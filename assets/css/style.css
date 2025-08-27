@@ -756,7 +756,7 @@ p {
         justify-content: flex-start; /* Align items to the top */
         align-items: flex-start; /* Align items to the left */
         /* Move the menu 100% of its own width off-screen */
-        transform: translateX(110%) translateY(-3.5%);
+        transform: translateX(120%) translateY(-3.5%);
         transition: transform 0.3s ease-in-out;
         z-index: 998;
         padding-top: 5rem; /* Add some space for the top of the menu */
