@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frank Wu | UX Portfolio</title>
+    <!-- Link to the redesigned CSS file -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Link to Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar remains the same -->
+    <header class="navbar">
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation menu">
+            <span class="hamburger"></span>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-bg-overlay"></div>
+        <section id="about">
+            <!-- Old about div now has the fade-in class -->
+            <div class="about fade-in">
+                <div class="about-content">
+                    <h2>About Me</h2>
+                    <p class="section-description">I'm a junior UI/UX designer with a strong passion for solving complex problems through thoughtful and engaging design. My journey into design began with fascination for how people interact with technology, and it has evolved into a career dedicated to making those interactions seamless and enjoyable. I believe in a collaborative and iterative design process, driven by user research and feedback.</p>
+                    <div class="skills-list">
+                        <span class="skill-tag">UI/UX Design</span>
+                        <span class="skill-tag">Prototyping</span>
+                        <span class="skill-tag">User Research</span>
+                        <span class="skill-tag">Wireframing</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">Design Systems</span>
+                        <span class="skill-tag">Responsive Design</span>
+                        <span class="skill-tag">Branding</span>
+                    </div>
+                </div>
+                <!-- Call-to-Action Card -->
+                <div class="cta-card">
+                    <h3>Curious to see more?</h3>
+                    <p>Download my resume to get a better overview of my professional experience and skills.</p>
+                    <a href="#" class="btn download">
+                        <i class="fa-solid fa-download"></i>
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <!-- Old contact div now has the fade-in class -->
+            <div class="contact-section fade-in">
+                <h2>Get In Touch</h2>
+                <p class="contact-description">I'm always open to new opportunities and collaborations. Feel free to reach out!</p>
+                <div class="contact-info">
+                    <a href="tel:+886956820832" class="contact-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+886 956 820832</span>
+                    </a>
+                    <a href="mailto:frank.wu.0405@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>frank.wu.0405@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- The link to the external JavaScript file -->
+    <script src="assets/js/script.js" defer></script>
+</body>
+</html>

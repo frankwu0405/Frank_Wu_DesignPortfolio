@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frank Wu | Projects</title>
+    <!-- Link to the redesigned CSS file -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Link to Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation menu">
+            <span class="hamburger"></span>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <main>
+        <div class="section-bg-overlay"></div>
+        <!-- Project Hero Section - Added 'fade-in' class -->
+        <section class="project-hero fade-in">
+            <h1>My Projects</h1>
+            <p class="description">A collection of my recent work, spanning UI/UX design, product design, and interactive experiences.</p>
+        </section>
+
+        <!-- New section for alternating project rows -->
+        <section id="project-list">
+            <!-- Project 1: Image Left, Text Right -->
+            <div class="project-row fade-in">
+                <a href="project1.html" class="project-image-container">
+                    <img src="assets/images/career_course_card_image.png" alt="Interactive Learning Tools" class="project-image">
+                </a>
+                <div class="project-content">
+                    <span class="project-tag">EdTech Mobile App</span>
+                    <h3>Interactive Learning Tools for Remote Students</h3>
+                    <p>A digital STEM learning tool designed to engage students in rural and remote areas. The project involved research into gamification principles to create a fun and effective learning environment.</p>
+                    <a href="project1.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Project 2: Image Right, Text Left -->
+            <div class="project-row project-row-reverse fade-in">
+                <a href="project2.html" class="project-image-container">
+                    <img src="assets/images/smart_station_card_image.png" alt="Smart Station" class="project-image">
+                </a>
+                <div class="project-content">
+                    <span class="project-tag">Interaction Design</span>
+                    <h3>Smart Station – Interactive Trolley Return System</h3>
+                    <p>A multi-sensory system to encourage trolley returns through gamification and clear user feedback. This project focused on creating a seamless and rewarding physical-digital interaction.</p>
+                    <a href="project2.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Project 3: Image Left, Text Right -->
+            <div class="project-row fade-in">
+                <a href="project3.html" class="project-image-container">
+                    <img src="assets/images/one_shop_gen_image.png" alt="AI-Driven Fashion Shopping App" class="project-image">
+                </a>
+                <div class="project-content">
+                    <span class="project-tag">E-Commerce Mobile App</span>
+                    <h3>AI-Driven Fashion Shopping App</h3>
+                    <p>A mobile shopping app with AI integration to help users make confident purchasing decisions. The goal was to enhance the shopping experience by providing personalized recommendations and visual search capabilities.</p>
+                    <a href="project3.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- This is the link to the external JavaScript file -->
+    <script src="assets/js/script.js" defer></script>
+</body>
+</html>

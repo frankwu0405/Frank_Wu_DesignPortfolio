@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frank Wu | UX Portfolio</title>
+    <!-- Link to the redesigned CSS file -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Link to Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar remains the same -->
+    <header class="navbar">
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-bg-overlay"></div>
+        <!-- Intro Section -->
+        <section id="intro">
+            <!-- Old intro div now has the fade-in class -->
+            <div class="intro fade-in">
+                <div class="intro-content">
+                    <div class="subtitle">Junior UI/UX Designer</div>
+                    <h1>Hi, I’m Frank Wu.</h1>
+                    <p class="description">
+                        I'm a passionate designer focused on bridging the gap between people and technology through intuitive, beautiful, and functional design. Let's create something amazing together.
+                    </p>
+                    <div class="intro-buttons">
+                        <a href="projects.html #projects" class="btn">
+                            View My Work
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </a>
+                        <a href="#contact" class="btn secondary">Get in Touch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What I Do Section -->
+        <section id="what-i-do">
+            <!-- Content Container now has the fade-in class -->
+            <div class="content-container fade-in">
+                <h2>What I Do</h2>
+                <p class="section-description">I combine aesthetic design with intuitive user experience to create digital products that are both beautiful and functional.</p>
+                <div class="services-grid">
+                    <!-- The fade-in class is now on the grid items themselves -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3>UI/UX Design</h3>
+                        <p>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <h3>Prototyping & Wireframing</h3>
+                        <p>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>User Research</h3>
+                        <p>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <!-- Old contact div now has the fade-in class -->
+            <div class="contact-section fade-in">
+                <h2>Get In Touch</h2>
+                <p class="contact-description">I'm always open to new opportunities and collaborations. Feel free to reach out!</p>
+                <div class="contact-info">
+                    <a href="tel:+886956820832" class="contact-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+886 956 820832</span>
+                    </a>
+                    <a href="mailto:frank.wu.0405@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>frank.wu.0405@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- The link to the external JavaScript file -->
+    <script src="assets/js/script.js" defer></script>
+</body>
+</html>
