@@ -796,7 +796,7 @@ p {
     /* Styles for the active link in the mobile menu */
     .navbar .nav-links li a.active {
         background-color: var(--secondary-color);
-        box-shadow: none; /* Remove the glow effect for a cleaner look */
+        box-shadow: var(--subtle-glow-shadow); /* Remove the glow effect for a cleaner look */
         border-radius: 0;
     }
 
