@@ -811,6 +811,7 @@ p {
         color: var(--text-primary);
         border-radius: 8px;
         font-weight: 600;
+        height:1em;
     }
 
     .intro{
