@@ -196,7 +196,7 @@ p {
     transition: all 0.3s linear;
     position: relative;
     transform-origin: 1px;
-    left: 10em;
+    left: 85%;
 }
 
 /* Create the top and bottom bars using pseudo-elements */
