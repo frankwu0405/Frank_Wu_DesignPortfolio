@@ -189,14 +189,14 @@ p {
 
 /* This is the middle bar of the hamburger menu */
 .hamburger {
+    content: '';
     width: 2rem;
     height: 0.25rem;
     background: var(--text-primary);
     border-radius: 10px;
     transition: all 0.3s linear;
-    position: relative;
-    transform-origin: 1px;
-    left: 85%;
+    position: absolute;
+    left:85%;
 }
 
 /* Create the top and bottom bars using pseudo-elements */
@@ -724,6 +724,7 @@ p {
         position: fixed;
     }
 
+
     /* NEW: Darken the original page when the menu is open */
     body.menu-open::before {
         content: '';
@@ -814,6 +815,10 @@ p {
 
     .intro{
         margin-top: 3em;
+    }
+
+    .intro .fade-in.visible{
+        margin:0;
     }
     
     .about {
