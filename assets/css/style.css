@@ -258,6 +258,13 @@ p {
     padding: 20px;
 }
 
+.intro-content a.name {
+    color: #ffffff;
+    stroke-width: 5.5;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
 .intro h1 {
     font-size: clamp(2.5rem, 8vw, 4rem);
     margin-bottom: 10px;
@@ -723,7 +730,7 @@ p {
     .navbar{
         position: fixed;
         height: 4.5em;
-        padding-left: 3%;
+        padding-left:3%;
     }
 
 
@@ -798,7 +805,7 @@ p {
     /* Styles for the active link in the mobile menu */
     .navbar .nav-links li a.active {
         background-color: var(--secondary-color);
-        box-shadow: var(--subtle-glow-shadow); /* Remove the glow effect for a cleaner look */
+        box-shadow: none; /* Remove the glow effect for a cleaner look */
         border-radius: 0;
     }
 
