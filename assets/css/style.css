@@ -723,6 +723,7 @@ p {
     .navbar{
         position: fixed;
         height: 4.5em;
+        padding-left: 3%;
     }
 
 
