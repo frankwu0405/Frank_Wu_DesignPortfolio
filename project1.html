@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project 1 | Case Study</title>
 
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Linking the external stylesheet for better organization and reusability -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -12,105 +20,195 @@
 <body>
     <!-- Navbar -->
     <header class="navbar">
-        <a href="index.html" class="logo">Frank Wu</a>
-        <ul class="nav-links">
-            <li><a href="index.html#projects">Projects</a></li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
-        <button class="nav-toggle" aria-label="Toggle navigation menu">
-            <span class="hamburger"></span>
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
         </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+            </ul>
+        </div>
     </header>
 
-    <main>
-        <!-- Back to projects link -->
-        <a href="index.html#projects" class="back-link">← Back to Projects</a>
+    <!-- Back to projects link (Sticky) -->
+    <div class="back-link-wrapper">
+        <a href="projects.html" class="back-link btn.secondary">← Back to Projects</a>
+    </div>
 
+    <main>
+        <div class="section-bg-overlay"></div>
+        
         <!-- Project Hero Section -->
         <section class="project-hero">
-            <div class="subtitle">EdTech Mobile App</div>
-            <h1>Interactive Learning Tools for Remote Students</h1>
-            <p class="description">
-                A digital STEM learning tool designed to engage students in rural and remote areas.
-            </p>
-        </section>
-
-        <!-- Carousel -->
-        <section class="carousel-container">
-            <button class="carousel-button prev">&#10094;</button>
-            <div class="carousel-images">
-                <img src="https://placehold.co/1200x600/E0E0E0/333?text=Project+Image+1" alt="Image 1">
-                <img src="https://placehold.co/1200x600/D0D0D0/333?text=Project+Image+2" alt="Image 2">
-                <img src="https://placehold.co/1200x600/C0C0C0/333?text=Project+Image+3" alt="Image 3">
+            <div class="project-hero-grid">
+                <!-- Main Project Image -->
+                <div class="project-hero-image">
+                    <img src="https://placehold.co/1200x800/E0E0E0/333?text=Main+Project+Image" alt="Main Project Image">
+                </div>
+                <!-- Project Hero Content -->
+                <div class="project-hero-content">
+                    <h1>Interactive Learning Tools for Remote Students</h1>
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-circle"></i>
+                            <div>
+                                <span class="detail-label">Role:</span>
+                                <span class="detail-value">Lead UX/UI Designer</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <div>
+                                <span class="detail-label">Duration:</span>
+                                <span class="detail-value">6 Weeks</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-trophy"></i>
+                            <div>
+                                <span class="detail-label">Key Achievement:</span>
+                                <span class="detail-value">Increased student engagement by 40% in pilot testing.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="placeholder" class="project-download btn secondary">View the Full Report</a>
+                </div>
             </div>
-            <button class="carousel-button next">&#10095;</button>
         </section>
 
-        <!-- Main Case Study Content -->
+        <!-- Main Case Study Content with a linear flow -->
         <section class="case-study-content">
-            <!-- The Problem -->
-            <div class="problem">
-                <h2>The Problem</h2>
-                <p>
-                    Students in remote and rural areas often lack access to the same quality of STEM educational resources as their
-                    urban counterparts. This educational gap is compounded by a lack of engaging, interactive digital tools that can
-                    function in low-connectivity environments.
-                </p>
-            </div>
+                <div class="problem-and-persona">
+                    <div class="content-card problem-card">
+                        <h2>The Problem</h2>
+                        <p>
+                            Students in remote and rural areas often lack access to the same quality of STEM educational resources as their
+                            urban counterparts. This educational gap is compounded by a lack of engaging, interactive digital tools that can
+                            function in low-connectivity environments.
+                        </p>
+                    </div>
+                    <!-- Persona Card -->
+                    <div class="content-card persona-card">
+                        <div class="persona-header">
+                            <i class="fa-solid fa-user-circle"></i>
+                            <h3>Maria, 8th Grade Student</h3>
+                        </div>
+                        <p class="quote">
+                            "I am curious about science but find it difficult to stay focused during my online lessons at home."
+                        </p>
+                        <div class="persona-details">
+                            <p><span class="label">Needs:</span> Interactive content</p>
+                            <p><span class="label">Goals:</span> Visual explanations</p>
+                            <p><span class="label">Motivations:</span> Can learn at home</p>
+                            <p><span class="label">Frustrations:</span> Lack of engaging study materials</p>
+                        </div>
+                    </div>
+                </div>
+            <div class="case-study-grid">
+                <!-- My Role & The Team -->
+                <div class="content-card role-card">
+                    <h2>My Role & The Team</h2>
+                    <p>On this project, I was responsible for the following key areas:</p>
+                    <div class="role-list-grid">
+                        <ul class="role-list">
+                            <li>User Research</li>
+                            <li>UI Design</li>
+                        </ul>
+                        <ul class="role-list">
+                            <li>Wireframing & Prototyping</li>
+                            <li>Usability Testing</li>
+                        </ul>
+                    </div>
+                    <p>I collaborated with a team of 3 Developers, 1 Project Manager.</p>
+                </div>
 
-            <!-- The Solution -->
-            <div class="solution">
-                <h2>The Solution</h2>
-                <p>
-                    We developed a mobile-first, gamified learning application that provides interactive STEM modules. The app is
-                    designed to work offline, ensuring accessibility for all students. By making learning feel like a game, we significantly
-                    increased student engagement and knowledge retention on complex STEM topics.
-                </p>
-            </div>
+                <!-- Research & Discovery -->
+                <div class="content-card research-card">
+                    <h2>Research & Discovery</h2>
+                    <p>
+                        Conducted interviews with 15 remote students. Found that 80% felt their science materials were 'uninteresting' and 'hard to visualize'.
+                    </p>
+                    <div class="quote-box">
+                        <p>"I wish I could actually see how the water cycle works instead of just reading about it."</p>
+                    </div>
+                </div>
 
-            <!-- My Role & Process -->
-            <div class="role-process">
-                <h2>My Role & Process</h2>
-                <ol>
-                    <li>
-                        <span>
-                            Led user research and interviews with students and teachers in rural areas.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Synthesized insights into design requirements for a digital STEM learning tool.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Prototyped and tested interactive, gamified learning modules with a focus on usability.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Worked cross-functionally to iterate designs based on user testing.
-                        </span>
-                    </li>
-                </ol>
-            </div>
+                <!-- The Journey: From Ideation to Solution AND The Solution: High-Fidelity Designs wrapped in horizontal-cards -->
+                <div class="horizontal-cards">
+                    <div class="content-card journey-card">
+                        <h2>The Journey: From Ideation to Solution</h2>
+                        <div class="the-journey-grid">
+                            <div class="journey-card content-card">
+                                <h3>Ideation & Wireframing</h3>
+                                <p>Sketched multiple concepts for gamified modules, focusing on turning abstract scientific concepts into visual puzzles. Wireframes prioritized a simple, visual hierarchy for easy navigation.</p>
+                                <img src="https://placehold.co/600x400/D0D0D0/333?text=Wireframe+sketches" alt="Wireframe sketches">
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3>Usability Testing</h3>
+                                <p>Ran usability tests on a clickable prototype with 5 students. They completed all tasks, but navigation anticipated but struggled to find the "Progress" page.</p>
+                                <div class="key-finding">
+                                    <h4>Key Finding:</h4>
+                                    <p>"Users were highly engaged with the game but found the linear navigation obvious way to return their overall progress in the "My Progress" tab."</p>
+                                </div>
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3>Key Iteration</h3>
+                                <p>Based on testing, the navigation was redesigned to include a persistent bottom bar for easy access to a "Progress" tab.</p>
+                                <div class="the-change">
+                                    <h4>The Change:</h4>
+                                    <p>A prominent progress bar and dedicated progress page was added, which increased user satisfaction scores by 25%.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Technologies & Tools -->
-            <div class="technologies-tools">
-                <h2>Technologies & Tools</h2>
-                <div class="technologies-tools-grid">
-                    <span class="tech-tag">Figma</span>
-                    <span class="tech-tag">Adobe XD</span>
-                    <span class="tech-tag">Miro</span>
-                    <span class="tech-tag">UserTesting.com</span>
-                    <span class="tech-tag">React Native</span>
+                    <div class="content-card solution-card">
+                        <h2>The Solution: High-Fidelity Designs</h2>
+                        <p>We developed a mobile-first, gamified learning application that provides interactive STEM modules, which work offline. By transforming complex topics into engaging games, we significantly increased student engagement and knowledge retention.</p>
+                        <div class="image-gallery-grid">
+                            <img src="https://placehold.co/600x800/D0D0D0/333?text=Interactive+Learning+Tools+for+Remote+Students+gallery+image+2" alt="Gallery Image 2">
+                            <img src="https://placehold.co/600x800/D0D0D0/333?text=Interactive+Learning+Tools+for+Remote+Students+gallery+image+3" alt="Gallery Image 3">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technologies & Next Steps in a row -->
+                <div class="content-card tech-card">
+                    <h2>Technologies & Tools</h2>
+                    <div class="technologies-tools-grid">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">Adobe XD</span>
+                        <span class="tech-tag">Miro</span>
+                        <span class="tech-tag">UserTesting.com</span>
+                        <span class="tech-tag">React Native</span>
+                    </div>
+                </div>
+                
+                <!-- Next Steps -->
+                <div class="content-card next-steps-card">
+                    <h2>Next Steps</h2>
+                    <p>Expand the module library to cover more STEM subjects and introduce a feature that learns to track student performance.</p>
                 </div>
             </div>
         </section>
     </main>
     
-    <!-- This is the link to the external JavaScript file -->
-    <script src="assets/js/script.js" defer></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">
+            &copy; 2023 Frank Wu. All rights reserved.
+        </div>
+        <div class="footer-social">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble-square"></i></a>
+            <a href="#" aria-label="Behance"><i class="fab fa-behance-square"></i></a>
+        </div>
+    </footer>
 </body>
 </html>
