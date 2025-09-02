@@ -1073,9 +1073,14 @@ p {
     .project-hero-grid,
     .case-study-grid,
     .image-gallery-grid,
-    .horizontal-cards {
+    .horizontal-cards,
+    .problem-and-persona,
+    .the-journey-grid {
+        display:flex;
+        flex-direction: column;
         grid-template-columns: 1fr;
     }
+    
     
     .project-hero-content {
         text-align: center;
