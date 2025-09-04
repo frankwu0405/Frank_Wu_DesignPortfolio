@@ -4,114 +4,242 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project 2 | Case Study</title>
-
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <!-- Linking the external stylesheet for better organization and reusability -->
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        body {
+            /* The following properties are key for a sticky footer */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navbar -->
     <header class="navbar">
-        <a href="index.html" class="logo">Frank Wu</a>
-        <ul class="nav-links">
-            <li><a href="index.html#projects">Projects</a></li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
-        <button class="nav-toggle" aria-label="Toggle navigation menu">
-            <span class="hamburger"></span>
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
         </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+            </ul>
+        </div>
     </header>
 
-    <main>
-        <!-- Back to projects link -->
-        <a href="index.html#projects" class="back-link">← Back to Projects</a>
-
+    <main style="flex-grow: 1;">
+        <div class="section-bg-overlay"></div>
+        <div class="back-link-wrapper">
+            <a href="projects.html" class="back-link btn.secondary">← Back to Projects</a>
+        </div>
         <!-- Project Hero Section -->
         <section class="project-hero">
-            <div class="subtitle">Interaction Design</div>
-            <h1>Smart Station – Interactive Trolley Return System</h1>
-            <p class="description">
-                A multi-device system to encourage trolley returns through gamification and clear user feedback.
-            </p>
-        </section>
-
-        <!-- Carousel -->
-        <section class="carousel-container">
-            <button class="carousel-button prev">&#10094;</button>
-            <div class="carousel-images">
-                <!-- Placeholder images based on the case study -->
-                <img src="https://placehold.co/1200x600/E0E0E0/333?text=Smart+Station+UI+Mockup" alt="UI Mockup">
-                <img src="https://placehold.co/1200x600/D0D0D0/333?text=Trolley+Return+Station+Concept" alt="Station Concept">
-                <img src="https://placehold.co/1200x600/C0C0C0/333?text=Gamification+System+Diagram" alt="System Diagram">
-            </div>
-            <button class="carousel-button next">&#10095;</button>
-        </section>
-
-        <!-- Main Case Study Content -->
-        <section class="case-study-content">
-            <!-- The Problem -->
-            <div class="problem">
-                <h2>The Problem</h2>
-                <p>
-                    Supermarket trolleys are often left scattered in parking lots, creating hazards and requiring manual collection. The existing return process lacks incentives and clear instructions, leading to low compliance from shoppers.
-                </p>
-            </div>
-
-            <!-- The Solution -->
-            <div class="solution">
-                <h2>The Solution</h2>
-                <p>
-                    We designed 'Smart Station,' an interactive system that gamifies the trolley return process. It includes a public display, a tablet interface for interaction, and a sensing station that confirms the return. By offering a chance to win a prize, we motivate users, while the streamlined interface makes the process quick and easy.
-                </p>
-            </div>
-
-            <!-- My Role & Process -->
-            <div class="role-process">
-                <h2>My Role & Process</h2>
-                <ol>
-                    <li>
-                        <span>
-                            Conducted user interviews and mid-to-high fidelity usability testing to identify interaction barriers and motivation triggers.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Prototyped a multi-device experience using Figma, including a public display, tablet interface, and sensing station.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Integrated user feedback to simplify user flow, replace visual effects for better accessibility, and resolve privacy concerns with QR code displays.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Applied gamification (wheel of prize) to encourage trolley return behavior and created a clear feedback loop for users.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Iterated based on testing insights to reduce decision fatigue and minimize site congestion.
-                        </span>
-                    </li>
-                </ol>
-            </div>
-
-            <!-- Technologies & Tools -->
-            <div class="technologies-tools">
-                <h2>Technologies & Tools</h2>
-                <div class="technologies-tools-grid">
-                    <span class="tech-tag">Figma</span>
-                    <span class="tech-tag">Arduino</span>
-                    <span class="tech-tag">Usability Testing</span>
-                    <span class="tech-tag">Gamification</span>
+            <div class="project-hero-grid">
+                <!-- Main Project Image -->
+                <div class="project-hero-image">
+                    <video controls playsinline class="project-video">
+                        <source src="assets/images/DECO2014_A4_Video_Prototype.mp4" type="video/mp4">
+                    </video>
                 </div>
+                <!-- Project Hero Content -->
+                <div class="project-hero-content">
+                    <h1>Smart Station – Interactive Trolley Return System</h1>
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-circle"></i>
+                            <div>
+                                <span class="detail-label">Role:</span>
+                                <span class="detail-value">Lead UX/UI Designer</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <div>
+                                <span class="detail-label">Duration:</span>
+                                <span class="detail-value">6 Weeks</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-trophy"></i>
+                            <div>
+                                <span class="detail-label">Key Achievement:</span>
+                                <span class="detail-value">Increased trolley returns by 50% in pilot study.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="project-download btn secondary">View the Full Report</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Case Study Content with a linear flow -->
+        <section class="case-study-content">
+            <div class="problem-and-persona">
+                <div class="content-card problem-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">quiz</span>
+                        <h2>The Problem</h2>
+                    </div>
+                    <p>
+                        Supermarket trolleys are often left scattered in parking lots, creating hazards and requiring manual collection. The existing return process lacks incentives and clear instructions, leading to low compliance from shoppers.
+                    </p>
+                </div>
+                <!-- Persona Card -->
+                <div class="content-card persona-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">attribution</span>
+                        <h3>David, Busy Shopper</h3>
+                    </div>
+                    <p class="quote">
+                        <i>"A parent who wants to get in and out of the supermarket as quickly as possible."</i>
+                    </p>
+                    <div class="persona-details">
+                        <p><span class="label">Needs:</span> Clear instructions, Quick process</p>
+                        <p><span class="label">Frustrations:</span> Ambiguous signage, Processes that take too much time</p>
+                    </div>
+                </div>
+            </div>
+            <div class="case-study-grid">
+                <!-- My Role & The Team -->
+                <div class="content-card role-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">groups</span>
+                        <h2>My Role & The Team</h2>
+                    </div>
+                    <p>On this project, I was responsible for the following key areas:</p>
+                    <div class="role-list-grid">
+                        <ul class="role-list">
+                            <li>User Journey Mapping</li>
+                            <li>Physical Computing</li>
+                        </ul>
+                        <ul class="role-list">
+                            <li>Interaction Prototyping</li>
+                            <li>Usability Testing</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Research & Discovery -->
+                <div class="content-card research-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">document_search</span>
+                        <h2>Research & Discovery</h2>
+                    </div>
+                    <p>
+                        Observed shopper behavior in 3 different supermarket parking lots. Found that only 2 out of 10 shoppers returned their trolleys to the designated bay if it was more than 50 feet away.
+                    </p>
+                    <div class="quote-box">
+                        <p><i>"I'd return it if I knew where it went and if it wasn't so far away. I just want to get home."</i></p>
+                    </div>
+                </div>
+                
+                <!-- Progress Arrow -->
+                <div class="progress_arrow">
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+
+                <!-- The Journey: From Ideation to Solution -->
+                <div class="horizontal-cards">
+                    <div class="content-card journey-card">
+                        <div class="card-header">
+                            <span class="material-symbols-outlined">moving</span>
+                            <h2>The Journey: From Ideation to Solution</h2>
+                        </div>
+                        <div class="the-journey-grid">
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">lightbulb</span>Ideation & Wireframing</h3>  
+                                <p>Focused on creating a "moment of delight" in a mundane task. Sketched a "Wheel of Prizes" concept to act as a powerful incentive for users to engage with the system.</p>
+                                <img src="https://placehold.co/600x400/D0D0D0/333?text=Wireframe+sketches" alt="Wireframe sketches">
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">task_alt</span>Usability Testing</h3>
+                                <p>Tested a physical prototype with a mock-up tablet interface. Users were excited by the game but confused about how to scan their receipt to begin.</p>
+                                <div class="key-finding">
+                                    <h4>Key Finding:</h4>
+                                    <p>The first step of the process was a major friction point. The "Scan Here" instruction wasn't visible enough."</p>
+                                </div>
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">model_training</span>Key Iteration</h3>
+                                <p>The tablet UI was redesigned to have a large, animated "Start Here: Scan Your Receipt" button as the very first screen.</p>
+                                <div class="the-change">
+                                    <h4>The Change:</h4>
+                                    <p>This change eliminated all confusion during the initial step, reducing the average transaction time from 45 seconds to 15 seconds.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Progress Arrow -->
+                <div class="progress_arrow">
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+                    <div class="content-card solution-card">
+                        <div class="card-header">
+                            <span class="material-symbols-outlined">design_services</span>
+                            <h2>The Solution: High-Fidelity Designs</h2>
+                        </div>
+                        <p>We designed “Smart Station,” an interactive system that gamifies the trolley return process. It includes a public display and a tablet interface. By offering a chance to win a prize, we motivate users, while the streamlined interface makes the process quick and easy.</p>
+                        <div class="image-gallery-grid">
+                            <img src="https://placehold.co/300x400/D0D0D0/333?text=Interactive+Learning+Tools+for+Remote+Students+gallery+image+2" alt="Gallery Image 2">
+                            <img src="https://placehold.co/300x400/D0D0D0/333?text=Interactive+Learning+Tools+for+Remote+Students+gallery+image+3" alt="Gallery Image 3">
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Technologies & Next Steps -->
+                <div class="content-card tech-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">build</span>
+                        <h2>Technologies & Tools</h2>
+                    </div>
+                    <div class="technologies-tools-grid">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">Adobe XD</span>
+                        <span class="tech-tag">Miro</span>
+                        <span class="tech-tag">UserTesting.com</span>
+                        <span class="tech-tag">React Native</span>
+                    </div>
+                </div>
+                
+                <!-- Next Steps -->
+                <div class="content-card next-steps-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">not_started</span>
+                        <h2>Next Steps</h2>
+                    </div>
+                    <p>Develop a more robust physical prototype and partner with a local supermarket for a real-world pilot study.</p>
+                </div>
+            
             </div>
         </section>
     </main>
     
-    <!-- This is the link to the external JavaScript file -->
-    <script src="assets/js/script.js" defer></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">
+            &copy; 2023 Frank Wu. All rights reserved.
+        </div>
+        <div class="footer-social">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble-square"></i></a>
+            <a href="#" aria-label="Behance"><i class="fab fa-behance-square"></i></a>
+        </div>
+    </footer>
 </body>
 </html>
