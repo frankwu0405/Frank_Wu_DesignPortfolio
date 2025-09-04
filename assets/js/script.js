@@ -102,7 +102,7 @@ function setupIntersectionObserver() {
     const observerOptions = {
         root: null, // Use the viewport as the root
         rootMargin: '0px',
-        threshold: 0.1 // Trigger when 10% of the element is visible
+        threshold: 0.3 // Trigger when 30% of the element is visible
     };
 
     const observer = new IntersectionObserver((entries, observer) => {
@@ -162,7 +162,7 @@ function highlightCurrentLink() {
         // Extract just the filename from the path
         currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
     }
-    
+
     // Select all the navigation links
     const links = document.querySelectorAll('.nav-links a');
 
@@ -173,8 +173,15 @@ function highlightCurrentLink() {
 
         // Check if the link's href attribute matches the current page's filename
         // The .endsWith() method is flexible for different relative path formats
-        if (link.getAttribute('href').endsWith(currentPath)) {
+        const linkHref = link.getAttribute('href');
+        if (linkHref.endsWith(currentPath)) {
             // If they match, add the 'active' class to this link
+            link.classList.add('active');
+        } else if (currentPath.startsWith('project') && (linkHref.endsWith('projects.html') || linkHref.endsWith('index.html#projects'))) {
+            // This new logic handles the project pages specifically.
+            // If the current URL starts with 'project' (e.g., project1.html)
+            // AND the link's href is either 'projects.html' or 'index.html#projects',
+            // it will add the active class to the Projects link.
             link.classList.add('active');
         }
     });
