@@ -34,7 +34,6 @@ body {
     background-position: center;
     background-attachment: fixed;
     background-color: var(--background-dark);
-
     /* This is the key change to solve the fixed navbar issue. */
     /* It adds space to the top of the body, pushing content down. */
     padding-top: var(--navbar-height);
@@ -46,6 +45,11 @@ html {
 
 html, body {
     overflow-x: hidden;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 body.menu-open {
@@ -83,6 +87,9 @@ p {
 .navbar {
     position: fixed;
     top: 0;
+    max-width: 1520.8px;
+    left: 0;
+    right: 0;
     width: 100%;
     z-index: 990; 
     display: flex;
@@ -93,7 +100,9 @@ p {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    margin: 0 auto;
 }
+
 
 .logo{
     height: 45px;
@@ -613,6 +622,12 @@ p {
     box-shadow: var(--natural-shadow);
 }
 
+.project-hero-image video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--natural-shadow);
+}
+
 .project-hero-content {
     text-align: left;
 }
@@ -651,8 +666,13 @@ p {
 
 .detail-item {
     display: flex;
-    align-items: center;
+    align-items: left;
+    text-align: left;
     gap: 15px;
+}
+
+.detail-item i{
+    min-width: 27px;
 }
 
 .detail-item i {
@@ -672,8 +692,11 @@ p {
 .back-link-wrapper {
     position: fixed;
     left: 3vw;
-    top: 20vh;
+    right: 0;
+    top: 120px;
     z-index: 998; /* Just below the navbar */
+    max-width: 1520.8px;
+    margin: 0 auto;
 }
 
 /* NEW: The back button style */
@@ -708,11 +731,25 @@ p {
 .problem-and-persona {
     grid-row: 2;
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 40px;
 }
 
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
+.card-header span, .card-header i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.icon-filled {
+    font-variation-settings: 'FILL' 1;
+}
 
 .content-card {
     background-color: var(--card-bg-overlay);
@@ -722,16 +759,27 @@ p {
     box-shadow: var(--natural-shadow);
 }
 
-.content-card h2 {
-    margin-bottom: 20px;
-}
-
 .horizontal-cards {
     grid-column: span 2;
     display: grid;
     grid-template-columns: 1fr;
     gap: 40px;
 }
+
+.progress_arrow {
+    display: flex;
+    justify-content: center;
+    grid-column: span 2;
+    margin:-3em;
+}
+
+.progress_arrow span {
+    font-size: 8rem;
+    color: var(--primary-color);
+    opacity: 0.7;
+    animation: flicker 2s infinite;
+}
+
 
 /* Specific styles for The Journey section */
 .the-journey-grid {
@@ -844,6 +892,8 @@ p {
     background: transparent;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    max-width: 1520.8px;
+    margin: 0 auto;
 }
 
 .footer-social {
@@ -1098,4 +1148,15 @@ p {
     .footer-text, .footer-social {
         order: initial;
     }
+}
+
+@keyframes flicker {
+            0%, 100% {
+                opacity: 0.6; /* Fully visible */
+                text-shadow: var(--subtle-glow-shadow);
+            }
+            50% {
+                opacity: 0.4; /* Faded state */
+                text-shadow: none;
+            }
 }
