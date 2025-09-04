@@ -442,6 +442,20 @@ p {
     margin-bottom: 20px;
 }
 
+.concept-image {
+    width: 50%;
+    border-radius: 12px;
+    box-shadow: var(--natural-shadow);
+    margin-top: 20px;
+}
+
+.problem-image {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--natural-shadow);
+    margin-top: 20px;
+}
+
 /* ===== ABOUT SECTION ===== */
 #about {
     background: transparent;
@@ -694,7 +708,7 @@ p {
     left: 3vw;
     right: 0;
     top: 120px;
-    z-index: 998; /* Just below the navbar */
+    z-index: 800; /* Just below the navbar */
     max-width: 1520.8px;
     margin: 0 auto;
 }
@@ -863,6 +877,7 @@ p {
     padding: 15px;
     border-left: 3px solid var(--primary-color);
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /* The Solution Image Gallery */
@@ -1086,6 +1101,14 @@ p {
     
     .about-content .btn.download {
         margin: 20px auto;
+    }
+
+    .concept-image {
+        width: 100%;
+    }
+
+    .problem-image{
+        width: 100%;
     }
     
     .project-card {
