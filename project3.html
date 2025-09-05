@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project 2 | Case Study</title>
+    <title>Project 3 | Case Study</title>
+
     <!-- Google Fonts for Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,105 +18,249 @@
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
 </head>
 
-
 <body>
     <!-- Navbar -->
     <header class="navbar">
-        <a href="index.html" class="logo">Frank Wu</a>
-        <ul class="nav-links">
-            <li><a href="index.html#projects">Projects</a></li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
-        <button class="nav-toggle" aria-label="Toggle navigation menu">
-            <span class="hamburger"></span>
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
         </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+            </ul>
+        </div>
     </header>
 
     <main>
-        <!-- Back to projects link -->
-        <a href="index.html#projects" class="back-link">← Back to Projects</a>
-
+        <div class="section-bg-overlay"></div>
+        <div class="back-link-wrapper">
+            <a href="projects.html" class="back-link btn.secondary">← Back to Projects</a>
+        </div>
         <!-- Project Hero Section -->
         <section class="project-hero">
-            <div class="subtitle">E-commerce Mobile App</div>
-            <h1>AI-Driven Fashion Shopping App</h1>
-            <p class="description">
-                A mobile shopping app with AI visualization to help users make confident purchasing decisions.
-            </p>
-        </section>
-
-        <!-- Carousel -->
-        <section class="carousel-container">
-            <button class="carousel-button prev">&#10094;</button>
-            <div class="carousel-images">
-                <!-- Placeholder images based on the case study -->
-                <img src="https://placehold.co/1200x600/E0E0E0/333?text=App+UI+Mockup" alt="App UI Mockup">
-                <img src="https://placehold.co/1200x600/D0D0D0/333?text=AI+Visualization+Example" alt="AI Visualization Example">
-                <img src="https://placehold.co/1200x600/C0C0C0/333?text=User+Flow+Diagram" alt="User Flow Diagram">
-            </div>
-            <button class="carousel-button next">&#10095;</button>
-        </section>
-
-        <!-- Main Case Study Content -->
-        <section class="case-study-content">
-            <!-- The Problem -->
-            <div class="problem">
-                <h2>The Problem</h2>
-                <p>
-                    Online fashion shoppers often struggle with decision-making due to the inability to visualize how clothes will fit and look on them. This uncertainty leads to high return rates and a frustrating user experience.
-                </p>
-            </div>
-
-            <!-- The Solution -->
-            <div class="solution">
-                <h2>The Solution</h2>
-                <p>
-                    We developed a user-centered mobile app that uses AI to allow shoppers to visualize clothing on a personalized avatar. By providing a more realistic and interactive shopping experience, we aimed to increase user confidence and reduce returns.
-                </p>
-            </div>
-
-            <!-- My Role & Process -->
-            <div class="role-process">
-                <h2>My Role & Process</h2>
-                <ol>
-                    <li>
-                        <span>
-                            Conducted user interviews and market analysis to uncover user needs and frustrations in the current market.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Created personas, journey maps, and usability scenarios based on research findings.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Prototyped a digital shopping platform with AI visualization features to enhance decision-making.
-                        </span>
-                    </li>
-                    <li>
-                        <span>
-                            Presented findings and prototypes in the final showcase with positive feedback.
-                        </span>
-                    </li>
-                </ol>
-            </div>
-
-            <!-- Technologies & Tools -->
-            <div class="technologies-tools">
-                <h2>Technologies & Tools</h2>
-                <div class="technologies-tools-grid">
-                    <span class="tech-tag">Figma</span>
-                    <span class="tech-tag">AI Visualization</span>
-                    <span class="tech-tag">User Research</span>
-                    <span class="tech-tag">Prototyping</span>
+            <div class="project-hero-grid">
+                <!-- Main Project Image -->
+                <div class="project-hero-image">
+                    <img src="https://placehold.co/1200x800/222/FFF?text=AI+Driven+Fashion+App+Hero+Image" alt="AI-Driven Fashion Shopping App hero image" class="project-image">
+                </div>
+                <!-- Project Hero Content -->
+                <div class="project-hero-content">
+                    <div class="subtitle">E-commerce Mobile App</div>
+                    <h1>AI-Driven Fashion Shopping App</h1>
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-circle"></i>
+                            <div>
+                                <span class="detail-label">Role:</span>
+                                <span class="detail-value">Lead UX Researcher & Strategist</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <div>
+                                <span class="detail-label">Duration:</span>
+                                <span class="detail-value">10-week course project</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-trophy"></i>
+                            <div>
+                                <span class="detail-label">Key Achievement:</span>
+                                <span class="detail-value">Finalist in a university-wide design showcase.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="project-download btn secondary">View the Full Report</a>
                 </div>
             </div>
         </section>
+
+        <!-- Main Case Study Content with a linear flow -->
+        <section class="case-study-content">
+            <div class="problem-and-persona">
+                <div class="content-card problem-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">quiz</span>
+                        <h2>The Problem</h2>
+                    </div>
+                    <p>
+                        Online fashion shoppers often struggle with decision-making due to the inability to visualize how clothes will fit and look on them. This uncertainty leads to high return rates and a frustrating user experience.
+                    </p>
+                </div>
+                <!-- Persona Card -->
+                <div class="content-card persona-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">attribution</span>
+                        <h3>Chloe, The Online Stylist</h3>
+                    </div>
+                    <p class="quote">
+                        <i>"A fashion-conscious shopper who buys a lot of her clothes online but is tired of the high return rate due to sizing."</i>
+                    </p>
+                    <div class="persona-details">
+                        <p><span class="label">Needs:</span> To see how clothes fit on her body type</p>
+                        <p><span class="label">Goals:</span> Easy returns are a must</p>
+                        <p><span class="label">Frustrations:</span> Inaccurate size charts</p>
+                        <p><span class="label">Frustrations:</span> Clothes looking different in person</p>
+                    </div>
+                </div>
+            </div>
+            <div class="case-study-grid">
+                <!-- My Role & The Team -->
+                <div class="content-card role-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">groups</span>
+                        <h2>My Role & The Team</h2>
+                    </div>
+                    <p>On this project, I was responsible for the following key areas:</p>
+                    <div class="role-list-grid">
+                        <ul class="role-list">
+                            <li>Market Analysis</li>
+                            <li>User Journey Mapping</li>
+                        </ul>
+                        <ul class="role-list">
+                            <li>Persona Development</li>
+                            <li>Concept Prototyping</li>
+                        </ul>
+                    </div>
+                    <p>I collaborated with a team of 4 student designers.</p>
+                </div>
+
+                <!-- Research & Discovery -->
+                <div class="content-card research-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">document_search</span>
+                        <h2>Research & Discovery</h2>
+                    </div>
+                    <p>
+                        Analyzed 5 major fashion e-commerce apps and surveyed 50 online shoppers. A key insight was that 'fit' was the #1 concern, cited by 95% of participants.
+                    </p>
+                    <div class="quote-box">
+                        <p><i>"I've bought the same size from the same brand and had it fit completely differently. I just don't trust it anymore."</i></p>
+                    </div>
+                </div>
+                
+                <!-- Progress Arrow -->
+                <div class="progress_arrow">
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+
+                <!-- The Journey: From Ideation to Solution AND The Solution: High-Fidelity Designs wrapped in horizontal-cards -->
+                <div class="horizontal-cards">
+                    <div class="content-card journey-card">
+                        <div class="card-header">
+                            <span class="material-symbols-outlined">moving</span>
+                            <h2>The Journey: From Ideation to Solution</h2>
+                        </div>
+                        <div class="the-journey-grid">
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">lightbulb</span>Ideation & Wireframing</h3> 
+                                <p>Brainstormed features to address the 'fit' problem, leading to the core concept of an AI-driven app, powered by a user's customizable avatar.</p>
+                                <img src="https://placehold.co/600x400/D0D0D0/333?text=Wireframe+sketches" alt="Wireframe sketches">
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">task_alt</span>Usability Testing</h3>
+                                <p>Presented a concept prototype to a panel of peers and a professor. The feedback was generally positive on the core concept, but concerns were raised about the backend feasibility.</p>
+                                <div class="key-finding">
+                                    <h4>Key Finding:</h4>
+                                    <p>"While the user need was strong, the main point of concern was for the real heavily on the accuracy of the AI visualization."</p>
+                                </div>
+                            </div>
+                            <div class="journey-card content-card">
+                                <h3><span class="material-symbols-outlined">model_training</span>Key Iteration</h3>
+                                <p>The project scope was refined to focus heavily on the avatar creation and personalization tool pipeline.</p>
+                                <div class="the-change">
+                                    <h4>The Change:</h4>
+                                    <p>We conducted a detailed, polished setup of the product's persona. This led to a better quality of the final product and increased user confidence with the concept's integrity.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Arrow -->
+                <div class="progress_arrow">
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+                <div class="content-card solution-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">design_services</span>
+                        <h2>The Solution: High-Fidelity Designs</h2>
+                    </div>
+                    <p>We developed a user-centered mobile app that uses AI to allow shoppers to visualize clothing on a personalized avatar. By providing a more realistic and interactive shopping experience, we aimed to increase user confidence and reduce returns.</p>
+                    <div class="image-gallery-grid">
+                        <div class="carousel-container">
+                                <div class="carousel-inner">
+                                    <div class="carousel-slide">
+                                        <figure>
+                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+1" alt="Smart Station interface design, slide 1">
+                                            <figcaption>The home screen shows a prominent "Start" button and a playful animation.</figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <figure>
+                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+2" alt="Smart Station interface design, slide 2">
+                                            <figcaption>Users are prompted to scan their receipt to confirm their return and unlock a prize.</figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <figure>
+                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+3" alt="Smart Station interface design, slide 3">
+                                            <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
+                                        </figure>
+                                    </div>
+                                </div>
+                                <button class="carousel-nav-btn prev-btn">&#10094;</button>
+                                <button class="carousel-nav-btn next-btn">&#10095;</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+            
+                    <!-- Technologies & Next Steps in a row -->
+                <div class="content-card tech-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">build</span>
+                        <h2>Technologies & Tools</h2>
+                    </div>
+                    <div class="technologies-tools-grid">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">AI Visualization</span>
+                        <span class="tech-tag">User Research</span>
+                        <span class="tech-tag">Prototyping</span>
+                    </div>
+                </div>
+                    
+                <!-- Next Steps -->
+                <div class="content-card next-steps-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">not_started</span>
+                        <h2>Next Steps</h2>
+                    </div>
+                    <p>Conduct a longitudinal study to measure the app's long-term impact on user behavior and purchase confidence.</p>
+                </div>
+            
+            </div>
+                
+            
+        </section>
     </main>
     
-    <!-- This is the link to the external JavaScript file -->
-    <script src="assets/js/script.js" defer></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">
+            &copy; 2025 Frank Wu. All rights reserved.
+        </div>
+        <div class="footer-social">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble-square"></i></a>
+            <a href="#" aria-label="Behance"><i class="fab fa-behance-square"></i></a>
+        </div>
+    </footer>
 </body>
 </html>
