@@ -188,6 +188,44 @@ function highlightCurrentLink() {
 }
 
 // ======================================================================
+// Back-Link Functionality
+// ======================================================================
+
+// Get a reference to the back-link element
+const backLinkWrapper = document.querySelector('.back-link-wrapper');
+
+// Store the last known scroll position to detect direction
+let lastScrollY = window.scrollY;
+
+// Define a threshold (in pixels) for when the button should first appear
+const showThreshold = 50;
+
+// The distance to scroll down before the button is hidden
+const hideDelta = 50; 
+
+// Function to handle the scroll event
+function handleScroll() {
+    const currentScrollY = window.scrollY;
+    
+    // Logic to hide the button on downward scroll past the delta
+    if (currentScrollY > lastScrollY + hideDelta) {
+        backLinkWrapper.classList.remove('is-visible');
+        lastScrollY = currentScrollY; // Reset the last position to the current one
+    }
+    // Logic to show the button on upward scroll past the threshold
+    else if (currentScrollY < lastScrollY - showThreshold) {
+        backLinkWrapper.classList.add('is-visible');
+        lastScrollY = currentScrollY; // Reset the last position to the current one
+    }
+}
+
+// Add the scroll event listener to the window
+window.addEventListener('scroll', handleScroll);
+
+
+
+
+// ======================================================================
 // Main execution on DOMContentLoaded
 // ======================================================================
 document.addEventListener('DOMContentLoaded', () => {
