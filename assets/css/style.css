@@ -751,7 +751,7 @@ figcaption{
 .case-study-grid {
     display: grid;
     gap: 40px;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 3.3fr 7fr;
     margin-top: 40px;
 }
 
@@ -1014,21 +1014,22 @@ figcaption{
     right: 10px;
 }
 
-/* ====================================================================== */
-/* Image Modal */
-/* ====================================================================== */
+/* ======================================================================
+    Modal for Image Zoom
+   ====================================================================== */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 998; /* Sit on top */
-    padding-top: 50px; /* Location of the box */
+    display: none;
+    position: fixed;
+    z-index: 998;
+    padding-top: 5%;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
-    transition: opacity 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+    touch-action: none; /* Prevents default browser actions like pinch-to-zoom */
 }
 
 .modal-content {
@@ -1036,29 +1037,59 @@ figcaption{
     display: block;
     width: 80%;
     max-width: 800px;
-    height: 50%;
-    object-fit: contain;
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
 }
 
 .close-btn {
-    position: fixed;
+    position: absolute;
     top: 15px;
     right: 35px;
     color: #f1f1f1;
-    font-size: 60px;
+    font-size: 40px;
     font-weight: bold;
     transition: 0.3s;
     cursor: pointer;
-    z-index: 1000;
-    
+    z-index: 999;
 }
 
 .close-btn:hover,
 .close-btn:focus {
     color: #bbb;
     text-decoration: none;
+}
+
+/* NEW: Styles for the zoom buttons */
+.modal-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.modal-controls button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.5em;
+    padding: 15px;
+    border-radius: 50%;
     cursor: pointer;
-    padding-left: 10%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.6);;
+    backdrop-filter: blur(5px);
+}
+
+.modal-controls button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+.modal-controls button:active {
+    background-color: rgba
 }
 
 /* ==================================
@@ -1255,6 +1286,13 @@ figcaption{
         max-height: 200px;
     }
 
+    .modal{
+        padding-top: 50%;
+    }
+
+    .modal-controls{
+        bottom: 200px;
+    }
 
     .footer {
         flex-direction: column;
