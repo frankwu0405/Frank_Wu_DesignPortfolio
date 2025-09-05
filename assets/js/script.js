@@ -205,8 +205,18 @@ function handleParallax() {
     document.body.style.backgroundPositionY = -scrollPosition * 0.1 + 'px';
 }
 
-// Listen for scroll events and call the parallax function
+// Toggles the parallax effect on or off by adding/removing the scroll listener.
+function toggleParallax(enable) {
+    if (enable) {
+        window.addEventListener('scroll', handleParallax);
+    } else {
+        window.removeEventListener('scroll', handleParallax);
+    }
+}
+
+// Listen for scroll events and call the parallax function on initial load
 window.addEventListener('scroll', handleParallax);
+
 
 // ======================================================================
 // Logo Click Functionality
@@ -308,137 +318,164 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ======================================================================
-// Image Modal Functionality (Updated with Zoom and Pan)
+// Modal Image Zoom Functionality
 // ======================================================================
 
+// Get all the gallery images on the page
+const galleryImages = document.querySelectorAll('.gallery-image');
+
+// Get the modal, modal content image, close button, and new zoom buttons
 const modal = document.getElementById('imageModal');
 const modalImage = document.getElementById('modalImage');
 const closeBtn = document.querySelector('.close-btn');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
-const clickableImages = document.querySelectorAll('.clickable-image');
 
-// Zoom and pan state variables
-let currentZoom = 1;
-const zoomStep = 0.2;
-const maxZoom = 3;
-const minZoom = 0.5;
+// Variables for pan and zoom
+let scale = 1;
+let translateX = 0;
+let translateY = 0;
 let isPanning = false;
 let startPanX = 0;
 let startPanY = 0;
-let translateX = 0;
-let translateY = 0;
 
-// Function to apply the transform to the modal image
+// Function to update the transform property of the image
 function updateTransform() {
-    modalImage.style.transform = `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`;
+    modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+    modalImage.style.cursor = scale > 1 ? 'grab' : 'default';
 }
 
-// Reset the zoom and pan when the modal is closed
-function resetModal() {
-    currentZoom = 1;
-    translateX = 0;
-    translateY = 0;
-    isPanning = false;
-    updateTransform();
-}
-
-// Add a click event listener to each image
-clickableImages.forEach(image => {
-    image.addEventListener('click', () => {
-        modal.style.display = 'block';
-        modalImage.src = image.src; // Set the modal image source
-        resetModal(); // Reset transform for the new image
+// Function to open the modal
+if (galleryImages) {
+    galleryImages.forEach(image => {
+        image.addEventListener('click', () => {
+            modal.style.display = 'block';
+            modalImage.src = image.src;
+            modalImage.alt = image.alt;
+            // Reset zoom and pan when a new image is opened
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            updateTransform();
+        });
     });
-});
+}
 
-// Close the modal when the close button is clicked
+// Function to close the modal
 if (closeBtn) {
     closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
-        resetModal();
     });
 }
 
-// Close the modal when the user clicks anywhere outside of the image
+// Close the modal if the user clicks outside of the image
 if (modal) {
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
             modal.style.display = 'none';
-            resetModal();
         }
     });
 }
 
-// Zoom controls
+// NEW: Zoom in and Zoom out button functionality
 if (zoomInBtn && zoomOutBtn) {
+    // Zoom In Button
     zoomInBtn.addEventListener('click', () => {
-        currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+        scale = Math.min(scale + 0.2, 5); // Max zoom level is 3
         updateTransform();
     });
 
+    // Zoom Out Button
     zoomOutBtn.addEventListener('click', () => {
-        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+        scale = Math.max(scale - 0.2, 1); // Min zoom level is 1
+        // Reset pan if scaled back to original size
+        if (scale === 1) {
+            translateX = 0;
+            translateY = 0;
+        }
         updateTransform();
     });
 }
 
-// Pan controls for the image
-if (modalImage) {
-    // Desktop: Mouse pan controls
-    // This event listener starts the drag action when the mouse button is pressed down.
-    modalImage.addEventListener('mousedown', (e) => {
-        e.preventDefault(); // Prevent accidental image drag outside of modal
-        isPanning = true;
-        startPanX = e.clientX - translateX;
-        startPanY = e.clientY - translateY;
-        modalImage.style.cursor = 'grabbing';
-    });
+// ======================================================================
+// Panning Logic (Mouse and Touch)
+// ======================================================================
 
-    // This event listener updates the image position as long as the mouse is moving
-    // AND the mouse button is held down (isPanning is true).
-    modalImage.addEventListener('mousemove', (e) => {
-        if (!isPanning) return;
-        translateX = e.clientX - startPanX;
-        translateY = e.clientY - startPanY;
-        updateTransform();
-    });
+// These functions will handle the mouse and touch events
+// They are defined here so we can add and remove them from listeners.
+let handleMouseMove = (e) => {
+    // This is the key change: prevent default browser drag behavior
+    e.preventDefault();
+    // Only pan if the flag is true
+    if (!isPanning) return;
+    const deltaX = e.clientX - lastX;
+    const deltaY = e.clientY - lastY;
+    translateX += deltaX;
+    translateY += deltaY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    updateTransform();
+};
 
-    // This event listener stops the drag action when the mouse button is released.
-    modalImage.addEventListener('mouseup', () => {
-        isPanning = false;
+let handleMouseUp = () => {
+    // Reset the panning flag and remove the listeners
+    isPanning = false;
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+    if (scale > 1) {
         modalImage.style.cursor = 'grab';
-    });
+    }
+};
 
-    // Mobile: Touch pan controls
-    // This listener starts the touch drag on the image.
+let handleTouchMove = (e) => {
+    // Prevent default touch behavior
+    e.preventDefault();
+    // Only pan if isPanning is true and there's one touch
+    if (!isPanning || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - lastX;
+    const deltaY = e.touches[0].clientY - lastY;
+    translateX += deltaX;
+    translateY += deltaY;
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
+    updateTransform();
+};
+
+let handleTouchEnd = () => {
+    isPanning = false;
+};
+
+// Mouse pan controls for desktop
+if (modalImage) {
+    modalImage.addEventListener('mousedown', (e) => {
+        // Prevent default behavior to stop browser from initiating a native drag
+        e.preventDefault();
+        // Only allow panning if the image is zoomed in
+        if (scale > 1) {
+            isPanning = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            modalImage.style.cursor = 'grabbing';
+            // Attach the event listeners to the window to capture events even if the mouse leaves the image
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
+        }
+    });
+}
+
+// Mobile: Touch pan controls
+if (modalImage) {
     modalImage.addEventListener('touchstart', (e) => {
-        isPanning = true;
-        // e.touches[0] gives the first finger's position
-        startPanX = e.touches[0].clientX - translateX;
-        startPanY = e.touches[0].clientY - translateY;
-    });
-
-    // This listener moves the image as the user drags their finger across the screen.
-    modalImage.addEventListener('touchmove', (e) => {
-        if (!isPanning) return;
-        translateX = e.touches[0].clientX - startPanX;
-        translateY = e.touches[0].clientY - startPanY;
-        updateTransform();
-    });
-
-    // This listener stops the touch drag when the user lifts their finger.
-    modalImage.addEventListener('touchend', () => {
-        isPanning = false;
-    });
-
-
-    // New: Mouse wheel zoom for desktop
-    modalImage.addEventListener('wheel', (e) => {
-        e.preventDefault(); // Prevent page from scrolling
-        // Determine zoom direction based on scroll delta
-        const delta = e.deltaY > 0 ? -1 : 1;
-        currentZoom = Math.min(Math.max(currentZoom + delta * zoomStep, minZoom), maxZoom);
-        updateTransform();
+        // Prevent default behavior to stop browser from initiating a native touch-based drag
+        e.preventDefault();
+        // Only allow panning if the image is zoomed in and there's only one touch (not pinch)
+        if (scale > 1 && e.touches.length === 1) {
+            isPanning = true;
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+            // Attach the event listeners to the window for consistency
+            window.addEventListener('touchmove', handleTouchMove);
+            window.addEventListener('touchend', handleTouchEnd);
+        }
     });
 }
