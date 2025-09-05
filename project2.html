@@ -102,7 +102,7 @@
                 <div class="content-card persona-card">
                     <div class="card-header">
                         <span class="material-symbols-outlined icon-filled">attribution</span>
-                        <h3>Josh, 26- Local Shopper</h3>
+                        <h3>Josh, 26, Local Shopper</h3>
                     </div>
                     <div class="quote-box">
                         <i>"I almost always put my trolley back after use, but I think it should be okay to not do so some of the time since there are people that do it as their job."</i>
@@ -150,7 +150,7 @@
                         <li><b>"Not My Issue" Mindset: </b>Many shoppers feel that trolley collection is a store's responsibility, not their own.</li>
                     </div>
                     <figure>
-                        <img src="assets\images\SS_User_Journey.png" alt="User Journey Illustration" class="problem-image clickable-image">
+                        <img src="assets\images\SS_User_Journey.png" alt="User Journey Illustration" class="problem-image gallery-image">
                         <figcaption>User Journey Map</figcaption>
                     </figure>
                 </div>
@@ -171,7 +171,7 @@
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">lightbulb</span>Ideation & Wireframing</h3>  
                                 <p>Focused on creating a "moment of delight" in a mundane task. Sketched a "Wheel of Prizes" concept to act as a powerful incentive for users to engage with the system.</p>
-                                <img src="assets\images\Smart_Station_Concept_Art.png" alt="Initial concept art for Smart Station" class="concept-image clickable-image">
+                                <img src="assets\images\Smart_Station_Concept_Art.png" alt="Initial concept art for Smart Station" class="concept-image gallery-image">
                             </div>
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">task_alt</span>Usability Testing</h3>
@@ -206,19 +206,19 @@
                                 <div class="carousel-inner">
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\SS_mid_fi.png" alt="Smart Station interface design, slide 1" class="clickable-image">
+                                            <img src="assets\images\SS_mid_fi.png" alt="Smart Station interface design, slide 1" class="gallery-image">
                                             <figcaption>The home screen shows a prominent "Start" button and a playful animation.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\SS_hi-fi.png" alt="Smart Station interface design, slide 2" class="clickable-image">
+                                            <img src="assets\images\SS_hi-fi.png" alt="Smart Station interface design, slide 2" class="gallery-image">
                                             <figcaption>Users are prompted to scan their receipt to confirm their return and unlock a prize.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\SS_prize_img.png" alt="Smart Station interface design, slide 3" class="clickable-image">
+                                            <img src="assets\images\SS_prize_img.png" alt="Smart Station interface design, slide 3" class="gallery-image">
                                             <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
                                         </figure>
                                     </div>
@@ -262,6 +262,11 @@
     <!-- Modal for image zoom -->
     <div id="imageModal" class="modal">
         <span class="close-btn">&times;</span>
+        <!-- New: Zoom buttons -->
+        <div class="modal-controls">
+            <button id="zoomOutBtn" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button id="zoomInBtn" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+        </div>
         <img class="modal-content" id="modalImage">
     </div>
     
