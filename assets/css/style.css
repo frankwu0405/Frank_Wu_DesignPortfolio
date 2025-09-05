@@ -442,6 +442,11 @@ p {
     margin-bottom: 20px;
 }
 
+figcaption{
+    text-align: center;
+    font-weight: 700;
+}
+
 .concept-image {
     width: 50%;
     border-radius: 12px;
@@ -710,7 +715,15 @@ p {
     top: 120px;
     z-index: 800; /* Just below the navbar */
     max-width: 1520.8px;
+    transform: translateX(-50%);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
     margin: 0 auto;
+}
+
+.back-link-wrapper.is-visible {
+    transform: translateX(0%);
+    opacity: 1;
 }
 
 /* NEW: The back button style */
@@ -745,7 +758,7 @@ p {
 .problem-and-persona {
     grid-row: 2;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5fr 3fr;
     gap: 40px;
 }
 
