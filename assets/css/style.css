@@ -213,7 +213,7 @@ p {
 
 .nav-toggle.active .hamburger {
     transform: rotate(45deg);
-    bottom: 1em;
+    bottom: 2.1em;
 }
 
 .nav-toggle.active .hamburger::before {
