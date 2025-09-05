@@ -2,43 +2,86 @@
 // Carousel Functionality
 // ======================================================================
 
-// Select the necessary DOM elements for the carousel
-const carouselImages = document.querySelector('.carousel-images');
-const images = document.querySelectorAll('.carousel-images img');
-const prevButton = document.querySelector('.carousel-button.prev');
-const nextButton = document.querySelector('.carousel-button.next');
-let index = 0; // Initialize the current image index
+const carouselInner = document.querySelector('.carousel-inner');
+const slides = document.querySelectorAll('.carousel-slide');
+const prevBtn = document.querySelector('.prev-btn');
+const nextBtn = document.querySelector('.next-btn');
 
-// Check if carousel elements exist on the page before adding event listeners
-if (carouselImages && images.length > 0 && prevButton && nextButton) {
-    // Function to update the carousel's position based on the current index
-    function updateCarousel() {
-        // Get the width of a single image to calculate the correct transform value
-        // This makes the carousel responsive to different screen sizes
-        const imageWidth = images[0].clientWidth;
-        carouselImages.style.transform = `translateX(-${index * imageWidth}px)`;
+let currentIndex = 0;
+let startX = 0;
+let endX = 0;
+
+/**
+ * Function to update the carousel position based on the current index.
+ * It checks if slides have a width before attempting to update the position.
+ */
+function updateCarousel() {
+    // Ensure slides exist and have a valid width to prevent errors
+    if (slides.length > 0 && slides[0].offsetWidth > 0) {
+        const offset = -currentIndex * slides[0].offsetWidth;
+        carouselInner.style.transform = `translateX(${offset}px)`;
     }
-
-    // Add event listener for the "next" button
-    nextButton.addEventListener('click', () => {
-        // Increment the index and use the modulo operator to loop back to the start
-        index = (index + 1) % images.length;
-        updateCarousel();
-    });
-
-    // Add event listener for the "previous" button
-    prevButton.addEventListener('click', () => {
-        // Decrement the index and handle the loop for negative numbers
-        index = (index - 1 + images.length) % images.length;
-        updateCarousel();
-    });
-
-    // Add a window resize listener to update the carousel position if the screen size changes
-    window.addEventListener('resize', updateCarousel);
-
-    // Call updateCarousel initially to ensure the first image is displayed correctly on page load
-    window.addEventListener('load', updateCarousel);
 }
+
+// Event listener for the "Next" button
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        currentIndex++;
+        if (currentIndex >= slides.length) {
+            currentIndex = 0; // Loop back to the first slide
+        }
+        updateCarousel();
+    });
+}
+
+// Event listener for the "Previous" button
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        currentIndex--;
+        if (currentIndex < 0) {
+            currentIndex = slides.length - 1; // Loop back to the last slide
+        }
+        updateCarousel();
+    });
+}
+
+// Add touch event listeners for swiping on mobile
+if (carouselInner) {
+    carouselInner.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    carouselInner.addEventListener('touchmove', (e) => {
+        endX = e.touches[0].clientX;
+    });
+
+    carouselInner.addEventListener('touchend', () => {
+        // Calculate the difference in horizontal position
+        const diff = startX - endX;
+
+        // If the swipe is significant enough, change the slide
+        if (diff > 50) {
+            // Swipe left (next slide)
+            currentIndex++;
+            if (currentIndex >= slides.length) {
+                currentIndex = 0;
+            }
+        } else if (diff < -50) {
+            // Swipe right (previous slide)
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = slides.length - 1;
+            }
+        }
+        updateCarousel();
+    });
+}
+
+// Ensure the initial carousel position is set after all images and resources
+// have loaded to get the correct slide widths.
+window.addEventListener('load', () => {
+    updateCarousel();
+});
 
 
 // ======================================================================
