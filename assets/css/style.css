@@ -1014,6 +1014,53 @@ figcaption{
     right: 10px;
 }
 
+/* ====================================================================== */
+/* Image Modal */
+/* ====================================================================== */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 998; /* Sit on top */
+    padding-top: 50px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 800px;
+    height: 50%;
+    object-fit: contain;
+}
+
+.close-btn {
+    position: fixed;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 60px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 1000;
+    
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    padding-left: 10%;
+}
+
 /* ==================================
     Responsive Adjustments for Mobile
     ================================== */
