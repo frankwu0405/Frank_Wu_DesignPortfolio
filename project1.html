@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project 1 | Case Study</title>
-
+    <title>Smart Station | Case Study</title>
     <!-- Google Fonts for Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +14,7 @@
     <!-- Linking the external stylesheet for better organization and reusability -->
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/js/script.js" defer></script>
+
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
 </head>
 
@@ -37,7 +37,7 @@
         </div>
     </header>
 
-    <main>
+    <main style="flex-grow: 1;">
         <div class="section-bg-overlay"></div>
         <div class="back-link-wrapper">
             <a href="projects.html" class="back-link btn.secondary">← Back to Projects</a>
@@ -47,73 +47,58 @@
             <div class="project-hero-grid">
                 <!-- Main Project Image -->
                 <div class="project-hero-image">
-                    <video controls playsinline class="project-video">
-                        <source src="assets\images\Video Prototype DECO3200_1.mp4" type="video/mp4">
+                    <video controls playsinline class="project-video" poster="assets/images/SS_Preview.png">
+                        <source src="assets/images/DECO2014_A4_Video_Prototype.mp4" type="video/mp4">
                     </video>
                 </div>
                 <!-- Project Hero Content -->
                 <div class="project-hero-content">
-                    <h1>Interactive Learning Tools for Remote Students</h1>
+                    <h1>Smart Station – Interactive Trolley Return System</h1>
                     <div class="project-details">
                         <div class="detail-item">
                             <i class="fas fa-user-circle"></i>
                             <div>
                                 <span class="detail-label">Role:</span>
-                                <span class="detail-value">Lead UX/UI Designer</span>
+                                <span class="detail-value">Lead UI/UX Designer</span>
                             </div>
                         </div>
                         <div class="detail-item">
                             <i class="far fa-calendar-alt"></i>
                             <div>
                                 <span class="detail-label">Duration:</span>
-                                <span class="detail-value">6 Weeks</span>
+                                <span class="detail-value">13 Weeks</span>
                             </div>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-trophy"></i>
                             <div>
-                                <span class="detail-label">Key Achievement:</span>
-                                <span class="detail-value">Increased student engagement by 40% in pilot testing.</span>
+                                <span class="detail-label">Key Design Goal:</span>
+                                <span class="detail-value">Design a viable solution that increases trolley returns by improving the user experience.</span>
                             </div>
                         </div>
                     </div>
-                    <a href="assets\images\DECO3200_A3_Team_Four.pdf" target="_blank" class="project-download btn secondary">View the Full Report</a>
+                    <a href="assets\images\DECO2014_A4 Appendix.pdf" target="_blank" class="project-download btn secondary">View the Full Report</a>
                 </div>
             </div>
         </section>
 
         <!-- Main Case Study Content with a linear flow -->
         <section class="case-study-content">
-                <div class="problem-and-persona">
-                    <div class="content-card problem-card">
-                        <div class="card-header">
-                            <span class="material-symbols-outlined icon-filled">quiz</span>
-                            <h2>The Problem</h2>
-                        </div>
-                        <p>
-                            Students in remote and rural areas often lack access to the same quality of STEM educational resources as their
-                            urban counterparts. This educational gap is compounded by a lack of engaging, interactive digital tools that can
-                            function in low-connectivity environments.
-                        </p>
+            <div class="problem-and-role">
+                <div class="content-card problem-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">quiz</span>
+                        <h2>The Problem</h2>
                     </div>
-                    <!-- Persona Card -->
-                    <div class="content-card persona-card">
-                        <div class="card-header">
-                            <span class="material-symbols-outlined icon-filled">attribution</span>
-                            <h3>Maria, 8th Grade Student</h3>
-                        </div>
-                        <p class="quote">
-                            <i>"I am curious about science but find it difficult to stay focused during my online lessons at home."</i>
-                        </p>
-                        <div class="persona-details">
-                            <p><span class="label">Needs:</span> Interactive content</p>
-                            <p><span class="label">Goals:</span> Visual explanations</p>
-                            <p><span class="label">Motivations:</span> Can learn at home</p>
-                            <p><span class="label">Frustrations:</span> Lack of engaging study materials</p>
-                        </div>
-                    </div>
+                <p>
+                    Observed shopper behavior in 3 different supermarket parking lots. Found that only 2 out of 10 shoppers returned their trolleys to the designated bay if it was more than 50 feet away.
+                </p>
+                <div class="quote-box">
+                    <p><i>"I'd return it if I knew where it went and if it wasn't so far away. I just want to get home."</i></p>
                 </div>
-            <div class="case-study-grid">
+                    
+                </div>
+
                 <!-- My Role & The Team -->
                 <div class="content-card role-card">
                     <div class="card-header">
@@ -124,27 +109,111 @@
                     <div class="role-list-grid">
                         <ul class="role-list">
                             <li>User Research</li>
-                            <li>UI Design</li>
-                        </ul>
-                        <ul class="role-list">
-                            <li>Wireframing & Prototyping</li>
+                            <li>User Journey Mapping</li>
+                            <li>UI & Animation Design</li>
+                            <li>Interaction Prototyping</li>
                             <li>Usability Testing</li>
                         </ul>
                     </div>
-                    <p>I collaborated with a team of 3 Developers, 1 Project Manager.</p>
                 </div>
-
+            </div>
+            <div class="case-study-grid">
+                <!-- Persona Card -->
+                <div class="content-card persona-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">attribution</span>
+                        <h3>Persona: Josh, 26, Local Shopper</h3>
+                    </div>
+                    <div class="quote-box">
+                        <i>"I almost always put my trolley back after use, but I think it should be okay to not do so some of the time since there are people that do it as their job."</i>
+                    </div>
+                    <div class="persona-details">
+                        <div class="label goal">
+                            <h3>Goals:</h3>
+                            <p>To leave the shopping center efficiently with ease when shopping is done.</p>
+                        </div>
+                        <div class="label frust">
+                            <h3>Frustrations:</h3>
+                            <ul class="frust_list">
+                                <li>Limited, far away trolley stations</li>
+                                <li>Trolleys with bad mobility</li>
+                                <li>Reduced motivation</li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                     <figure>
+                        <img src="assets\images\SS_User_Journey.png" alt="User Journey Illustration" class="problem-image gallery-image">
+                        <figcaption>Josh: User Journey Map</figcaption>
+                    </figure>
+                </div>
+                
                 <!-- Research & Discovery -->
                 <div class="content-card research-card">
                     <div class="card-header">
                         <span class="material-symbols-outlined">document_search</span>
                         <h2>Research & Discovery</h2>
                     </div>
-                    <p>
-                        Conducted interviews with 15 remote students. Found that 80% felt their science materials were 'uninteresting' and 'hard to visualize'.
-                    </p>
-                    <div class="quote-box">
-                        <p><i>"I wish I could actually see how the water cycle works instead of just reading about it."</i></p>
+                    <p>Through surveys, interviews, and observation, we concluded that trolley misplacement is a multi-faceted problem driven by a combination of <b>systemic flaws</b> and <b>human behavior</b>: </p>
+                    <div class="key-point-carousel-container">
+                        <!-- Carousel Cards -->
+                        <div class="key-point-card active" data-index="0">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">💡</span>
+                                    <h2 class="card-title">Poor User Experience:</h2>
+                                </div>
+                                <span class="card-number">1</span>
+                            </div>
+                            <h2 class="card-description">The trolley return process often lacks clear instructions, making it confusing.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="1">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">💰</span>
+                                    <h2 class="card-title">Lack of Incentives:</h2>
+                                </div>
+                                <span class="card-number">2</span>
+                            </div>
+                            <h2 class="card-description">There is little to no motivation for users to return trolleys, especially when they are in a hurry.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="2">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">🛒</span>
+                                    <h2 class="card-title">Bandwagon Effect:</h2>
+                                </div>
+                                <span class="card-number">3</span>
+                            </div>
+                            <h2 class="card-description">People are more likely to abandon a trolley if they see others doing the same.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="3">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">😒</span>
+                                    <h2 class="card-title">"Not My Issue" Mindset:</h2>
+                                </div>
+                                <span class="card-number">4</span>
+                            </div>
+                            <h2 class="card-description">Many shoppers feel that trolley collection is a store's responsibility, not their own.</h2>
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <div class="controls">
+                            <button id="prev-btn" class="key-point-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                            </button>
+                            <div id="dots-container" class="dots-container"></div>
+                            <button id="next-btn" class="key-point-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="research-presentation">
+                        <a href="https://drive.google.com/file/d/1_7nH9asVq1AurMqRdn6IYpq1yO-icG93/view?usp=sharing" target="_blank" class="project-download btn secondary">View Research Presentation</a>
                     </div>
                 </div>
                 
@@ -153,7 +222,7 @@
                     <span class="material-symbols-outlined">arrow_drop_down</span>
                 </div>
 
-                <!-- The Journey: From Ideation to Solution AND The Solution: High-Fidelity Designs wrapped in horizontal-cards -->
+                <!-- The Journey: From Ideation to Solution -->
                 <div class="horizontal-cards">
                     <div class="content-card journey-card">
                         <div class="card-header">
@@ -163,23 +232,42 @@
                         <div class="the-journey-grid">
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">lightbulb</span>Ideation & Wireframing</h3>  
-                                <p>Sketched multiple concepts for gamified modules, focusing on turning abstract scientific concepts into visual puzzles. Wireframes prioritized a simple, visual hierarchy for easy navigation.</p>
-                                <img src="https://placehold.co/600x400/D0D0D0/333?text=Wireframe+sketches" alt="Wireframe sketches">
+                                <p>To create a positive reinforcement system, a mid-fidelity prototype of the "Smart Station" was developed to solve the issue of misplaced trolleys. This early design included </p>
+                                <ul>
+                                    <li>A Main Display</li>
+                                    <li>User Interactive Tablet</li>
+                                    <li>A Trolley Sensing Frame</li>
+                                </ul>
+                                <figure>
+                                    <img src="assets\images\Smart_Station_Concept_Art.png" alt="Initial concept art for Smart Station" class="concept-image gallery-image">
+                                    <figcaption>Initial sketches exploring the "Smart Station" concept.</figcaption>
+                                </figure>
                             </div>
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">task_alt</span>Usability Testing</h3>
-                                <p>Ran usability tests on a clickable prototype with 5 students. They completed all tasks, but navigation anticipated but struggled to find the "Progress" page.</p>
+                                <p>User testing validated the design and revealed key insights:</p>
+                                
                                 <div class="key-finding">
-                                    <h4>Key Finding:</h4>
-                                    <p>"Users were highly engaged with the game but found the linear navigation obvious way to return their overall progress in the "My Progress" tab."</p>
+                                    <div class="key-finding_1">
+                                        <h4>🔒 User Privacy:</h4>
+                                        <p>Vouchers displayed on the main public screen raised concerns of privacy.</p>
+                                    </div>
+                                    <div class="key-finding_2">
+                                        <h4>🖼️ Aesthetics:</h4>
+                                        <p>The flickering display was visually jarring and created unnecessary cognitive load.</p>
+                                    </div>
+                                    <div class="key-finding_3">
+                                        <h4>⏩ Flow Efficiency:</h4>
+                                        <p>A minigame in the process was found to be a potential bottleneck, slowing down the user journey.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">model_training</span>Key Iteration</h3>
-                                <p>Based on testing, the navigation was redesigned to include a persistent bottom bar for easy access to a "Progress" tab.</p>
+                                <p>The tablet UI was redesigned to have a large, animated "Start Here: Scan Your Receipt" button as the very first screen.</p>
                                 <div class="the-change">
                                     <h4>The Change:</h4>
-                                    <p>A prominent progress bar and dedicated progress page was added, which increased user satisfaction scores by 25%.</p>
+                                    <p>This change eliminated all confusion during the initial step, reducing the average transaction time from 45 seconds to 15 seconds.</p>
                                 </div>
                             </div>
                         </div>
@@ -193,37 +281,38 @@
                             <span class="material-symbols-outlined">design_services</span>
                             <h2>The Solution: High-Fidelity Designs</h2>
                         </div>
-                        <p>We developed a mobile-first, gamified learning application that provides interactive STEM modules, which work offline. By transforming complex topics into engaging games, we significantly increased student engagement and knowledge retention.</p>
+                        <p>We designed “Smart Station,” an interactive system that gamifies the trolley return process. It includes a public display and a tablet interface. By offering a chance to win a prize, we motivate users, while the streamlined interface makes the process quick and easy.</p>
                         <div class="image-gallery-grid">
                             <div class="carousel-container">
                                 <div class="carousel-inner">
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+1" alt="Smart Station interface design, slide 1">
+                                            <img src="assets\images\SS_mid_fi.png" alt="Smart Station interface design, slide 1" class="gallery-image">
                                             <figcaption>The home screen shows a prominent "Start" button and a playful animation.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+2" alt="Smart Station interface design, slide 2">
+                                            <img src="assets\images\SS_hi-fi.png" alt="Smart Station interface design, slide 2" class="gallery-image">
                                             <figcaption>Users are prompted to scan their receipt to confirm their return and unlock a prize.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+3" alt="Smart Station interface design, slide 3">
+                                            <img src="assets\images\SS_prize_img.png" alt="Smart Station interface design, slide 3" class="gallery-image">
                                             <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
                                         </figure>
                                     </div>
                                 </div>
                                 <button class="carousel-nav-btn prev-btn">&#10094;</button>
                                 <button class="carousel-nav-btn next-btn">&#10095;</button>
-                            </div>    
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 
-                <!-- Technologies & Next Steps in a row -->
+                <!-- Technologies & Next Steps -->
                 <div class="content-card tech-card">
                     <div class="card-header">
                         <span class="material-symbols-outlined">build</span>
@@ -244,11 +333,23 @@
                         <span class="material-symbols-outlined">not_started</span>
                         <h2>Next Steps</h2>
                     </div>
-                    <p>Expand the module library to cover more STEM subjects and introduce a feature that learns to track student performance.</p>
+                    <p>Develop a more robust physical prototype and partner with a local supermarket for a real-world pilot study.</p>
                 </div>
+            
             </div>
         </section>
     </main>
+
+    <!-- Modal for image zoom -->
+    <div id="imageModal" class="modal">
+        <span class="close-btn">&times;</span>
+        <!-- New: Zoom buttons -->
+        <div class="modal-controls">
+            <button id="zoomOutBtn" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button id="zoomInBtn" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+        </div>
+        <img class="modal-content" id="modalImage">
+    </div>
     
     <!-- Footer -->
     <footer class="footer">
