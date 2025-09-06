@@ -33,7 +33,7 @@ function startAutoPlay() {
             currentIndex = 0; // Loop back to the first slide
         }
         updateCarousel();
-    }, 5000);
+    }, 4000);
 }
 
 // Function to stop the automatic carousel slide
@@ -479,3 +479,93 @@ if (modalImage) {
         }
     });
 }
+
+// ======================================================================
+// Key Points Carousel Functionality
+// ======================================================================
+document.addEventListener('DOMContentLoaded', () => {
+const cards = document.querySelectorAll('.key-point-card');
+const container = document.querySelector('.key-point-carousel-container'); // This was missing
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const dotsContainer = document.getElementById('dots-container');
+let currentIndex = 0;
+let autoPlayInterval;
+
+// Function to show a specific card
+function showCard(index) {
+    cards.forEach(card => card.classList.remove('active'));
+    cards[index].classList.add('active');
+    updateDots(index);
+}
+
+// Function to update the dots
+function updateDots(index) {
+    const dots = dotsContainer.querySelectorAll('.key-point-dot');
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[index].classList.add('active');
+}
+
+// Function to start the automatic carousel slide
+function startAutoPlay() {
+    // Clear any existing interval to prevent multiple timers
+    clearInterval(autoPlayInterval);
+    // Set a new interval to advance the carousel every 5 seconds
+    autoPlayInterval = setInterval(() => {
+        currentIndex++;
+        if (currentIndex >= cards.length) {
+            currentIndex = 0; // Loop back to the first slide
+        }
+        showCard(currentIndex);
+    }, 4000);
+}
+
+// Function to stop the automatic carousel slide
+function stopAutoPlay() {
+    clearInterval(autoPlayInterval);
+}
+
+
+// Create dots dynamically
+for (let i = 0; i < cards.length; i++) {
+    const dot = document.createElement('div');
+    dot.classList.add('key-point-dot');
+    dot.addEventListener('click', () => {
+        stopAutoPlay();
+        currentIndex = i;
+        showCard(currentIndex);
+        setTimeout(startAutoPlay, 5000); // Resume autoplay after a delay
+    });
+    dotsContainer.appendChild(dot);
+}
+
+// Add event listeners for navigation buttons
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : cards.length - 1;
+        showCard(currentIndex);
+        setTimeout(startAutoPlay, 5000); // Resume autoplay after a delay
+    });
+}
+
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        currentIndex = (currentIndex < cards.length - 1) ? currentIndex + 1 : 0;
+        showCard(currentIndex);
+        setTimeout(startAutoPlay, 5000); // Resume autoplay after a delay
+    });
+}
+
+// Add event listeners for hover to pause/resume
+if (container) {
+    container.addEventListener('mouseenter', stopAutoPlay);
+    container.addEventListener('mouseleave', startAutoPlay);
+}
+
+
+// Initial state
+showCard(currentIndex);
+startAutoPlay();
+});
