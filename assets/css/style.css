@@ -636,6 +636,7 @@ figcaption{
 /* ==================================
     Individual Project Page Specific Styles
     ================================== */
+
 .project-hero {
     padding-top: 10em;
     text-align: center;
@@ -851,16 +852,41 @@ figcaption{
     margin-top: 20px;
 }
 
-.key-finding, .the-change {
+.content-card ul {
+    gap: 10px;
+    margin: 10px;
+    margin-left: 30px;
+}
+
+
+.key-finding h4, .the-change h4 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.key-finding_1,
+.key-finding_2,
+.key-finding_3 {
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     padding: 15px;
     margin-top: 20px;
 }
 
-.key-finding h4, .the-change h4 {
-    color: var(--primary-color);
-    margin-bottom: 5px;
+
+.key-finding_1 h4 {
+    color: rgba(251, 191, 36, 1);
+    font-size: 1.2em;
+}
+
+.key-finding_2 h4 {
+    color: rgba(74, 222, 128, 1);
+    font-size: 1.2em;
+}
+
+.key-finding_3 h4 {
+    color: rgba(96, 165, 250, 1);
+    font-size: 1.2em;
 }
 
 /* Specific styles for Technologies & Tools */
