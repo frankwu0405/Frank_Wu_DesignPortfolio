@@ -895,14 +895,18 @@ figcaption{
 
 .key_change_1 p {
     color: rgb(251, 190, 36, 1);
+    font-weight: 600;
 }
 
 .key_change_2 p {
     color: rgba(74, 222, 128, 1);
+    font-weight: 600;
 }
 
 .key_change_3 p {
     color: rgba(96, 165, 250, 1);   
+    font-weight: 600;
+
 }
 
 .figma_prototype {
