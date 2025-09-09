@@ -1059,14 +1059,17 @@ figcaption {
 
 .table-container table{
     width: 100%;
-    border-collapse: collapse;
+    border-collapse:separate;
     /* This is the key property for fixed column widths */
-    table-layout: fixed;
     margin: 10px;
 } 
 
 tr {
     text-align: center;
+}
+
+table .wide-column {
+    width: 45%;
 }
 
 /* S E C T I O N :   S O L U T I O N   G A L L E R Y */
