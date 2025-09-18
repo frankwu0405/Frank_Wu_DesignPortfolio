@@ -455,9 +455,6 @@ b {
     transition: transform 0.3s ease;
 }
 
-.project-image:hover {
-    transform: scale(1.02);
-}
 
 .project-content {
     flex: 1;
@@ -678,11 +675,13 @@ figcaption {
     grid-template-columns: 2fr 1fr;
     gap: 40px;
     align-items: center;
+    min-height: 480px;
 }
 
 .project-hero-image img,
 .project-hero-image video {
     width: 100%;
+    min-height: 450px;
     border-radius: 12px;
     box-shadow: var(--natural-shadow);
 }
@@ -715,6 +714,7 @@ figcaption {
     flex-direction: column;
     gap: 15px;
     box-shadow: var(--natural-shadow);
+    margin-bottom: 10px;
 }
 
 .project-download {
@@ -731,9 +731,11 @@ figcaption {
 }
 
 .detail-item i {
-    min-width: 27px;
+    min-width: 25px;
     font-size: 1.5rem;
+    text-align: center;
     color: var(--primary-color);
+    padding-top: 3px;
 }
 
 .detail-item .detail-label {
@@ -783,18 +785,19 @@ figcaption {
 }
 
 /* S E C T I O N :   C A S E   S T U D Y   C O N T E N T */
-.case-study-grid {
-    display: grid;
-    gap: 40px;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 40px;
-}
 
 .problem-and-role {
     grid-row: 2;
     display: grid;
     grid-template-columns: 5fr 3fr;
     gap: 40px;
+}
+
+.case-study-grid {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 40px;
 }
 
 .card-header {
@@ -814,13 +817,18 @@ figcaption {
     font-variation-settings: 'FILL' 1;
 }
 
+.role-list {
+    padding-top: 5px
+}
+
 .role-list-items {
-    list-style: inside;
+    list-style: outside;
     margin: 15px;
-    margin-left: -10px;
+    margin-left: -15px;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
+    padding-left: 30px;
 }
 
 .problem-vis {
@@ -832,6 +840,7 @@ figcaption {
 .problem-vis img {
     width: 100%;
     margin: 0;
+    margin-top: 10px;;
 }
 
 .content-card {
@@ -946,7 +955,7 @@ figcaption {
 .figma_prototype {
     text-align: center;
     margin: 0;
-    margin-top: -2em;
+    margin-top: -3em;
 }
 
 /* S E C T I O N :   T E C H N O L O G I E S   &   T O O L S */
@@ -1033,7 +1042,6 @@ figcaption {
     display: grid;
     gap: 3px;
     grid-template-columns: 7fr 7fr;
-    margin-top: 40px;
 }
 
 .market-content {
@@ -1049,6 +1057,11 @@ figcaption {
     font-size: 1em;
 }
 
+.market-content h2 {
+    text-align: center;
+}
+
+
 .market-content .card-header {
     margin-bottom: 10px;
 }
@@ -1061,15 +1074,37 @@ figcaption {
     width: 100%;
     border-collapse:separate;
     /* This is the key property for fixed column widths */
-    margin: 10px;
+    margin-top: 20px;
 } 
 
-tr {
+th, td {
+    padding: 0.6rem 0.2rem;
     text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    white-space: none;
+    max-width: 100px;
 }
 
-table .wide-column {
-    width: 45%;
+th {
+    background-color: rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+td {
+    font-weight: 400;
+}
+
+/* Styling for the check and cross marks */
+.check, .cross {
+    font-size: 1.25rem;
+}
+
+.check {
+    color: var(--success-color);
+}
+
+.cross {
+    color: var(--danger-color);
 }
 
 /* S E C T I O N :   S O L U T I O N   G A L L E R Y */
@@ -1096,6 +1131,7 @@ table .wide-column {
     overflow: hidden;
     width: 100%;
     border-radius: 12px;
+    margin-top: 1em;
 }
 
 .carousel-inner {
@@ -1127,7 +1163,7 @@ table .wide-column {
     border-radius: 8px;
     object-fit: cover;
     max-height: 400px;
-    max-width: 80%;
+    max-width: 100%;
 }
 
 .carousel-slide figcaption {
@@ -1158,6 +1194,16 @@ table .wide-column {
 
 .next-btn {
     right: 10px;
+}
+
+#prototype_prev_btn {
+    transform: scale(70%);
+    left: 0px;
+}
+
+#prototype_next_btn {
+    transform: scale(70%);
+    right: 0px;
 }
 
 /* ---
@@ -1242,7 +1288,7 @@ table .wide-column {
     padding: 2rem;
     position: relative;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .key-point-card {
@@ -1463,7 +1509,7 @@ table .wide-column {
     .navbar .nav-links li a:hover,
     .navbar .nav-links li a.active {
         background-color: var(--secondary-color);
-        border-radius: 0;
+        border-radius: 15px;
         box-shadow: var(--subtle-glow-shadow);
     }
 
@@ -1506,6 +1552,11 @@ table .wide-column {
     .concept-image,
     .problem-image {
         width: 100%;
+    }
+
+    .project-hero-image img,
+    .project-hero-image video {
+        min-height: min-content;
     }
 
     .project-card {
@@ -1569,8 +1620,14 @@ table .wide-column {
         font-size: 0.5em;
     }
 
+    #prototype_prev_btn,
+    #prototype_next_btn {
+        top: 45%;
+        transform: scale(100%);
+    }
+
     .carousel-slide img {
-        width: 90%;
+        width: 100%;
         max-height: 200px;
     }
 
