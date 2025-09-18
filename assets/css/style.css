@@ -1557,6 +1557,7 @@ td {
     .project-hero-image img,
     .project-hero-image video {
         min-height: min-content;
+        width: 100%;
     }
 
     .project-card {
