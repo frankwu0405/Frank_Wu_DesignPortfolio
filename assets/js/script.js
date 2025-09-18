@@ -1,119 +1,144 @@
-// ======================================================================
-// Carousel Functionality
-// ======================================================================
+class Carousel {
+    constructor(element) {
+        // Find all elements within this specific carousel instance
+        this.element = element;
+        this.carouselInner = this.element.querySelector('.carousel-inner');
+        this.slides = this.element.querySelectorAll('.carousel-slide');
+        this.prevBtn = this.element.querySelector('.prev-btn');
+        this.nextBtn = this.element.querySelector('.next-btn');
 
-const carouselInner = document.querySelector('.carousel-inner');
-const slides = document.querySelectorAll('.carousel-slide');
-const prevBtn = document.querySelector('.prev-btn');
-const nextBtn = document.querySelector('.next-btn');
+        // State variables specific to this carousel
+        this.currentIndex = 0;
+        this.startX = 0;
+        this.endX = 0;
+        this.autoPlayInterval = null;
 
-let currentIndex = 0;
-let startX = 0;
-let endX = 0;
-let autoPlayInterval;
+        // Bind methods to the class instance to maintain `this` context
+        this.updateCarousel = this.updateCarousel.bind(this);
+        this.startAutoPlay = this.startAutoPlay.bind(this);
+        this.stopAutoPlay = this.stopAutoPlay.bind(this);
+        this.handleNextClick = this.handleNextClick.bind(this);
+        this.handlePrevClick = this.handlePrevClick.bind(this);
+        this.handleTouchStart = this.handleTouchStart.bind(this);
+        this.handleTouchMove = this.handleTouchMove.bind(this);
+        this.handleTouchEnd = this.handleTouchEnd.bind(this);
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
-// Function to update the carousel position based on the current index.
-// It checks if slides have a width before attempting to update the position.
-function updateCarousel() {
-    // Ensure slides exist and have a valid width to prevent errors
-    if (slides.length > 0 && slides[0].offsetWidth > 0) {
-        const offset = -currentIndex * slides[0].offsetWidth;
-        carouselInner.style.transform = `translateX(${offset}px)`;
+        // Initialize the carousel
+        this.addEventListeners();
+        this.updateCarousel(); // Set initial position
+        this.startAutoPlay(); // Start auto-play
+    }
+
+    // Method to update the carousel position
+    updateCarousel() {
+        if (this.slides.length > 0 && this.slides[0].offsetWidth > 0) {
+            const offset = -this.currentIndex * this.slides[0].offsetWidth;
+            this.carouselInner.style.transform = `translateX(${offset}px)`;
+        }
+    }
+
+    // Method to start autoplay for this instance
+    startAutoPlay() {
+        this.stopAutoPlay();
+        this.autoPlayInterval = setInterval(() => {
+            this.currentIndex++;
+            if (this.currentIndex >= this.slides.length) {
+                this.currentIndex = 0;
+            }
+            this.updateCarousel();
+        }, 4000);
+    }
+
+    // Method to stop autoplay for this instance
+    stopAutoPlay() {
+        clearInterval(this.autoPlayInterval);
+    }
+
+    // Event handler for the next button
+    handleNextClick() {
+        this.currentIndex++;
+        if (this.currentIndex >= this.slides.length) {
+            this.currentIndex = 0;
+        }
+        this.updateCarousel();
+        this.stopAutoPlay();
+        this.startAutoPlay();
+    }
+
+    // Event handler for the previous button
+    handlePrevClick() {
+        this.currentIndex--;
+        if (this.currentIndex < 0) {
+            this.currentIndex = this.slides.length - 1;
+        }
+        this.updateCarousel();
+        this.stopAutoPlay();
+        this.startAutoPlay();
+    }
+
+    // Touch event handlers for mobile swiping
+    handleTouchStart(e) {
+        this.startX = e.touches[0].clientX;
+    }
+
+    handleTouchMove(e) {
+        this.endX = e.touches[0].clientX;
+    }
+
+    handleTouchEnd() {
+        const diff = this.startX - this.endX;
+        if (diff > 50) { // Swipe left (next slide)
+            this.currentIndex++;
+        } else if (diff < -50) { // Swipe right (previous slide)
+            this.currentIndex--;
+        }
+        if (this.currentIndex >= this.slides.length) {
+            this.currentIndex = 0;
+        }
+        if (this.currentIndex < 0) {
+            this.currentIndex = this.slides.length - 1;
+        }
+        this.updateCarousel();
+        this.stopAutoPlay();
+        this.startAutoPlay();
+    }
+
+    // Mouse event handlers for pausing on hover
+    handleMouseEnter() {
+        this.stopAutoPlay();
+    }
+
+    handleMouseLeave() {
+        this.startAutoPlay();
+    }
+
+    // Register all event listeners
+    addEventListeners() {
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', this.handleNextClick);
+        }
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', this.handlePrevClick);
+        }
+        if (this.carouselInner) {
+            this.carouselInner.addEventListener('touchstart', this.handleTouchStart);
+            this.carouselInner.addEventListener('touchmove', this.handleTouchMove);
+            this.carouselInner.addEventListener('touchend', this.handleTouchEnd);
+            this.carouselInner.addEventListener('mouseenter', this.handleMouseEnter);
+            this.carouselInner.addEventListener('mouseleave', this.handleMouseLeave);
+        }
     }
 }
 
-// Function to start the automatic carousel slide
-function startAutoPlay() {
-    // Clear any existing interval to prevent multiple timers
-    clearInterval(autoPlayInterval);
-    // Set a new interval to advance the carousel every 5 seconds
-    autoPlayInterval = setInterval(() => {
-        currentIndex++;
-        if (currentIndex >= slides.length) {
-            currentIndex = 0; // Loop back to the first slide
-        }
-        updateCarousel();
-    }, 4000);
-}
-
-// Function to stop the automatic carousel slide
-function stopAutoPlay() {
-    clearInterval(autoPlayInterval);
-}
-
-// Event listener for the "Next" button
-if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-        currentIndex++;
-        if (currentIndex >= slides.length) {
-            currentIndex = 0; // Loop back to the first slide
-        }
-        updateCarousel();
-        stopAutoPlay(); // Stop auto-play on manual navigation
-        startAutoPlay(); // Restart the auto-play timer
-    });
-}
-
-// Event listener for the "Previous" button
-if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-        currentIndex--;
-        if (currentIndex < 0) {
-            currentIndex = slides.length - 1; // Loop back to the last slide
-        }
-        updateCarousel();
-        stopAutoPlay(); // Stop auto-play on manual navigation
-        startAutoPlay(); // Restart the auto-play timer
-    });
-}
-
-// Add touch event listeners for swiping on mobile
-if (carouselInner) {
-    carouselInner.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-    });
-
-    carouselInner.addEventListener('touchmove', (e) => {
-        endX = e.touches[0].clientX;
-    });
-
-    carouselInner.addEventListener('touchend', () => {
-        // Calculate the difference in horizontal position
-        const diff = startX - endX;
-
-        // If the swipe is significant enough, change the slide
-        if (diff > 50) {
-            // Swipe left (next slide)
-            currentIndex++;
-            if (currentIndex >= slides.length) {
-                currentIndex = 0;
-            }
-        } else if (diff < -50) {
-            // Swipe right (previous slide)
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = slides.length - 1;
-            }
-        }
-        updateCarousel();
-        stopAutoPlay(); // Stop auto-play on manual navigation
-        startAutoPlay(); // Restart the auto-play timer
-    });
-}
-
-// Ensure the initial carousel position is set and auto-play starts after all images and resources
-// have loaded to get the correct slide widths.
+// Initialize all carousels on the page once the window has loaded
 window.addEventListener('load', () => {
-    updateCarousel();
-    startAutoPlay();
+    const carousels = document.querySelectorAll('.carousel-container');
+    carousels.forEach(carouselElement => {
+        new Carousel(carouselElement);
+    });
 });
-
-// Pause auto-play when the mouse is over the carousel
-if (carouselInner) {
-    carouselInner.addEventListener('mouseenter', stopAutoPlay);
-    carouselInner.addEventListener('mouseleave', startAutoPlay);
-}
-
 
 // ======================================================================
 // Mobile Menu Functionality
