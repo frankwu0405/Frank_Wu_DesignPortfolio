@@ -40,7 +40,7 @@
     <main style="flex-grow: 1;">
         <div class="section-bg-overlay"></div>
         <div class="back-link-wrapper">
-            <a href="projects.html#project1" class="back-link btn.secondary">← Back to Projects</a>
+            <a href="projects.html #project1" class="back-link btn.secondary">← Back to Projects</a>
         </div>
         <!-- Project Hero Section -->
         <section class="project-hero">
@@ -284,7 +284,10 @@
                                 <div class="key_change_3">
                                     <p>The minigame was removed and a timer was implemented to streamline the flow and prevent system abuse.</p>
                                 </div>
-                            </div>
+                            </div>                            
+                        </div>
+                        <div class="research-presentation">
+                            <a href="https://docs.google.com/presentation/d/1o6c31o8HfbTxmXp9yPAzuiB8W48gt3WXh9EARioYL4U/edit?usp=sharing" target="_blank" class="project-download btn secondary">View Iterarion Report</a>
                         </div>
                     </div>
                 <!-- Progress Arrow -->
@@ -314,20 +317,20 @@
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\SS_hi-fi.png" alt="Smart Station interface design, slide 2" class="gallery-image">
-                                            <figcaption>Users are prompted to scan their receipt to confirm their return and unlock a prize.</figcaption>
+                                            <img src="assets\images\SS_landing.png" alt="Smart Station Landing Page" class="gallery-image">
+                                            <figcaption>Main Page of the final Smart Station, featuring signaling banner and valuable info for customers.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\SS_prize_img.png" alt="Smart Station interface design, slide 3" class="gallery-image">
-                                            <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
+                                            <img src="assets\images\SS_hi-fi.png" alt="Smart Station Wheel of Prize Page" class="gallery-image">
+                                            <figcaption>Once customer has returned the trolley, the Wheel of Prize page will be triggered.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\Wow-gif.gif" class="gallery-image">
-                                            <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
+                                            <img src="assets\images\SS_prize_img.png" alt="Smart Station Prize Page" class="gallery-image">
+                                            <figcaption>The corresponding prize QR code projected on the user tablet to ensure security & privacy.</figcaption>
                                         </figure>
                                     </div>
                                 </div>
@@ -348,12 +351,32 @@
                         <span class="material-symbols-outlined">build</span>
                         <h2>Technologies & Tools</h2>
                     </div>
-                    <div class="technologies-tools-grid">
-                        <span class="tech-tag">Figma</span>
-                        <span class="tech-tag">Miro</span>
-                        <span class="tech-tag">Zoom</span>
-                        <span class="tech-tag">Adobe Premiere</span>
-                        <span class="tech-tag">Adobe Photoshop</span>                        
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-button active" data-tab="tools">Tools</button>
+                            <button class="tab-button" data-tab="methods">Methodology</button>
+                        </div>
+                        <div id="tools-content" class="tab-content active">
+                            <div class="tech-tag-grid">
+                                <span class="tech-tag">Figma</span>
+                                <span class="tech-tag">Miro</span>
+                                <span class="tech-tag">Zoom</span>
+                                <span class="tech-tag">Adobe Premiere</span>
+                                <span class="tech-tag">Adobe Photoshop</span>
+                            </div>
+                        </div>
+                        <div id="methods-content" class="tab-content">
+                            <div class="tech-tag-grid">
+                                <span class="method-tag">Affinity Diagramming</span>
+                                <span class="method-tag">Persona</span>
+                                <span class="method-tag">User Journey Map</span>
+                                <span class="method-tag">Storyboarding</span>
+                                <span class="method-tag">Crazy 8</span>
+                                <span class="method-tag">Decision Matrix</span>
+                                <span class="method-tag">Paper Prototyping</span>
+                                <span class="method-tag">Usability Testing</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -387,9 +410,8 @@
             &copy; 2025 Frank Wu. All rights reserved.
         </div>
         <div class="footer-social">
-            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.linkedin.com/public-profile/settings?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact-info%3BNb1Tau%2FkR5CHhbS%2FwwJBCw%3D%3D" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="#" aria-label="Github"><i class="fab fa-github-square"></i></a>
-            <a href="#" aria-label="Behance"><i class="fab fa-behance-square"></i></a>
         </div>
     </footer>
 </body>
