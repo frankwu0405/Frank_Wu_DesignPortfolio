@@ -17,6 +17,8 @@
     /* A dark charcoal */
     --background-light: #1e1e1e;
     /* A slightly lighter charcoal */
+    --background-lightest: #3c3c3c;
+    /* Lightest background color */
     --text-primary: #ffffff;
     /* White text */
     --text-secondary: #b0b0b0;
@@ -29,9 +31,9 @@
     --highlight-bg: #D32F2F;
     --highlight-text: #fff;
     --alert-color-bg: rgba(127, 18, 14, 0.5);
-    --alert-color-border: rgba(224, 28, 28, 0.504);
+    --alert-color: rgba(255, 158, 61, 0.75);
     --success-color-bg: rgba(14, 127, 36, 0.5);
-    --success-color-border: rgba(28, 224, 67, 0.504);
+    --success-color: rgba(28, 224, 67, 0.75);
     /* A new variable to define the fixed navbar's height for consistent spacing */
     --navbar-height: 90px;
 }
@@ -82,6 +84,10 @@ section {
 #project3 {
     padding: 0;
     scroll-margin-top: 200px;
+}
+
+#intro {
+    scroll-margin-top:-200;
 }
 
 .section-bg-overlay {
@@ -372,6 +378,25 @@ b {
     box-shadow: none;
 }
 
+.btn.tertiary {
+    background: none;
+    width: 80%;
+    text-align: center;
+    margin: 0px;
+    padding: 1px;
+    margin-right: 10%;
+    margin-left: 10%;
+    font-weight: 500;
+    border-color: none;
+    color: var(--primary-color);
+    box-shadow: none
+}
+
+.btn.tertiary:hover {
+    color: var(--text-primary);
+}
+
+
 .btn.download {
     background: rgba(0, 0, 0, 0.8);
     box-shadow: none;
@@ -649,7 +674,7 @@ figcaption {
 .services-grid .fade-in:nth-child(1),
 .services-grid .fade-in:nth-child(2),
 .services-grid .fade-in:nth-child(3) {
-    transition-delay: 1s;
+    transition-delay: 0.1s;
 }
 
 .fade-in.visible {
@@ -718,7 +743,7 @@ figcaption {
 }
 
 .project-download {
-    margin-top: 5%;
+    margin-top: 3%;
     display: inline-block;
     border-radius: 50px;
 }
@@ -883,6 +908,7 @@ figcaption {
     gap: 40px;
 }
 
+
 .journey-card h3 {
     font-size: 1.25rem;
     margin-bottom: 10px;
@@ -895,7 +921,7 @@ figcaption {
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .content-card ul {
@@ -958,11 +984,90 @@ figcaption {
     margin-top: -3em;
 }
 
+.CC_paper_eval {
+    background-color: var(--card-bg-overlay);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: var(--natural-shadow);
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.CC_paper_eval p {
+    margin-left: 5px;
+}
+
+.CC_paper_strength {
+    border-width: 2px;
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.CC_paper_limit {
+    border-width: 2px;
+    border-color: var(--alert-color);
+    color: var(--alert-color);
+}
+
+#CC_ideation {
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+
 /* S E C T I O N :   T E C H N O L O G I E S   &   T O O L S */
-.technologies-tools-grid {
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tab-buttons {
+    display: grid;
+    justify-content: center;
+    background-color: var(--background-lightest);
+    grid-template-columns: 1fr 1fr;
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+}
+
+.tab-button {
+    flex-grow: 1;
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.tab-button.active {
+    background-color: var(--background-dark);
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+    display: none;
+    padding: 0.3rem 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tech-tag-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0.75rem;
+    justify-content: left;
 }
 
 .tech-tag {
@@ -970,9 +1075,25 @@ figcaption {
     color: var(--text-primary);
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     white-space: nowrap;
 }
+
+.method-tag {
+    background-color: var(--background-lightest);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* S E C T I O N :  N E X T  S T E P */
+.next-steps-card {
+    height: fit-content;
+}
+
 
 /* S E C T I O N :   P E R S O N A   C A R D */
 .persona-header {
@@ -1094,25 +1215,13 @@ td {
     font-weight: 400;
 }
 
-/* Styling for the check and cross marks */
-.check, .cross {
-    font-size: 1.25rem;
-}
-
-.check {
-    color: var(--success-color);
-}
-
-.cross {
-    color: var(--danger-color);
-}
 
 /* S E C T I O N :   S O L U T I O N   G A L L E R Y */
 .image-gallery-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .image-gallery-grid img {
@@ -1196,6 +1305,37 @@ td {
     right: 10px;
 }
 
+#CC_mid_fi_container{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#CC_mid_fi_carousel {
+    max-width: 280px;
+    max-height: 150px;
+    width: 100%;
+    height: auto;
+    background-color: var(--card-bg-overlay);
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: none;
+}
+
+.CC_mid_fi_fix {
+    background-color: var(--card-bg-overlay);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--natural-shadow);
+    text-align: center;
+}
+
+.CC_mid_fi_fix h4{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 #prototype_prev_btn {
     transform: scale(70%);
     left: 0px;
@@ -1204,6 +1344,28 @@ td {
 #prototype_next_btn {
     transform: scale(70%);
     right: 0px;
+}
+
+#CC_mid_prev_btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-10%);
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    padding: 0px;
+    scale: 2;
+}
+
+#CC_mid_next_btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-10%);
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    padding: 0px;
+    scale: 2;
 }
 
 /* ---
@@ -1216,7 +1378,7 @@ td {
     left: 0;
     top: 0;
     width: 100%;
-    height: 120%;
+    height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.9);
     touch-action: none;
@@ -1282,7 +1444,7 @@ td {
 /* S E C T I O N :   K E Y   P O I N T S   C A R O U S E L */
 .key-point-carousel-container {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     max-width: 100%;
     border-radius: 20px;
     padding: 2rem;
@@ -1650,7 +1812,7 @@ td {
         bottom: 120px;
     }
 
-    .footer {
+        .footer {
         flex-direction: column;
         gap: 20px;
     }
