@@ -15,7 +15,7 @@
     /* A darker red */
     --background-dark: #121212;
     /* A dark charcoal */
-    --background-light: #1e1e1e;
+    --background-light: rgb(30, 30, 30);
     /* A slightly lighter charcoal */
     --background-lightest: #3c3c3c;
     /* Lightest background color */
@@ -865,7 +865,7 @@ figcaption {
 .problem-vis img {
     width: 100%;
     margin: 0;
-    margin-top: 10px;;
+    margin-top: 10px;
 }
 
 .content-card {
@@ -1346,17 +1346,7 @@ td {
     right: 0px;
 }
 
-#CC_mid_prev_btn {
-    position: absolute;
-    top: 40%;
-    transform: translateY(-10%);
-    background-color: transparent;
-    color: var(--primary-color);
-    border: none;
-    padding: 0px;
-    scale: 2;
-}
-
+#CC_mid_prev_btn,
 #CC_mid_next_btn {
     position: absolute;
     top: 40%;
@@ -1745,6 +1735,10 @@ td {
         grid-template-columns: 1fr;
     }
 
+    .problem-vis img {
+        width: 110%;
+    }
+
     .project-row,
     .project-row.project-row-reverse {
         flex-direction: column;
@@ -1788,6 +1782,17 @@ td {
     #prototype_next_btn {
         top: 45%;
         transform: scale(100%);
+    }
+
+
+    #CC_mid_next_btn {
+        scale: 4;
+        transform: translateY(20%) translateX(-25%);
+    }
+
+    #CC_mid_prev_btn {
+        scale: 4;
+        transform: translateY(20%) translateX(25%);
     }
 
     .carousel-slide img {
