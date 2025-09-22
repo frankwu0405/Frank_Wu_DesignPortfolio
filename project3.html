@@ -89,23 +89,38 @@
                         <h2>The Problem</h2>
                     </div>
                     <p>
-                        Online fashion shoppers often struggle with decision-making due to the inability to visualize how clothes will fit and look on them. This uncertainty leads to high return rates and a frustrating user experience.
+                        The shift to online fashion shopping has amplified an environmental crisis. About <b>30%  all online fashion purchases are returned</b>, creating millions of tons of waste annually due to customer dissatisfaction. This project aims to address the experiential gap between online and physical retail to reduce waste by increasing purchase satisfaction.
                     </p>
-                </div>
-                <!-- Persona Card -->
-                <div class="content-card persona-card">
-                    <div class="card-header">
-                        <span class="material-symbols-outlined icon-filled">attribution</span>
-                        <h3>Chloe, The Online Stylist</h3>
+                    <div class="problem-vis">
+                        <img src="assets\images/OS_problem_vis.png" alt="Misplaced Trolleys Issue Visualization" class="gallery-image">
                     </div>
-                    <p class="quote">
-                        <i>"A fashion-conscious shopper who buys a lot of her clothes online but is tired of the high return rate due to sizing."</i>
-                    </p>
-                    <div class="persona-details">
-                        <p><span class="label">Needs:</span> To see how clothes fit on her body type</p>
-                        <p><span class="label">Goals:</span> Easy returns are a must</p>
-                        <p><span class="label">Frustrations:</span> Inaccurate size charts</p>
-                        <p><span class="label">Frustrations:</span> Clothes looking different in person</p>
+                </div>
+
+                <!-- My Role & The Team -->
+                <div class="content-card role-card">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-filled">groups</span>
+                        <h2>My Role & The Team</h2>
+                    </div>
+                    <p>As the sole designer and researcher of the project, I was responsible for the following key areas:</p>
+                    <div class="role-list-grid">
+                        <ul class="role-list">
+                            <div class="role-list-items">
+                                <li>Primary & Secondary Research</li>
+                            </div>
+                            <div class="role-list-items">
+                                <li>Data Synthesis</li>
+                            </div>
+                            <div class="role-list-items">
+                                <li>Wireframes & Wireflows</li>
+                            </div>
+                            <div class="role-list-items">
+                                <li>UI & Interaction Design</li>
+                            </div>
+                            <div class="role-list-items">
+                                <li>Usability Testing</li>
+                            </div>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -136,11 +151,77 @@
                         <span class="material-symbols-outlined">document_search</span>
                         <h2>Research & Discovery</h2>
                     </div>
-                    <p>
-                        Analyzed 5 major fashion e-commerce apps and surveyed 50 online shoppers. A key insight was that 'fit' was the #1 concern, cited by 95% of participants.
-                    </p>
-                    <div class="quote-box">
-                        <p><i>"I've bought the same size from the same brand and had it fit completely differently. I just don't trust it anymore."</i></p>
+                    <p>Through direct engagement with stakeholders—including <b>students, teachers, and organizational leaders</b>—we found that a core issue in the rural education gap is the disconnect between academic subjects and real-world careers. This is driven by several interconnected factors:</p>
+                    <div class="key-point-carousel-container">
+                        <!-- Carousel Cards -->
+                        <div class="key-point-card active" data-index="0">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">🎲</span>
+                                    <h2 class="card-title">Online Shopping "Gamble":</h2>
+                                </div>
+                                <span class="card-number">1</span>
+                            </div>
+                            <h2 class="card-description">Users lack confidence due to the inability to physically try on items.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="1">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">ℹ️</span>
+                                    <h2 class="card-title">Inaccurate Product Info:</h2>
+                                </div>
+                                <span class="card-number">2</span>
+                            </div>
+                            <h2 class="card-description">Users distrust edited images and desire better material and sizing data.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="2">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">👕</span>
+                                    <h2 class="card-title">Wardrobe Compatibility:</h2>
+                                </div>
+                                <span class="card-number">3</span>
+                            </div>
+                            <h2 class="card-description">Items are often returned if they don't match a user's existing wardrobe.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="3">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">( &nbsp)</span>
+                                    <h2 class="card-title">Wasteful "Bracketing":</h2>
+                                </div>
+                                <span class="card-number">4</span>
+                            </div>
+                            <h2 class="card-description">Users bulk buy and return items to compensate for online uncertainty.</h2>
+                        </div>
+
+                        <div class="key-point-card" data-index="4">
+                            <div class="key-point-header">
+                                <div class="flex items-center">
+                                    <span class="card-icon">🔙</span>
+                                    <h2 class="card-title">Returns Process is a Hassle:</h2>
+                                </div>
+                                <span class="card-number">5</span>
+                            </div>
+                            <h2 class="card-description">Dissatisfied users often keep items to avoid the difficult return proces.</h2>
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <div class="controls">
+                            <button id="prev-btn" class="key-point-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                            </button>
+                            <div id="dots-container" class="dots-container"></div>
+                            <button id="next-btn" class="key-point-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="research-presentation">
+                        <a href="https://docs.google.com/document/d/1Pjvj4FYFgyAWU7BqciNyixRes6-RBM9kee2Gs2GaqUk/edit?usp=sharing" target="_blank" class="project-download btn secondary">View Research Report</a>
                     </div>
                 </div>
                 
@@ -225,7 +306,7 @@
                 <div class="content-card tech-card">
                     <div class="card-header">
                         <span class="material-symbols-outlined">build</span>
-                        <h2>Technologies & Tools</h2>
+                        <h2>Tools & Methods</h2>
                     </div>
                     <div class="tab-container">
                         <div class="tab-buttons">
@@ -270,6 +351,17 @@
             
         </section>
     </main>
+
+    <!-- Modal for image zoom -->
+    <div id="imageModal" class="modal">
+        <span class="close-btn">&times;</span>
+        <!-- New: Zoom buttons -->
+        <div class="modal-controls">
+            <button id="zoomOutBtn" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button id="zoomInBtn" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+        </div>
+        <img class="modal-content" id="modalImage">
+    </div>
     
     <!-- Footer -->
     <footer class="footer">
