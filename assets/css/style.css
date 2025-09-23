@@ -873,6 +873,67 @@ figcaption {
     display: none;
 }
 
+.tri-vis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tri-vis img {
+    width: 80%;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.tri-mobile {
+    display: none;
+}
+
+.tri-desk {
+    display: block;
+}
+
+.tri-card {
+    background-color: var(--card-bg-overlay);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: var(--natural-shadow);
+    /* Use shorthand to set all padding values in one line */
+    padding: 20px 5px 5px 30px; 
+    margin: 10px 0px 10px 10px;
+    transition: ease-in-out 0.2s;
+}
+
+.tri-content {
+    display: grid;
+    grid-template-columns: 0.5fr 10fr 1.5fr;
+    align-items: center;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.tri-content span{
+    font-size: 2em;
+    line-height: 1; 
+}
+
+.tri-list {
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.tri-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tri-link:hover .tri-card {
+    background-color: var(--background-lightest);
+    border: 3px solid var(--primary-color);
+    transition: ease-in-out 0.2s;
+}
+
 .content-card {
     background-color: var(--card-bg-overlay);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1742,6 +1803,43 @@ td {
 
     .problem-vis img {
         width: 110%;
+    }
+
+    .tri-mobile {
+        display: block;
+    }
+
+    .tri-desk {
+        display: none;
+    }
+    
+    .tri-vis img {
+        width: 100%;
+    } 
+
+    .tri-card {
+        padding: 10px 20px 10px 20px;
+        margin: 20px 0px 0px 0px;
+    }
+
+    .tri-card h3 {
+        padding: 5px;
+        padding-bottom: 10px;
+    }
+
+    .tri-content {
+        grid-template-columns: 2fr 10fr 0.1fr;
+        padding: 0px;
+        padding-left: 20 px;
+    }
+
+    .tri-content ul{
+        font-size: 0.2em;
+        text-align: center;
+    }
+    
+    .tri-arrow {
+        font-size: 1em;
     }
 
     /* Hide the desktop image */
