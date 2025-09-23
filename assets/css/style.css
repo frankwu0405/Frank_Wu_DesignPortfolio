@@ -868,6 +868,11 @@ figcaption {
     margin-top: 10px;
 }
 
+/* By default, hide the mobile image */
+.mobile-img {
+    display: none;
+}
+
 .content-card {
     background-color: var(--card-bg-overlay);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1737,6 +1742,15 @@ td {
 
     .problem-vis img {
         width: 110%;
+    }
+
+    /* Hide the desktop image */
+    .desktop-img {
+        display: none;
+    }
+    /* Show the mobile image */
+    .mobile-img {
+        display: block; /* or display: inline-block; */
     }
 
     .project-row,
