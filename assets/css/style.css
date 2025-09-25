@@ -1051,7 +1051,7 @@ figcaption {
 .figma_prototype {
     text-align: center;
     margin: 0;
-    margin-top: -3em;
+    margin-top: -2em;
 }
 
 .CC_paper_eval {
@@ -1426,6 +1426,19 @@ td {
     border: none;
     padding: 0px;
     scale: 2;
+}
+
+.OS_ideation_img {
+    display: grid;
+    align-items: start;
+    grid-template-columns: 4fr 5fr;
+    gap: 20px;
+}
+
+.OS_ideate_grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* ---
