@@ -897,7 +897,7 @@ figcaption {
     background-color: var(--card-bg-overlay);
     border: 3px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    box-shadow: var(--natural-shadow);
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.4);
     /* Use shorthand to set all padding values in one line */
     padding: 20px 5px 5px 30px; 
     margin: 10px 0px 10px 10px;
@@ -915,6 +915,10 @@ figcaption {
 .tri-content span{
     font-size: 2em;
     line-height: 1; 
+}
+
+.tri-arrow {
+    animation: point 1s infinite ease-in-out;
 }
 
 .tri-list {
@@ -1960,5 +1964,17 @@ td {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes point {
+    0%, 100% {
+        opacity: 0.8;
+        text-shadow: none;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(5px);
     }
 }
