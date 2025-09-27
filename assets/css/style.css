@@ -119,8 +119,9 @@ ul {
 }
 
 b {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     font-weight: 900;
+    font-style: italic;
 }
 
 /* ---
@@ -1051,7 +1052,7 @@ figcaption {
 .figma_prototype {
     text-align: center;
     margin: 0;
-    margin-top: -2em;
+    margin-top: -1em;
 }
 
 .CC_paper_eval {
@@ -1226,6 +1227,7 @@ figcaption {
     border-left: 3px solid var(--primary-color);
     margin-top: 20px;
     margin-bottom: 20px;
+    font-style: italic;
 }
 
 /* S E C T I O N :   M A R K E T   A N A L Y S I S */
@@ -1297,7 +1299,6 @@ td {
 .image-gallery-grid img {
     width: 100%;
     border-radius: 12px;
-    box-shadow: var(--natural-shadow);
 }
 
 /*======================================================================
@@ -1316,6 +1317,7 @@ td {
 .carousel-inner {
     display: flex;
     transition: transform 0.5s ease-in-out;
+    align-items: start;
 }
 
 .carousel-slide {
@@ -1396,7 +1398,9 @@ td {
     background-color: var(--card-bg-overlay);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 25px;
+    padding: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
     box-shadow: var(--natural-shadow);
     text-align: center;
 }
@@ -1419,14 +1423,15 @@ td {
 #CC_mid_prev_btn,
 #CC_mid_next_btn {
     position: absolute;
-    top: 40%;
+    top: 35%;
     transform: translateY(-10%);
     background-color: transparent;
     color: var(--primary-color);
     border: none;
     padding: 0px;
-    scale: 2;
+    transform: scale(1.5); /* Use transform instead of scale */
 }
+
 
 .OS_ideation_img {
     display: grid;
@@ -1440,6 +1445,145 @@ td {
     flex-direction: column;
     justify-content: space-between;
 }
+
+#OS_ideate_container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 300px; /* or another valid value */
+    text-align: center;
+}
+
+#OS_ideate_carousel {
+    width: 100%;
+    height: auto;
+    background-color: var(--card-bg-overlay);
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: none;
+    max-width: 300px;
+    /* Remove align-items: start; */
+}
+
+.OS_testing h4 {
+    padding: 20px;
+    font-size: 18px;
+    width: 100%;
+    margin: auto;
+}
+
+.OS_testing .quote-box {
+    width: 80%;
+    margin: auto;
+}
+
+#OS_prev_btn,
+#OS_next_btn {
+    position: absolute;
+    top: 50%;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    padding: 0px;
+    transform: scale(2); /* Use transform instead of scale */
+}
+
+#OS_iterate_container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 300px; /* or another valid value */
+    text-align: center;
+}
+
+#OS_iterate_carousel {
+    width: 110%;
+    height: auto;
+    background-color: var(--card-bg-overlay);
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: none;
+    max-width: 300px;
+    /* Remove align-items: start; */
+}
+
+#OS_iterate_carousel img {
+    padding: 10px;
+}
+
+
+#OS_iter_prev_btn,
+#OS_iter_next_btn {
+    position: absolute;
+    top: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--text-primary);
+    border: none;
+    padding: 0px;
+    transform: scale(2); /* Use transform instead of scale */
+}
+
+.slider-container {
+    /* Sets the visible height of the carousel */
+    height: auto; 
+    overflow-x: scroll; 
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; /* Smooth scrolling for programmatic changes, though not used here */
+    border: none;
+    border-radius: 8px;
+}
+
+.slides-wrapper {
+    /* **KEY 3: Arranges slides horizontally** */
+    display: flex;
+    /* Ensures the wrapper is wide enough to hold both slides */
+    width: fit-content; 
+    gap: 50px;
+}
+
+.slide {
+    min-width: 100%; 
+    scroll-snap-align: center; 
+    background: transparent;
+    /* Aesthetic styling for visibility */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Hiding the scrollbar for a cleaner look */
+.slider-container::-webkit-scrollbar {
+    display: none;
+}
+.slider-container {
+    -ms-overflow-style: none;
+}
+
+/* Slide specific styles */
+.slide-1 .slide-content span{
+    animation: point 2s infinite ease-in-out;
+}
+.slide-2 .slide-content span{
+    animation: pointBack 2s infinite ease-in-out;
+}
+
+.slide-content {
+    align-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.slide-content img {
+    scale: 1;
+}
+
+.slide-content span {
+    padding: 10px;
+    scale: 2;
+}
+
 
 /* ---
 /* S E C T I O N :   I M A G E   Z O O M   M O D A L */
@@ -1915,13 +2059,23 @@ td {
 
 
     #CC_mid_next_btn {
-        scale: 4;
+        scale: 3;
         transform: translateY(20%) translateX(-25%);
     }
 
     #CC_mid_prev_btn {
-        scale: 4;
+        scale: 3;
         transform: translateY(20%) translateX(25%);
+    }
+
+    #OS_next_btn {
+        scale: 3;
+        transform:  translateX(-25%);
+    }
+
+    #OS_prev_btn {
+        scale: 3;
+        transform: translateX(25%);
     }
 
     .carousel-slide img {
@@ -1991,3 +2145,16 @@ td {
         transform: translateX(5px);
     }
 }
+
+@keyframes pointBack{
+    0%, 100% {
+        opacity: 0.8;
+        text-shadow: none;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-5px);
+    }
+}
+
