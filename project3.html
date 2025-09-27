@@ -256,7 +256,7 @@
                         <div class="the-journey-grid">
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">lightbulb</span>Ideation & Wireframing</h3> 
-                                <p>Brainstormed features to address the 'fit' problem, leading to the core concept of an AI-driven app, powered by a user's customizable avatar.</p>
+                                <p>Brainstormed features to address the 'fit' problem, leading to the core concept of an AI-driven app, powered by a user's customizable virtual self.</p>
                                 
                                 <div class="OS_ideation_img">
                                     <figure class="OS_ideate_grid">
@@ -267,7 +267,7 @@
                                         <figure>
                                             <img src="assets\images\OS_wireframe_m.png" alt="Mobile Frames sketches" class="gallery-image">
                                             <img src="assets\images\OS_wireframe_d.png" alt="Desktop Frames sketches" class="gallery-image">
-                                            <figcaption>Mobile and Desktop Sketches</figcaption>
+                                            <figcaption>Mobile & Desktop Sketches</figcaption>
                                         </figure>
                                     </div>
                                 </div>
@@ -275,19 +275,68 @@
                             </div>
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">task_alt</span>Usability Testing</h3>
-                                <p>Through heuristic evaluation and Think-Aloud protocol, the insights sparked a few area of improvement:</p>
-                                <ul class="OS_usability_list">
-                                    <li>Lack of system status</li>
-                                    <li>Unclear room icon</li>
-                                    <li>Error prevention and intuitive shortcuts</li>
-                                    <div class="quote-box">
-                                        <i class="fas fa-quote-left quote-icon"></i>
-                                        <p class="quote-text">"if you cannot change the color or the size of the item of your choice in the fitting room. It’s going to take a lot of extra effort...</p>
+                                <p>Through <b>heuristic evaluation</b> and <b>Think-Aloud protocol</b>, the insights sparked a few area of improvement:</p>
+                                    <div class="carousel-container" id="OS_ideate_container">
+                                        
+                                        <div class="carousel-inner" id="OS_ideate_carousel">
+                                            <div class="carousel-slide">                                            
+                                                <div class="OS_testing">
+                                                    <h4>#1 Lack of System Status</h4>
+                                                    <div class="quote-box">
+                                                        <i class="fas fa-quote-left quote-icon"></i>
+                                                        <p class="quote-text">I had a hard time figuring out how many items I'm trying at the moment and if better the total estimated price for all of them.</p>
+                                                        <i class="fas fa-quote-right quote-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <div class="OS_testing">
+                                                    <h4>#2 Unclear Icons & Buttons</h4>
+                                                    <div class="quote-box">
+                                                        <i class="fas fa-quote-left quote-icon"></i>
+                                                        <p class="quote-text">I think you might need to have a bit more explanation on that part. Either next to the arrow or directly available from the fitting room. </p>
+                                                        <i class="fas fa-quote-right quote-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <div class="OS_testing">
+                                                    <h4>#3 Error Prevention & Intuitive Shortcuts</h4>
+                                                    <div class="quote-box">
+                                                        <i class="fas fa-quote-left quote-icon"></i>
+                                                        <p class="quote-text">Once I tried the item on in the fitting room page, I could no longer find where I could go and put the item in the bag.</p>
+                                                        <i class="fas fa-quote-right quote-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="carousel-nav-btn prev-btn" id="OS_prev_btn">&#10094;</button>
+                                        <button class="carousel-nav-btn next-btn" id="OS_next_btn">&#10095;</button>
                                     </div>
                             </div>
                             <div class="journey-card content-card">
                                 <h3><span class="material-symbols-outlined">model_training</span>Key Iteration</h3>
-                                
+                                <p>Following the testing, the iteration focused on improving status visibility, function availability, and color contrast to maximise interaction experience.</p>
+                                <div class="slider-container">
+                                    <div class="slides-wrapper">
+                                        
+                                        <!-- Slide 1 -->
+                                        <div class="slide slide-1">
+                                            <div class="slide-content">
+                                                <img src="assets\images\OS_tryon.png" alt="One Shop Iterated Try On Page" class="gallery-image">
+                                                <span class="material-symbols-outlined">arrow_right_alt</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Slide 2 -->
+                                        <div class="slide slide-2">
+                                            <div class="slide-content">
+                                                <img src="assets\images\OS_cart.png" alt="One Shop Iterated Bag Page" class="gallery-image">
+                                                <span class="material-symbols-outlined">arrow_left_alt</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -301,26 +350,32 @@
                         <span class="material-symbols-outlined">design_services</span>
                         <h2>The Solution: High-Fidelity Designs</h2>
                     </div>
-                    <p>We developed a user-centered mobile app that uses AI to allow shoppers to visualize clothing on a personalized avatar. By providing a more realistic and interactive shopping experience, we aimed to increase user confidence and reduce returns.</p>
+                    <p>Our final design, <i>One Shop</i>, is a mobile-centered fashion e-commerce application that addresses the environmental waste from high product return rates by reducing the experiential gap between online and physical shopping. Utilizing an AI-powered fitting room visualizer, shoppers can have a better grasp on product compatibility and further boost purchase confidence before they purchase. </p>
                     <div class="image-gallery-grid">
                         <div class="carousel-container">
                                 <div class="carousel-inner">
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+1" alt="Smart Station interface design, slide 1">
-                                            <figcaption>The home screen shows a prominent "Start" button and a playful animation.</figcaption>
+                                            <img src="assets\images\OS_fitting_m&d.png" alt="One Shop Desktop and Mobile Fitting Room" class="gallery-image">
+                                            <figcaption>Fitting room page for both desktop and mobile version. Hover panel layout when viewed on desktop.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="assets\images\OS_design_system.png" alt="Smart Station interface design, slide 2">
-                                            <figcaption>Users are prompted to scan their receipt to confirm their return and unlock a prize.</figcaption>
+                                            <img src="assets\images\OS_design_system.png" alt="One Shop UI Design System" class="gallery-image">
+                                            <figcaption>Design system and UI elements of the final design.</figcaption>
                                         </figure>
                                     </div>
                                     <div class="carousel-slide">
                                         <figure>
-                                            <img src="https://placehold.co/300x100/D0D0D0/333?text=AI+Driven+App+gallery+image+3" alt="Smart Station interface design, slide 3">
-                                            <figcaption>The prize wheel screen, designed to create a "moment of delight" for users.</figcaption>
+                                            <img src="assets/images/OS_wireflow_m.png" alt="One Shop Mobile Wireflow" class="gallery-image">
+                                            <figcaption>Mobile wireflow and annotation of the final design.</figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <figure>
+                                            <img src="assets/images/OS_wireflow_d.png" alt="One Shop Desktop Wireflow" class="gallery-image">
+                                            <figcaption>Desktop wireflow and annotation of the final design.</figcaption>
                                         </figure>
                                     </div>
                                 </div>
@@ -358,7 +413,6 @@
                         <div id="methods-content" class="tab-content">
                             <div class="tech-tag-grid">
                                 <span class="method-tag">Affinity Diagramming</span>
-                                <span class="method-tag">Persona</span>
                                 <span class="method-tag">User Journey Map</span>
                                 <span class="method-tag">Storyboarding</span>
                                 <span class="method-tag">Crazy 8</span>
@@ -376,7 +430,7 @@
                         <span class="material-symbols-outlined">not_started</span>
                         <h2>Next Steps</h2>
                     </div>
-                    <p>Conduct a longitudinal study to measure the app's long-term impact on user behavior and purchase confidence.</p>
+                    <p>The next phase focuses on developing system functionality and validating the technical feasibility of the application's core AI systems. As the technology supporting the current design is yet to be developed for commercial use, whether or not this will be a cost-effective and prmosing solution tackling the original problem remains to be seen and tested.</p>
                 </div>
             
             </div>
