@@ -261,38 +261,37 @@ if (logo) {
 
 // Function to highlight the current page in the navigation bar
 function highlightCurrentLink() {
-    // Get the current page's URL pathname, e.g., '/projects.html'
-    let currentPath = window.location.pathname;
+  // Get the full URL path, e.g., '/projects.html' or just '/'
+    const currentPath = window.location.pathname;
 
-    // Handle the case of the root URL ('/') which should be the index page
-    if (currentPath === '/') {
-        currentPath = 'index.html';
-    } else {
-        // Extract just the filename from the path
-        currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
-    }
-
-    // Select all the navigation links
+  // Select all the navigation links
     const links = document.querySelectorAll('.nav-links a');
 
-    // Loop through each link
+  // Loop through each link
     links.forEach(link => {
-        // Remove the active class from all links first to ensure only one is active
-        link.classList.remove('active');
+    // Get the href attribute of the current link
+    const linkHref = link.getAttribute('href');
 
-        // Check if the link's href attribute matches the current page's filename
-        // The .endsWith() method is flexible for different relative path formats
-        const linkHref = link.getAttribute('href');
-        if (linkHref.endsWith(currentPath)) {
-            // If they match, add the 'active' class to this link
-            link.classList.add('active');
-        } else if (currentPath.startsWith('project') && (linkHref.endsWith('projects.html') || linkHref.endsWith('index.html#projects'))) {
-            // This new logic handles the project pages specifically.
-            // If the current URL starts with 'project' (e.g., project1.html)
-            // AND the link's href is either 'projects.html' or 'index.html#projects',
-            // it will add the active class to the Projects link.
-            link.classList.add('active');
-        }
+    // Remove the active class from all links first
+    link.classList.remove('active');
+
+    // Handle the root page ('/') and the "index.html" link.
+    if (currentPath === '/' && linkHref === 'index.html') {
+        link.classList.add('active');
+      return; // Stop here, we found the right link.
+    }
+
+    // Now, handle all other pages.
+    if (currentPath.includes(linkHref)) {
+        link.classList.add('active');
+    }
+
+    // This is the new, more robust logic for project subpages.
+    // If you are on a page like 'project-A.html' or 'project-B.html',
+    // it will highlight the 'projects.html' link in the nav bar.
+    if (currentPath.startsWith('/project') && linkHref === 'projects.html') {
+        link.classList.add('active');
+    }
     });
 }
 
