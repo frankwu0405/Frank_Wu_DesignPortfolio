@@ -261,42 +261,36 @@ if (logo) {
 
 // Function to highlight the current page in the navigation bar
 function highlightCurrentLink() {
-  // Get the current page's URL pathname, e.g., '/projects.html' or just '/'
-    const currentPath = window.location.pathname;
+  // Get the current page's URL pathname
+    let currentPath = window.location.pathname;
+
+  // Handle the case of the root URL ('/')
+    if (currentPath === '/') {
+    currentPath = 'index.html';
+    } else {
+    // Extract just the filename from the path
+    currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+    }
 
   // Select all the navigation links
     const links = document.querySelectorAll('.nav-links a');
 
   // Loop through each link
     links.forEach(link => {
-    // Remove the 'active' class from all links first to ensure only one is active
-    link.classList.remove('active');
-
     // Get the link's href attribute
     const linkHref = link.getAttribute('href');
 
-    // **FIX 1: Correctly handle the root URL and index.html link.**
-    // If the current path is the root ('/') AND the link's href is 'index.html',
-    // highlight the link. This solves the issue on first entry.
-    if (currentPath === '/' && linkHref === 'index.html') {
-        link.classList.add('active');
-      return; // Exit the forEach loop for this link.
-    }
+    // Remove the 'active' class from all links first
+    link.classList.remove('active');
 
-    // **FIX 2: Handle other pages, including project pages.**
-    // Create a normalized path to match against the link's href.
-    // The `substring` method extracts the filename from the path.
-    const normalizedPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+    // Check if the link's href matches the current page's filename
+    if (linkHref === currentPath) {
+      // If it matches, add the 'active' class to this link
+        link.classList.add('active');
+    }
     
-    // Check for a direct match between the link's href and the normalized path.
-    if (linkHref === normalizedPath) {
-        link.classList.add('active');
-    }
-
-    // **FIX 3: Ensure the "Projects" tab is highlighted for all individual project pages.**
-    // This logic checks if the current URL starts with '/project' (e.g., /project1.html)
-    // and if the link's href is exactly 'projects.html'.
-    if (currentPath.startsWith('/project') && linkHref === 'projects.html') {
+    // Additional logic for highlighting the "Projects" link on individual project pages
+    if (currentPath.startsWith('project') && linkHref === 'projects.html') {
         link.classList.add('active');
     }
     });
