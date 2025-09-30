@@ -261,38 +261,49 @@ if (logo) {
 
 // Function to highlight the current page in the navigation bar
 function highlightCurrentLink() {
-  // Get the current page's URL pathname
+    // Get the current page's URL pathname
     let currentPath = window.location.pathname;
 
-  // Handle the case of the root URL ('/')
-    if (currentPath === '/') {
-    currentPath = 'index.html';
-    } else {
-    // Extract just the filename from the path
-    currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
-    }
+    // Define the base path for your GitHub Pages project site
+    // The base path is the repository name, including the leading and trailing slash
+    const basePath = '/Frank_Wu_DesignPortfolio/';
 
-  // Select all the navigation links
-    const links = document.querySelectorAll('.nav-links a');
-
-  // Loop through each link
-    links.forEach(link => {
-    // Get the link's href attribute
-    const linkHref = link.getAttribute('href');
-
-    // Remove the 'active' class from all links first
-    link.classList.remove('active');
-
-    // Check if the link's href matches the current page's filename
-    if (linkHref === currentPath) {
-      // If it matches, add the 'active' class to this link
-        link.classList.add('active');
+    // Check if the URL starts with the base path and remove it
+    if (currentPath.startsWith(basePath)) {
+        currentPath = currentPath.substring(basePath.length);
     }
     
-    // Additional logic for highlighting the "Projects" link on individual project pages
-    if (currentPath.startsWith('project') && linkHref === 'projects.html') {
-        link.classList.add('active');
+    // Handle the case of the root URL (e.g., https://.../Frank_Wu_DesignPortfolio/)
+    // After removing the base path, the root URL becomes an empty string
+    if (currentPath === '') {
+        currentPath = 'index.html';
+    } else {
+        // For other pages, extract just the filename from the path
+        currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
     }
+
+    // Select all the navigation links
+    const links = document.querySelectorAll('.nav-links a');
+
+    // Loop through each link
+    links.forEach(link => {
+        // Get the link's href attribute
+        const linkHref = link.getAttribute('href');
+
+        // Remove the 'active' class from all links first
+        link.classList.remove('active');
+
+        // Check if the link's href matches the current page's filename
+        if (linkHref === currentPath) {
+            // If it matches, add the 'active' class to this link
+            link.classList.add('active');
+        }
+
+        // Additional logic for highlighting the "Projects" link on individual project pages
+        // This logic assumes your project pages' URLs start with 'project'
+        if (currentPath.startsWith('project') && linkHref === 'projects.html') {
+            link.classList.add('active');
+        }
     });
 }
 
