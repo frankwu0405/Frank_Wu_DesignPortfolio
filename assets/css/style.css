@@ -545,33 +545,43 @@ figcaption {
     padding-bottom: 0;
 }
 
-.about {
-    justify-content: center;
-    text-align: center;
-    min-height: calc(10vh - 80px);
-    padding: 0 40px;
-    padding-top: 10vh;
-    flex-wrap: wrap;
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
+.profile-pic {
+    filter: brightness(60%);
+    background-size: cover;
+    height: 85%;
+    width: 85%;
+    align-self: center;
+    border-radius: 100%;
+    object-fit: cover;
+    margin:auto;;
+    box-shadow: var(--natural-shadow);
 }
 
 .about-content {
-    padding: 0;
+    justify-content: center;
+    text-align: center;
+    min-height: calc(10vh - 80px);
+    padding: 40px;
+    padding-top: 10vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background-color: #00000098;;
+    border-radius: 20px 200px 20px 200px;
 }
 
+
 .about-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin-bottom: 20px;
 }
 
 .about-content .section-description {
     color: var(--text-secondary);
     margin-bottom: 25px;
+    text-align: left;
 }
+
 
 .skills-list {
     display: flex;
@@ -598,14 +608,17 @@ figcaption {
 }
 
 .cta-card {
-    background-color: rgba(183, 28, 28, 0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 30px;
-    border-radius: 12px;
+    border-radius: 20px;
     box-shadow: var(--natural-shadow);
     text-align: center;
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
     justify-content: center;
 }
 
@@ -620,7 +633,6 @@ figcaption {
 
 .cta-card .btn {
     align-self: center;
-    box-shadow: var(--subtle-glow-shadow);
 }
 
 /* ---
@@ -1906,7 +1918,7 @@ td {
     }
 
     .intro {
-        margin-top: 5em;
+        margin-top: 2em;
         margin-bottom: 0;
         min-height: calc(60vh - var(--navbar-height));
     }
@@ -1920,13 +1932,21 @@ td {
         font-size: 1.22em;
     }
 
-    .about {
-        grid-template-columns: 1fr;
-        text-align: center;
+    .about-content {
+        border-radius: 20px;
+    }
+
+    .profile-pic {
+        width: 100%
+    }
+
+    .cta-card {
+        width: 100%;
     }
 
     .about-content {
-        padding: 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .skills-list {
