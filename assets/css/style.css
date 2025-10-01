@@ -87,10 +87,6 @@ section {
     scroll-margin-top: 200px;
 }
 
-#intro {
-    scroll-margin-top:-200;
-}
-
 .section-bg-overlay {
     position: fixed;
     top: 0;
@@ -329,22 +325,6 @@ b {
     flex-wrap: wrap;
 }
 
-/* S E C T I O N :   P R O F I L E   I M A G E */
-.profile-image-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 250px;
-    max-width: 400px;
-}
-
-.profile-image {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: var(--natural-shadow);
-}
-
 /* ---
 /* S E C T I O N :   B U T T O N S */
 /* ===== BUTTONS ===== */
@@ -561,8 +541,7 @@ figcaption {
     justify-content: center;
     text-align: center;
     min-height: calc(10vh - 80px);
-    padding: 40px;
-    padding-top: 10vh;
+    padding: 50px 40px 40px 40px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
