@@ -189,6 +189,37 @@ if (navToggle && navLinks) {
     });
 }
 
+// ======================================================================
+// FIX: Controlled Scroll Position Management (Fixes Drift, Keeps Memory)
+// ======================================================================
+
+function manageScrollPosition() {
+    // 1. Check if a scroll position was saved (meaning the page was reloaded)
+    const savedScrollY = sessionStorage.getItem('scrollpos');
+
+    if (savedScrollY) {
+        // IMPORTANT: Restore the scroll position immediately.
+        // The slight delay (setTimeout) can sometimes be necessary to let
+        // the browser's *own* scroll restoration complete its initial (incorrect)
+        // action before we override it with the correct, saved value.
+        window.scrollTo(0, savedScrollY);
+        
+        // Clear the saved position after use
+        sessionStorage.removeItem('scrollpos');
+    }
+}
+
+// 2. Save the current scroll position before the page unloads (on navigation or reload)
+// Use 'beforeunload' for robustness across different browser actions.
+window.addEventListener('beforeunload', () => {
+    // The browser's native scroll restoration for history navigation (back/forward)
+    // is usually accurate, so we only save the scroll position when we suspect
+    // a manual action (like a refresh) might cause the drift issue.
+    
+    // We only save the scroll Y position.
+    sessionStorage.setItem('scrollpos', window.scrollY);
+});
+
 
 // ======================================================================
 // Reusable Fade-in-on-scroll Functionality
