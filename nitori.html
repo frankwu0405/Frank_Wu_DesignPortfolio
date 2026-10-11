@@ -68,10 +68,18 @@
             .nt-row { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
             .nt-row h3 { font-size: 1.35rem; }
         }
+        /* Same clearance the project pages leave for the fixed back button (style.css, max-width: 768px) */
+        @media (max-width: 768px) {
+            .nt-hero { margin-top: 3em; padding-top: 40px; }
+        }
+        /* Phones: logo sits beside the label line, title runs full width below */
         @media (max-width: 600px) {
-            .nt-series-head { flex-direction: column; align-items: flex-start; gap: 14px; }
-            .nt-logo { width: 56px; }
-            .nt-hero { padding-top: 36px; padding-bottom: 8px; }
+            .nt-series-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 14px; row-gap: 14px; align-items: center; }
+            .nt-series-head > div { display: contents; }
+            .nt-logo { width: 52px; grid-row: 1; grid-column: 1; }
+            .nt-kicker { grid-row: 1; grid-column: 2; line-height: 1.45; }
+            .nt-hero h1 { grid-column: 1 / -1; margin-top: 0; }
+            .nt-hero { padding-bottom: 8px; }
             .nt-list { padding-top: 0; }
         }
 
