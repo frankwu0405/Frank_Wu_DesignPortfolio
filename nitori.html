@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frank Wu | Shipped at Nitori</title>
+    <meta name="description" content="E-commerce pages Frank Wu designed and built for Nitori Taiwan's online store, six of them live on nitori-net.tw." />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <style>
+        /* Page-scoped. Same charcoal + Inter as the site, but the series
+           speaks in Nitori teal instead of the project pages' red. */
+        .nt { --series: #1FB5AB; --series-deep: #009E96; --series-weak: rgba(0, 158, 150, 0.12); }
+        .nt { max-width: 1080px; margin: 0 auto; padding: 0 24px 40px; }
+        .nt .zh { font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", 'Inter', sans-serif; letter-spacing: 0.03em; }
+        .nt b, .nt strong { font-style: normal; }
+        .nt a.inline { color: #fff; text-decoration: underline; text-decoration-color: var(--series); text-underline-offset: 4px; }
+        .nt a.inline:hover { color: var(--series); }
+
+        .nt-hero { padding: 60px 0 40px; }
+        .nt-series-head { display: flex; align-items: center; gap: 24px; margin-bottom: 8px; }
+        .nt-logo { width: clamp(72px, 10vw, 104px); height: auto; flex: none; }
+        .nt-hero h1 { margin-bottom: 0 !important; }
+        .nt-hero p { margin-top: 20px; }
+        .nt-kicker { color: var(--series); font-weight: 600; font-size: 0.95rem; }
+        .nt-hero h1 { font-size: clamp(2.6rem, 7vw, 4.5rem); line-height: 1.05; margin: 12px 0 20px; letter-spacing: -0.02em; }
+        .nt-hero p { max-width: 62ch; font-size: clamp(1.02rem, 1.6vw, 1.2rem); }
+
+        /* Mother's Day results, inside its own entry */
+        .md-stats { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--background-lightest); }
+        .md-stats b { display: block; font-size: clamp(1.05rem, 2vw, 1.35rem); color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
+        .md-stats span { font-size: 0.78rem; color: #8a8a8a; }
+        .md-stats .run b { color: var(--series); }
+        .nt-row .md-note { font-size: 0.74rem; color: #8a8a8a; margin: 8px 0 0; }
+        @media (max-width: 1000px) { .md-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .md-stats .run { grid-column: 1 / -1; } }
+        @media (max-width: 480px) { .md-stats { grid-template-columns: 1fr 1fr; } }
+
+        /* The series page glows green instead of red: same variables the site
+           uses for its red, so the nav pill, buttons and glows all follow. */
+        body.nt-page { --primary-color: #009E96; --secondary-color: #00857E; --subtle-glow-shadow: 0 0 30px rgba(0, 158, 150, 0.5); background-image: none; }
+        body.nt-page::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: url('assets/images/abstract art.png') center / cover no-repeat; filter: hue-rotate(165deg) saturate(0.9); }
+
+        /* back link: same behaviour as the project pages, in series teal */
+        .nt-back .back-link { background-color: #009E96; }
+        .nt-back .back-link:hover { background-color: #007F79; }
+
+        /* simple list: thumbnail + a few lines */
+        .nt-list { list-style: none; margin: 0; padding: 30px 0 10px; }
+        .nt-list > li { margin: 0; }
+        .nt-row { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 32px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--background-lightest); }
+        .nt-row:last-child { border-bottom: 0; }
+        .nt-thumb { display: block; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
+        .nt-thumb img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
+        a.nt-thumb:hover img { transform: scale(1.03); }
+        .nt-tag { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--series); margin-bottom: 6px; }
+        .nt-row h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); margin-bottom: 2px; }
+        .nt-row .zh-title { display: block; font-size: 0.9rem; color: #8a8a8a; margin-bottom: 10px; }
+        .nt-row p { max-width: 62ch; margin-bottom: 10px; font-weight: 400; color: var(--text-secondary); font-size: 1rem; }
+        .nt-live { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--series); padding-bottom: 2px; }
+        .nt-live:hover { color: var(--series); }
+        .nt-ended { font-size: 0.9rem; color: #8a8a8a; }
+        @media (max-width: 760px) {
+            .nt-row { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+            .nt-row h3 { font-size: 1.35rem; }
+        }
+        @media (max-width: 600px) {
+            .nt-series-head { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .nt-logo { width: 56px; }
+            .nt-hero { padding-top: 36px; padding-bottom: 8px; }
+            .nt-list { padding-top: 0; }
+        }
+
+        .nt-cta { text-align: center; padding: 70px 0 30px; }
+        .nt-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 12px; }
+        .nt-cta p { margin-bottom: 24px; }
+        .nt-cta-btns { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .nt-cta-btns .btn { justify-content: center; }
+        @media (max-width: 600px) {
+            .nt-cta { padding: 56px 0 24px; }
+            .nt-cta-btns { flex-direction: column; align-items: stretch; max-width: 320px; margin: 0 auto; }
+        }
+        .nt .nt-btn { background: var(--series-deep); box-shadow: none; }
+        .nt .nt-btn:hover { background: #007F79; }
+        .nt .nt-btn-2 { border-color: var(--series); color: var(--series); box-shadow: none; }
+        .nt .nt-btn-2:hover { background: var(--series-weak); color: var(--series); }
+        .nt :focus-visible { outline: 2px solid var(--series); outline-offset: 3px; }
+    </style>
+</head>
+<body class="nt-page">
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation menu">
+            <span class="hamburger"></span>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-bg-overlay"></div>
+        <div class="back-link-wrapper nt-back">
+            <a href="projects.html#nitori" class="back-link btn.secondary">← Back to Projects</a>
+        </div>
+        <div class="nt">
+
+            <section class="nt-hero">
+                <div class="nt-series-head">
+                    <img class="nt-logo" src="assets/images/logo_og.png" alt="NITORI 宜得利家居">
+                    <div>
+                        <div class="nt-kicker">Professional series · Nitori Taiwan · since October 2025</div>
+                        <h1>Shipped at Nitori</h1>
+                    </div>
+                </div>
+                <p>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The seventh, a Mother's Day campaign, ran for four weeks this spring.</p>
+            </section>
+
+            <ul class="nt-list">
+                <li class="nt-row">
+                    <div class="nt-thumb"><img src="https://nitorimain.blob.core.windows.net/article/document/HFA/Topic/MothersDay/TOP_m.jpg" alt="Cover image of the Mother's Day 2026 campaign page" loading="lazy"></div>
+                    <div>
+                        <span class="nt-tag">Seasonal campaign</span>
+                        <h3>Mother's Day 2026</h3>
+                        <span class="zh-title zh">溫馨5月 · 母親節暖心選品</span>
+                        <p>Instead of a price-sorted grid, I staged the products as scenes in one mother's evening, so a NT$15,000 recliner and a NT$300 mug could share one story. Almost nothing on it was discounted.</p>
+                        <div class="md-stats" aria-label="Campaign results">
+                            <div class="run"><b>4 weeks</b><span>17 Apr – 14 May 2026</span></div>
+                            <div><b>NT$787K</b><span>assisted revenue</span></div>
+                            <div><b>160</b><span>orders</span></div>
+                            <div><b>1.08%</b><span>conversion</span></div>
+                            <div><b>305K</b><span>page views</span></div>
+                        </div>
+                        <p class="md-note">GA4. Sessions that viewed the page before buying; returns excluded.</p>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Cover image of the electric sofa guide page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Product guide</span>
+                        <h3>Electric sofa guide</h3>
+                        <span class="zh-title zh">電動可躺式沙發 在家享受頂級坐感</span>
+                        <p>Rebuilt from seven series stacked in one repeated block into a guide: a viewer that reclines each sofa and shows its size, a care kit matched to the fabric, and one table comparing all seven.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Cover image of the sofa guide page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Product guide</span>
+                        <h3>Sofa guide</h3>
+                        <span class="zh-title zh">多款風格沙發 | 打造理想居家空間</span>
+                        <p>Each sofa type opens with who it's for, such as 給想盤腿放鬆的人, before the products. It ends with a side-by-side comparison and an FAQ.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Cover image of the kitchen cupboard guide page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Product guide</span>
+                        <h3>Kitchen cupboard guide</h3>
+                        <span class="zh-title zh">打造理想廚房收納 | 機能櫥櫃選購指南</span>
+                        <p>Organised by what people care about in a kitchen, like flexibility, safety or an open view, rather than by product line. A comparison and an FAQ close the page.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Cover image of the pet living page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Lifestyle guide</span>
+                        <h3>Pet living</h3>
+                        <span class="zh-title zh">養寵推薦｜毛孩用品選物</span>
+                        <p>A season switcher brings cooling or warming beds forward, and the featured group follows what's in stock. Claw-proof furniture, essentials, an FAQ and comparison tables follow.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Feature page</span>
+                        <h3>Home appliances, by task</h3>
+                        <span class="zh-title zh">【家電特集】日常家電選用升級指南</span>
+                        <p>Appliances grouped by the chore they take off your hands: cleaning, cooking, unwinding, keeping cool.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020001/article_main__comfyappliance_600x315_v1.jpg" alt="Cover image of the comfortable-home appliances page" loading="lazy"></a>
+                    <div>
+                        <span class="nt-tag">Feature page</span>
+                        <h3>Home appliances, by mood</h3>
+                        <span class="zh-title zh">【家電特集】佈置舒適居家空間</span>
+                        <p>The same range seen another way: grouped by how a room feels, through air, scent and light.</p>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+            </ul>
+
+            <section class="nt-cta">
+                <h2>Want the details behind any of these?</h2>
+                <p>I'm glad to walk you through the decisions, the trade-offs and the code.</p>
+                <div class="nt-cta-btns">
+                    <a href="mailto:frank.wu.0405@gmail.com" class="btn nt-btn">Email me</a>
+                    <a href="projects.html#university" class="btn secondary nt-btn-2">University projects</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-text">
+            &copy; 2026 Frank Wu. All rights reserved.
+        </div>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js" defer></script>
+</body>
+</html>

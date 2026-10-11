@@ -332,7 +332,7 @@ function highlightCurrentLink() {
 
         // Additional logic for highlighting the "Projects" link on individual project pages
         // This logic assumes your project pages' URLs start with 'project'
-        if (currentPath.startsWith('project') && linkHref === 'projects.html') {
+        if ((currentPath.startsWith('project') || currentPath === 'nitori.html') && linkHref === 'projects.html') {
             link.classList.add('active');
         }
     });
@@ -356,6 +356,7 @@ const hideDelta = 50;
 
 // Function to handle the scroll event
 function handleScroll() {
+    if (!backLinkWrapper) return; // pages without a back link
     const currentScrollY = window.scrollY;
     
     // Logic to hide the button on downward scroll past the delta
@@ -552,6 +553,7 @@ if (modalImage) {
 // ======================================================================
 document.addEventListener('DOMContentLoaded', () => {
 const cards = document.querySelectorAll('.key-point-card');
+if (!cards.length) return; // pages without the carousel
 const container = document.querySelector('.key-point-carousel-container'); // This was missing
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');

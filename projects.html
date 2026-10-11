@@ -14,6 +14,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <style>
+        /* Series band: same charcoal and Inter as the site, but Nitori teal
+           instead of red, a framed panel instead of an alternating row. */
+        .series-wrap { padding: 10px 40px 0; }
+        .series-band { --series: #1FB5AB; --series-deep: #009E96;
+            max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(200px, 300px) minmax(0, 1fr); gap: 40px; align-items: center;
+            padding: 32px; border: 1px solid rgba(0, 158, 150, 0.5); border-radius: 16px; background: rgba(0, 158, 150, 0.07); }
+        .series-cover { display: block; border-radius: 12px; overflow: hidden; background: #009E96; }
+        .series-cover img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; }
+        .series-label { display: inline-block; color: var(--series); font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; }
+        .series-body h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 12px; }
+        .series-body p { max-width: 60ch; margin-bottom: 20px; }
+        .series-strip { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 24px 0; padding: 0; }
+        .series-strip a { display: block; border-radius: 6px; overflow: hidden; background: #2a2a2a; }
+        .series-strip img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
+        .series-strip a:hover img { transform: scale(1.05); }
+        .series-band .series-btn { background: var(--series-deep); box-shadow: none; }
+        .series-band .series-btn:hover { background: #007F79; }
+        .series-band a:focus-visible { outline: 2px solid var(--series); outline-offset: 3px; }
+        .uni-head { max-width: 1200px; margin: 0 auto 50px; padding-top: 30px; border-top: 1px solid var(--background-lightest); scroll-margin-top: 110px; }
+        .uni-head h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 6px; }
+        #nitori { scroll-margin-top: 110px; }
+        @media (max-width: 860px) {
+            .series-wrap { padding: 10px 20px 0; }
+            .series-band { grid-template-columns: 1fr; gap: 24px; padding: 22px; }
+            .series-cover { max-width: 220px; }
+            .series-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
 </head>
 <body>
     <header class="navbar">
@@ -38,11 +67,37 @@
         <!-- Project Hero Section - Added 'fade-in' class -->
         <section class="project-hero fade-in">
             <h1>My Projects</h1>
-            <p class="description">A collection of my recent work, spanning user research, UI/UX design, and interactive experiences.</p>
+            <p class="description">Professional work, followed by my university case studies in user research, UI/UX design and interactive experiences.</p>
+        </section>
+
+        <!-- Nitori: a professional series, styled apart from the university case studies -->
+        <section class="series-wrap" id="nitori">
+            <div class="series-band fade-in">
+                <a class="series-cover" href="nitori.html" aria-label="Open the Nitori series">
+                    <img src="assets/images/logo_og.png" alt="NITORI 宜得利家居">
+                </a>
+                <div class="series-body">
+                    <span class="series-label">Professional series · 7 pages</span>
+                    <h2>Shipped at Nitori</h2>
+                    <p>E-commerce pages I designed and built for Nitori Taiwan's online store, from a Mother's Day campaign to a guide that helps shoppers choose between seven electric sofas. Six are live, so you can try them yourself.</p>
+                    <ul class="series-strip" aria-label="Pages in the series">
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Electric sofa guide" loading="lazy"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Sofa guide" loading="lazy"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Kitchen cupboard guide" loading="lazy"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Pet living guide" loading="lazy"></a></li>
+                    </ul>
+                    <a href="nitori.html" class="btn series-btn">Open the series <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
         </section>
 
         <!-- New section for alternating project rows -->
         <section id="project-list">
+            <div class="uni-head fade-in" id="university">
+                <h2>University projects</h2>
+                <p>Case studies from my Bachelor of Design Computing at the University of Sydney.</p>
+            </div>
+
             <!-- Project 1: Image Left, Text Right -->
             <section id="project1">
                 <div class="project-row fade-in">
@@ -62,7 +117,7 @@
             <section id="project2">
                 <div class="project-row project-row-reverse fade-in">
                     <a href="project2.html" class="project-image-container">
-                        <img src="assets/images/career_course_card_image.png" alt="Interactive Learning Tools" class="project-image">
+                        <img src="assets/images/career_course_card_image.png" alt="CareerCourse learning platform" class="project-image">
                     </a>
                     <div class="project-content">
                         <span class="project-tag">EdTech Online Site</span>
@@ -83,7 +138,7 @@
                     <div class="project-content">
                         <span class="project-tag">E-Commerce Mobile App</span>
                         <h3>One Shop — AI-Driven Fashion Shopping App</h3>
-                        <p>A mobile shopping app with AI integration to help users make confident purchasing decisions. The goal was to enhance the shopping experience by providing personalized recommendations and visualing purchasing garments.</p>
+                        <p>A mobile shopping app with AI integration to help users make confident purchasing decisions. The goal was to enhance the shopping experience by providing personalized recommendations and letting people visualize garments before they buy.</p>
                         <a href="project3.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 </div>
@@ -95,11 +150,11 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-text">
-            &copy; 2025 Frank Wu. All rights reserved.
+            &copy; 2026 Frank Wu. All rights reserved.
         </div>
         <div class="footer-social">
-            <a href="https://www.linkedin.com/public-profile/settings?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact-info%3BNb1Tau%2FkR5CHhbS%2FwwJBCw%3D%3D" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="#" aria-label="Github"><i class="fab fa-github-square"></i></a>
+            <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
         </div>
     </footer>
 
