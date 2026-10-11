@@ -38,9 +38,15 @@
         #nitori { scroll-margin-top: 110px; }
         @media (max-width: 860px) {
             .series-wrap { padding: 10px 20px 0; }
-            .series-band { grid-template-columns: 1fr; gap: 24px; padding: 22px; }
-            .series-cover { max-width: 220px; }
-            .series-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .series-band { grid-template-columns: 1fr; gap: 24px; padding: 22px; text-align: center; justify-items: center; }
+            .series-cover { max-width: 220px; width: 100%; margin: 0 auto; }
+            .series-body p { margin-left: auto; margin-right: auto; }
+            .series-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); text-align: left; }
+            /* centre the university section too */
+            .uni-head { text-align: center; }
+            .project-content { text-align: center; }
+            .project-content p { margin-left: auto; margin-right: auto; }
+            .project-content .btn { justify-content: center; }
         }
     </style>
 </head>
