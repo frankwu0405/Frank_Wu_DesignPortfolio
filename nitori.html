@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Frank Wu | Shipped at Nitori</title>
-    <meta name="description" content="E-commerce pages Frank Wu designed and built for Nitori Taiwan's online store, six of them live on nitori-net.tw." />
+    <title>Frank Wu | Nitori</title>
+    <meta name="description" content="E-commerce pages Frank Wu designed and built for Nitori Taiwan's online store: three seasonal campaigns and six pages live on nitori-net.tw." />
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,14 +30,14 @@
         .nt-hero h1 { font-size: clamp(2.6rem, 7vw, 4.5rem); line-height: 1.05; margin: 12px 0 20px; letter-spacing: -0.02em; }
         .nt-hero p { max-width: 62ch; font-size: clamp(1.02rem, 1.6vw, 1.2rem); }
 
-        /* Mother's Day results, inside its own entry */
-        .md-stats { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--background-lightest); }
-        .md-stats b { display: block; font-size: clamp(1.05rem, 2vw, 1.35rem); color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
-        .md-stats span { font-size: 0.78rem; color: #8a8a8a; }
-        .md-stats .run b { color: var(--series); }
-        .nt-row .md-note { font-size: 0.74rem; color: #8a8a8a; margin: 8px 0 0; }
-        @media (max-width: 1000px) { .md-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .md-stats .run { grid-column: 1 / -1; } }
-        @media (max-width: 480px) { .md-stats { grid-template-columns: 1fr 1fr; } }
+        /* Campaign results, inside each seasonal entry */
+        .nt-stats { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--background-lightest); }
+        .nt-stats b { display: block; font-size: clamp(1.05rem, 2vw, 1.35rem); color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
+        .nt-stats span { font-size: 0.78rem; color: #8a8a8a; }
+        .nt-stats .run b { color: var(--series); }
+        .nt-row .nt-note { font-size: 0.74rem; color: #8a8a8a; margin: 8px 0 0; }
+        @media (max-width: 1000px) { .nt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nt-stats .run { grid-column: 1 / -1; } }
+        @media (max-width: 480px) { .nt-stats { grid-template-columns: 1fr 1fr; } }
 
         /* The series page glows green instead of red: same variables the site
            uses for its red, so the nav pill, buttons and glows all follow. */
@@ -131,25 +131,59 @@
                         <h1>Shipped at Nitori</h1>
                     </div>
                 </div>
-                <p>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The seventh, a Mother's Day campaign, ran for four weeks this spring.</p>
+                <p>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The other three were seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn, shown here with their results.</p>
             </section>
 
             <ul class="nt-list">
                 <li class="nt-row">
-                    <div class="nt-thumb"><img src="https://nitorimain.blob.core.windows.net/article/document/HFA/Topic/MothersDay/TOP_m.jpg" alt="Cover image of the Mother's Day 2026 campaign page" loading="lazy"></div>
+                    <div class="nt-thumb"><img src="assets/images/2026_mothersday600x315_v1.jpg" alt="Cover image of the Mother's Day 2026 campaign page" loading="lazy"></div>
                     <div>
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Mother's Day 2026</h3>
                         <span class="zh-title zh">溫馨5月 · 母親節暖心選品</span>
                         <p>Instead of a price-sorted grid, I staged the products as scenes in one mother's evening, so a NT$15,000 recliner and a NT$300 mug could share one story. Almost nothing on it was discounted.</p>
-                        <div class="md-stats" aria-label="Campaign results">
+                        <div class="nt-stats" aria-label="Campaign results">
                             <div class="run"><b>4 weeks</b><span>17 Apr – 14 May 2026</span></div>
                             <div><b>NT$787K</b><span>assisted revenue</span></div>
                             <div><b>160</b><span>orders</span></div>
                             <div><b>1.08%</b><span>conversion</span></div>
                             <div><b>305K</b><span>page views</span></div>
                         </div>
-                        <p class="md-note">GA4. Sessions that viewed the page before buying; returns excluded.</p>
+                        <p class="nt-note">GA4. Sessions that viewed the page before buying; returns excluded.</p>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"></div>
+                    <div>
+                        <span class="nt-tag">Seasonal campaign</span>
+                        <h3>Father's Day 2026</h3>
+                        <span class="zh-title zh">給爸爸的專屬躺平時光 · 父親節放鬆好禮推薦</span>
+                        <p>I built the page around three times in a father's day: 19:00 home and reclining, 9:00 back at the desk, 23:00 lights out. The colours shift from daylight to night blue as you scroll, with an electric recliner at the centre. It brought in more than double Mother's Day's revenue, in 17 days instead of four weeks.</p>
+                        <div class="nt-stats" aria-label="Campaign results">
+                            <div class="run"><b>17 days</b><span>24 Jul – 9 Aug 2026</span></div>
+                            <div><b>NT$1.67M</b><span>assisted revenue</span></div>
+                            <div><b>304</b><span>orders</span></div>
+                            <div><b>1.07%</b><span>conversion</span></div>
+                            <div><b>28.4K</b><span>sessions</span></div>
+                        </div>
+                        <p class="nt-note">GA4. Sessions that viewed the page before buying.</p>
+                    </div>
+                </li>
+                <li class="nt-row">
+                    <div class="nt-thumb"><img src="assets/images/260901MidAutumn_600x315_v1.jpg" alt="Cover image of the Mid-Autumn 2026 campaign page: portioned food in sealed bags and stacked glass containers" loading="lazy"></div>
+                    <div>
+                        <span class="nt-tag">Seasonal campaign</span>
+                        <h3>Mid-Autumn BBQ 2026</h3>
+                        <span class="zh-title zh">中秋烤肉，備料更輕鬆</span>
+                        <p>The grilling takes two hours; the prep takes a day. So the page walks through the six prep steps, from portioning to clean-up, each opening with a familiar kitchen mishap and the item that fixes it. A moon in the step bar fills as you go and is full at the last step. It converted best of the three campaigns.</p>
+                        <div class="nt-stats" aria-label="Campaign results">
+                            <div class="run"><b>4 weeks</b><span>1 – 27 Sep 2026</span></div>
+                            <div><b>NT$465K</b><span>assisted revenue</span></div>
+                            <div><b>138</b><span>orders</span></div>
+                            <div><b>1.19%</b><span>conversion</span></div>
+                            <div><b>11.6K</b><span>sessions</span></div>
+                        </div>
+                        <p class="nt-note">GA4. Sessions that viewed the page before buying.</p>
                     </div>
                 </li>
                 <li class="nt-row">
