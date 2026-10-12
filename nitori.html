@@ -57,6 +57,44 @@
         .nt-thumb { display: block; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
         .nt-thumb img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
         a.nt-thumb:hover img { transform: scale(1.03); }
+
+        /* Key screens: a strip under the cover on desktop. On phones the cover
+           becomes the first frame and the screens swipe in beside it. */
+        .nt-media { min-width: 0; }
+        .nt-shots { list-style: none; display: flex; gap: 8px; margin: 10px 0 0; padding: 0 0 6px; overflow-x: auto; scroll-snap-type: x mandatory;
+            scrollbar-width: thin; scrollbar-color: rgba(0, 158, 150, 0.6) transparent; }
+        .nt-shots li { flex: 0 0 62px; margin: 0; scroll-snap-align: start; }
+        .nt-shot { display: block; width: 100%; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
+        .nt-shot img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform 0.3s ease; }
+        .nt-shot:hover img { transform: scale(1.06); }
+        .nt-count { display: none; }
+        @media (max-width: 760px) {
+            .nt-media { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+                margin: 0 -24px; padding: 0 24px; scroll-padding: 0 24px; }
+            .nt-media::-webkit-scrollbar { display: none; }
+            /* cover at 85% leaves the first screen peeking; 33.5% makes a 3:4 screen exactly as tall as the 600:315 cover */
+            .nt-media .nt-thumb { flex: 0 0 85%; position: relative; scroll-snap-align: start; }
+            .nt-media .nt-shots { display: contents; }
+            .nt-media .nt-shots li { flex: 0 0 33.5%; }
+            .nt-shot { border-radius: 10px; }
+            .nt-count { display: inline-flex; align-items: center; gap: 6px; position: absolute; right: 8px; bottom: 8px; padding: 4px 9px; border-radius: 999px;
+                background: rgba(20, 20, 20, 0.78); color: #fff; font-size: 0.75rem; font-weight: 600; }
+        }
+
+        /* Full-size viewer */
+        html:has(.nt-viewer[open]) { overflow: hidden; }
+        .nt-viewer { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 16px; border: 0; background: #121212; color: #fff; }
+        .nt-viewer[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+        .nt-viewer::backdrop { background: transparent; }
+        .nt-v-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .nt-v-img { display: block; height: min(calc(100dvh - 170px), calc((100vw - 32px) * 4 / 3), 1040px); width: auto; aspect-ratio: 3 / 4; border-radius: 12px; background: #222; touch-action: pan-y; }
+        .nt-v-cap { font-style: normal; font-weight: 400; font-size: 0.95rem; color: var(--text-secondary); max-width: 44ch; text-align: center; min-height: 1.6em; }
+        .nt-v-bar { display: flex; align-items: center; gap: 18px; }
+        .nt-v-count { font-size: 0.85rem; color: #8a8a8a; min-width: 4ch; text-align: center; font-variant-numeric: tabular-nums; }
+        .nt-viewer button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50%;
+            background: transparent; color: #fff; font-size: 1rem; cursor: pointer; }
+        .nt-viewer button:hover { border-color: var(--series); color: var(--series); }
+        .nt-v-close { position: absolute; top: 14px; right: 14px; }
         .nt-tag { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--series); margin-bottom: 6px; }
         .nt-row h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); margin-bottom: 2px; }
         .nt-row .zh-title { display: block; font-size: 0.9rem; color: #8a8a8a; margin-bottom: 10px; }
@@ -153,7 +191,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"></div>
+                    <div class="nt-media">
+                        <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 6 screens</span></div>
+                        <ul class="nt-shots" aria-label="Key screens from the Father's Day page">
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_01.webp" data-cap="The opening: three clocks, one for each time of his day, jump to their chapter."><img src="assets/images/nitori/fathersday_01_thumb.webp" alt="Opening section with three clock buttons" loading="lazy"></button></li>
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_02.webp" data-cap="19:00, off work. A pause switch opens the recliner chapter."><img src="assets/images/nitori/fathersday_02_thumb.webp" alt="The 19:00 off-work chapter opening" loading="lazy"></button></li>
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_03.webp" data-cap="2 motors or 4: one table to choose between the two recliners, with the product video below."><img src="assets/images/nitori/fathersday_03_thumb.webp" alt="Table comparing the 2-motor and 4-motor recliners" loading="lazy"></button></li>
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_04.webp" data-cap="9:00, on work. The switch flips to play and the page turns sky blue."><img src="assets/images/nitori/fathersday_04_thumb.webp" alt="The 9:00 on-work chapter opening" loading="lazy"></button></li>
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_05.webp" data-cap="23:00, recharge. The page goes night blue and the switch becomes a battery."><img src="assets/images/nitori/fathersday_05_thumb.webp" alt="The 23:00 recharge chapter opening" loading="lazy"></button></li>
+                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_06.webp" data-cap="The cooling bedding set builds up layer by layer as you scroll: pad, pillowcase, then duvet."><img src="assets/images/nitori/fathersday_06_thumb.webp" alt="Cooling bedding section with the full set on the bed" loading="lazy"></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Father's Day 2026</h3>
@@ -256,6 +304,19 @@
                     <a href="projects.html#university" class="btn secondary nt-btn-2">University projects</a>
                 </div>
             </section>
+
+            <dialog class="nt-viewer" aria-label="Key screens">
+                <button type="button" class="nt-v-close" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                <figure class="nt-v-fig">
+                    <img class="nt-v-img" alt="">
+                    <figcaption class="nt-v-cap"></figcaption>
+                </figure>
+                <div class="nt-v-bar">
+                    <button type="button" class="nt-v-prev" aria-label="Previous screen"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+                    <span class="nt-v-count" aria-live="polite"></span>
+                    <button type="button" class="nt-v-next" aria-label="Next screen"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+            </dialog>
         </div>
     </main>
 
@@ -270,5 +331,63 @@
     </footer>
 
     <script src="assets/js/script.js" defer></script>
+    <script>
+        // Key-screen viewer: opens from any .nt-shot, steps through that row's set.
+        // Arrows, arrow keys or a swipe move between screens; Esc, the close
+        // button or the phone's back gesture closes it.
+        (() => {
+            const dlg = document.querySelector('.nt-viewer');
+            if (!dlg || !dlg.showModal) return;
+            const img = dlg.querySelector('.nt-v-img');
+            const cap = dlg.querySelector('.nt-v-cap');
+            const count = dlg.querySelector('.nt-v-count');
+            let set = [], i = 0, pushed = false;
+
+            const show = (n) => {
+                i = (n + set.length) % set.length;
+                const btn = set[i];
+                img.src = btn.dataset.full;
+                img.alt = btn.querySelector('img').alt;
+                cap.textContent = btn.dataset.cap;
+                count.textContent = `${i + 1} / ${set.length}`;
+                [i + 1, i - 1].forEach((k) => { new Image().src = set[(k + set.length) % set.length].dataset.full; });
+            };
+
+            document.querySelectorAll('.nt-shots').forEach((list) => {
+                const btns = [...list.querySelectorAll('.nt-shot')];
+                btns.forEach((btn, n) => btn.addEventListener('click', () => {
+                    set = btns;
+                    show(n);
+                    dlg.showModal();
+                    history.pushState({ ntViewer: true }, '');
+                    pushed = true;
+                }));
+            });
+
+            dlg.querySelector('.nt-v-prev').addEventListener('click', () => show(i - 1));
+            dlg.querySelector('.nt-v-next').addEventListener('click', () => show(i + 1));
+            dlg.querySelector('.nt-v-close').addEventListener('click', () => dlg.close());
+            dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+            dlg.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') show(i + 1);
+                if (e.key === 'ArrowLeft') show(i - 1);
+            });
+            dlg.addEventListener('close', () => {
+                if (pushed) { pushed = false; history.back(); }
+            });
+            window.addEventListener('popstate', () => {
+                if (dlg.open) { pushed = false; dlg.close(); }
+            });
+
+            let x0 = null, y0 = 0;
+            dlg.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+            dlg.addEventListener('touchend', (e) => {
+                if (x0 === null) return;
+                const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) show(i + (dx < 0 ? 1 : -1));
+                x0 = null;
+            }, { passive: true });
+        })();
+    </script>
 </body>
 </html>
