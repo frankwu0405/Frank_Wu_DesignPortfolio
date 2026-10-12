@@ -43,29 +43,6 @@
         .series-band .series-btn { background: var(--series-deep); box-shadow: none; }
         .series-band .series-btn:hover { background: #007F79; }
         .series-band a:focus-visible { outline: 2px solid var(--series); outline-offset: 3px; }
-        /* EXPERIMENT (local): "drum" scroll. Blocks stay flat while they are in
-           the middle of the screen and tilt back slightly as they approach the
-           top or bottom edge, as if the page wraps round a cylinder. Driven by
-           CSS scroll timelines, so it runs on the compositor; browsers without
-           support, and visitors who prefer reduced motion, get the flat page.
-           Strength: --drum-tilt (try projects.html?drum=8 / 16 / 26, ?drum=0 off). */
-        :root { --drum-tilt: 16deg; }
-        @supports (animation-timeline: view()) {
-            @media (prefers-reduced-motion: no-preference) {
-                .series-wrap, #project-list > section {
-                    animation: drum linear both;
-                    animation-timeline: view();
-                    animation-range: cover 0% cover 100%;
-                    transform-origin: 50% 50%;
-                    will-change: transform, opacity;
-                }
-                @keyframes drum {
-                    0%       { transform: perspective(1200px) rotateX(calc(var(--drum-tilt) * -1)) scale(0.94); opacity: 0.5; }
-                    30%, 70% { transform: perspective(1200px) rotateX(0deg) scale(1); opacity: 1; }
-                    100%     { transform: perspective(1200px) rotateX(var(--drum-tilt)) scale(0.94); opacity: 0.5; }
-                }
-            }
-        }
         .uni-head { max-width: 1200px; margin: 0 auto 50px; padding-top: 30px; border-top: 1px solid var(--background-lightest); scroll-margin-top: 110px; }
         .uni-head h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 6px; }
         #nitori { scroll-margin-top: 110px; }
@@ -207,13 +184,6 @@
 
     <!-- This is the link to the external JavaScript file -->
     <script src="assets/js/script.js" defer></script>
-    <script>
-        // EXPERIMENT (local): ?drum=N sets the tilt in degrees for quick comparison.
-        (() => {
-            const n = new URLSearchParams(location.search).get('drum');
-            if (n !== null && !isNaN(+n)) document.documentElement.style.setProperty('--drum-tilt', `${+n}deg`);
-        })();
-    </script>
     <script>
         // Nitori strip: the nine covers are followed by a hidden copy so the
         // strip can drift forever and wrap without a seam. It is still a normal
