@@ -31,12 +31,12 @@
         .nt-hero p { max-width: 62ch; font-size: clamp(1.02rem, 1.6vw, 1.2rem); }
 
         /* Campaign results, inside each seasonal entry */
-        .nt-stats { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--background-lightest); }
+        .nt-stats { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 0; padding-top: 14px; border-top: 1px solid var(--background-lightest); }
         .nt-stats b { display: block; font-size: clamp(1.05rem, 2vw, 1.35rem); color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
         .nt-stats span { font-size: 0.78rem; color: #8a8a8a; }
         .nt-stats .run b { color: var(--series); }
         .nt-row .nt-note { font-size: 0.74rem; color: #8a8a8a; margin: 8px 0 0; }
-        @media (max-width: 1000px) { .nt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nt-stats .run { grid-column: 1 / -1; } }
+        @media (max-width: 760px) { .nt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nt-stats .run { grid-column: 1 / -1; } }
         @media (max-width: 480px) { .nt-stats { grid-template-columns: 1fr 1fr; } }
 
         /* The series page glows green instead of red: same variables the site
@@ -68,9 +68,12 @@
         .nt-shots li { margin: 0; }
         @media (min-width: 761px) {
             .nt-row:has(.nt-media) { grid-template-areas: "cover text" "shots shots"; row-gap: 28px; }
+            /* campaign results sit under the tiles, so cover and text line up like the other rows */
+            .nt-row:has(.nt-results) { grid-template-areas: "cover text" "shots shots" "results results"; }
+            .nt-results { grid-area: results; }
             .nt-media { display: contents; }
             .nt-media .nt-thumb { grid-area: cover; }
-            .nt-media ~ div { grid-area: text; }
+            .nt-media + div { grid-area: text; }
             .nt-shots { grid-area: shots; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
         }
         .nt-shot { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
@@ -213,6 +216,8 @@
                         <h3>Mother's Day 2026</h3>
                         <span class="zh-title zh">溫馨5月 · 母親節暖心選品</span>
                         <p>Instead of a price-sorted grid, I staged the products as scenes in one mother's evening, so a NT$15,000 recliner and a NT$300 mug could share one story. Almost nothing on it was discounted.</p>
+                    </div>
+                    <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
                             <div class="run"><b>4 weeks</b><span>17 Apr – 14 May 2026</span></div>
                             <div><b>NT$787K</b><span>assisted revenue</span></div>
@@ -240,6 +245,8 @@
                         <h3>Father's Day 2026</h3>
                         <span class="zh-title zh">給爸爸的專屬躺平時光 · 父親節放鬆好禮推薦</span>
                         <p>I built the page around three times in a father's day: 19:00 home and reclining, 9:00 back at the desk, 23:00 lights out. The colours shift from daylight to night blue as you scroll, with an electric recliner at the centre. It brought in more than double Mother's Day's revenue, in 17 days instead of four weeks.</p>
+                    </div>
+                    <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
                             <div class="run"><b>17 days</b><span>24 Jul – 9 Aug 2026</span></div>
                             <div><b>NT$1.67M</b><span>assisted revenue</span></div>
@@ -267,6 +274,8 @@
                         <h3>Mid-Autumn BBQ 2026</h3>
                         <span class="zh-title zh">中秋烤肉，備料更輕鬆</span>
                         <p>The grilling takes two hours; the prep takes a day. So the page walks through the six prep steps, from portioning to clean-up, each opening with a familiar kitchen mishap and the item that fixes it. A moon in the step bar fills as you go and is full at the last step. It converted best of the three campaigns.</p>
+                    </div>
+                    <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
                             <div class="run"><b>4 weeks</b><span>1 – 27 Sep 2026</span></div>
                             <div><b>NT$465K</b><span>assisted revenue</span></div>
