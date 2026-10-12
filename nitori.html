@@ -54,6 +54,17 @@
         .nt-list > li { margin: 0; }
         .nt-row { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 32px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--background-lightest); }
         .nt-row:last-child { border-bottom: 0; }
+        /* Rows are linked from the projects page strip (nitori.html#sofa etc.):
+           land below the fixed header, then a brief teal glow marks the row. */
+        .nt-row { position: relative; scroll-margin-top: 110px; }
+        .nt-row:target::before { content: ""; position: absolute; inset: 8px -16px; border-radius: 14px; pointer-events: none;
+            animation: nt-arrive 2.6s ease-out 0.4s both; }
+        @keyframes nt-arrive {
+            from { box-shadow: 0 0 0 1px var(--series), 0 0 36px rgba(0, 158, 150, 0.35); background: rgba(0, 158, 150, 0.08); }
+            to { box-shadow: 0 0 0 1px transparent, 0 0 36px transparent; background: transparent; }
+        }
+        @media (prefers-reduced-motion: reduce) { .nt-row:target::before { animation: none; } }
+        @media (max-width: 768px) { .nt-row { scroll-margin-top: 180px; } }   /* clears the fixed back button too */
         .nt-thumb { display: block; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
         .nt-thumb img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
         a.nt-thumb:hover img { transform: scale(1.03); }
@@ -199,7 +210,7 @@
             </section>
 
             <ul class="nt-list">
-                <li class="nt-row">
+                <li class="nt-row" id="mothers-day">
                     <div class="nt-media">
                         <div class="nt-thumb"><img src="assets/images/2026_mothersday600x315_v1.jpg" alt="Cover image of the Mother's Day 2026 campaign page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></div>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Mother&#x27;s Day page">
@@ -228,7 +239,7 @@
                         <p class="nt-note">GA4. Sessions that viewed the page before buying; returns excluded.</p>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="fathers-day">
                     <div class="nt-media">
                         <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></div>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Father's Day page">
@@ -257,7 +268,7 @@
                         <p class="nt-note">GA4. Sessions that viewed the page before buying.</p>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="mid-autumn">
                     <div class="nt-media">
                         <div class="nt-thumb"><img src="assets/images/260901MidAutumn_600x315_v1.jpg" alt="Cover image of the Mid-Autumn 2026 campaign page: portioned food in sealed bags and stacked glass containers" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></div>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Mid-Autumn BBQ page">
@@ -286,7 +297,7 @@
                         <p class="nt-note">GA4. Sessions that viewed the page before buying.</p>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="electric-sofa">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Cover image of the electric sofa guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Electric sofa guide page">
@@ -306,7 +317,7 @@
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="sofa">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Cover image of the sofa guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Sofa guide page">
@@ -326,7 +337,7 @@
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="cupboard">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Cover image of the kitchen cupboard guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Kitchen cupboard guide page">
@@ -346,7 +357,7 @@
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="pet-living">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Cover image of the pet living page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Pet living page">
@@ -366,7 +377,7 @@
                         <a class="nt-live" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="home-appliances">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by task page">
@@ -386,7 +397,7 @@
                         <a class="nt-live" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
-                <li class="nt-row">
+                <li class="nt-row" id="comfy-appliances">
                     <div class="nt-media">
                         <a class="nt-thumb" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020001/article_main__comfyappliance_600x315_v1.jpg" alt="Cover image of the comfortable-home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
                         <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by mood page">
