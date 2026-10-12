@@ -14,6 +14,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
 </head>
 <body>
     <!-- Navbar remains the same -->
@@ -59,7 +64,7 @@
                 </div>
                 <!-- Call-to-Action Card -->
                 <div class="cta-card fade-in">
-                    <h3>Curious to see more?</h3>
+                    <h3 data-blur>Curious to see more?</h3>
                     <p>Download my resume to get a better overview of my professional experience and skills.</p>
                     <a href="assets\images\Yen-Ting (Frank) Wu Resume.pdf" target="_blank" class="btn">
                         <i class="fa-solid fa-download"></i>

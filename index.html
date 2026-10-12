@@ -14,6 +14,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
 </head>
 <body>
     <!-- Navbar remains the same -->
@@ -41,9 +46,9 @@
             <!-- Old intro div now has the fade-in class -->
             <div class="intro fade-in">
                 <div class="intro-content">
-                    <div class="subtitle">UI/UX Designer</div>
+                    <div class="subtitle" data-blur>UI/UX Designer</div>
                     <h1>Hi, I’m <a class="name">Frank Wu.</a></h1>
-                    <p class="description">
+                    <p class="description" data-blur>
                         I design and build interfaces that make everyday decisions feel simple.
                     </p>
                     <div class="intro-buttons">
@@ -65,31 +70,31 @@
             <!-- Content Container now has the fade-in class -->
             <div class="content-container fade-in">
                 <h2>What I Do</h2>
-                <p class="section-description">I create thoughtful and intuitive digital products with empathy and a user-centered approach.</p>
+                <p class="section-description" data-blur>I create thoughtful and intuitive digital products with empathy and a user-centered approach.</p>
                 <div class="services-grid">
                     <!-- The fade-in class is now on the grid items themselves -->
                     <div class="service-card fade-in">
                         <div class="service-icon">
                             <i class="fas fa-magic"></i>
                         </div>
-                        <h3>UI/UX Design</h3>
-                        <p>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
+                        <h3 data-blur>UI/UX Design</h3>
+                        <p data-blur>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
                     </div>
 
                     <div class="service-card fade-in">
                         <div class="service-icon">
                             <i class="fas fa-drafting-compass"></i>
                         </div>
-                        <h3>Prototyping & Wireframing</h3>
-                        <p>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
+                        <h3 data-blur>Prototyping & Wireframing</h3>
+                        <p data-blur>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
                     </div>
 
                     <div class="service-card fade-in">
                         <div class="service-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <h3>User Research</h3>
-                        <p>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
+                        <h3 data-blur>User Research</h3>
+                        <p data-blur>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
                     </div>
                 </div>
             </div>
@@ -100,7 +105,7 @@
             <!-- Old contact div now has the fade-in class -->
             <div class="contact-section fade-in">
                 <h2>Get In Touch</h2>
-                <p class="contact-description">I'm always open to new opportunities and collaborations. <br>Feel free to reach out!</p>
+                <p class="contact-description" data-blur>I'm always open to new opportunities and collaborations. <br>Feel free to reach out!</p>
                 <div class="contact-info">
                     <a href="tel:+886956820832" class="contact-link">
                         <i class="fas fa-phone"></i>

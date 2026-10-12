@@ -62,6 +62,11 @@
             .project-content .btn { justify-content: center; }
         }
     </style>
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
 </head>
 <body>
     <header class="navbar">
@@ -130,7 +135,7 @@
                     </a>
                     <div class="project-content">
                         <span class="project-tag">Interaction Design</span>
-                        <h3>Smart Station — Interactive Trolley Return System</h3>
+                        <h3 data-blur>Smart Station — Interactive Trolley Return System</h3>
                         <p>A multi-sensory system to encourage trolley returns through gamification and clear user feedback. This project focused on creating a seamless and rewarding physical-digital interaction.</p>
                         <a href="project1.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
@@ -145,7 +150,7 @@
                     </a>
                     <div class="project-content">
                         <span class="project-tag">EdTech Online Site</span>
-                        <h3>CareerCourse — Interactive LMS for Remote Students</h3>
+                        <h3 data-blur>CareerCourse — Interactive LMS for Remote Students</h3>
                         <p>A digital STEM learning tool designed to engage students in rural and remote areas. The project involved research into gamification principles to create a fun and effective learning environment.</p>
                         <a href="project2.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
@@ -161,7 +166,7 @@
                     </a>
                     <div class="project-content">
                         <span class="project-tag">E-Commerce Mobile App</span>
-                        <h3>One Shop — AI-Driven Fashion Shopping App</h3>
+                        <h3 data-blur>One Shop — AI-Driven Fashion Shopping App</h3>
                         <p>A mobile shopping app with AI integration to help users make confident purchasing decisions. The goal was to enhance the shopping experience by providing personalized recommendations and letting people visualize garments before they buy.</p>
                         <a href="project3.html" class="btn secondary">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
                     </div>

@@ -16,6 +16,11 @@
     <script src="assets/js/script.js" defer></script>
 
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
 </head>
 
 <body>

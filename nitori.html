@@ -173,6 +173,11 @@
         .nt .nt-btn-2:hover { background: var(--series-weak); color: var(--series); }
         .nt :focus-visible { outline: 2px solid var(--series); outline-offset: 3px; }
     </style>
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
 </head>
 <body class="nt-page">
     <header class="navbar">
@@ -206,7 +211,7 @@
                         <h1>Shipped at Nitori</h1>
                     </div>
                 </div>
-                <p>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The other three were seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn, shown here with their results.</p>
+                <p data-blur>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The other three were seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn, shown here with their results.</p>
             </section>
 
             <ul class="nt-list">

@@ -654,3 +654,58 @@ tabButtons.forEach(button => {
         document.getElementById(`${targetTab}-content`).classList.add('active');
     });
 });
+
+// Blur reveal: headings (and anything marked data-blur) come into focus word by
+// word as they scroll into view. Plain h2s only, so case-study cards built from
+// h2.card-title / h2.card-description stay still. Long lines are paced to land
+// within about a second.
+(() => {
+    const root = document.documentElement;
+    window.__blurReady = true;
+    if (!root.classList.contains('js-blur')) return;
+    const targets = document.querySelectorAll('main h1, main h2:not([class]), [data-blur]');
+    targets.forEach((el) => {
+        // Inside a flex or grid layout, word pieces can change how the heading
+        // wraps, so those headings come into focus as one line instead.
+        const parentDisplay = getComputedStyle(el.parentElement).display;
+        if (/flex|grid/.test(parentDisplay)) { el.classList.add('bw-whole'); return; }
+        const words = [];
+        const walk = (node) => {
+            [...node.childNodes].forEach((child) => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                    const frag = document.createDocumentFragment();
+                    child.textContent.split(/(\s+)/).forEach((part) => {
+                        if (!part) return;
+                        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+                        const w = document.createElement('span');
+                        w.className = 'bw';
+                        w.textContent = part;
+                        words.push(w);
+                        frag.appendChild(w);
+                    });
+                    child.replaceWith(frag);
+                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                    walk(child);
+                }
+            });
+        };
+        walk(el);
+        const step = Math.min(55, 900 / Math.max(words.length, 1));
+        words.forEach((w, i) => w.style.setProperty('--d', `${Math.round(i * step)}ms`));
+    });
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('is-focused'); io.unobserve(e.target); }
+        });
+    }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach((el) => io.observe(el));
+    // Backup for headings inside clipped containers: reveal anything that has
+    // reached the screen once scrolling settles.
+    let t;
+    const sweep = () => targets.forEach((el) => {
+        if (!el.classList.contains('is-focused') && el.getClientRects().length && el.getBoundingClientRect().top < innerHeight) {
+            el.classList.add('is-focused'); io.unobserve(el);
+        }
+    });
+    addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(sweep, 150); }, { passive: true });
+})();
