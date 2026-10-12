@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frank Wu | UX Portfolio</title>
+    <meta name="robots" content="noindex" />
+    <!-- Link to the redesigned CSS file -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Link to Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <script>
+        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
+        // and show them anyway if script.js never runs.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+    </script>
+    <style>
+        /* PREVIEW: two sections after the intro. "Proof" pairs a browser window
+           playing real Nitori pages with rolling figures; "Explore" is a quick
+           nav that previews each project. Same charcoal, red and Inter as the
+           site; everything is scoped to .proof / .explore. */
+        .proof, .explore { max-width: 1200px; padding: 70px 40px; }
+        .proof b, .explore b { font-style: normal; }   /* the site sets b in italics */
+        .sec-head { margin-bottom: 34px; }
+        .sec-kicker { display: inline-flex; align-items: center; gap: 10px; color: var(--primary-color); font-weight: 500; font-size: 0.95rem; margin-bottom: 10px; }
+        .sec-kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-color); box-shadow: 0 0 12px rgba(211, 47, 47, 0.8); }
+        .sec-head h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); margin: 0; letter-spacing: -0.01em; }
+
+        /* Proof: window + figures */
+        .proof-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
+        .hx-window { margin: 0; border-radius: 14px; overflow: hidden; background: #0d0d0d; border: 1px solid var(--background-lightest);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 50px rgba(183, 28, 28, 0.22); align-self: center; }
+        .hx-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: #171717; border-bottom: 1px solid #262626; }
+        .hx-bar i { width: 10px; height: 10px; border-radius: 50%; background: #3a3a3a; }
+        .hx-url { margin-left: 10px; flex: 1; max-width: 340px; padding: 4px 12px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a;
+            font-size: 0.74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .hx-screen { position: relative; aspect-ratio: 16 / 10; background: #111; }
+        .hx-screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.45s ease; }
+        .hx-screen video.is-out { opacity: 0; }
+        .hx-window figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; font-size: 0.82rem; font-style: normal;
+            text-align: left; max-width: none; color: var(--text-secondary); border-top: 1px solid #262626; }
+        .hx-window figcaption b { color: #fff; font-weight: 500; margin: 0; }
+        .hx-tag { color: #8a8a8a; white-space: nowrap; }
+        .odo-side { display: flex; flex-direction: column; justify-content: center; }
+        .odo-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--background-lightest); border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.35); }
+        .odo-cell { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px 22px 24px; text-decoration: none; color: inherit; transition: background 0.3s ease; }
+        .odo-cell:nth-child(2n) { border-left: 1px solid var(--background-lightest); }
+        .odo-cell:nth-child(n + 3) { border-top: 1px solid var(--background-lightest); }
+        .odo-cell::after { content: ""; position: absolute; left: 22px; right: 22px; bottom: 0; height: 2px; background: var(--primary-color);
+            transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
+        .odo-cell:hover { background: rgba(211, 47, 47, 0.06); }
+        .odo-cell:hover::after { transform: scaleX(1); }
+        .odo-cell:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+        .odo { display: flex; align-items: flex-end; height: 1.1em; line-height: 1.1; font-size: clamp(2rem, 3.6vw, 3.2rem); font-weight: 800;
+            letter-spacing: -0.03em; color: #fff; font-feature-settings: "tnum"; margin: 0; }
+        .odo-label { font-size: 0.84rem; line-height: 1.5; color: #8a8a8a; }
+        .odo-label strong { color: #e6e6e6; font-weight: 600; }
+        .odo-note { margin: 12px 0 0; font-size: 0.72rem; color: #6f6f6f; text-align: left; }
+        .odo-ch { display: inline-block; }
+        .odo-unit { color: var(--primary-color); font-size: 0.55em; font-weight: 700; margin: 0 0.06em 0.16em; align-self: flex-end; }
+        .odo-d { display: inline-block; height: 1.1em; overflow: hidden; }
+        .odo.is-rolling .odo-d { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); }
+        .odo-strip { display: flex; flex-direction: column; transform: translateY(0);
+            transition: transform var(--dur, 1.6s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--delay, 0s); }
+        .odo-strip span { display: block; height: 1.1em; }
+
+        /* Explore: list with progress bars + preview stage */
+        .qx { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 36px; align-items: center; }
+        .qx-list { list-style: none; margin: 0; padding: 0; font-weight: 400; }
+        .qx-list li { margin: 0; }
+        .qx-item { position: relative; display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; align-items: center; gap: 12px;
+            padding: 20px 4px 22px; text-decoration: none; color: inherit; border-top: 1px solid var(--background-lightest); }
+        .qx-list li:last-child .qx-item { border-bottom: 1px solid var(--background-lightest); }
+        .qx-num { font-size: 0.8rem; color: #6f6f6f; font-feature-settings: "tnum"; transition: color 0.3s ease; }
+        .qx-text { display: flex; flex-direction: column; gap: 4px; }
+        .qx-title { font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 600; color: #8a8a8a; letter-spacing: -0.01em; transition: color 0.3s ease, transform 0.35s ease; }
+        .qx-meta { font-size: 0.84rem; color: #6f6f6f; }
+        .qx-go { color: #6f6f6f; font-size: 1.2rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .qx-bar { position: absolute; left: 0; right: 0; top: -1px; height: 2px; overflow: hidden; }
+        .qx-bar i { display: block; height: 100%; width: 100%; background: var(--primary-color); transform: scaleX(0); transform-origin: left; }
+        .qx-item.is-active .qx-num { color: var(--primary-color); }
+        .qx-item.is-active .qx-title { color: #fff; transform: translateX(6px); }
+        .qx-item.is-active .qx-go { color: var(--primary-color); transform: translateX(4px); }
+        .qx-item.is-active .qx-bar i { animation: qx-fill var(--qx-time, 5s) linear forwards; }
+        .qx.is-paused .qx-item.is-active .qx-bar i { animation-play-state: paused; }
+        .qx.is-manual .qx-item.is-active .qx-bar i { animation: none; transform: scaleX(1); }
+        @keyframes qx-fill { to { transform: scaleX(1); } }
+        .qx-item:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 4px; border-radius: 4px; }
+        .qx-stage { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: #111;
+            border: 1px solid var(--background-lightest); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45); text-decoration: none; }
+        .qx-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06);
+            transition: opacity 0.6s ease, transform 1.2s ease; }
+        .qx-stage img.is-on { opacity: 1; transform: scale(1); }
+        .qx-stage:hover img.is-on { transform: scale(1.03); }
+        .qx-info { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 6px; padding: 60px 24px 20px;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.92), rgba(10, 10, 10, 0.55) 60%, transparent); transition: opacity 0.3s ease; }
+        .qx-info.is-out { opacity: 0; }
+        .qx-tag { align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: rgba(10, 10, 10, 0.7); border: 1px solid rgba(255, 255, 255, 0.14);
+            font-size: 0.74rem; font-weight: 600; color: #fff; }
+        .qx-line { font-size: 0.98rem; color: #e6e6e6; max-width: 46ch; line-height: 1.5; }
+        .qx-open { margin-top: 4px; font-size: 0.86rem; font-weight: 600; color: #fff; }
+
+        @media (max-width: 900px) {
+            .proof, .explore { padding: 50px 20px; }
+            .proof-grid { grid-template-columns: 1fr; gap: 22px; }
+            .hx-window figcaption { flex-direction: column; gap: 2px; }
+            .odo-cell { padding: 20px 16px 18px; }
+            .odo-cell::after { left: 16px; right: 16px; }
+            .odo { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+            .qx { grid-template-columns: 1fr; gap: 18px; }
+            .qx-stage { order: -1; }
+            .qx-item { padding: 14px 2px 16px; }
+            .qx-line { font-size: 0.9rem; }
+            .qx-info { padding: 40px 16px 14px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar remains the same -->
+    <header class="navbar">
+        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-bg-overlay"></div>
+        <!-- Intro Section -->
+        <section id="intro">
+            <!-- Old intro div now has the fade-in class -->
+            <div class="intro fade-in">
+                <div class="intro-content">
+                    <div class="subtitle" data-blur>UI/UX Designer</div>
+                    <h1>Hi, I’m <a class="name">Frank Wu.</a></h1>
+                    <p class="description" data-blur>
+                        I design and build interfaces that make everyday decisions feel simple.
+                    </p>
+                    <div class="intro-buttons">
+                        <a href="projects.html" class="btn">
+                            View My Work
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </a>
+                        <a href="about.html" class="btn secondary">About Me</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PREVIEW: proof. Real Nitori pages playing, paired with what they show I'm good at -->
+        <section class="proof">
+            <div class="sec-head">
+                <span class="sec-kicker"><span class="dot" aria-hidden="true"></span>Proof, not promises</span>
+                <h2>Designed, built, and it sells.</h2>
+            </div>
+            <div class="proof-grid">
+                <figure class="hx-window fade-in">
+                    <div class="hx-bar" aria-hidden="true"><i></i><i></i><i></i><span class="hx-url">nitori-net.tw/article/Sofa</span></div>
+                    <div class="hx-screen">
+                        <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video>
+                    </div>
+                    <figcaption><span><b class="hx-cap-title">Sofa guide</b> <span class="hx-cap">· armrests update the price</span></span><span class="hx-tag">Designed &amp; built by me</span></figcaption>
+                </figure>
+                <div class="odo-side">
+                    <div class="odo-grid" aria-label="What the Nitori work shows">
+                        <a class="odo-cell" href="nitori.html#fathers-day"><b class="odo" data-value="NT$1.67M">NT$1.67M</b><span class="odo-label"><strong>Campaigns that sell.</strong> Father's Day, in 17 days.</span></a>
+                        <a class="odo-cell" href="nitori.html#fathers-day"><b class="odo" data-value="2.1×">2.1×</b><span class="odo-label"><strong>Each one better.</strong> The previous campaign's revenue, in under ⅔ of the time.</span></a>
+                        <a class="odo-cell" href="nitori.html#mid-autumn"><b class="odo" data-value="1.19%">1.19%</b><span class="odo-label"><strong>Design that converts.</strong> Mid-Autumn, selling everyday kitchenware.</span></a>
+                        <a class="odo-cell" href="nitori.html"><b class="odo" data-value="0">0</b><span class="odo-label"><strong>Hand-offs.</strong> From research to front-end code, it's all me.</span></a>
+                    </div>
+                    <p class="odo-note">Nitori Taiwan. GA4 assisted revenue: sessions that viewed the page before buying.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PREVIEW: quick nav. Hover or focus a project to preview it; click to open -->
+        <section class="explore">
+            <div class="sec-head">
+                <span class="sec-kicker"><span class="dot" aria-hidden="true"></span>Quick preview</span>
+                <h2>Explore the work.</h2>
+            </div>
+            <div class="qx">
+                <ol class="qx-list">
+                    <li><a class="qx-item is-active" href="nitori.html" data-i="0"><span class="qx-num">01</span><span class="qx-text"><span class="qx-title">Shipped at Nitori</span><span class="qx-meta">Professional series · E-commerce</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
+                    <li><a class="qx-item" href="project1.html" data-i="1"><span class="qx-num">02</span><span class="qx-text"><span class="qx-title">Smart Station</span><span class="qx-meta">Interaction design · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
+                    <li><a class="qx-item" href="project2.html" data-i="2"><span class="qx-num">03</span><span class="qx-text"><span class="qx-title">CareerCourse</span><span class="qx-meta">EdTech online site · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
+                    <li><a class="qx-item" href="project3.html" data-i="3"><span class="qx-num">04</span><span class="qx-text"><span class="qx-title">One Shop</span><span class="qx-meta">E-commerce mobile app · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
+                </ol>
+                <a class="qx-stage" href="nitori.html" aria-hidden="true" tabindex="-1">
+                    <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_careercourse.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
+                    <span class="qx-info">
+                        <span class="qx-tag">Professional · Nitori Taiwan</span>
+                        <span class="qx-line">Seasonal campaigns and product guides for Nitori Taiwan's online store, designed and coded end to end.</span>
+                        <span class="qx-open">Open project →</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+        <!-- What I Do Section -->
+        <section id="what-i-do">
+            <!-- Content Container now has the fade-in class -->
+            <div class="content-container fade-in">
+                <h2>What I Do</h2>
+                <p class="section-description" data-blur>I create thoughtful and intuitive digital products with empathy and a user-centered approach.</p>
+                <div class="services-grid">
+                    <!-- The fade-in class is now on the grid items themselves -->
+                    <div class="service-card fade-in">
+                        <div class="service-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3 data-blur>UI/UX Design</h3>
+                        <p data-blur>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
+                    </div>
+
+                    <div class="service-card fade-in">
+                        <div class="service-icon">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <h3 data-blur>Prototyping & Wireframing</h3>
+                        <p data-blur>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
+                    </div>
+
+                    <div class="service-card fade-in">
+                        <div class="service-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 data-blur>User Research</h3>
+                        <p data-blur>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <!-- Old contact div now has the fade-in class -->
+            <div class="contact-section fade-in">
+                <h2>Get In Touch</h2>
+                <p class="contact-description" data-blur>I'm always open to new opportunities and collaborations. <br>Feel free to reach out!</p>
+                <div class="contact-info">
+                    <a href="tel:+886956820832" class="contact-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+886 956 820 832</span>
+                    </a>
+                    <a href="mailto:frank.wu.0405@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>frank.wu.0405@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">
+            &copy; 2026 Frank Wu. All rights reserved.
+        </div>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
+        </div>
+    </footer>
+
+    <!-- The link to the external JavaScript file -->
+    <script src="assets/js/script.js" defer></script>
+    <script>
+        // PREVIEW: the live window plays three real clips in turn.
+        (() => {
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const clips = [
+                { src: 'assets/images/nitori/sofa/04_desk', url: 'nitori-net.tw/article/Sofa', title: 'Sofa guide', cap: '· armrests update the price' },
+                { src: 'assets/images/nitori/electricsofa/04_desk', url: 'nitori-net.tw/article/Electricsofa', title: 'Electric sofa guide', cap: '· the viewer reclines and turns' },
+                { src: 'assets/images/nitori/petlife/02_desk', url: 'nitori-net.tw/article/PetLife', title: 'Pet living', cap: '· a season switch for the beds' },
+            ];
+            const vid = document.querySelector('.hx-screen video');
+            if (!vid || reduce) return;
+            const url = document.querySelector('.hx-url');
+            const title = document.querySelector('.hx-cap-title');
+            const cap = document.querySelector('.hx-cap');
+            let i = 0;
+            const load = (k) => {
+                const c = clips[k];
+                vid.classList.add('is-out');
+                setTimeout(() => {
+                    vid.poster = c.src + '_poster.webp';
+                    vid.src = c.src + '.mp4';
+                    url.textContent = c.url; title.textContent = c.title; cap.textContent = c.cap;
+                    vid.play().catch(() => {});
+                    vid.classList.remove('is-out');
+                }, 300);
+            };
+            vid.addEventListener('ended', () => { i = (i + 1) % clips.length; load(i); });
+            new IntersectionObserver(([e]) => {
+                if (!vid.getAttribute('src')) { if (e.isIntersecting) load(0); return; }
+                if (e.isIntersecting) vid.play().catch(() => {}); else vid.pause();
+            }).observe(vid);
+        })();
+
+        // PREVIEW: odometer (proof section). Every digit is a strip of 0-9 that spins a few full
+        // turns before settling on its value; later digits spin longer, and each
+        // figure starts a beat after the one before. Hovering a figure (desktop)
+        // spins it again. Reduced motion keeps the plain numbers.
+        (() => {
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const figures = [...document.querySelectorAll('.odo')];
+            if (!figures.length) return;
+            const H = 1.1; // em per digit, matches the CSS
+
+            const build = (el, s) => {
+                const value = el.dataset.value;
+                el.setAttribute('aria-label', value);
+                el.textContent = '';
+                const strips = [];
+                let k = 0;
+                [...value].forEach((ch) => {
+                    if (/\d/.test(ch)) {
+                        const d = document.createElement('span'); d.className = 'odo-d'; d.setAttribute('aria-hidden', 'true');
+                        const strip = document.createElement('span'); strip.className = 'odo-strip';
+                        const turns = 2 + k;
+                        for (let t = 0; t < turns; t++) for (let n = 0; n < 10; n++) strip.appendChild(Object.assign(document.createElement('span'), { textContent: n }));
+                        for (let n = 0; n <= +ch; n++) strip.appendChild(Object.assign(document.createElement('span'), { textContent: n }));
+                        strip.style.setProperty('--dur', `${1.5 + k * 0.35}s`);
+                        strip.style.setProperty('--delay', `${s * 0.14 + k * 0.06}s`);
+                        strip.dataset.stop = strip.children.length - 1;
+                        d.appendChild(strip); el.appendChild(d); strips.push(strip); k++;
+                    } else {
+                        const c = document.createElement('span');
+                        c.className = /[0-9.,]/.test(ch) ? 'odo-ch' : 'odo-ch odo-unit';
+                        c.setAttribute('aria-hidden', 'true'); c.textContent = ch;
+                        el.appendChild(c);
+                    }
+                });
+                return strips;
+            };
+            const sets = figures.map((el, s) => ({ el, strips: build(el, s) }));
+
+            const roll = ({ el, strips }, instantReset) => {
+                el.classList.remove('is-rolled');
+                el.classList.add('is-rolling');
+                if (instantReset) {
+                    strips.forEach((st) => { st.style.transition = 'none'; st.style.transform = 'translateY(0)'; });
+                    void el.offsetWidth;   // apply the reset before rolling again
+                    strips.forEach((st) => { st.style.transition = ''; st.style.setProperty('--delay', '0s'); });
+                }
+                strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * H}em)`; });
+                const last = strips[strips.length - 1];
+                last.addEventListener('transitionend', () => { el.classList.remove('is-rolling'); el.classList.add('is-rolled'); }, { once: true });
+            };
+
+            const io = new IntersectionObserver((entries) => {
+                if (!entries.some((e) => e.isIntersecting)) return;
+                io.disconnect();
+                sets.forEach((set) => roll(set, false));
+            }, { threshold: 0.35 });
+            io.observe(document.querySelector('.odo-grid'));
+
+            if (matchMedia('(hover: hover)').matches) {
+                sets.forEach((set) => {
+                    set.el.closest('.odo-cell').addEventListener('mouseenter', () => {
+                        if (set.el.classList.contains('is-rolled')) roll(set, true);
+                    });
+                });
+            }
+        })();
+
+        // PREVIEW: explore. The active project fills its red bar, then the next
+        // one takes over. Hovering or focusing a project shows it (and holds the
+        // cycle); clicking opens it. Reduced motion: no auto-advance.
+        (() => {
+            const root = document.querySelector('.qx');
+            if (!root) return;
+            const items = [...root.querySelectorAll('.qx-item')];
+            const imgs = [...root.querySelectorAll('.qx-stage img')];
+            const stage = root.querySelector('.qx-stage');
+            const info = root.querySelector('.qx-info');
+            const tag = root.querySelector('.qx-tag'), line = root.querySelector('.qx-line');
+            const copy = [
+                ['Professional · Nitori Taiwan', "Seasonal campaigns and product guides for Nitori Taiwan's online store, designed and coded end to end."],
+                ['Interaction design · University of Sydney', 'A multi-sensory system that encourages trolley returns through gamification and clear feedback.'],
+                ['EdTech online site · University of Sydney', 'A STEM learning platform built to engage students in rural and remote areas.'],
+                ['E-commerce mobile app · University of Sydney', 'A shopping app with AI support, so people can buy clothes with confidence.'],
+            ];
+            let cur = 0;
+            const set = (i) => {
+                if (i === cur && items[i].classList.contains('is-active')) return;
+                cur = i;
+                items.forEach((it, k) => it.classList.toggle('is-active', k === i));
+                imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
+                stage.href = items[i].getAttribute('href');
+                info.classList.add('is-out');
+                setTimeout(() => { tag.textContent = copy[i][0]; line.textContent = copy[i][1]; info.classList.remove('is-out'); }, 250);
+            };
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('is-manual');
+            items.forEach((it, k) => {
+                it.querySelector('.qx-bar i').addEventListener('animationend', () => set((k + 1) % items.length));
+                it.addEventListener('mouseenter', () => set(k));
+                it.addEventListener('focus', () => { root.classList.add('is-manual'); set(k); });
+            });
+            root.addEventListener('mouseenter', () => root.classList.add('is-paused'));
+            root.addEventListener('mouseleave', () => root.classList.remove('is-paused'));
+            new IntersectionObserver(([e]) => {
+                root.classList.toggle('is-offscreen', !e.isIntersecting);
+                if (!e.isIntersecting) root.classList.add('is-paused');
+                else if (!root.matches(':hover')) root.classList.remove('is-paused');
+            }, { threshold: 0.3 }).observe(root);
+        })();
+    </script>
+</body>
+</html>
