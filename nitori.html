@@ -59,14 +59,19 @@
         a.nt-thumb:hover img { transform: scale(1.03); }
 
         /* Key screens: a strip under the cover on desktop. On phones the cover
-           becomes the first frame and the screens swipe in beside it. */
+           becomes the first frame and the screens swipe in beside it. Every
+           screen exists as a desktop and a phone capture; the strip shows the
+           one that matches the visitor's screen, the viewer can switch. */
         .nt-media { min-width: 0; }
         .nt-shots { list-style: none; display: flex; gap: 8px; margin: 10px 0 0; padding: 0 0 6px; overflow-x: auto; scroll-snap-type: x mandatory;
             scrollbar-width: thin; scrollbar-color: rgba(0, 158, 150, 0.6) transparent; }
-        .nt-shots li { flex: 0 0 62px; margin: 0; scroll-snap-align: start; }
-        .nt-shot { display: block; width: 100%; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
-        .nt-shot img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform 0.3s ease; }
+        .nt-shots li { flex: 0 0 88px; margin: 0; scroll-snap-align: start; }
+        .nt-shot { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
+        .nt-shot picture { display: block; }
+        .nt-shot img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.3s ease; }
         .nt-shot:hover img { transform: scale(1.06); }
+        .nt-play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+        .nt-play i { display: grid; place-items: center; width: 24px; height: 24px; padding-left: 2px; border-radius: 50%; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 0.6rem; }
         .nt-count { display: none; }
         @media (max-width: 760px) {
             .nt-media { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -77,6 +82,8 @@
             .nt-media .nt-shots { display: contents; }
             .nt-media .nt-shots li { flex: 0 0 33.5%; }
             .nt-shot { border-radius: 10px; }
+            .nt-shot img { aspect-ratio: 3 / 4; }
+            .nt-play i { width: 34px; height: 34px; font-size: 0.8rem; }
             .nt-count { display: inline-flex; align-items: center; gap: 6px; position: absolute; right: 8px; bottom: 8px; padding: 4px 9px; border-radius: 999px;
                 background: rgba(20, 20, 20, 0.78); color: #fff; font-size: 0.75rem; font-weight: 600; }
         }
@@ -86,8 +93,17 @@
         .nt-viewer { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 16px; border: 0; background: #121212; color: #fff; }
         .nt-viewer[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
         .nt-viewer::backdrop { background: transparent; }
+        .nt-v-views { display: inline-flex; padding: 3px; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; }
+        .nt-viewer .nt-v-views button { display: inline-flex; align-items: center; gap: 7px; width: auto; height: 34px; padding: 0 16px; border: 0; border-radius: 999px;
+            font-size: 0.85rem; font-weight: 600; color: #b5b5b5; }
+        .nt-viewer .nt-v-views button:hover { color: #fff; }
+        .nt-viewer .nt-v-views button[aria-pressed="true"] { background: var(--series-deep); color: #fff; }
         .nt-v-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .nt-v-img { display: block; height: min(calc(100dvh - 170px), calc((100vw - 32px) * 4 / 3), 1040px); width: auto; aspect-ratio: 3 / 4; border-radius: 12px; background: #222; touch-action: pan-y; }
+        /* --ar is set per view: 16:10 for desktop captures, 390:844 for phone ones */
+        .nt-v-frame { --ar: 1.6; width: min(calc(100vw - 32px), calc((100dvh - 230px) * var(--ar)), 1440px); aspect-ratio: var(--ar);
+            border-radius: 12px; overflow: hidden; background: #222; touch-action: pan-y; }
+        .nt-v-frame img, .nt-v-frame video { display: block; width: 100%; height: 100%; object-fit: contain; }
+        .nt-v-frame [hidden] { display: none; }
         .nt-v-cap { font-style: normal; font-weight: 400; font-size: 0.95rem; color: var(--text-secondary); max-width: 44ch; text-align: center; min-height: 1.6em; }
         .nt-v-bar { display: flex; align-items: center; gap: 18px; }
         .nt-v-count { font-size: 0.85rem; color: #8a8a8a; min-width: 4ch; text-align: center; font-variant-numeric: tabular-nums; }
@@ -192,14 +208,14 @@
                 </li>
                 <li class="nt-row">
                     <div class="nt-media">
-                        <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 6 screens</span></div>
-                        <ul class="nt-shots" aria-label="Key screens from the Father's Day page">
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_01.webp" data-cap="The opening: three clocks, one for each time of his day, jump to their chapter."><img src="assets/images/nitori/fathersday_01_thumb.webp" alt="Opening section with three clock buttons" loading="lazy"></button></li>
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_02.webp" data-cap="19:00, off work. A pause switch opens the recliner chapter."><img src="assets/images/nitori/fathersday_02_thumb.webp" alt="The 19:00 off-work chapter opening" loading="lazy"></button></li>
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_03.webp" data-cap="2 motors or 4: one table to choose between the two recliners, with the product video below."><img src="assets/images/nitori/fathersday_03_thumb.webp" alt="Table comparing the 2-motor and 4-motor recliners" loading="lazy"></button></li>
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_04.webp" data-cap="9:00, on work. The switch flips to play and the page turns sky blue."><img src="assets/images/nitori/fathersday_04_thumb.webp" alt="The 9:00 on-work chapter opening" loading="lazy"></button></li>
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_05.webp" data-cap="23:00, recharge. The page goes night blue and the switch becomes a battery."><img src="assets/images/nitori/fathersday_05_thumb.webp" alt="The 23:00 recharge chapter opening" loading="lazy"></button></li>
-                            <li><button type="button" class="nt-shot" data-full="assets/images/nitori/fathersday_06.webp" data-cap="The cooling bedding set builds up layer by layer as you scroll: pad, pillowcase, then duvet."><img src="assets/images/nitori/fathersday_06_thumb.webp" alt="Cooling bedding section with the full set on the bed" loading="lazy"></button></li>
+                        <div class="nt-thumb"><img src="assets/images/26fathersday_600x315.jpg" alt="Cover image of the Father's Day 2026 campaign page: a father reading in an electric recliner" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></div>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Father's Day page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/fathersday/01" data-cap="The opening: three clocks, one for each time of his day, jump to their chapter." data-cap-mob="On phones the banner crops in on the father, and the three clocks still fit in one row."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/01_mob_t.webp"><img src="assets/images/nitori/fathersday/01_desk_t.webp" alt="Opening banner and the three clock buttons" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/fathersday/02" data-cap="19:00, off work. A pause switch opens the recliner chapter."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/02_mob_t.webp"><img src="assets/images/nitori/fathersday/02_desk_t.webp" alt="The 19:00 off-work chapter opening" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/fathersday/03" data-cap="2 motors or 4: one table to choose between the two recliners, with the product video below." data-cap-mob="On phones the two columns stack, and the 4-motor card stays dark so the upgrade still stands out."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/03_mob_t.webp"><img src="assets/images/nitori/fathersday/03_desk_t.webp" alt="Table comparing the 2-motor and 4-motor recliners" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/fathersday/04" data-cap="9:00, on work. The switch flips to play and the page turns sky blue."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/04_mob_t.webp"><img src="assets/images/nitori/fathersday/04_desk_t.webp" alt="The 9:00 on-work chapter opening" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/fathersday/05" data-cap="Scrolling from the work chapter into 23:00: the page darkens to night blue and the switch becomes a battery."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/05_mob_t.webp"><img src="assets/images/nitori/fathersday/05_desk_t.webp" alt="Clip: scrolling from the work chapter into the 23:00 night chapter" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/fathersday/06" data-cap="The cooling bedding set builds up layer by layer as you scroll: pad, pillowcase, then duvet." data-cap-mob="On phones the pinned scroll becomes arrows and dots, so each layer is one tap."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/fathersday/06_mob_t.webp"><img src="assets/images/nitori/fathersday/06_desk_t.webp" alt="Clip: the cooling bedding set building up layer by layer" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
                         </ul>
                     </div>
                     <div>
@@ -307,8 +323,15 @@
 
             <dialog class="nt-viewer" aria-label="Key screens">
                 <button type="button" class="nt-v-close" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                <div class="nt-v-views" role="group" aria-label="Layout">
+                    <button type="button" data-view="desk" aria-pressed="true"><i class="fa-solid fa-desktop" aria-hidden="true"></i> Desktop</button>
+                    <button type="button" data-view="mob" aria-pressed="false"><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i> Mobile</button>
+                </div>
                 <figure class="nt-v-fig">
-                    <img class="nt-v-img" alt="">
+                    <div class="nt-v-frame">
+                        <img class="nt-v-img" alt="">
+                        <video class="nt-v-vid" muted loop playsinline preload="none" hidden></video>
+                    </div>
                     <figcaption class="nt-v-cap"></figcaption>
                 </figure>
                 <div class="nt-v-bar">
@@ -333,30 +356,62 @@
     <script src="assets/js/script.js" defer></script>
     <script>
         // Key-screen viewer: opens from any .nt-shot, steps through that row's set.
-        // Arrows, arrow keys or a swipe move between screens; Esc, the close
+        // Each item has a desktop and a phone version ({data-src}_desk / _mob);
+        // the Desktop/Mobile switch flips between them and stays put while you
+        // browse. Clips (data-kind="clip") are muted looping MP4s.
+        // Arrows, arrow keys or a swipe move between items; Esc, the close
         // button or the phone's back gesture closes it.
         (() => {
             const dlg = document.querySelector('.nt-viewer');
             if (!dlg || !dlg.showModal) return;
+            const frame = dlg.querySelector('.nt-v-frame');
             const img = dlg.querySelector('.nt-v-img');
+            const vid = dlg.querySelector('.nt-v-vid');
             const cap = dlg.querySelector('.nt-v-cap');
             const count = dlg.querySelector('.nt-v-count');
-            let set = [], i = 0, pushed = false;
+            const viewBtns = [...dlg.querySelectorAll('[data-view]')];
+            const RATIO = { desk: 1440 / 900, mob: 390 / 844 };
+            const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let set = [], i = 0, pushed = false, view = null;
+
+            const file = (btn, suffix) => `${btn.dataset.src}_${view}${suffix}`;
+            const stopVideo = () => { vid.pause(); vid.removeAttribute('src'); vid.removeAttribute('poster'); vid.load(); };
 
             const show = (n) => {
                 i = (n + set.length) % set.length;
                 const btn = set[i];
-                img.src = btn.dataset.full;
-                img.alt = btn.querySelector('img').alt;
-                cap.textContent = btn.dataset.cap;
+                const label = btn.querySelector('img').alt;
+                frame.style.setProperty('--ar', RATIO[view]);
+                if (btn.dataset.kind === 'clip') {
+                    img.hidden = true;
+                    img.removeAttribute('src');
+                    vid.hidden = false;
+                    vid.poster = file(btn, '_poster.webp');
+                    vid.src = file(btn, '.mp4');
+                    vid.setAttribute('aria-label', label);
+                    vid.controls = reduceMotion;
+                    if (!reduceMotion) vid.play().catch(() => { vid.controls = true; });
+                } else {
+                    stopVideo();
+                    vid.hidden = true;
+                    img.hidden = false;
+                    img.src = file(btn, '.webp');
+                    img.alt = label;
+                }
+                cap.textContent = (view === 'mob' && btn.dataset.capMob) || btn.dataset.cap;
                 count.textContent = `${i + 1} / ${set.length}`;
-                [i + 1, i - 1].forEach((k) => { new Image().src = set[(k + set.length) % set.length].dataset.full; });
+                viewBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+                [i + 1, i - 1].forEach((k) => {
+                    const near = set[(k + set.length) % set.length];
+                    if (near.dataset.kind !== 'clip') new Image().src = file(near, '.webp');
+                });
             };
 
             document.querySelectorAll('.nt-shots').forEach((list) => {
                 const btns = [...list.querySelectorAll('.nt-shot')];
                 btns.forEach((btn, n) => btn.addEventListener('click', () => {
                     set = btns;
+                    view = view || (matchMedia('(max-width: 760px)').matches ? 'mob' : 'desk');
                     show(n);
                     dlg.showModal();
                     history.pushState({ ntViewer: true }, '');
@@ -364,6 +419,7 @@
                 }));
             });
 
+            viewBtns.forEach((b) => b.addEventListener('click', () => { view = b.dataset.view; show(i); }));
             dlg.querySelector('.nt-v-prev').addEventListener('click', () => show(i - 1));
             dlg.querySelector('.nt-v-next').addEventListener('click', () => show(i + 1));
             dlg.querySelector('.nt-v-close').addEventListener('click', () => dlg.close());
@@ -373,6 +429,7 @@
                 if (e.key === 'ArrowLeft') show(i - 1);
             });
             dlg.addEventListener('close', () => {
+                stopVideo();
                 if (pushed) { pushed = false; history.back(); }
             });
             window.addEventListener('popstate', () => {
