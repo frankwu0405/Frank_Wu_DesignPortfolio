@@ -26,9 +26,19 @@
         .series-label { display: inline-block; color: var(--series); font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; }
         .series-body h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 12px; }
         .series-body p { max-width: 60ch; margin-bottom: 20px; }
-        .series-strip { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 24px 0; padding: 0; }
-        .series-strip a { display: block; border-radius: 6px; overflow: hidden; background: #2a2a2a; }
-        .series-strip img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
+        /* Every page in the series on a slow, endless loop. It stays a real
+           scroller (swipe, trackpad, shift-wheel or drag), and the drift pauses
+           while someone hovers, touches or tabs into it. */
+        .series-body { min-width: 0; }
+        .series-strip { list-style: none; display: flex; gap: 10px; margin: 0 0 24px 0; padding: 0; overflow-x: auto; scroll-behavior: auto;
+            scrollbar-width: none; cursor: grab;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+        .series-strip::-webkit-scrollbar { display: none; }
+        .series-strip.is-dragging { cursor: grabbing; }
+        .series-strip li { flex: 0 0 190px; margin: 0; }
+        .series-strip a { display: block; border-radius: 6px; overflow: hidden; background: #2a2a2a; -webkit-user-drag: none; }
+        .series-strip img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; user-select: none; -webkit-user-drag: none; }
         .series-strip a:hover img { transform: scale(1.05); }
         .series-band .series-btn { background: var(--series-deep); box-shadow: none; }
         .series-band .series-btn:hover { background: #007F79; }
@@ -41,7 +51,9 @@
             .series-band { grid-template-columns: 1fr; gap: 24px; padding: 22px; text-align: center; justify-items: center; }
             .series-cover { max-width: 220px; width: 100%; margin: 0 auto; }
             .series-body p { margin-left: auto; margin-right: auto; }
-            .series-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); text-align: left; }
+            .series-body { width: 100%; }
+            .series-strip { text-align: left; }
+            .series-strip li { flex-basis: 150px; }
             /* centre the university section too */
             .uni-head { text-align: center; }
             .project-content { text-align: center; }
@@ -87,10 +99,15 @@
                     <h2>Shipped at Nitori</h2>
                     <p>E-commerce pages I designed and built for Nitori Taiwan's online store, from seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn to a guide that helps shoppers choose between seven electric sofas. Six are live, so you can try them yourself.</p>
                     <ul class="series-strip" aria-label="Pages in the series">
-                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Electric sofa guide" loading="lazy"></a></li>
-                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Sofa guide" loading="lazy"></a></li>
-                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Kitchen cupboard guide" loading="lazy"></a></li>
-                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Pet living guide" loading="lazy"></a></li>
+                        <li><a href="nitori.html"><img src="assets/images/2026_mothersday600x315_v1.jpg" alt="Mother's Day 2026 campaign" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="assets/images/26fathersday_600x315.jpg" alt="Father's Day 2026 campaign" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="assets/images/260901MidAutumn_600x315_v1.jpg" alt="Mid-Autumn BBQ 2026 campaign" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Electric sofa guide" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Sofa guide" loading="lazy" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Kitchen cupboard guide" loading="lazy" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Pet living guide" loading="lazy" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Home appliances by task" loading="lazy" draggable="false"></a></li>
+                        <li><a href="nitori.html"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020001/article_main__comfyappliance_600x315_v1.jpg" alt="Home appliances by mood" loading="lazy" draggable="false"></a></li>
                     </ul>
                     <a href="nitori.html" class="btn series-btn">Open the series <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
@@ -166,5 +183,85 @@
 
     <!-- This is the link to the external JavaScript file -->
     <script src="assets/js/script.js" defer></script>
+    <script>
+        // Nitori strip: the nine covers are followed by a hidden copy so the
+        // strip can drift forever and wrap without a seam. It is still a normal
+        // scroller: swipe, trackpad and shift-wheel work, a mouse can drag it,
+        // and the drift waits while someone is hovering, touching or tabbing in.
+        (() => {
+            const strip = document.querySelector('.series-strip');
+            if (!strip) return;
+            const originals = [...strip.children];
+            originals.forEach((li) => {
+                const copy = li.cloneNode(true);
+                copy.setAttribute('aria-hidden', 'true');
+                copy.querySelectorAll('a').forEach((a) => { a.tabIndex = -1; });
+                copy.querySelectorAll('img').forEach((img) => { img.loading = 'lazy'; });
+                strip.appendChild(copy);
+            });
+
+            const SPEED = 28; // px per second
+            const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let period = 0, pos = 0, last = 0, holdUntil = 0, hovering = false, onScreen = true;
+            const now = () => performance.now();
+            const measure = () => { period = strip.children[originals.length].offsetLeft - strip.children[0].offsetLeft; };
+            const wrap = () => {
+                if (!period) return;
+                if (strip.scrollLeft >= period) strip.scrollLeft -= period;
+                else if (strip.scrollLeft <= 0) strip.scrollLeft += period;
+            };
+            measure();
+            addEventListener('resize', measure);
+            strip.addEventListener('scroll', wrap, { passive: true });
+
+            // pause while in use, resume a moment after
+            const hold = (ms) => { holdUntil = ms === Infinity ? Infinity : now() + ms; };
+            strip.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovering = true; });
+            strip.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hovering = false; });
+            strip.addEventListener('touchstart', () => hold(Infinity), { passive: true });
+            strip.addEventListener('touchend', () => hold(2500), { passive: true });
+            strip.addEventListener('wheel', () => hold(2500), { passive: true });
+            strip.addEventListener('focusin', () => hold(Infinity));
+            strip.addEventListener('focusout', () => hold(1500));
+            new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(strip);
+
+            // drag with a mouse; a drag doesn't count as a click on the cover
+            let drag = null, swallowClick = false;
+            strip.addEventListener('pointerdown', (e) => {
+                if (e.pointerType !== 'mouse' || e.button !== 0) return;
+                drag = { x: e.clientX, left: strip.scrollLeft, moved: false };
+            });
+            addEventListener('pointermove', (e) => {
+                if (!drag) return;
+                const dx = e.clientX - drag.x;
+                if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; strip.classList.add('is-dragging'); }
+                if (drag.moved && period) strip.scrollLeft = (((drag.left - dx) % period) + period) % period;
+            });
+            addEventListener('pointerup', () => {
+                if (!drag) return;
+                swallowClick = drag.moved;
+                drag = null;
+                strip.classList.remove('is-dragging');
+                hold(1500);
+            });
+            strip.addEventListener('click', (e) => {
+                if (swallowClick) { e.preventDefault(); swallowClick = false; }
+            }, true);
+
+            if (reduceMotion) return;
+            const tick = (t) => {
+                const dt = last ? Math.min(t - last, 64) : 0;
+                last = t;
+                if (!hovering && !drag && onScreen && !document.hidden && t > holdUntil && period) {
+                    if (Math.abs(strip.scrollLeft - pos) > 2) pos = strip.scrollLeft; // someone moved it
+                    pos += SPEED * dt / 1000;
+                    if (pos >= period) pos -= period;
+                    strip.scrollLeft = pos;
+                }
+                requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        })();
+    </script>
 </body>
 </html>
