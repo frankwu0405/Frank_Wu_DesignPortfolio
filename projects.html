@@ -52,8 +52,9 @@
             .series-cover { max-width: 220px; width: 100%; margin: 0 auto; }
             .series-body p { margin-left: auto; margin-right: auto; }
             .series-body { width: 100%; }
-            .series-strip { text-align: left; }
-            .series-strip li { flex-basis: 150px; }
+            /* run edge to edge inside the panel so the covers can be bigger */
+            .series-strip { text-align: left; margin-left: -22px; margin-right: -22px; }
+            .series-strip li { flex-basis: 230px; }
             /* centre the university section too */
             .uni-head { text-align: center; }
             .project-content { text-align: center; }
