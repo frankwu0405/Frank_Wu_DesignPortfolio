@@ -58,20 +58,27 @@
         .nt-thumb img { display: block; width: 100%; aspect-ratio: 600 / 315; object-fit: cover; transition: transform 0.4s ease; }
         a.nt-thumb:hover img { transform: scale(1.03); }
 
-        /* Key screens: a strip under the cover on desktop. On phones the cover
-           becomes the first frame and the screens swipe in beside it. Every
-           screen exists as a desktop and a phone capture; the strip shows the
-           one that matches the visitor's screen, the viewer can switch. */
+        /* Key screens. Desktop: a full-width row of tiles under the entry, all
+           visible at once. Phones: the cover becomes the first frame and the
+           screens swipe in beside it. Every screen exists as a desktop and a
+           phone capture; the tiles show the one that matches the visitor's
+           screen, the viewer can switch. */
         .nt-media { min-width: 0; }
-        .nt-shots { list-style: none; display: flex; gap: 8px; margin: 10px 0 0; padding: 0 0 6px; overflow-x: auto; scroll-snap-type: x mandatory;
-            scrollbar-width: thin; scrollbar-color: rgba(0, 158, 150, 0.6) transparent; }
-        .nt-shots li { flex: 0 0 88px; margin: 0; scroll-snap-align: start; }
-        .nt-shot { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
+        .nt-shots { list-style: none; margin: 0; padding: 0; }
+        .nt-shots li { margin: 0; }
+        @media (min-width: 761px) {
+            .nt-row:has(.nt-media) { grid-template-areas: "cover text" "shots shots"; row-gap: 28px; }
+            .nt-media { display: contents; }
+            .nt-media .nt-thumb { grid-area: cover; }
+            .nt-media ~ div { grid-area: text; }
+            .nt-shots { grid-area: shots; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+        }
+        .nt-shot { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: #2a2a2a; cursor: zoom-in; }
         .nt-shot picture { display: block; }
         .nt-shot img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.3s ease; }
         .nt-shot:hover img { transform: scale(1.06); }
         .nt-play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
-        .nt-play i { display: grid; place-items: center; width: 24px; height: 24px; padding-left: 2px; border-radius: 50%; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 0.6rem; }
+        .nt-play i { display: grid; place-items: center; width: 36px; height: 36px; padding-left: 3px; border-radius: 50%; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 0.85rem; }
         .nt-count { display: none; }
         @media (max-width: 760px) {
             .nt-media { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -80,10 +87,10 @@
             /* cover at 85% leaves the first screen peeking; 33.5% makes a 3:4 screen exactly as tall as the 600:315 cover */
             .nt-media .nt-thumb { flex: 0 0 85%; position: relative; scroll-snap-align: start; }
             .nt-media .nt-shots { display: contents; }
-            .nt-media .nt-shots li { flex: 0 0 33.5%; }
+            .nt-media .nt-shots li { flex: 0 0 33.5%; scroll-snap-align: start; }
             .nt-shot { border-radius: 10px; }
             .nt-shot img { aspect-ratio: 3 / 4; }
-            .nt-play i { width: 34px; height: 34px; font-size: 0.8rem; }
+            .nt-play i { width: 34px; height: 34px; font-size: 0.8rem; padding-left: 2px; }
             .nt-count { display: inline-flex; align-items: center; gap: 6px; position: absolute; right: 8px; bottom: 8px; padding: 4px 9px; border-radius: 999px;
                 background: rgba(20, 20, 20, 0.78); color: #fff; font-size: 0.75rem; font-weight: 600; }
         }
@@ -234,7 +241,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <div class="nt-thumb"><img src="assets/images/260901MidAutumn_600x315_v1.jpg" alt="Cover image of the Mid-Autumn 2026 campaign page: portioned food in sealed bags and stacked glass containers" loading="lazy"></div>
+                    <div class="nt-media">
+                        <div class="nt-thumb"><img src="assets/images/260901MidAutumn_600x315_v1.jpg" alt="Cover image of the Mid-Autumn 2026 campaign page: portioned food in sealed bags and stacked glass containers" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></div>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Mid-Autumn BBQ page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/midautumn/01" data-cap="The opening: grilling takes two hours, prep takes a day, so the page splits the prep into six steps."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/01_mob_t.webp"><img src="assets/images/nitori/midautumn/01_desk_t.webp" alt="Opening banner and the dark intro" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/midautumn/02" data-cap="Step 1, portioning. Each step opens with a familiar kitchen mishap, then the item that fixes it."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/02_mob_t.webp"><img src="assets/images/nitori/midautumn/02_desk_t.webp" alt="Step 1 with its photo and mishap-and-fix card" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/midautumn/03" data-cap="Each step has two tabs; tapping the second swaps the photo and the mishap-and-fix card."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/03_mob_t.webp"><img src="assets/images/nitori/midautumn/03_desk_t.webp" alt="Clip: switching between the two tabs of step 2" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/midautumn/04" data-cap="Step 4, chilling: the fridge photo shows why matching, stackable containers keep it tidy."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/04_mob_t.webp"><img src="assets/images/nitori/midautumn/04_desk_t.webp" alt="Step 4 with the fridge photo and stackable containers" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/midautumn/05" data-cap="The moon in the step bar fills a little at every step; after the sixth, the sky shows it full."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/05_mob_t.webp"><img src="assets/images/nitori/midautumn/05_desk_t.webp" alt="Clip: scrolling into the full moon after the last step" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/midautumn/06" data-cap="The recap: the key items again, each tagged with the steps it helps with."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/midautumn/06_mob_t.webp"><img src="assets/images/nitori/midautumn/06_desk_t.webp" alt="Recap of key items, each tagged with the steps it helps with" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Mid-Autumn BBQ 2026</h3>
@@ -251,7 +268,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Cover image of the electric sofa guide page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022070024/article_main__2609_Electricsofa_600x315.jpg" alt="Cover image of the electric sofa guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Electric sofa guide page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/electricsofa/01" data-cap="The opening, live on nitori-net.tw."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/01_mob_t.webp"><img src="assets/images/nitori/electricsofa/01_desk_t.webp" alt="Opening banner of the electric sofa guide" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/electricsofa/02" data-cap="It starts by asking what kind of relaxation you&#x27;re after, not which model you want."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/02_mob_t.webp"><img src="assets/images/nitori/electricsofa/02_desk_t.webp" alt="Intro asking what kind of relaxation you want" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/electricsofa/03" data-cap="Each series gets a feature spread, here the season&#x27;s lead, N-BELIEVA 3."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/03_mob_t.webp"><img src="assets/images/nitori/electricsofa/03_desk_t.webp" alt="N-BELIEVA 3 feature section" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/electricsofa/04" data-cap="The viewer reclines the sofa and turns it, right beside the live price."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/04_mob_t.webp"><img src="assets/images/nitori/electricsofa/04_desk_t.webp" alt="Clip: the viewer reclining the N-BELIEVA 3" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/electricsofa/05" data-cap="Fabric tabs switch the variants below, each with its own price."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/05_mob_t.webp"><img src="assets/images/nitori/electricsofa/05_desk_t.webp" alt="Clip: switching fabric tabs in the variant list" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/electricsofa/06" data-cap="All seven series compared in one table, from seats to charging ports."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/electricsofa/06_mob_t.webp"><img src="assets/images/nitori/electricsofa/06_desk_t.webp" alt="Table comparing all seven series" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Product guide</span>
                         <h3>Electric sofa guide</h3>
@@ -261,7 +288,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Cover image of the sofa guide page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080013/article_main__2026_sofa_600x315_1.jpg" alt="Cover image of the sofa guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Sofa guide page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/sofa/01" data-cap="The opening, live on nitori-net.tw."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/01_mob_t.webp"><img src="assets/images/nitori/sofa/01_desk_t.webp" alt="Opening banner of the sofa guide" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/sofa/02" data-cap="Start from your living room: pick a floor plan, then fill in who lives there, the material and the style."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/02_mob_t.webp"><img src="assets/images/nitori/sofa/02_desk_t.webp" alt="Living-room floor plan picker" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/sofa/03" data-cap="Each sofa type opens with who it&#x27;s for, here 給想盤腿放鬆的人, before any product."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/03_mob_t.webp"><img src="assets/images/nitori/sofa/03_desk_t.webp" alt="Fabric sofa intro for people who like to sit cross-legged" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/sofa/04" data-cap="The MS01 viewer: add armrests and the price updates, change the colour, turn the sofa round."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/04_mob_t.webp"><img src="assets/images/nitori/sofa/04_desk_t.webp" alt="Clip: MS01 viewer adding armrests, changing colour and turning" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/sofa/05" data-cap="One tap opens the sofa bed into a bed, and another folds it back."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/05_mob_t.webp"><img src="assets/images/nitori/sofa/05_desk_t.webp" alt="Clip: the sofa bed opening into a bed" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/sofa/06" data-cap="The comparison: each type&#x27;s series side by side, ending with the price range."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/sofa/06_mob_t.webp"><img src="assets/images/nitori/sofa/06_desk_t.webp" alt="Comparison table of sofa types" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Product guide</span>
                         <h3>Sofa guide</h3>
@@ -271,7 +308,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Cover image of the kitchen cupboard guide page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2022080024/article_main__2026Cupboard_600x315.jpg" alt="Cover image of the kitchen cupboard guide page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Kitchen cupboard guide page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/cupboard/01" data-cap="The opening, live on nitori-net.tw."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/01_mob_t.webp"><img src="assets/images/nitori/cupboard/01_desk_t.webp" alt="Opening banner of the kitchen cupboard guide" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/cupboard/02" data-cap="A sentence to fill in: wall width, cupboard type and function lead to the right series."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/02_mob_t.webp"><img src="assets/images/nitori/cupboard/02_desk_t.webp" alt="Width, type and function picker" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/cupboard/03" data-cap="Series are grouped by what you want from a kitchen, starting with 想自由搭配."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/03_mob_t.webp"><img src="assets/images/nitori/cupboard/03_desk_t.webp" alt="Mix-and-match section with the LIGARE series" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/cupboard/04" data-cap="Standard or ceramic countertop: one toggle shows the difference and what it adds to the price."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/04_mob_t.webp"><img src="assets/images/nitori/cupboard/04_desk_t.webp" alt="Clip: toggling between standard and ceramic countertops" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/cupboard/05" data-cap="The cabinet viewer opens the doors and changes the wood colour, inside a room scene."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/05_mob_t.webp"><img src="assets/images/nitori/cupboard/05_desk_t.webp" alt="Clip: cabinet viewer opening its doors and changing colour" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/cupboard/06" data-cap="Every series compared side by side at the end."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/cupboard/06_mob_t.webp"><img src="assets/images/nitori/cupboard/06_desk_t.webp" alt="Table comparing every cupboard series" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Product guide</span>
                         <h3>Kitchen cupboard guide</h3>
@@ -281,7 +328,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Cover image of the pet living page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2023030007/article_main__600x315_v1.png" alt="Cover image of the pet living page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Pet living page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/petlife/01" data-cap="The opening, live on nitori-net.tw."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/01_mob_t.webp"><img src="assets/images/nitori/petlife/01_desk_t.webp" alt="Opening banner of the pet living page" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/petlife/02" data-cap="The season switch swaps the beds between cooling, all-season and warming, and a cat follows your pick."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/02_mob_t.webp"><img src="assets/images/nitori/petlife/02_desk_t.webp" alt="Clip: the season switch changing the featured pet beds" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/petlife/03" data-cap="Furniture that suits pets and people, in natural wood or scratch-resistant finishes."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/03_mob_t.webp"><img src="assets/images/nitori/petlife/03_desk_t.webp" alt="Furniture section with natural wood and scratch-resistant options" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/petlife/04" data-cap="One switch flips the furniture between natural wood and scratch-resistant."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/04_mob_t.webp"><img src="assets/images/nitori/petlife/04_desk_t.webp" alt="Clip: switching between natural wood and scratch-resistant furniture" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/petlife/05" data-cap="Essentials sit on illustrated shelves, with cats keeping watch."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/05_mob_t.webp"><img src="assets/images/nitori/petlife/05_desk_t.webp" alt="Pet bowls on an illustrated shelf with cats" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/petlife/06" data-cap="Comparison tables for beds and for how well furniture stands up to claws."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/petlife/06_mob_t.webp"><img src="assets/images/nitori/petlife/06_desk_t.webp" alt="Comparison tables for pet beds and furniture" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Lifestyle guide</span>
                         <h3>Pet living</h3>
@@ -291,7 +348,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by task page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/homeappliances/01" data-cap="The opening, with a tab for each chore."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/01_mob_t.webp"><img src="assets/images/nitori/homeappliances/01_desk_t.webp" alt="Opening banner with a tab for each chore" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/homeappliances/02" data-cap="Each chore gets a spotlit stage: the product in the middle, its features listed beside it."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/02_mob_t.webp"><img src="assets/images/nitori/homeappliances/02_desk_t.webp" alt="Cleaning section with a vacuum on a spotlit stage" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/homeappliances/03" data-cap="Stepping through the features opens a detail card for each one on the stage."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/03_mob_t.webp"><img src="assets/images/nitori/homeappliances/03_desk_t.webp" alt="Clip: stepping through the vacuum&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/homeappliances/04" data-cap="Cooking, staged the same way."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/04_mob_t.webp"><img src="assets/images/nitori/homeappliances/04_desk_t.webp" alt="Cooking section with a rice cooker on stage" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/homeappliances/05" data-cap="The massage range, feature by feature."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/05_mob_t.webp"><img src="assets/images/nitori/homeappliances/05_desk_t.webp" alt="Clip: stepping through a massager&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/homeappliances/06" data-cap="Every stage leads into a row of related products with live prices."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/homeappliances/06_mob_t.webp"><img src="assets/images/nitori/homeappliances/06_desk_t.webp" alt="Row of cooking appliances with prices" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Feature page</span>
                         <h3>Home appliances, by task</h3>
@@ -301,7 +368,17 @@
                     </div>
                 </li>
                 <li class="nt-row">
-                    <a class="nt-thumb" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020001/article_main__comfyappliance_600x315_v1.jpg" alt="Cover image of the comfortable-home appliances page" loading="lazy"></a>
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020001/article_main__comfyappliance_600x315_v1.jpg" alt="Cover image of the comfortable-home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by mood page">
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/comfyappliance/01" data-cap="The opening, with tabs for air, scent, light and accessories."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/01_mob_t.webp"><img src="assets/images/nitori/comfyappliance/01_desk_t.webp" alt="Opening banner with tabs for air, scent and light" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/comfyappliance/02" data-cap="Air: the purifier with its feature cards and the numbers that matter."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/02_mob_t.webp"><img src="assets/images/nitori/comfyappliance/02_desk_t.webp" alt="LUMENA A3 air purifier with feature cards and key figures" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/comfyappliance/03" data-cap="Scrolling through the air section, from the purifier&#x27;s figures to the circulator fan."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/03_mob_t.webp"><img src="assets/images/nitori/comfyappliance/03_desk_t.webp" alt="Clip: scrolling through the air section" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/comfyappliance/04" data-cap="Scent: diffusers shown in warm, soft light."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/04_mob_t.webp"><img src="assets/images/nitori/comfyappliance/04_desk_t.webp" alt="Scent section with diffusers" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="assets/images/nitori/comfyappliance/05" data-cap="Light: the page darkens so each lamp is shown lit, with its specs beside it."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/05_mob_t.webp"><img src="assets/images/nitori/comfyappliance/05_desk_t.webp" alt="Clip: scrolling into the lighting section" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="assets/images/nitori/comfyappliance/06" data-cap="The desk lamp, shown lit with its features around it."><picture><source media="(max-width: 760px)" srcset="assets/images/nitori/comfyappliance/06_mob_t.webp"><img src="assets/images/nitori/comfyappliance/06_desk_t.webp" alt="Desk lamp shown lit with its features" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
                     <div>
                         <span class="nt-tag">Feature page</span>
                         <h3>Home appliances, by mood</h3>
