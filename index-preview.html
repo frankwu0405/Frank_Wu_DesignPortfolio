@@ -64,7 +64,7 @@
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
-        .fx-hero { position: relative; height: 270vh; }
+        .fx-hero { position: relative; z-index: 2; height: 430vh; }
         .fx-stage { position: sticky; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
         .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
@@ -118,24 +118,35 @@
         .fx-ready .fx-title h1 .ch { opacity: 1; filter: none; transform: none; }
         .fx-ready .fx-title .role-in { opacity: 1; }
 
-        /* 2 · Statement on the red panel (pinned briefly), black returns along the slant */
-        .fx-state { position: relative; height: 230vh; background: var(--deep); }
-        .fx-sstage { position: sticky; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); overflow: hidden; --p: 0; --lock: 0; }
-        .fx-sstage .ghost { position: absolute; width: 150vw; left: -25vw; top: 50%; aspect-ratio: 1872 / 1153; pointer-events: none; fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 1;
-            transform: translate3d(calc(var(--p) * -14vw), calc(-50% + var(--p) * 10vh), 0); }
+        /* 2 · Statement: part of the hero scene, so it starts the moment the red completes.
+           Words are invisible until their entrance; the entrance continues the camera move. */
+        .fx-scene { position: absolute; inset: 0; z-index: 4; pointer-events: none; --s1: 0; --s2: 0; --s3: 0; --sg: 0; }
+        .fx-scene .ghost { position: absolute; left: 50%; top: 50%; width: 150vw; aspect-ratio: 1872 / 1153; fill: none; stroke: rgba(255, 255, 255, 0.1); stroke-width: 1; opacity: 0; }
         .fx-sin { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 6vw; }
-        .fx-sin .label { color: rgba(255, 255, 255, 0.7); }
+        .fx-sin .label { color: rgba(255, 255, 255, 0.75); opacity: var(--s3); transform: translate3d(0, calc((1 - var(--s3)) * 16px), 0); }
         .fx-sin .display { font-size: clamp(3rem, 9.6vw, 10rem); }
-        .fx-sin .l1 { display: block; transform: translate3d(calc((1 - var(--lock)) * -34vw), 0, 0); opacity: calc(0.15 + var(--lock) * 0.85); }
-        .fx-sin .l2 { display: block; transform: translate3d(calc((1 - var(--lock)) * 34vw), 0, 0); opacity: calc(0.15 + var(--lock) * 0.85); }
+        .fx-sin .l1, .fx-sin .l2 { display: block; opacity: 0; will-change: transform, opacity, filter; }
         .fx-sin .l2 .blk { color: #120000; }
-        .fx-sin .sub { margin: 4vh 0 0; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.6; color: rgba(255, 255, 255, 0.85);
-            transform: translate3d(0, calc((1 - var(--lock)) * 40px), 0); opacity: var(--lock); }
-        .fx-wipe { position: absolute; inset: 0; background: var(--ink); clip-path: polygon(110% 0, 110% 0, 110% 100%, 110% 100%); }
-        .fx-wipe-edge { position: absolute; top: -10%; height: 120%; width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f; transform: rotate(var(--lean)); left: 110%; opacity: 0; }
+        .fx-sin .sub { margin: 4vh 0 0; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.6; color: rgba(255, 255, 255, 0.88);
+            opacity: var(--s3); transform: translate3d(0, calc((1 - var(--s3)) * 24px), 0); }
+        /* zoom: the camera keeps moving forward, so the lines come out of depth toward you */
+        .mode-zoom .fx-sin .l1, .mode-zoom .fx-sin .l2 { transform-origin: 50% 50%; }
+        .mode-zoom .fx-sin .l1 { opacity: var(--s1); transform: scale(calc(0.42 + 0.58 * var(--s1))); filter: blur(calc((1 - var(--s1)) * 18px)); }
+        .mode-zoom .fx-sin .l2 { opacity: var(--s2); transform: scale(calc(0.42 + 0.58 * var(--s2))); filter: blur(calc((1 - var(--s2)) * 18px)); }
+        .mode-zoom .fx-scene .ghost { opacity: calc(var(--sg) * (1 - var(--sg)) * 3.2); transform: translate(-50%, -50%) scale(calc(0.35 + var(--sg) * 1.6)); }
+        /* pan: the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
+        .mode-pan .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
+        .mode-pan .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
+        .mode-pan .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
+        /* exit: the scene is cut away along the slant, revealing the next stage already in place */
+        .fx-wipe-edge { position: fixed; z-index: 30; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
+            transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
+        .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: 16vh 0; }
+        .fx-scene.is-static .fx-sin { position: relative; }
+        .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .label, .fx-scene.is-static .sub { opacity: 1; transform: none; filter: none; }
 
         /* 3 · Skills (pinned) */
-        .fx-skills { position: relative; height: 330vh; }
+        .fx-skills { position: relative; z-index: 1; height: 330vh; }
         .fx-kstage { position: sticky; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); overflow: hidden; perspective: 1100px; --p: 0; }
         .fx-kstage .head { position: absolute; left: 6vw; top: 5vh; z-index: 3; }
         .fx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 68%; transform-origin: 50% 100%; transform: rotateX(76deg);
@@ -245,12 +256,11 @@
         @keyframes fx-marq { to { transform: translateX(-50%); } }
 
         @media (max-width: 900px) {
-            .fx-hero { height: 200vh; }
+            .fx-hero { height: 340vh; }
             .fx-title h1 { font-size: 14vw; }
             .fx-title .role { letter-spacing: 0.3em; }
             .fx-intro { left: 20px; right: 20px; bottom: 76px; max-width: none; font-size: 0.82rem; }
             .fx-cue { right: 20px; bottom: 26px; }
-            .fx-state { height: 200vh; }
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
             .fx-kstage .head, .fx-wstage .head { left: 20px; top: 3vh; }
@@ -280,13 +290,11 @@
             .fx-ledger { padding: 0 12px; } .fx-ledger span { font-size: 0.56rem; letter-spacing: 0.16em; }
         }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
-        .fx-reduce .fx-hero, .fx-reduce .fx-state { height: auto; }
+        .fx-reduce .fx-hero { height: auto; }
         .fx-reduce .fx-stage { position: relative; top: 0; }
-        .fx-reduce .fx-sstage { position: relative; top: 0; }
-        .fx-reduce .fx-sin .l1, .fx-reduce .fx-sin .l2, .fx-reduce .fx-sin .sub { transform: none; opacity: 1; }
         .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-light, .fx-reduce .fx-marq .track, .fx-reduce .fx-cue i { animation: none; }
-        .fx-reduce .fx-wipe, .fx-reduce .fx-wipe-edge { display: none; }
+        .fx-reduce .fx-wipe-edge { display: none; }
     </style>
 </head>
 <body class="fx">
@@ -312,6 +320,7 @@
         <span class="plus">+</span><span data-l="research">Research</span><span class="plus">+</span><span data-l="design">Design</span><span class="plus">+</span><span data-l="build">Build</span><span class="plus">+</span>
     </div>
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
+    <div class="fx-wipe-edge" aria-hidden="true"></div>
     <div class="fx-switch" role="group" aria-label="Preview: transition style"><span>Transition</span><a href="?t=zoom" data-t="zoom">Zoom</a><a href="?t=pan" data-t="pan">Pan</a></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -352,20 +361,14 @@
                 </div>
                 <p class="fx-intro">I design and build interfaces that make everyday decisions feel simple.</p>
                 <div class="fx-cue" aria-hidden="true"><i></i>Scroll</div>
-            </div>
-        </section>
-
-        <!-- 2 · Statement on the red panel -->
-        <section class="fx-state" data-ledger="research">
-            <div class="fx-sstage">
-                <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
-                <div class="fx-sin">
-                    <p class="label">What I care about</p>
-                    <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
-                    <p class="sub">The best interfaces disappear into everyday use. I research, design and build them so that they do.</p>
+                <div class="fx-scene">
+                    <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
+                    <div class="fx-sin">
+                        <p class="label">What I care about</p>
+                        <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
+                        <p class="sub">The best interfaces disappear into everyday use. I research, design and build them so that they do.</p>
+                    </div>
                 </div>
-                <div class="fx-wipe" aria-hidden="true"></div>
-                <div class="fx-wipe-edge" aria-hidden="true"></div>
             </div>
         </section>
 
@@ -541,8 +544,8 @@
             const trails = MODE === 'zoom' ? [1, 2, 3].map(() => fxbox.appendChild(mkCam('fx-trail', '<use class="rim" href="#fwMark"/>'))) : [];
             const fringes = MODE === 'zoom' ? ['f1', 'f2'].map((c) => fxbox.appendChild(mkCam('fx-fringe ' + c, '<use class="rim" href="#fwMark"/>'))) : [];
             const bulgeMap = document.getElementById('fxBulgeMap'), bulgeDisp = document.getElementById('fxBulgeDisp'), smearBlur = document.getElementById('fxSmearBlur');
-            const state = document.querySelector('.fx-state'), sstage = state.querySelector('.fx-sstage');
-            const wipe = state.querySelector('.fx-wipe'), wipeEdge = state.querySelector('.fx-wipe-edge');
+            const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
+            if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
             const kWords = [...skills.querySelectorAll('.fx-words .w')], kCards = [...skills.querySelectorAll('.fx-card')];
             const kLists = [...skills.querySelectorAll('.fx-lists ul')], kTicks = [...skills.querySelectorAll('.fx-ticks i')];
@@ -561,6 +564,9 @@
             const ZP = { x: 1090, y: 1260 }, PC = { x: 988, y: 992.5 }, ZOOM_MAX = 24;   // ZP: deep inside the W's first stroke
             const slabX = (y) => 2144 - (y - 416) * 0.3045;
             let K0 = 1, SW = 1, SH = 1, mobile = false, slantA = 0;
+            /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
+            const FADE1 = 0.14, EM0 = 0.13, EM1 = 0.32, ZM0 = 0.36, ZM1 = 0.60, ST0 = 0.56, ST1 = 0.78, WIPE0 = 0.86;
+            let heroSt = 0, heroWk = 0;
             function layout() {
                 mobile = innerWidth <= 900;
                 SW = stage.clientWidth; SH = stage.clientHeight;
@@ -568,7 +574,9 @@
                 K0 = W / 1872;
                 bulgeMap.setAttribute('width', SW); bulgeMap.setAttribute('height', SH);
                 bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
-                slantA = Math.round(sstage.clientHeight * TAN);
+                slantA = Math.round(SH * TAN);
+                // the skills section slides under the end of the hero, so the exit wipe reveals it already in place
+                skills.style.marginTop = reduce ? '' : `-${Math.round(innerHeight + (hero.offsetHeight - innerHeight) * (1 - WIPE0) + 4)}px`;
                 panel.style.setProperty('--a', `${Math.round(Math.min(panel.offsetHeight * TAN, innerWidth * (mobile ? 0.1 : 0.16)))}px`);
                 // process: steps sit either side of the leaning beam
                 if (!mobile) {
@@ -590,16 +598,6 @@
             function frame() {
                 ticking = false;
                 const vh = innerHeight;
-
-                /* ---- statement: lines lock into place, then black returns along the slant ---- */
-                const sp = reduce ? 0.5 : pinP(state);
-                sstage.style.setProperty('--p', sp.toFixed(3));
-                sstage.style.setProperty('--lock', (reduce ? 1 : ease(clamp(sp / 0.42))).toFixed(3));
-                const wk = reduce ? 0 : ease(clamp((sp - 0.66) / 0.34));
-                const L = lerp(sstage.clientWidth + slantA + 4, 0, wk);
-                wipe.style.clipPath = `polygon(${L.toFixed(1)}px 0, 100% 0, 100% 100%, ${(L - slantA).toFixed(1)}px 100%)`;
-                wipeEdge.style.left = `${(L - slantA / 2).toFixed(1)}px`;
-                wipeEdge.style.opacity = wk > 0.001 && wk < 0.999 ? '1' : '0';
 
                 /* ---- skills: three steps; cards travel up along the 16.5° lean ---- */
                 const kp = pinP(skills);
@@ -664,7 +662,9 @@
                 /* ---- ledger ---- */
                 let mode = '';
                 const midY = vh * 0.5, kr = skills.getBoundingClientRect();
-                if (kr.top <= midY && kr.bottom >= midY) mode = ['research', 'design', 'build'][ks];
+                const hr = hero.getBoundingClientRect();
+                if (hr.top <= midY && hr.bottom >= midY && heroWk < 0.5) mode = heroSt > 0.2 ? 'research' : '';
+                else if (kr.top <= midY && kr.bottom >= midY) mode = ['research', 'design', 'build'][ks];
                 else ledgerBlocks.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= midY && r.bottom >= midY) mode = el.dataset.ledger; });
                 ledger.forEach((l) => l.classList.toggle('is-on', mode === 'all' || l.dataset.l === mode));
             }
@@ -674,7 +674,22 @@
                 const hp = reduce ? 0 : pinP(hero);
                 if (lastHp !== null) { const dt = Math.max(8, t - lastT); vel += ((hp - lastHp) / dt * 1000 - vel) * 0.18; }
                 lastHp = hp; lastT = t;
-                const fade = clamp(hp / 0.22), em = reduce ? 0.7 : ease(clamp((hp - 0.2) / 0.3)), zm = reduce ? 0 : clamp((hp - 0.58) / 0.42);
+                const fade = clamp(hp / FADE1), em = reduce ? 0.7 : ease(clamp((hp - EM0) / (EM1 - EM0))), zm = reduce ? 0 : clamp((hp - ZM0) / (ZM1 - ZM0));
+                // statement: starts while the red is completing, each line slightly after the last
+                const st = reduce ? 1 : clamp((hp - ST0) / (ST1 - ST0));
+                scene.style.setProperty('--s1', ease(clamp(st / 0.62)).toFixed(4));
+                scene.style.setProperty('--s2', ease(clamp((st - 0.16) / 0.62)).toFixed(4));
+                scene.style.setProperty('--s3', ease(clamp((st - 0.42) / 0.58)).toFixed(4));
+                scene.style.setProperty('--sg', st.toFixed(4));
+                // exit: the whole scene is cut away along the slant
+                const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
+                heroSt = st; heroWk = wk;
+                if (wk > 0.0005) {
+                    const L = lerp(SW + slantA + 4, 0, wk);
+                    stage.style.clipPath = `polygon(0 0, ${L.toFixed(1)}px 0, ${(L - slantA).toFixed(1)}px 100%, 0 100%)`;
+                    wipeEdge.style.left = `${(L - slantA - 0.75).toFixed(1)}px`;
+                    wipeEdge.style.opacity = wk < 0.999 ? '1' : '0';
+                } else { stage.style.clipPath = ''; wipeEdge.style.opacity = '0'; }
                 stage.style.setProperty('--fade', fade.toFixed(3));
                 stage.style.setProperty('--em', em.toFixed(3));
                 stage.style.setProperty('--zm', zm.toFixed(3));
@@ -721,7 +736,7 @@
                 });
             }
             const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
-            new IntersectionObserver(([e]) => { heroOn = e.isIntersecting; }).observe(hero);
+            new IntersectionObserver(([e]) => { heroOn = e.isIntersecting; if (!heroOn) wipeEdge.style.opacity = '0'; }).observe(hero);
             requestAnimationFrame(heroLoop);
 
             const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
