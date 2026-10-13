@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Frank Wu | UX Portfolio</title>
     <meta name="robots" content="noindex" />
-    <!-- Link to the redesigned CSS file -->
+    <meta name="description" content="Frank Wu, UI/UX designer who designs and builds. Shipped e-commerce pages for Nitori Taiwan, plus university case studies." />
     <link rel="stylesheet" href="assets/css/style.css" />
-    <!-- Link to Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- Link to Google Fonts for Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Ruthie&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
     <script>
         // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
@@ -21,111 +18,241 @@
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
     </script>
     <style>
-        /* PREVIEW: two sections after the intro. "Proof" pairs a browser window
-           playing real Nitori pages with rolling figures; "Explore" is a quick
-           nav that previews each project. Same charcoal, red and Inter as the
-           site; everything is scoped to .proof / .explore. */
-        .proof, .explore { max-width: 1200px; padding: 70px 40px; }
-        .proof b, .explore b { font-style: normal; }   /* the site sets b in italics */
-        .sec-head { margin-bottom: 34px; }
-        .sec-kicker { display: inline-flex; align-items: center; gap: 10px; color: var(--primary-color); font-weight: 500; font-size: 0.95rem; margin-bottom: 10px; }
-        .sec-kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-color); box-shadow: 0 0 12px rgba(211, 47, 47, 0.8); }
-        .sec-head h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); margin: 0; letter-spacing: -0.01em; }
+        /* PREVIEW, inspired by meermohsin.me: layered depth instead of flat
+           panels. Portrait in front of a moving headline, a 3D grid floor,
+           projects floating over blurred copies of themselves, a light beam
+           through the process, drifting embers. CSS 3D and one small scroll
+           loop; no WebGL, no smooth-scroll library. Scoped to body.mx. */
+        body.mx { --red: #d3161b; --red-deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --script: 'Ruthie', cursive;
+            background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; }
+        .mx .section-bg-overlay { display: none; }
+        .mx main { max-width: none; }
+        :where(.mx) section { padding: 0; max-width: none; margin: 0; }
+        .mx b, .mx figcaption { font-style: normal; }
+        .mx ul, .mx ol { list-style: none; margin: 0; padding: 0; font-weight: 400; }
+        .mx li { margin: 0; }
+        .mx .script { font-family: var(--script); font-weight: 400; text-transform: none; letter-spacing: 0; }
+        .mx .k { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); margin: 0 0 18px; }
+        .mx a:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
 
-        /* Proof: window + figures */
-        .proof-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
-        .hx-window { margin: 0; border-radius: 14px; overflow: hidden; background: #0d0d0d; border: 1px solid var(--background-lightest);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 50px rgba(183, 28, 28, 0.22); align-self: center; }
-        .hx-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: #171717; border-bottom: 1px solid #262626; }
-        .hx-bar i { width: 10px; height: 10px; border-radius: 50%; background: #3a3a3a; }
-        .hx-url { margin-left: 10px; flex: 1; max-width: 340px; padding: 4px 12px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a;
-            font-size: 0.74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .hx-screen { position: relative; aspect-ratio: 16 / 10; background: #111; }
-        .hx-screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.45s ease; }
-        .hx-screen video.is-out { opacity: 0; }
-        .hx-window figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; font-size: 0.82rem; font-style: normal;
-            text-align: left; max-width: none; color: var(--text-secondary); border-top: 1px solid #262626; }
-        .hx-window figcaption b { color: #fff; font-weight: 500; margin: 0; }
-        .hx-tag { color: #8a8a8a; white-space: nowrap; }
-        .odo-side { display: flex; flex-direction: column; justify-content: center; }
-        .odo-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--background-lightest); border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.35); }
-        .odo-cell { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px 22px 24px; text-decoration: none; color: inherit; transition: background 0.3s ease; }
-        .odo-cell:nth-child(2n) { border-left: 1px solid var(--background-lightest); }
-        .odo-cell:nth-child(n + 3) { border-top: 1px solid var(--background-lightest); }
-        .odo-cell::after { content: ""; position: absolute; left: 22px; right: 22px; bottom: 0; height: 2px; background: var(--primary-color);
-            transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
-        .odo-cell:hover { background: rgba(211, 47, 47, 0.06); }
-        .odo-cell:hover::after { transform: scaleX(1); }
-        .odo-cell:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
-        .odo { display: flex; align-items: flex-end; height: 1.1em; line-height: 1.1; font-size: clamp(2rem, 3.6vw, 3.2rem); font-weight: 800;
-            letter-spacing: -0.03em; color: #fff; font-feature-settings: "tnum"; margin: 0; }
-        .odo-label { font-size: 0.84rem; line-height: 1.5; color: #8a8a8a; }
-        .odo-label strong { color: #e6e6e6; font-weight: 600; }
-        .odo-note { margin: 12px 0 0; font-size: 0.72rem; color: #6f6f6f; text-align: left; }
+        /* Embers: a few red sparks drifting above everything */
+        .mx-embers { position: fixed; inset: 0; z-index: 40; pointer-events: none; mix-blend-mode: screen; }
+        .mx-embers i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #ff3b2f;
+            box-shadow: 0 0 10px 3px rgba(255, 40, 30, 0.7), 0 0 40px 12px rgba(200, 0, 0, 0.35); opacity: 0.55; animation: mx-drift var(--t, 18s) ease-in-out infinite alternate; }
+        @keyframes mx-drift { to { transform: translate3d(var(--dx, 40px), var(--dy, -60px), 0) scale(0.6); opacity: 0.15; } }
+
+        /* Fixed ledger: RESEARCH + DESIGN + BUILD, lit by the section in view */
+        .mx-ledger { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; height: 34px; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+            align-items: center; padding: 0 22px; background: linear-gradient(to top, rgba(6, 6, 6, 0.95), rgba(6, 6, 6, 0.6)); pointer-events: none; }
+        .mx-ledger span { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; color: #4a4a4a; transition: color 0.4s ease, text-shadow 0.4s ease; justify-self: center; }
+        .mx-ledger .plus { color: #3a3a3a; font-weight: 400; letter-spacing: 0; }
+        .mx-ledger .plus:first-child { justify-self: start; } .mx-ledger .plus:last-child { justify-self: end; }
+        .mx-ledger span.is-on { color: #fff; text-shadow: 0 0 14px rgba(255, 40, 30, 0.8); }
+        .mx-progress { position: fixed; left: 22px; bottom: 44px; z-index: 45; width: 120px; height: 2px; background: rgba(255, 255, 255, 0.1); pointer-events: none; }
+        .mx-progress i { display: block; height: 100%; background: var(--red); transform-origin: left; transform: scaleX(var(--page, 0)); box-shadow: 0 0 8px var(--red); }
+
+        /* Cursor ring (desktop) */
+        .mx-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 1px solid rgba(255, 70, 60, 0.9);
+            pointer-events: none; display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 700; letter-spacing: 0.12em;
+            transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, background 0.35s ease, font-size 0.2s ease; will-change: transform; }
+        .mx-cursor.is-view { width: 86px; height: 86px; margin: -43px 0 0 -43px; background: rgba(211, 22, 27, 0.85); border-color: transparent; font-size: 0.7rem; }
+        @media (hover: none), (pointer: coarse) { .mx-cursor { display: none; } }
+
+        /* 1 · Hero: the headline runs behind the portrait */
+        .mx-hero { position: relative; height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); min-height: 560px; overflow: hidden; isolation: isolate;
+            --mx: 0; --my: 0; --out: 0; }
+        .mx-hero-bg { position: absolute; inset: 0; z-index: 0;
+            background: radial-gradient(60% 75% at 50% 30%, #c90a0f 0%, #860000 38%, #2a0000 68%, var(--ink) 100%); }
+        .mx-hero-bg::after { content: ""; position: absolute; inset: auto 0 0 0; height: 35%; background: linear-gradient(to bottom, transparent, var(--ink)); }
+        .mx-marquee { position: absolute; left: 0; right: 0; top: 34%; z-index: 1; white-space: nowrap; pointer-events: none;
+            transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -10px + var(--out) * -140px), 0); }
+        .mx-track { display: inline-flex; animation: mx-marq 38s linear infinite; }
+        .mx-track span { font-size: clamp(5rem, 17vw, 17rem); font-weight: 800; letter-spacing: -0.045em; line-height: 0.85; color: #fff; padding-right: 0.25em; }
+        @keyframes mx-marq { to { transform: translateX(-50%); } }
+        .mx-portrait { position: absolute; z-index: 2; left: 50%; bottom: 0; height: 92%; width: auto; max-width: none;
+            transform: translate3d(calc(-50% + var(--mx) * 14px), calc(var(--my) * 6px + var(--out) * 90px), 0) scale(calc(1 + var(--out) * 0.06));
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.6)); -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+            mask-image: linear-gradient(to bottom, #000 78%, transparent); }
+        .mx-hero-copy { position: absolute; z-index: 3; left: 40px; top: 32px; max-width: 30ch; opacity: calc(1 - var(--out) * 1.6); }
+        .mx-hero-copy h1 { font-size: 1.05rem; font-weight: 700; margin: 0 0 8px; color: #fff; }
+        .mx-hero-copy p { font-size: 0.92rem; line-height: 1.55; margin: 0; color: rgba(255, 255, 255, 0.82); }
+        .mx-roles { position: absolute; z-index: 3; right: 40px; bottom: 90px; text-align: right; opacity: calc(1 - var(--out) * 1.6); }
+        .mx-roles li { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; line-height: 1.9; }
+        .mx-hero-cta { position: absolute; z-index: 3; left: 40px; bottom: 82px; display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 4px; color: #fff; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(6px); opacity: calc(1 - var(--out) * 1.6); transition: background 0.3s ease, border-color 0.3s ease; }
+        .mx-hero-cta:hover { background: var(--red); border-color: var(--red); }
+        .mx-hero-cta i { width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); }
+        .mx-hero-cta:hover i { background: #fff; }
+
+        /* 2 · Statement: layered words at different depths */
+        .mx-state { position: relative; padding: 18vh 40px 20vh; overflow: hidden; --p: 0.5; }
+        .mx-state-in { position: relative; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .mx-big { margin: 0; line-height: 0.92; }
+        .mx-big .l1, .mx-big .l2 { display: block; font-size: clamp(2.6rem, 8.4vw, 8.2rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; color: var(--red);
+            transform: translate3d(calc((0.5 - var(--p)) * 140px), 0, 0); }
+        .mx-big .l2 { color: #fff; transform: translate3d(calc((var(--p) - 0.5) * 140px), 0, 0); }
+        .mx-big .script { display: block; font-size: clamp(4rem, 15vw, 14rem); color: #fff; line-height: 0.75; margin-top: -0.02em; text-shadow: 0 0 40px rgba(255, 30, 30, 0.55);
+            transform: translate3d(0, calc((0.5 - var(--p)) * -120px), 0) rotate(-5deg); }
+        .mx-float { position: absolute; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55);
+            transform: translate3d(0, calc((0.5 - var(--p)) * var(--d) * 520px), 0) scale(calc(0.7 + var(--d) * 0.5)); filter: blur(calc((1 - var(--d)) * 2.2px)); }
+        .mx-float::before { content: "+ "; color: var(--red); }
+
+        /* 3 · Skills: pinned stage with a 3D grid floor */
+        .mx-skills { position: relative; height: 340vh; --p: 0; }
+        .mx-stage { position: sticky; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); overflow: hidden; perspective: 1100px; }
+        .mx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 70%; transform-origin: 50% 100%; transform: rotateX(74deg);
+            background-image: linear-gradient(rgba(211, 22, 27, 0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(211, 22, 27, 0.45) 1px, transparent 1px);
+            background-size: 90px 90px; background-position: 50% calc(var(--p) * 1400px);
+            -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%); mask-image: linear-gradient(to top, #000 10%, transparent 85%); }
+        .mx-lines { position: absolute; inset: 6% 8% 10%; width: 84%; height: 84%; opacity: 0.55; transform: scale(calc(0.92 + var(--p) * 0.12)); }
+        .mx-lines * { fill: none; stroke: rgba(211, 22, 27, 0.4); stroke-width: 1; vector-effect: non-scaling-stroke; }
+        .mx-sk-count { position: absolute; left: 40px; top: 30px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.18em; color: var(--dim); }
+        .mx-sk-count b { color: #fff; margin: 0; }
+        .mx-words { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; transform: translateX(-12vw); }
+        .mx-words .w { grid-area: 1 / 1; font-family: var(--script); font-size: clamp(4.6rem, 15vw, 14rem); color: var(--red); line-height: 1; white-space: nowrap;
+            text-shadow: 0 0 50px rgba(211, 22, 27, 0.45); opacity: 0; filter: blur(14px); transform: translateZ(-200px) scale(0.92);
+            transition: opacity 0.7s ease, filter 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .mx-words .w.is-on { opacity: 1; filter: none; transform: none; }
+        .mx-cards { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+        .mx-card { position: absolute; left: 50%; top: 50%; width: min(28vw, 360px); margin: 0; transform-style: preserve-3d; will-change: transform, opacity; opacity: 0; }
+        .mx-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+        .mx-card figcaption { margin-top: 10px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); text-align: left; max-width: none; }
+        .mx-sk-lists { position: absolute; right: 40px; bottom: 70px; width: 250px; }
+        .mx-sk-lists ul { position: absolute; right: 0; bottom: 0; width: 100%; text-align: right; opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .mx-sk-lists ul.is-on { opacity: 1; transform: none; }
+        .mx-sk-lists li { font-size: 0.92rem; color: #d9d9d9; line-height: 1.75; }
+        .mx-sk-lists li:first-child { color: var(--red); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; }
+
+        /* 4 · Torn band, two layers moving at different speeds */
+        .mx-tear { position: relative; padding: 16vh 0; overflow: hidden; --p: 0.5; }
+        .mx-tear-back, .mx-tear-front { position: relative; }
+        .mx-tear-back { position: absolute; left: -5%; right: -5%; top: 22%; height: 56%; background: #3a0000; transform: translate3d(0, calc((0.5 - var(--p)) * -120px), 0) rotate(2.5deg); }
+        .mx-tear-front { margin: 0 -4%; transform: translate3d(0, calc((0.5 - var(--p)) * 90px), 0) rotate(-2.5deg); filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6)); }
+        .mx-tear-paper { background: #f2efe9; padding: 14px 0; }
+        .mx-tear-red { background: linear-gradient(100deg, #7a0000, #c4070c 55%, #8f0000); padding: 9vh 10%; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+        .mx-tear-red h2 { font-size: clamp(2.2rem, 5.6vw, 5rem); font-weight: 800; letter-spacing: -0.035em; line-height: 0.98; margin: 0; color: #fff; }
+        .mx-tear-red h2 .script { color: #fff; font-size: 1.25em; text-shadow: 0 0 30px rgba(0, 0, 0, 0.35); }
+        .mx-figs { display: grid; gap: 22px; }
+        .mx-fig b { display: flex; align-items: flex-end; height: 1.1em; line-height: 1.1; font-size: clamp(2rem, 4.2vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; color: #fff; margin: 0; font-feature-settings: "tnum"; }
+        .mx-fig span.lab { display: block; margin-top: 6px; font-size: 0.86rem; color: rgba(255, 255, 255, 0.82); }
         .odo-ch { display: inline-block; }
-        .odo-unit { color: var(--primary-color); font-size: 0.55em; font-weight: 700; margin: 0 0.06em 0.16em; align-self: flex-end; }
+        .odo-unit { font-size: 0.55em; color: rgba(255, 255, 255, 0.7); margin: 0 0.06em 0.16em; align-self: flex-end; }
         .odo-d { display: inline-block; height: 1.1em; overflow: hidden; }
-        .odo.is-rolling .odo-d { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
-            mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); }
-        .odo-strip { display: flex; flex-direction: column; transform: translateY(0);
-            transition: transform var(--dur, 1.6s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--delay, 0s); }
+        .odo-strip { display: flex; flex-direction: column; transition: transform var(--dur, 1.6s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--delay, 0s); }
         .odo-strip span { display: block; height: 1.1em; }
 
-        /* Explore: list with progress bars + preview stage */
-        .qx { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 36px; align-items: center; }
-        .qx-list { list-style: none; margin: 0; padding: 0; font-weight: 400; }
-        .qx-list li { margin: 0; }
-        .qx-item { position: relative; display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; align-items: center; gap: 12px;
-            padding: 20px 4px 22px; text-decoration: none; color: inherit; border-top: 1px solid var(--background-lightest); }
-        .qx-list li:last-child .qx-item { border-bottom: 1px solid var(--background-lightest); }
-        .qx-num { font-size: 0.8rem; color: #6f6f6f; font-feature-settings: "tnum"; transition: color 0.3s ease; }
-        .qx-text { display: flex; flex-direction: column; gap: 4px; }
-        .qx-title { font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 600; color: #8a8a8a; letter-spacing: -0.01em; transition: color 0.3s ease, transform 0.35s ease; }
-        .qx-meta { font-size: 0.84rem; color: #6f6f6f; }
-        .qx-go { color: #6f6f6f; font-size: 1.2rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .qx-bar { position: absolute; left: 0; right: 0; top: -1px; height: 2px; overflow: hidden; }
-        .qx-bar i { display: block; height: 100%; width: 100%; background: var(--primary-color); transform: scaleX(0); transform-origin: left; }
-        .qx-item.is-active .qx-num { color: var(--primary-color); }
-        .qx-item.is-active .qx-title { color: #fff; transform: translateX(6px); }
-        .qx-item.is-active .qx-go { color: var(--primary-color); transform: translateX(4px); }
-        .qx-item.is-active .qx-bar i { animation: qx-fill var(--qx-time, 5s) linear forwards; }
-        .qx.is-paused .qx-item.is-active .qx-bar i { animation-play-state: paused; }
-        .qx.is-manual .qx-item.is-active .qx-bar i { animation: none; transform: scaleX(1); }
-        @keyframes qx-fill { to { transform: scaleX(1); } }
-        .qx-item:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 4px; border-radius: 4px; }
-        .qx-stage { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: #111;
-            border: 1px solid var(--background-lightest); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45); text-decoration: none; }
-        .qx-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06);
-            transition: opacity 0.6s ease, transform 1.2s ease; }
-        .qx-stage img.is-on { opacity: 1; transform: scale(1); }
-        .qx-stage:hover img.is-on { transform: scale(1.03); }
-        .qx-info { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 6px; padding: 60px 24px 20px;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.92), rgba(10, 10, 10, 0.55) 60%, transparent); transition: opacity 0.3s ease; }
-        .qx-info.is-out { opacity: 0; }
-        .qx-tag { align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: rgba(10, 10, 10, 0.7); border: 1px solid rgba(255, 255, 255, 0.14);
-            font-size: 0.74rem; font-weight: 600; color: #fff; }
-        .qx-line { font-size: 0.98rem; color: #e6e6e6; max-width: 46ch; line-height: 1.5; }
-        .qx-open { margin-top: 4px; font-size: 0.86rem; font-weight: 600; color: #fff; }
+        /* 5 · Work: one project at a time over a blurred copy of itself */
+        .mx-work { position: relative; height: 470vh; --p: 0; }
+        .mx-wstage { position: sticky; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); height: calc(100svh - var(--navbar-height)); overflow: hidden; perspective: 1400px; }
+        .mx-wbg img { position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover; filter: blur(40px) brightness(0.42) saturate(1.25); opacity: 0; transition: opacity 0.9s ease; }
+        .mx-wbg img.is-on { opacity: 1; }
+        .mx-wstage::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, transparent 40%, rgba(6, 6, 6, 0.85)); pointer-events: none; }
+        .mx-whead { position: absolute; left: 40px; top: 28px; z-index: 3; }
+        .mx-whead h2 { font-size: 1rem; font-weight: 700; margin: 0; color: #fff; }
+        .mx-wname, .mx-wdesc { position: absolute; z-index: 3; top: 50%; transform: translateY(-50%); }
+        .mx-wname { left: 40px; width: 22vw; }
+        .mx-wname .n, .mx-wdesc .d { position: absolute; top: 50%; left: 0; right: 0; opacity: 0; transform: translateY(calc(-50% + 18px)); transition: opacity 0.5s ease, transform 0.6s ease; }
+        .mx-wname .n.is-on, .mx-wdesc .d.is-on { opacity: 1; transform: translateY(-50%); }
+        .mx-wname .n { font-size: clamp(1.4rem, 2.4vw, 2.1rem); font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: #fff; line-height: 1.05; }
+        .mx-wname .n small { display: block; margin-top: 8px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; color: var(--red); }
+        .mx-wdesc { right: 40px; width: 22vw; }
+        .mx-wdesc .d p { font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.85); margin: 0 0 12px; }
+        .mx-wdesc .d a { color: #fff; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+        .mx-wdesc .d:not(.is-on) { pointer-events: none; }
+        .mx-wcards { position: absolute; inset: 0; z-index: 2; transform-style: preserve-3d; }
+        .mx-wcard { position: absolute; left: 50%; top: 50%; width: min(46vw, 720px); text-decoration: none; transform-style: preserve-3d; will-change: transform, opacity; opacity: 0; }
+        .mx-wcard img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        .mx-browser { border-radius: 10px; overflow: hidden; background: #0d0d0d; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 60px rgba(211, 22, 27, 0.25); }
+        .mx-browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #171717; }
+        .mx-browser .bar i { width: 9px; height: 9px; border-radius: 50%; background: #3a3a3a; }
+        .mx-browser .url { margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
+        .mx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
+        .mx-ring { position: absolute; right: 40px; bottom: 64px; z-index: 3; width: 62px; height: 62px; display: grid; place-items: center; }
+        .mx-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+        .mx-ring circle { fill: none; stroke-width: 1.5; }
+        .mx-ring .t { stroke: rgba(255, 255, 255, 0.18); } .mx-ring .f { stroke: var(--red); stroke-dasharray: 182; stroke-dashoffset: calc(182 - var(--wp, 0) * 182); transition: stroke-dashoffset 0.6s ease; }
+        .mx-ring b { font-size: 0.9rem; font-weight: 700; color: #fff; margin: 0; }
+
+        /* 6 · Process: a beam of light writes the steps */
+        .mx-process { position: relative; padding: 16vh 40px 10vh; --bp: 0; }
+        .mx-pr-head { max-width: 900px; margin: 0 auto 10vh; text-align: center; }
+        .mx-pr-head h2 { font-size: clamp(1.8rem, 3.6vw, 3rem); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; color: var(--red); margin: 0; }
+        .mx-pr-head h2 .script { display: block; color: #fff; font-size: 1.6em; line-height: 1; margin-top: 4px; }
+        .mx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; }
+        .mx-beam { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: rgba(211, 22, 27, 0.15); }
+        .mx-beam::before { content: ""; position: absolute; left: 50%; top: 0; width: 240px; margin-left: -120px; height: calc(var(--bp) * 100%);
+            background: radial-gradient(50% 100% at 50% 100%, rgba(211, 22, 27, 0.35), transparent 70%); filter: blur(30px); }
+        .mx-beam i { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(211, 22, 27, 0.2), #ff2a20);
+            transform-origin: top; transform: scaleY(var(--bp)); box-shadow: 0 0 18px 2px rgba(255, 30, 30, 0.6); }
+        .mx-beam b { position: absolute; left: 50%; top: calc(var(--bp) * 100%); width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #fff;
+            box-shadow: 0 0 14px 4px #ff3b2f, 0 0 60px 20px rgba(211, 22, 27, 0.6); }
+        .mx-steps { position: relative; display: grid; gap: 12vh; perspective: 900px; }
+        .mx-step { width: calc(50% - 70px); opacity: 0.14; filter: blur(3px); transform: translate3d(var(--sx, -40px), 30px, -140px);
+            transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .mx-step:nth-child(odd) { justify-self: start; text-align: right; }
+        .mx-step:nth-child(even) { justify-self: end; --sx: 40px; }
+        .mx-step.is-lit { opacity: 1; filter: none; transform: none; }
+        .mx-step .num { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.18em; color: var(--dim); }
+        .mx-step h3 { font-family: var(--script); font-weight: 400; font-size: clamp(2.6rem, 4.6vw, 4.2rem); color: var(--red); margin: 0 0 6px; line-height: 1.1; }
+        .mx-step p { margin: 0; color: #cfcfcf; line-height: 1.65; }
+        .mx-pool { height: 22vh; margin-top: 4vh; background: radial-gradient(30% 60% at 50% 0%, rgba(211, 22, 27, calc(var(--bp) * 0.45)), transparent 70%); }
+
+        /* 7 · Finale */
+        .mx .mx-end { position: relative; overflow: hidden; padding: 18vh 40px 14vh; text-align: center; isolation: isolate; }
+        .mx-end::before { content: ""; position: absolute; left: 10%; right: 10%; bottom: -30%; height: 80%; z-index: -1; background: radial-gradient(50% 50% at 50% 70%, rgba(211, 22, 27, 0.5), transparent 70%); filter: blur(40px); }
+        .mx-end h2 { font-size: clamp(2.4rem, 6.4vw, 6rem); font-weight: 800; letter-spacing: -0.035em; text-transform: uppercase; line-height: 0.95; margin: 0 auto; max-width: 15ch; color: var(--red); }
+        .mx-end h2 .script { display: block; color: #fff; font-size: 1.45em; line-height: 0.85; margin-top: 0.05em; text-shadow: 0 0 40px rgba(255, 30, 30, 0.5); }
+        .mx-mail { display: inline-flex; align-items: center; gap: 12px; margin-top: 48px; font-size: clamp(1.1rem, 2.4vw, 1.8rem); font-weight: 600; color: #fff; text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.35); padding-bottom: 6px; transition: border-color 0.3s ease; }
+        .mx-mail:hover { border-color: var(--red); }
+        .mx-mail span { color: var(--red); transition: transform 0.3s ease; } .mx-mail:hover span { transform: translateX(6px); }
+        .mx-end-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 28px; margin-top: 24px; }
+        .mx-end-links a { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+        .mx-end-links a:hover { color: #fff; }
+        .mx-end-marq { margin-top: 12vh; white-space: nowrap; pointer-events: none; opacity: 0.5; }
+        .mx-end-marq .mx-track { animation-duration: 46s; animation-direction: reverse; }
+        .mx-end-marq span { font-family: var(--script); font-size: clamp(4rem, 11vw, 10rem); color: var(--red); padding-right: 0.4em; line-height: 1.2; font-weight: 400; letter-spacing: 0; }
 
         @media (max-width: 900px) {
-            .proof, .explore { padding: 50px 20px; }
-            .proof-grid { grid-template-columns: 1fr; gap: 22px; }
-            .hx-window figcaption { flex-direction: column; gap: 2px; }
-            .odo-cell { padding: 20px 16px 18px; }
-            .odo-cell::after { left: 16px; right: 16px; }
-            .odo { font-size: clamp(1.8rem, 8vw, 2.4rem); }
-            .qx { grid-template-columns: 1fr; gap: 18px; }
-            .qx-stage { order: -1; }
-            .qx-item { padding: 14px 2px 16px; }
-            .qx-line { font-size: 0.9rem; }
-            .qx-info { padding: 40px 16px 14px; }
+            .mx-hero-copy { left: 20px; top: 20px; right: 20px; }
+            .mx-roles { right: 20px; bottom: 78px; }
+            .mx-roles li { font-size: 0.66rem; }
+            .mx-hero-cta { left: 20px; bottom: 74px; }
+            .mx-marquee { top: 40%; }
+            .mx-portrait { height: 76%; }
+            .mx-state { padding: 12vh 20px 14vh; }
+            .mx-float { font-size: 0.66rem; }
+            .mx-sk-count { left: 20px; top: 18px; }
+            .mx-words { transform: none; place-items: start center; padding-top: 7vh; }
+            .mx-words .w { font-size: 19vw; }
+            .mx-card { width: 64vw; }
+            .mx-float { display: none; }
+            .mx-sk-lists { left: 20px; right: 20px; bottom: 56px; width: auto; }
+            .mx-sk-lists ul { text-align: left; }
+            .mx-tear-red { grid-template-columns: 1fr; padding: 7vh 9%; gap: 28px; }
+            .mx-whead { left: 20px; top: 16px; }
+            .mx-wname { left: 20px; right: 20px; width: auto; top: 13%; }
+            .mx-wdesc { left: 20px; right: 20px; width: auto; top: auto; bottom: 18%; transform: none; height: 7.5em; }
+            .mx-wdesc .d { top: 0; transform: translateY(18px); } .mx-wdesc .d.is-on { transform: none; }
+            .mx-wdesc .d p { font-size: 0.84rem; }
+            .mx-wcard { width: 86vw; }
+            .mx-ring { right: 20px; top: 10px; bottom: auto; width: 50px; height: 50px; }
+            .mx-process { padding: 12vh 20px 8vh; }
+            .mx-beam { left: 6px; }
+            .mx-step, .mx-step:nth-child(odd), .mx-step:nth-child(even) { width: auto; justify-self: stretch; text-align: left; margin-left: 34px; --sx: 30px; }
+            .mx .mx-end { padding: 14vh 20px 10vh; }
+            .mx-ledger { padding: 0 12px; } .mx-ledger span { font-size: 0.58rem; letter-spacing: 0.14em; }
+            .mx-progress { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mx-track, .mx-embers i { animation: none; }
+            .mx-embers { display: none; }
         }
     </style>
 </head>
-<body>
-    <!-- Navbar remains the same -->
+<body class="mx">
     <header class="navbar">
-        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
         <a href="index.html" class="logo">
             <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
         </a>
@@ -141,293 +268,329 @@
         </div>
     </header>
 
+    <div class="mx-embers" aria-hidden="true">
+        <i style="left:12%;top:70%;--t:17s;--dx:60px;--dy:-120px"></i>
+        <i style="left:82%;top:40%;--t:21s;--dx:-50px;--dy:-90px"></i>
+        <i style="left:46%;top:86%;--t:15s;--dx:30px;--dy:-160px"></i>
+        <i style="left:68%;top:18%;--t:24s;--dx:-70px;--dy:60px"></i>
+        <i style="left:24%;top:30%;--t:19s;--dx:50px;--dy:80px"></i>
+        <i style="left:92%;top:78%;--t:22s;--dx:-40px;--dy:-140px"></i>
+    </div>
+    <div class="mx-ledger" aria-hidden="true">
+        <span class="plus">+</span><span data-l="research">Research</span><span class="plus">+</span><span data-l="design">Design</span><span class="plus">+</span><span data-l="build">Build</span><span class="plus">+</span>
+    </div>
+    <div class="mx-progress" aria-hidden="true"><i></i></div>
+    <div class="mx-cursor" aria-hidden="true">VIEW</div>
+
     <main>
         <div class="section-bg-overlay"></div>
-        <!-- Intro Section -->
-        <section id="intro">
-            <!-- Old intro div now has the fade-in class -->
-            <div class="intro fade-in">
-                <div class="intro-content">
-                    <div class="subtitle" data-blur>UI/UX Designer</div>
-                    <h1>Hi, I’m <a class="name">Frank Wu.</a></h1>
-                    <p class="description" data-blur>
-                        I design and build interfaces that make everyday decisions feel simple.
-                    </p>
-                    <div class="intro-buttons">
-                        <a href="projects.html" class="btn">
-                            View My Work
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14" />
-                                <path d="m12 5 7 7-7 7" />
-                            </svg>
-                        </a>
-                        <a href="about.html" class="btn secondary">About Me</a>
-                    </div>
+
+        <!-- 1 · Hero: portrait in front of a moving headline -->
+        <section class="mx-hero">
+            <div class="mx-hero-bg"></div>
+            <div class="mx-marquee" aria-hidden="true">
+                <div class="mx-track"><span>Frank Wu ✕ Design &amp; Build ✕</span><span>Frank Wu ✕ Design &amp; Build ✕</span></div>
+            </div>
+            <img class="mx-portrait" src="assets/images/home/portrait_cut.webp" alt="Portrait of Frank Wu" fetchpriority="high">
+            <div class="mx-hero-copy">
+                <h1>Hi, I’m Frank Wu.</h1>
+                <p>I design and build interfaces that make everyday decisions feel simple.</p>
+            </div>
+            <ul class="mx-roles">
+                <li>UI/UX designer</li>
+                <li>Front-end builder</li>
+                <li>Sydney → Taipei</li>
+            </ul>
+            <a class="mx-hero-cta" href="#work"><i aria-hidden="true"></i>See the work</a>
+        </section>
+
+        <!-- 2 · Statement -->
+        <section class="mx-state" data-track="p" data-ledger="research">
+            <div class="mx-state-in">
+                <p class="k">(01) What I care about</p>
+                <h2 class="mx-big"><span class="l1">Everyday decisions,</span><span class="l2">made</span><span class="script">simple.</span></h2>
+                <span class="mx-float" style="left:2%;top:18%;--d:0.9" aria-hidden="true">Interview</span>
+                <span class="mx-float" style="right:4%;top:8%;--d:0.4" aria-hidden="true">Prototype</span>
+                <span class="mx-float" style="left:10%;bottom:4%;--d:0.5" aria-hidden="true">Test</span>
+                <span class="mx-float" style="right:8%;bottom:14%;--d:1" aria-hidden="true">Build</span>
+                <span class="mx-float" style="left:42%;top:-4%;--d:0.25" aria-hidden="true">Measure</span>
+                <span class="mx-float" style="right:30%;bottom:-6%;--d:0.7" aria-hidden="true">Ship</span>
+            </div>
+        </section>
+
+        <!-- 3 · Skills: pinned, three steps over a 3D grid floor -->
+        <section class="mx-skills" aria-label="What I do">
+            <div class="mx-stage">
+                <div class="mx-floor" aria-hidden="true"></div>
+                <svg class="mx-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <rect x="22" y="14" width="56" height="72"/><line x1="0" y1="0" x2="100" y2="100"/><line x1="100" y1="0" x2="0" y2="100"/>
+                    <line x1="50" y1="0" x2="50" y2="100"/><line x1="0" y1="50" x2="100" y2="50"/>
+                </svg>
+                <div class="mx-sk-count" aria-hidden="true"><b class="cur">01</b> / 03</div>
+                <div class="mx-words" aria-hidden="true">
+                    <span class="w is-on">Research</span><span class="w">UI / UX</span><span class="w">Front-end</span>
+                </div>
+                <div class="mx-cards">
+                    <figure class="mx-card"><img src="assets/images/home/skill_research.webp" alt="Usability test of the CareerCourse prototype" loading="lazy"><figcaption>CareerCourse · usability testing</figcaption></figure>
+                    <figure class="mx-card"><img src="assets/images/home/skill_uiux.webp" alt="One Shop design system: components for desktop and mobile" loading="lazy"><figcaption>One Shop · design system</figcaption></figure>
+                    <figure class="mx-card"><img src="assets/images/home/skill_build.webp" alt="Live Nitori electric sofa guide built by Frank" loading="lazy"><figcaption>Nitori · built and shipped</figcaption></figure>
+                </div>
+                <div class="mx-sk-lists">
+                    <ul class="is-on"><li>Research</li><li>User interviews &amp; surveys</li><li>Usability testing</li><li>Personas &amp; journeys</li></ul>
+                    <ul><li>UI / UX design</li><li>Wireframes &amp; prototypes</li><li>Design systems</li><li>High-fidelity UI</li></ul>
+                    <ul><li>Front-end</li><li>HTML · CSS · JavaScript</li><li>Responsive layouts</li><li>Shipped on nitori-net.tw</li></ul>
                 </div>
             </div>
         </section>
 
-        <!-- PREVIEW: proof. Real Nitori pages playing, paired with what they show I'm good at -->
-        <section class="proof">
-            <div class="sec-head">
-                <span class="sec-kicker"><span class="dot" aria-hidden="true"></span>Proof, not promises</span>
-                <h2>Designed, built, and it sells.</h2>
-            </div>
-            <div class="proof-grid">
-                <figure class="hx-window fade-in">
-                    <div class="hx-bar" aria-hidden="true"><i></i><i></i><i></i><span class="hx-url">nitori-net.tw/article/Sofa</span></div>
-                    <div class="hx-screen">
-                        <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video>
+        <!-- 4 · Torn band: results that sell the strengths -->
+        <section class="mx-tear" data-track="p" data-ledger="build">
+            <div class="mx-tear-back" aria-hidden="true"></div>
+            <div class="mx-tear-front">
+                <div class="mx-tear-paper"><div class="mx-tear-red">
+                    <h2>Designed, built, and it <span class="script">sells.</span></h2>
+                    <div class="mx-figs">
+                        <div class="mx-fig"><b class="odo" data-value="NT$1.67M">NT$1.67M</b><span class="lab">Father's Day campaign, in 17 days</span></div>
+                        <div class="mx-fig"><b class="odo" data-value="1.19%">1.19%</b><span class="lab">Mid-Autumn conversion, everyday kitchenware</span></div>
                     </div>
-                    <figcaption><span><b class="hx-cap-title">Sofa guide</b> <span class="hx-cap">· armrests update the price</span></span><span class="hx-tag">Designed &amp; built by me</span></figcaption>
-                </figure>
-                <div class="odo-side">
-                    <div class="odo-grid" aria-label="What the Nitori work shows">
-                        <a class="odo-cell" href="nitori.html#fathers-day"><b class="odo" data-value="NT$1.67M">NT$1.67M</b><span class="odo-label"><strong>Campaigns that sell.</strong> Father's Day, in 17 days.</span></a>
-                        <a class="odo-cell" href="nitori.html#fathers-day"><b class="odo" data-value="2.1×">2.1×</b><span class="odo-label"><strong>Each one better.</strong> The previous campaign's revenue, in under ⅔ of the time.</span></a>
-                        <a class="odo-cell" href="nitori.html#mid-autumn"><b class="odo" data-value="1.19%">1.19%</b><span class="odo-label"><strong>Design that converts.</strong> Mid-Autumn, selling everyday kitchenware.</span></a>
-                        <a class="odo-cell" href="nitori.html"><b class="odo" data-value="0">0</b><span class="odo-label"><strong>Hand-offs.</strong> From research to front-end code, it's all me.</span></a>
-                    </div>
-                    <p class="odo-note">Nitori Taiwan. GA4 assisted revenue: sessions that viewed the page before buying.</p>
-                </div>
+                </div></div>
             </div>
         </section>
 
-        <!-- PREVIEW: quick nav. Hover or focus a project to preview it; click to open -->
-        <section class="explore">
-            <div class="sec-head">
-                <span class="sec-kicker"><span class="dot" aria-hidden="true"></span>Quick preview</span>
-                <h2>Explore the work.</h2>
-            </div>
-            <div class="qx">
-                <ol class="qx-list">
-                    <li><a class="qx-item is-active" href="nitori.html" data-i="0"><span class="qx-num">01</span><span class="qx-text"><span class="qx-title">Shipped at Nitori</span><span class="qx-meta">Professional series · E-commerce</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
-                    <li><a class="qx-item" href="project1.html" data-i="1"><span class="qx-num">02</span><span class="qx-text"><span class="qx-title">Smart Station</span><span class="qx-meta">Interaction design · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
-                    <li><a class="qx-item" href="project2.html" data-i="2"><span class="qx-num">03</span><span class="qx-text"><span class="qx-title">CareerCourse</span><span class="qx-meta">EdTech online site · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
-                    <li><a class="qx-item" href="project3.html" data-i="3"><span class="qx-num">04</span><span class="qx-text"><span class="qx-title">One Shop</span><span class="qx-meta">E-commerce mobile app · University of Sydney</span></span><span class="qx-go" aria-hidden="true">→</span><span class="qx-bar" aria-hidden="true"><i></i></span></a></li>
-                </ol>
-                <a class="qx-stage" href="nitori.html" aria-hidden="true" tabindex="-1">
-                    <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="" loading="lazy">
+        <!-- 5 · Work: pinned, one project at a time -->
+        <section class="mx-work" id="work" data-ledger="build" aria-label="Selected work">
+            <div class="mx-wstage">
+                <div class="mx-wbg" aria-hidden="true">
+                    <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="">
                     <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
                     <img src="assets/images/home/explore_careercourse.webp" alt="" loading="lazy">
                     <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
-                    <span class="qx-info">
-                        <span class="qx-tag">Professional · Nitori Taiwan</span>
-                        <span class="qx-line">Seasonal campaigns and product guides for Nitori Taiwan's online store, designed and coded end to end.</span>
-                        <span class="qx-open">Open project →</span>
-                    </span>
-                </a>
-            </div>
-        </section>
-        <!-- What I Do Section -->
-        <section id="what-i-do">
-            <!-- Content Container now has the fade-in class -->
-            <div class="content-container fade-in">
-                <h2>What I Do</h2>
-                <p class="section-description" data-blur>I create thoughtful and intuitive digital products with empathy and a user-centered approach.</p>
-                <div class="services-grid">
-                    <!-- The fade-in class is now on the grid items themselves -->
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-magic"></i>
-                        </div>
-                        <h3 data-blur>UI/UX Design</h3>
-                        <p data-blur>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
-                    </div>
-
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-drafting-compass"></i>
-                        </div>
-                        <h3 data-blur>Prototyping & Wireframing</h3>
-                        <p data-blur>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
-                    </div>
-
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 data-blur>User Research</h3>
-                        <p data-blur>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
-                    </div>
                 </div>
+                <div class="mx-whead"><p class="k" style="margin:0 0 4px">(02)</p><h2 class="mx-wtitle">My work</h2></div>
+                <div class="mx-wname" aria-hidden="true">
+                    <span class="n is-on">Shipped at Nitori<small>Professional · 2025–now</small></span>
+                    <span class="n">Smart Station<small>Interaction design · USYD</small></span>
+                    <span class="n">CareerCourse<small>EdTech site · USYD</small></span>
+                    <span class="n">One Shop<small>Mobile app · USYD</small></span>
+                </div>
+                <div class="mx-wcards">
+                    <a class="mx-wcard" href="nitori.html" data-cursor aria-label="Shipped at Nitori: open the series">
+                        <div class="mx-browser"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">nitori-net.tw/article/Sofa</span></div>
+                            <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video></div>
+                    </a>
+                    <a class="mx-wcard" href="project1.html" data-cursor aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
+                    <a class="mx-wcard" href="project2.html" data-cursor aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
+                    <a class="mx-wcard" href="project3.html" data-cursor aria-label="One Shop case study"><img src="assets/images/home/explore_oneshop.webp" alt="One Shop fashion shopping app" loading="lazy"></a>
+                </div>
+                <div class="mx-wdesc">
+                    <div class="d is-on"><p>Nine e-commerce pages for Nitori Taiwan's online store, from seasonal campaigns to product guides. I designed and coded them end to end; six are live.</p><a href="nitori.html">Open the series →</a></div>
+                    <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study →</a></div>
+                    <div class="d"><p>A STEM learning platform built to engage students in rural and remote areas.</p><a href="project2.html">View case study →</a></div>
+                    <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study →</a></div>
+                </div>
+                <div class="mx-ring" aria-hidden="true"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="29"/><circle class="f" cx="31" cy="31" r="29"/></svg><b class="cur">01</b></div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact">
-            <!-- Old contact div now has the fade-in class -->
-            <div class="contact-section fade-in">
-                <h2>Get In Touch</h2>
-                <p class="contact-description" data-blur>I'm always open to new opportunities and collaborations. <br>Feel free to reach out!</p>
-                <div class="contact-info">
-                    <a href="tel:+886956820832" class="contact-link">
-                        <i class="fas fa-phone"></i>
-                        <span>+886 956 820 832</span>
-                    </a>
-                    <a href="mailto:frank.wu.0405@gmail.com" class="contact-link">
-                        <i class="fas fa-envelope"></i>
-                        <span>frank.wu.0405@gmail.com</span>
-                    </a>
-                </div>
+        <!-- 6 · Process: the beam lights each step -->
+        <section class="mx-process">
+            <div class="mx-pr-head">
+                <p class="k">(03) How I work</p>
+                <h2 class="mx-pr-h">From the first interview to shipped code, every step is <span class="script">intentional.</span></h2>
             </div>
+            <div class="mx-pr-body">
+                <div class="mx-beam" aria-hidden="true"><i></i><b></b></div>
+                <ol class="mx-steps">
+                    <li class="mx-step" data-ledger="research"><span class="num">01</span><h3>Understand</h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></li>
+                    <li class="mx-step" data-ledger="design"><span class="num">02</span><h3>Shape</h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></li>
+                    <li class="mx-step" data-ledger="build"><span class="num">03</span><h3>Build</h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></li>
+                    <li class="mx-step" data-ledger="build"><span class="num">04</span><h3>Ship &amp; refine</h3><p>Launch, read the results, and carry what worked into the next page.</p></li>
+                </ol>
+                <div class="mx-pool" aria-hidden="true"></div>
+            </div>
+        </section>
+
+        <!-- 7 · Finale -->
+        <section class="mx-end" id="contact" data-ledger="all">
+            <p class="k">(04) Get in touch</p>
+            <h2 class="mx-end-h">Let's build something worth <span class="script">remembering.</span></h2>
+            <a class="mx-mail" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com <span aria-hidden="true">→</span></a>
+            <div class="mx-end-links">
+                <a href="tel:+886956820832">+886 956 820 832</a>
+                <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/frankwu0405" target="_blank" rel="noopener">GitHub</a>
+                <a href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+            </div>
+            <div class="mx-end-marq" aria-hidden="true"><div class="mx-track"><span>Frank Wu — design &amp; build —</span><span>Frank Wu — design &amp; build —</span></div></div>
         </section>
     </main>
 
-
-    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-text">
-            &copy; 2026 Frank Wu. All rights reserved.
-        </div>
+        <div class="footer-text">&copy; 2026 Frank Wu. All rights reserved.</div>
         <div class="footer-social">
             <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
         </div>
     </footer>
 
-    <!-- The link to the external JavaScript file -->
     <script src="assets/js/script.js" defer></script>
     <script>
-        // PREVIEW: the live window plays three real clips in turn.
+        // PREVIEW scroll engine: one rAF pass per scroll/resize sets CSS
+        // variables and step states; everything else is CSS transforms.
         (() => {
             const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const clips = [
-                { src: 'assets/images/nitori/sofa/04_desk', url: 'nitori-net.tw/article/Sofa', title: 'Sofa guide', cap: '· armrests update the price' },
-                { src: 'assets/images/nitori/electricsofa/04_desk', url: 'nitori-net.tw/article/Electricsofa', title: 'Electric sofa guide', cap: '· the viewer reclines and turns' },
-                { src: 'assets/images/nitori/petlife/02_desk', url: 'nitori-net.tw/article/PetLife', title: 'Pet living', cap: '· a season switch for the beds' },
-            ];
-            const vid = document.querySelector('.hx-screen video');
-            if (!vid || reduce) return;
-            const url = document.querySelector('.hx-url');
-            const title = document.querySelector('.hx-cap-title');
-            const cap = document.querySelector('.hx-cap');
-            let i = 0;
-            const load = (k) => {
-                const c = clips[k];
-                vid.classList.add('is-out');
-                setTimeout(() => {
-                    vid.poster = c.src + '_poster.webp';
-                    vid.src = c.src + '.mp4';
-                    url.textContent = c.url; title.textContent = c.title; cap.textContent = c.cap;
-                    vid.play().catch(() => {});
-                    vid.classList.remove('is-out');
-                }, 300);
-            };
-            vid.addEventListener('ended', () => { i = (i + 1) % clips.length; load(i); });
-            new IntersectionObserver(([e]) => {
-                if (!vid.getAttribute('src')) { if (e.isIntersecting) load(0); return; }
-                if (e.isIntersecting) vid.play().catch(() => {}); else vid.pause();
-            }).observe(vid);
-        })();
+            const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+            const hero = document.querySelector('.mx-hero');
+            const tracked = [...document.querySelectorAll('[data-track="p"]')];
+            const skills = document.querySelector('.mx-skills');
+            const work = document.querySelector('.mx-work');
+            const proc = document.querySelector('.mx-process');
+            const prBody = proc.querySelector('.mx-pr-body');
+            const ledger = [...document.querySelectorAll('.mx-ledger [data-l]')];
+            const ledgerBlocks = [...document.querySelectorAll('[data-ledger]')];
+            const progress = document.querySelector('.mx-progress');
 
-        // PREVIEW: odometer (proof section). Every digit is a strip of 0-9 that spins a few full
-        // turns before settling on its value; later digits spin longer, and each
-        // figure starts a beat after the one before. Hovering a figure (desktop)
-        // spins it again. Reduced motion keeps the plain numbers.
-        (() => {
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            const figures = [...document.querySelectorAll('.odo')];
-            if (!figures.length) return;
-            const H = 1.1; // em per digit, matches the CSS
+            const skWords = [...skills.querySelectorAll('.w')], skCards = [...skills.querySelectorAll('.mx-card')], skLists = [...skills.querySelectorAll('.mx-sk-lists ul')];
+            const skCur = skills.querySelector('.cur');
+            const wCards = [...work.querySelectorAll('.mx-wcard')], wBgs = [...work.querySelectorAll('.mx-wbg img')];
+            const wNames = [...work.querySelectorAll('.mx-wname .n')], wDescs = [...work.querySelectorAll('.mx-wdesc .d')];
+            const wCur = work.querySelector('.mx-ring .cur'), ring = work.querySelector('.mx-ring');
+            const steps = [...proc.querySelectorAll('.mx-step')];
+            let skStep = -1, wStep = -1, ticking = false;
 
-            const build = (el, s) => {
-                const value = el.dataset.value;
-                el.setAttribute('aria-label', value);
-                el.textContent = '';
-                const strips = [];
-                let k = 0;
-                [...value].forEach((ch) => {
-                    if (/\d/.test(ch)) {
-                        const d = document.createElement('span'); d.className = 'odo-d'; d.setAttribute('aria-hidden', 'true');
-                        const strip = document.createElement('span'); strip.className = 'odo-strip';
-                        const turns = 2 + k;
-                        for (let t = 0; t < turns; t++) for (let n = 0; n < 10; n++) strip.appendChild(Object.assign(document.createElement('span'), { textContent: n }));
-                        for (let n = 0; n <= +ch; n++) strip.appendChild(Object.assign(document.createElement('span'), { textContent: n }));
-                        strip.style.setProperty('--dur', `${1.5 + k * 0.35}s`);
-                        strip.style.setProperty('--delay', `${s * 0.14 + k * 0.06}s`);
-                        strip.dataset.stop = strip.children.length - 1;
-                        d.appendChild(strip); el.appendChild(d); strips.push(strip); k++;
-                    } else {
-                        const c = document.createElement('span');
-                        c.className = /[0-9.,]/.test(ch) ? 'odo-ch' : 'odo-ch odo-unit';
-                        c.setAttribute('aria-hidden', 'true'); c.textContent = ch;
-                        el.appendChild(c);
-                    }
+            const pinP = (el) => { const r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight)); };
+            const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
+
+            function frame() {
+                ticking = false;
+                const vh = innerHeight, mobile = innerWidth <= 900;
+                progress.style.setProperty('--page', (scrollY / Math.max(1, document.documentElement.scrollHeight - vh)).toFixed(4));
+                const hr = hero.getBoundingClientRect();
+                hero.style.setProperty('--out', clamp(-hr.top / hr.height).toFixed(4));
+                // parallax sections: 0 entering at the bottom, 1 leaving at the top
+                tracked.forEach((el) => { const r = el.getBoundingClientRect(); el.style.setProperty('--p', clamp((vh - r.top) / (vh + r.height)).toFixed(4)); });
+
+                // skills: three steps; each card flies in from the back right and out to the back left
+                const sp = pinP(skills); skills.style.setProperty('--p', sp.toFixed(4));
+                const sStep = Math.min(2, Math.floor(sp * 3));
+                if (sStep !== skStep) { skStep = sStep; setOn(skWords, sStep); setOn(skLists, sStep); skCur.textContent = '0' + (sStep + 1); }
+                skCards.forEach((c, i) => {
+                    let o = sp * 3 - i - 0.5; if (reduce) o = i === sStep ? 0 : 9;
+                    const a = Math.abs(o), x = mobile ? 0 : 22, y = mobile ? 6 : 2;
+                    c.style.opacity = clamp(1.6 - a * 1.6).toFixed(3);
+                    c.style.transform = `translate3d(calc(-50% + ${(-o * (mobile ? 70 : 52) + x).toFixed(2)}vw), calc(-50% + ${(y + a * 6).toFixed(2)}vh), ${(-a * 520).toFixed(0)}px) rotateY(${(o * 38).toFixed(2)}deg) rotateZ(${(o * -4).toFixed(2)}deg)`;
                 });
-                return strips;
-            };
-            const sets = figures.map((el, s) => ({ el, strips: build(el, s) }));
 
-            const roll = ({ el, strips }, instantReset) => {
-                el.classList.remove('is-rolled');
-                el.classList.add('is-rolling');
-                if (instantReset) {
-                    strips.forEach((st) => { st.style.transition = 'none'; st.style.transform = 'translateY(0)'; });
-                    void el.offsetWidth;   // apply the reset before rolling again
-                    strips.forEach((st) => { st.style.transition = ''; st.style.setProperty('--delay', '0s'); });
+                // work: one project per step; neighbours peek small above and below
+                const n = wCards.length, wp = pinP(work);
+                const ws = Math.min(n - 1, Math.floor(wp * n));
+                ring.style.setProperty('--wp', ((ws + 1) / n).toFixed(3));
+                if (ws !== wStep) { wStep = ws; setOn(wBgs, ws); setOn(wNames, ws); setOn(wDescs, ws); wCur.textContent = '0' + (ws + 1); }
+                const wr = work.getBoundingClientRect();
+                playClip(ws === 0 && wr.top < vh && wr.bottom > 0);
+                // phones: centre the card in the space between the title and the description, shrinking it if needed
+                let mShift = 0, mFit = 1;
+                if (mobile) {
+                    const st = work.querySelector('.mx-wstage').getBoundingClientRect();
+                    const top = work.querySelector('.mx-wname .n.is-on').getBoundingClientRect().bottom + 14;
+                    const bottom = work.querySelector('.mx-wdesc .d.is-on').getBoundingClientRect().top - 14;
+                    const ch = wCards[ws].offsetHeight;
+                    mFit = Math.min(1, (bottom - top) / ch);
+                    mShift = (top + bottom) / 2 - (st.top + st.height / 2);
                 }
-                strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * H}em)`; });
-                const last = strips[strips.length - 1];
-                last.addEventListener('transitionend', () => { el.classList.remove('is-rolling'); el.classList.add('is-rolled'); }, { once: true });
-            };
+                wCards.forEach((c, i) => {
+                    let o = wp * n - i - 0.5; if (reduce) o = i === ws ? 0 : (i < ws ? -1 : 1);
+                    const a = Math.min(Math.abs(o), 1.6);
+                    const lift = Math.sign(o) * Math.min(Math.abs(o), 1) * (mobile ? 36 : 54);
+                    c.style.opacity = (mobile ? clamp(1 - a * 2) : clamp(1.25 - a * 0.75)).toFixed(3);
+                    c.style.transform = `translate3d(-50%, calc(-50% + ${mShift.toFixed(1)}px + ${(-lift).toFixed(2)}vh), ${(-a * 380).toFixed(0)}px) rotateX(${(o * 26).toFixed(2)}deg) scale(${((1 - Math.min(a, 1) * 0.58) * mFit).toFixed(3)})`;
+                    c.style.zIndex = String(10 - Math.round(a * 4));
+                    c.style.pointerEvents = a < 0.5 ? 'auto' : 'none';
+                    c.tabIndex = a < 0.5 ? 0 : -1;
+                });
 
-            const io = new IntersectionObserver((entries) => {
-                if (!entries.some((e) => e.isIntersecting)) return;
-                io.disconnect();
-                sets.forEach((set) => roll(set, false));
-            }, { threshold: 0.35 });
-            io.observe(document.querySelector('.odo-grid'));
+                // process: the beam grows down the steps
+                const pb = prBody.getBoundingClientRect();
+                proc.style.setProperty('--bp', clamp((vh * 0.62 - pb.top) / pb.height).toFixed(4));
+                steps.forEach((s) => { s.classList.toggle('is-lit', reduce || s.getBoundingClientRect().top < vh * 0.62); });
 
-            if (matchMedia('(hover: hover)').matches) {
-                sets.forEach((set) => {
-                    set.el.closest('.odo-cell').addEventListener('mouseenter', () => {
-                        if (set.el.classList.contains('is-rolled')) roll(set, true);
-                    });
+                // ledger: whichever marked block sits in the middle of the screen
+                let mode = '';
+                const mid = vh * 0.5, sr = skills.getBoundingClientRect();
+                if (sr.top <= mid && sr.bottom >= mid) mode = ['research', 'design', 'build'][sStep];
+                else ledgerBlocks.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= mid && r.bottom >= mid) mode = el.dataset.ledger; });
+                ledger.forEach((s) => s.classList.toggle('is-on', mode === 'all' || s.dataset.l === mode));
+            }
+            const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+            addEventListener('scroll', req, { passive: true });
+            addEventListener('resize', req);
+
+            // hero: mouse depth (desktop)
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                hero.addEventListener('pointermove', (e) => {
+                    const r = hero.getBoundingClientRect();
+                    hero.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+                    hero.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
                 });
             }
-        })();
 
-        // PREVIEW: explore. The active project fills its red bar, then the next
-        // one takes over. Hovering or focusing a project shows it (and holds the
-        // cycle); clicking opens it. Reduced motion: no auto-advance.
-        (() => {
-            const root = document.querySelector('.qx');
-            if (!root) return;
-            const items = [...root.querySelectorAll('.qx-item')];
-            const imgs = [...root.querySelectorAll('.qx-stage img')];
-            const stage = root.querySelector('.qx-stage');
-            const info = root.querySelector('.qx-info');
-            const tag = root.querySelector('.qx-tag'), line = root.querySelector('.qx-line');
-            const copy = [
-                ['Professional · Nitori Taiwan', "Seasonal campaigns and product guides for Nitori Taiwan's online store, designed and coded end to end."],
-                ['Interaction design · University of Sydney', 'A multi-sensory system that encourages trolley returns through gamification and clear feedback.'],
-                ['EdTech online site · University of Sydney', 'A STEM learning platform built to engage students in rural and remote areas.'],
-                ['E-commerce mobile app · University of Sydney', 'A shopping app with AI support, so people can buy clothes with confidence.'],
+            // Nitori card: real pages playing, only while that card is in front
+            const vid = work.querySelector('video'), url = work.querySelector('.mx-browser .url');
+            const clips = [
+                ['assets/images/nitori/sofa/04_desk', 'nitori-net.tw/article/Sofa'],
+                ['assets/images/nitori/electricsofa/04_desk', 'nitori-net.tw/article/Electricsofa'],
+                ['assets/images/nitori/petlife/02_desk', 'nitori-net.tw/article/PetLife'],
             ];
-            let cur = 0;
-            const set = (i) => {
-                if (i === cur && items[i].classList.contains('is-active')) return;
-                cur = i;
-                items.forEach((it, k) => it.classList.toggle('is-active', k === i));
-                imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
-                stage.href = items[i].getAttribute('href');
-                info.classList.add('is-out');
-                setTimeout(() => { tag.textContent = copy[i][0]; line.textContent = copy[i][1]; info.classList.remove('is-out'); }, 250);
-            };
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('is-manual');
-            items.forEach((it, k) => {
-                it.querySelector('.qx-bar i').addEventListener('animationend', () => set((k + 1) % items.length));
-                it.addEventListener('mouseenter', () => set(k));
-                it.addEventListener('focus', () => { root.classList.add('is-manual'); set(k); });
-            });
-            root.addEventListener('mouseenter', () => root.classList.add('is-paused'));
-            root.addEventListener('mouseleave', () => root.classList.remove('is-paused'));
-            new IntersectionObserver(([e]) => {
-                root.classList.toggle('is-offscreen', !e.isIntersecting);
-                if (!e.isIntersecting) root.classList.add('is-paused');
-                else if (!root.matches(':hover')) root.classList.remove('is-paused');
-            }, { threshold: 0.3 }).observe(root);
+            let ci = 0, wantPlay = false;
+            const load = (k) => { vid.poster = clips[k][0] + '_poster.webp'; vid.src = clips[k][0] + '.mp4'; url.textContent = clips[k][1]; };
+            vid.addEventListener('ended', () => { ci = (ci + 1) % clips.length; load(ci); if (wantPlay) vid.play().catch(() => {}); });
+            function playClip(on) {
+                on = on && !reduce;
+                if (on === wantPlay) return;
+                wantPlay = on;
+                if (on) { if (!vid.getAttribute('src')) load(0); vid.play().catch(() => {}); } else vid.pause();
+            }
+
+            // cursor ring with a "View" state over project cards (desktop)
+            const cur = document.querySelector('.mx-cursor');
+            if (matchMedia('(hover: hover) and (pointer: fine)').matches && !reduce) {
+                let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
+                addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; cur.classList.toggle('is-view', !!e.target.closest('[data-cursor]')); }, { passive: true });
+                const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; cur.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`; requestAnimationFrame(loop); };
+                loop();
+            } else cur.remove();
+
+            // odometer figures in the torn band
+            if (!reduce) {
+                const figs = [...document.querySelectorAll('.odo')];
+                const sets = figs.map((el, s) => {
+                    const value = el.dataset.value; el.setAttribute('aria-label', value); el.textContent = '';
+                    const strips = []; let k = 0;
+                    [...value].forEach((ch) => {
+                        if (/\d/.test(ch)) {
+                            const d = document.createElement('span'); d.className = 'odo-d'; d.setAttribute('aria-hidden', 'true');
+                            const st = document.createElement('span'); st.className = 'odo-strip';
+                            for (let t = 0; t < 2 + k; t++) for (let m = 0; m < 10; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
+                            for (let m = 0; m <= +ch; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
+                            st.style.setProperty('--dur', `${1.5 + k * 0.35}s`); st.style.setProperty('--delay', `${s * 0.2 + k * 0.06}s`);
+                            st.dataset.stop = st.children.length - 1; d.appendChild(st); el.appendChild(d); strips.push(st); k++;
+                        } else {
+                            const c = document.createElement('span'); c.className = /[0-9.,]/.test(ch) ? 'odo-ch' : 'odo-ch odo-unit';
+                            c.setAttribute('aria-hidden', 'true'); c.textContent = ch; el.appendChild(c);
+                        }
+                    });
+                    return strips;
+                });
+                const io = new IntersectionObserver((es) => {
+                    if (!es.some((e) => e.isIntersecting)) return; io.disconnect();
+                    sets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
+                }, { threshold: 0.5 });
+                io.observe(document.querySelector('.mx-figs'));
+            }
+
+            // pause the hero headline while it's off screen
+            new IntersectionObserver(([e]) => { hero.querySelector('.mx-track').style.animationPlayState = e.isIntersecting ? 'running' : 'paused'; }).observe(hero);
+            frame();
         })();
     </script>
 </body>
