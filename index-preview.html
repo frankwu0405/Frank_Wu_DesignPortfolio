@@ -109,12 +109,9 @@
         .fx-bp * { vector-effect: non-scaling-stroke; }
         .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.78); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
         .fx-bp .bp-meta { opacity: var(--bpMeta, 0); }
-        .fx-bp .bp-guide { fill: none; stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; stroke-dasharray: 5 6; }
-        .fx-bp .bp-sel { fill: none; stroke: var(--red); stroke-width: 1; }
-        .fx-bp .bp-hd { fill: #fff; stroke: var(--red); stroke-width: 1; }
+        .fx-bp .bp-cuts { opacity: var(--bpCut, 1); }
+        .fx-bp .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
         .fx-bp .bp-ang { fill: none; stroke: rgba(255, 255, 255, 0.6); stroke-width: 1; }
-        .fx-bp .bp-pill { fill: var(--red); }
-        .fx-bp text { font-family: Inter, system-ui, sans-serif; font-weight: 600; fill: #fff; letter-spacing: 0.02em; }
         .fx-bp .bp-a { opacity: 0; transition: opacity 0.18s; }
         .fx-bp .bp-a.on { opacity: 1; }
         .fx-bp .bp-a rect { fill: #fff; stroke: #1a1a1a; stroke-width: 1; }
@@ -814,7 +811,7 @@
             }
             /* blueprint: outline, anchor points (each appears as the line reaches it), curve handles,
                selection box with its size, guides and the 16.5 degree angle */
-            let ANCH = [];
+            let ANCH = [], CUTS = [];
             function buildBp() {
                 const u = 1 / K0, f = (v) => v.toFixed(1);
                 const sq = (x, y, r) => `<rect x="${f(x - r)}" y="${f(y - r)}" width="${f(2 * r)}" height="${f(2 * r)}"/>`;
@@ -831,29 +828,32 @@
                     a += `<g class="bp-a" data-f="${fr}"><line x1="${f(x - hx)}" y1="${f(y - hy)}" x2="${f(x + hx)}" y2="${f(y + hy)}"/>`
                         + `<circle cx="${f(x - hx)}" cy="${f(y - hy)}" r="${f(3 * u)}"/><circle cx="${f(x + hx)}" cy="${f(y + hy)}" r="${f(3 * u)}"/>${sq(x, y, 3.5 * u)}</g>`;
                 });
-                const X0 = 52, Y0 = 416, X1 = 1924, Y1 = 1569, CX = (X0 + X1) / 2;
-                let m = `<line class="bp-guide" x1="-4000" y1="${Y0}" x2="6000" y2="${Y0}"/><line class="bp-guide" x1="-4000" y1="${Y1}" x2="6000" y2="${Y1}"/>`
-                    + `<line class="bp-guide" x1="${X0}" y1="-3000" x2="${X0}" y2="5000"/><line class="bp-guide" x1="${X1}" y1="-3000" x2="${X1}" y2="5000"/>`;
-                // angle: the lean of the W's last stroke against the vertical
+                // cut lines: every edge of the mark extended to the edge of the screen, each one running in
+                // from off-screen and reaching its corner just as the outline gets there
+                let c = '';
+                const seen = new Set();
+                UNIQ.forEach((P) => {
+                    const n = P.length, len = P.map((p, i) => Math.hypot(P[(i + 1) % n][0] - p[0], P[(i + 1) % n][1] - p[1]));
+                    const tot = len.reduce((x, y) => x + y, 0);
+                    let acc = 0;
+                    P.forEach((p, i) => {
+                        const q = P[(i + 1) % n], ex = (q[0] - p[0]) / len[i], ey = (q[1] - p[1]) / len[i];
+                        [[p, -1, acc / tot], [q, 1, (acc + len[i]) / tot]].forEach(([v, sg, fr]) => {
+                            const key = `${Math.round(Math.atan2(ey, ex) * sg * 20)}|${Math.round(v[0] * ey - v[1] * ex)}|${sg}`;
+                            if (seen.has(key)) return; seen.add(key);
+                            const arrive = 0.1 + 0.88 * (fr % 1), from = Math.max(0, arrive - 0.32);
+                            c += `<line class="bp-cut" pathLength="100" data-a="${from.toFixed(3)}" data-b="${arrive.toFixed(3)}" x1="${f(v[0] + ex * sg * 7000)}" y1="${f(v[1] + ey * sg * 7000)}" x2="${f(v[0])}" y2="${f(v[1])}"/>`;
+                        });
+                        acc += len[i];
+                    });
+                });
+                // angle mark on the W's last stroke against the vertical
                 const V = [1429.04, 1136.26], T = [1644.52, 416], dl = Math.hypot(T[0] - V[0], T[1] - V[1]), dx = (T[0] - V[0]) / dl, dy = (T[1] - V[1]) / dl;
                 const r = 64 * u;
-                m += `<line class="bp-guide" x1="${f(V[0] - dx * 900)}" y1="${f(V[1] - dy * 900)}" x2="${f(V[0] + dx * 1600)}" y2="${f(V[1] + dy * 1600)}"/>`
-                    + `<line class="bp-ang" x1="${f(V[0])}" y1="${f(V[1])}" x2="${f(V[0])}" y2="${f(V[1] - r * 1.5)}"/>`
-                    + `<path class="bp-ang" d="M${f(V[0])} ${f(V[1] - r)} A${f(r)} ${f(r)} 0 0 1 ${f(V[0] + dx * r)} ${f(V[1] + dy * r)}"/>`
-                    + `<text x="${f(V[0] + 6 * u)}" y="${f(V[1] - r - 10 * u)}" font-size="${f(11 * u)}" text-anchor="start" dominant-baseline="central">16.5°</text>`;
-                // redline: the width of the W's top bar, measured like a spec in the design file
-                const M0 = 1157.74, M1 = 1406.43, my = 890.78 - 26 * u, mw = 40 * u, mh = 18 * u;
-                m += `<line class="bp-sel" x1="${f(M0)}" y1="${f(my)}" x2="${f(M1)}" y2="${f(my)}"/>`
-                    + `<line class="bp-sel" x1="${f(M0)}" y1="${f(my - 6 * u)}" x2="${f(M0)}" y2="${f(my + 6 * u)}"/><line class="bp-sel" x1="${f(M1)}" y1="${f(my - 6 * u)}" x2="${f(M1)}" y2="${f(my + 6 * u)}"/>`
-                    + `<rect class="bp-pill" x="${f((M0 + M1) / 2 - mw / 2)}" y="${f(my - mh - 6 * u)}" width="${f(mw)}" height="${f(mh)}" rx="${f(4 * u)}"/>`
-                    + `<text x="${f((M0 + M1) / 2)}" y="${f(my - mh / 2 - 6 * u)}" font-size="${f(10.5 * u)}" text-anchor="middle" dominant-baseline="central">${Math.round(M1 - M0)}</text>`;
-                // selection box, handles and the size readout
-                m += `<rect class="bp-sel" x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}"/>`;
-                [[X0, Y0], [CX, Y0], [X1, Y0], [X0, (Y0 + Y1) / 2], [X1, (Y0 + Y1) / 2], [X0, Y1], [CX, Y1], [X1, Y1]].forEach(([x, y]) => { m += sq(x, y, 3.5 * u).replace('<rect', '<rect class="bp-hd"'); });
-                const pw = 92 * u, ph = 20 * u, py = Y1 + 12 * u;
-                m += `<rect class="bp-pill" x="${f(CX - pw / 2)}" y="${f(py)}" width="${f(pw)}" height="${f(ph)}" rx="${f(4 * u)}"/>`
-                    + `<text x="${f(CX)}" y="${f(py + ph / 2)}" font-size="${f(11 * u)}" text-anchor="middle" dominant-baseline="central">${X1 - X0} × ${Y1 - Y0}</text>`;
-                bp.innerHTML = `<g class="bp-meta">${m}</g><g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/>${a}</g>`;
+                const m = `<line class="bp-ang" x1="${f(V[0])}" y1="${f(V[1])}" x2="${f(V[0])}" y2="${f(V[1] - r * 1.5)}"/>`
+                    + `<path class="bp-ang" d="M${f(V[0])} ${f(V[1] - r)} A${f(r)} ${f(r)} 0 0 1 ${f(V[0] + dx * r)} ${f(V[1] + dy * r)}"/>`;
+                bp.innerHTML = `<g class="bp-cuts">${c}</g><g class="bp-meta">${m}</g><g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/>${a}</g>`;
+                CUTS = [...bp.querySelectorAll('.bp-cut')].map((el) => ({ el, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
                 ANCH = [...bp.querySelectorAll('.bp-a')].map((el) => ({ el, f: +el.dataset.f, on: false }));
             }
             /* the build edge leans like the strokes; X is where it crosses y = 1700 */
@@ -941,6 +941,8 @@
                     bp.style.setProperty('--bpd', (100 - draw * 100).toFixed(2));
                     bp.style.setProperty('--bpMeta', (clamp((draw - 0.4) / 0.45) * (1 - clamp(build / 0.45))).toFixed(3));
                     ANCH.forEach((a) => { const on = draw >= a.f - 0.002; if (on !== a.on) { a.on = on; a.el.classList.toggle('on', on); } });
+                    CUTS.forEach((ct) => { const v = Math.round(ease(clamp((draw - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10; if (v !== ct.v) { ct.v = v; ct.el.style.strokeDashoffset = String(100 - v); } });
+                    bp.style.setProperty('--bpCut', (1 - clamp(build / 0.5)).toFixed(3));
                 }
                 // finish: a raised, bevelled surface lit from where the pointer is (scroll turns the light on phones)
                 const lit = reduce ? 0.55 : ease(clamp((build - 0.45) / 0.55)) * (1 - clamp(zm / 0.3));
