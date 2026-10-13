@@ -69,21 +69,37 @@
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
         .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
             background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
-            transform: translate3d(calc(var(--mx) * 30px), calc(var(--my) * 14px), 0) scale(calc(1 + var(--em) * 0.25)); opacity: calc(0.8 + var(--em) * 0.4 - var(--zm) * 1.2);
+            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(1 + var(--em) * 0.25)); opacity: calc(0.8 + var(--em) * 0.4 - var(--zm) * 1.2);
             animation: fx-breathe 6s ease-in-out infinite alternate; }
         @keyframes fx-breathe { from { filter: blur(30px) brightness(0.85); } to { filter: blur(34px) brightness(1.15); } }
         .fx-par { position: absolute; inset: 0; pointer-events: none; }
         .fx-par.echo1 { transform: translate3d(calc(var(--mx) * 22px * (1 - var(--zm))), calc(var(--my) * 12px * (1 - var(--zm))), 0); }
         .fx-par.echo2 { transform: translate3d(calc(var(--mx) * 38px * (1 - var(--zm))), calc(var(--my) * 20px * (1 - var(--zm))), 0); }
         .fx-par.markp { transform: translate3d(calc(var(--mx) * -12px * (1 - var(--zm))), calc(var(--my) * -6px * (1 - var(--zm))), 0); }
-        .fx-mark { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
-        .fx-mark svg { display: block; width: 100%; height: 100%; overflow: visible; }
-        .fx-mark .dark { fill: #0d0d0d; }
-        .fx-mark .redfill { opacity: var(--em); fill: var(--deep); }
-        .fx-mark .shine { opacity: calc(var(--em) * (1 - var(--zm) * 1.6)); }
-        .fx-mark .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 + var(--em) * 0.6)); stroke-width: 1.2; }
-        .fx-mark .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; filter: drop-shadow(0 0 6px #ff3b2f); }
+        /* The mark is drawn by full-stage SVGs whose viewBox is the camera, so it is
+           re-rendered as vector at every zoom level (no stretched bitmap, no pixelation). */
+        .fx-cam { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
+        .fx-fxbox, .fx-bands { position: absolute; inset: 0; }
+        .fx-bands { transform-origin: 50% 50%; }
+        .fx-cam .dark { fill: #0d0d0d; }
+        .fx-cam .redfill { fill: var(--deep); opacity: var(--em); }
+        .fx-cam .shine { opacity: calc(var(--em) * (1 - var(--zm) * 1.6)); }
+        .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 + var(--em) * 0.6)); stroke-width: 1.2; }
+        .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
+        .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; }
+        .mode-zoom .fx-cam .slab { display: none; }
         .fx-echo { opacity: calc(var(--em) * 0.5 * (1 - var(--zm) * 2)); fill: none; stroke: rgba(211, 22, 27, 0.5); stroke-width: 1; }
+        .fx-trail, .fx-fringe { opacity: 0; pointer-events: none; }
+        .fx-trail .rim { stroke: rgba(255, 110, 90, 0.9); }
+        .fx-fringe { mix-blend-mode: screen; }
+        .fx-fringe.f1 .rim { stroke: #ff7a3d; stroke-width: 3; } .fx-fringe.f2 .rim { stroke: #ffffff; stroke-width: 2; }
+        .fx-light { --pan: 0px; }
+        /* preview-only switch between the two transitions */
+        .fx-switch { position: fixed; right: 16px; bottom: 46px; z-index: 70; display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
+            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: blur(8px); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+        .fx-switch span { color: var(--dim); padding: 0 8px 0 10px; }
+        .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 12px; border-radius: 999px; }
+        .fx-switch a.is-on { background: var(--red); color: #fff; }
         .fx-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
             transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
         .fx-title h1 { font-size: clamp(4.6rem, 15vw, 15rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.82; color: #fff; margin: 0; white-space: nowrap; transform-style: preserve-3d; }
@@ -296,6 +312,7 @@
         <span class="plus">+</span><span data-l="research">Research</span><span class="plus">+</span><span data-l="design">Design</span><span class="plus">+</span><span data-l="build">Build</span><span class="plus">+</span>
     </div>
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
+    <div class="fx-switch" role="group" aria-label="Preview: transition style"><span>Transition</span><a href="?t=zoom" data-t="zoom">Zoom</a><a href="?t=pan" data-t="pan">Pan</a></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
         <defs>
@@ -303,6 +320,14 @@
                 <polygon pathLength="100" vector-effect="non-scaling-stroke" points="818.61 886.07 1022.09 1569.04 1180.35 1569.04 1270.78 1207.3 1338.61 1569.04 1572.87 1569.04 1924 416 1644.52 416 1429.04 1136.26 1406.43 890.78 1157.74 890.78 1067.3 1136.26 1022.09 886.07 818.61 886.07"/>
                 <polygon pathLength="100" vector-effect="non-scaling-stroke" points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/>
             </g>
+            <polygon id="fwSlab" vector-effect="non-scaling-stroke" points="3184.2 -3000 30000 -3000 30000 5000 743.3 5000"/>
+            <filter id="fxBulge" x="0" y="0" width="1" height="1" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feImage id="fxBulgeMap" x="0" y="0" width="1440" height="810" preserveAspectRatio="none" result="map" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAH8klEQVR42sVaYZNbOQiTuPfD+8vNfbDBAjvZbG973Xmzk8m2CQIMQpi/fv3Cn/zx4x3+6Oc/P/lhPH6fUBwusPj3AaS5rK9fhcPlRYDh3wFAgCDFeoHhh1FeTc+HDg9g/J8AhN20sNi69WTJ/unpjmGsNzk2Ev5ZAASn9bZ+JwwPAGl9YnBJfc/kccCW6U7Q4QPMsPwJAAxbafvF8r2BDUPNoul7DwAeEXADBki4gwSGBORnAdAWgHyW3QZYmG5fnAFHAJiOT+sJ+IotR0RtfHQqnk/SxqrpCmA+JLwGYWUOd+n0iMBMnolh514CCBgE7INT8XydNgQNdgKQxwmapNA8LREHlw6wMXD9Xs/olcyAMcCv6uzzpfXT9A3gnwpg+t6OQ3wto74B+Mx46SHLWbWjWGQUvwuAWNYrAAvTE4BH/uQZYBSrVkaX3fPFWK9B+Kgt0ddRyndsvOsSz5tTa4ynBqEBmPkzxJHOO5XYGAzD98luABwwwAGLHDOLw/0hgLR7PZQUYqn90/1OWGBYacDMbWm7XBjGDMI8yhOwgR41Oq23MGgAhN0S6XmZ+iwRMO4DnSXIA8YQWkG+pGlewQws032aaCBA370SXk7IlTg9Z+rbzXpjKXNZbWa2GKePVj4wTkJpAvHn1cQoMWnnOL9CMEy/2NcAWDD8w229xadEcV9e8RXhRufeun9ToQXMM2zxXR7PxuYLMF8BWJWnPUkXJElc/I3T+pnNXmcav2Bwpdg1CdmIY5wurxXpae63M4UyCPnffH3HjP7w7nuK9WUQ0D4wT7MWIomDE8bC2BlBaB/+oHmRpRdKv4ry7MEUIgrHedv/ppdR6cTDa2eQYK02XA0rdewagZX62GlTADjMw/dBUaYLTc4AooxIUsvZFU6aGIZSVOz5hmd+SgQSw6PZvx2vqe8wj7/m6OSr9q3ZQMtfECFUMteDoC25zgmzezBgDLHeJA68ptDM9e37QGwOeqQHVgOCBeUSBpEFlIcw4TLWTAArkUbBQF/f6FgNe9M7rvczT59iff5Ouwlz2IzdADVd4vUqGq/cj3sQ2pGYGLS+DpRoa7oarikEyQSI3QAHzEDUgi9svmPAfqEz8T4JKa7UorSzyGFjV6qdPF4q7wLQVYXJB8P6NWaNuwCxmU9z/xGB3hD0JFQACWPEpD9zyY5OwksZ1VC86FBa86nux4HhlOhcesIBQ4WjPj8cjW9+5tNVKe8wlKIU3SqnltP018KWHy8gMBoAXqN0jYCWcGav1uoZboZIJll5tWjzS53U65ivogtWFeoiQK1dOM9AaUCCIc90q49LOBHTyW8qvt7D4t41PG3S7c38gKd98GYaXvqolvY+7xL8jlLrt2io6Tz/5IVQvR1oRDcuhIyv1NH/Kr77V8L8u38DPO/+qD8D//cPf0+Z86Ij3BcV3kny7xvJMlcUo1mmlFfAnivjrQym1LuD31T59vONAg+DWhVm5bNRSxpXf7aFsjvpXEVoSSt5uNX1ryXu5mNVs5uuoQMapcywciE/9deKgY3AHIW5ReNVwqjX00pV5NPxOUPmAJikWrvNgzaYHlMflKhUBoaKBx8cic72uMW8C0M59EZGALnZaFU79nNgaExLWQpqpl3SSXzWhoc7Rzzf40X1IGsE0vQx6WtQQgtF/w6gMhl/vV5VoSHz+yXJNVlchSx3wni6aBP8ZGkNMW1MZsshAGQEuQfB75mT7lfVRLdsU12c89Oa1IWVkSUIBcAeeWQImnZYClFDIiCjYJ5+tAai5/Zk4HW4W1ufEdJyDlUxHtY1UALgpulz6BwyABB7tqBMfUWmfRuEq/tTvh8x6NH2KmB+FwNDEddqJ5EIhOQyZBzjHKtT/Ml6GquuS9U620IdGKglUnSNlFXALeQwNR6WI3HoQoQ7hsSrn/dcSh+z7Dhr7o16aAnXxLE4eEylrJmOgsFYyMXTxVfKORYAmaWt+54Y/BV79C77jdpfC2U4dMFWTO9caAmdLH0kN19WlyjauXvTOM5x0pi+yUt5HbEqFiHZbkozX5K5+KxRGyGq8L1+O15cfaiECgeNuanwDLE+P99UI1SBmZ2cPs1Rq3pW33sI9i2Cmm9X1eCcftoidSWtXnThbUXEnfrk23lgVlJohw8d7LKhCW1r1HWd5w4YF06fyTMo6+RjQ6PLIcXw1UDD3RCar3JHtopS7Lac25Hvxj9hPozFlMuujbH0z/10Tx5epIPn+k0jVfosOMlMYpeIWDDOKw/DOjXypoNJ9Kb753rc9fpLLBHN9pZal3Tf2BO7YURDntZ76L5deVatPHZedzKXzNlglCW57J7LUj3db9+9ahBJPKwMdy7S3f6XY6+bektuZ6ByT8aiPwHoozD4Wnd63gx+04Zh/V5c4cAjlKJK7Ir6wzI3butZLo1cAbxK/c9uq8S5nJSrl3AWqd3ZZzclc7k/3ltr8T3kHlXBUHvRb90XIgCMRsIoImTW07gC5C86sQ67+3KR7Wtfxfosd/yJC0/zTC+/CoA0AnkDq43LbRxrY5de+6o32chPxdbnc51s3jJhNK+5N18X96ze5vPLROYthRoG7iaAj63/5q3FyJbJujxXrlbvpKgmXqmOSxwow9Vy/DdN/917o3mnL65L7vs9DUP9T37LolJY8W3rf//i6x5EGyl9rSYTx/Vknev/zt1pWVd25d8/uhrO/yjP/8zt9c7rv1akf/DnX1tWvIuwfbTUAAAAAElFTkSuQmCC"/>
+                <feDisplacementMap id="fxBulgeDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
+                <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
+            </filter>
             <linearGradient id="fwShine" x1="52" y1="416" x2="1924" y2="1569" gradientUnits="userSpaceOnUse">
                 <stop offset="0" stop-color="#ff4a3d" stop-opacity="0.55"/><stop offset="0.45" stop-color="#d3161b" stop-opacity="0.15"/><stop offset="1" stop-color="#000" stop-opacity="0.35"/>
             </linearGradient>
@@ -316,18 +341,10 @@
         <section class="fx-hero" aria-label="Introduction">
             <div class="fx-stage">
                 <div class="fx-light" aria-hidden="true"></div>
-                <div class="fx-par echo2" aria-hidden="true"><div class="fx-mark fx-echo" data-echo="1.12"><svg viewBox="52 416 1872 1153"><use href="#fwMark"/></svg></div></div>
-                <div class="fx-par echo1" aria-hidden="true"><div class="fx-mark fx-echo" data-echo="1.06"><svg viewBox="52 416 1872 1153"><use href="#fwMark"/></svg></div></div>
+                <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
+                <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par markp" aria-hidden="true">
-                    <div class="fx-mark" data-main>
-                        <svg viewBox="52 416 1872 1153">
-                            <use class="dark" href="#fwMark"/>
-                            <use class="redfill" href="#fwMark"/>
-                            <use class="shine" href="#fwMark" fill="url(#fwShine)"/>
-                            <use class="rim" href="#fwMark"/>
-                            <use class="glint" href="#fwMark"/>
-                        </svg>
-                    </div>
+                    <div class="fx-fxbox"><div class="fx-bands"></div></div>
                 </div>
                 <div class="fx-title">
                     <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
@@ -510,8 +527,20 @@
 
             /* ---------- elements ---------- */
             const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
-            const mainMark = stage.querySelector('[data-main]'), echoes = [...stage.querySelectorAll('[data-echo]')];
-            const glint = stage.querySelector('.glint');
+            const MODE = new URLSearchParams(location.search).get('t') === 'pan' ? 'pan' : 'zoom';
+            stage.classList.add('mode-' + MODE);
+            document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.t === MODE));
+            const SVGNS = 'http://www.w3.org/2000/svg';
+            const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
+            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="redfill" href="#fwMark"/>'
+                + '<use class="shine" href="#fwMark" fill="url(#fwShine)"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
+            const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
+            const echoes = [...stage.querySelectorAll('[data-echo]')];
+            const NB = MODE === 'pan' ? (innerWidth <= 900 ? 5 : 7) : 1;
+            const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
+            const trails = MODE === 'zoom' ? [1, 2, 3].map(() => fxbox.appendChild(mkCam('fx-trail', '<use class="rim" href="#fwMark"/>'))) : [];
+            const fringes = MODE === 'zoom' ? ['f1', 'f2'].map((c) => fxbox.appendChild(mkCam('fx-fringe ' + c, '<use class="rim" href="#fwMark"/>'))) : [];
+            const bulgeMap = document.getElementById('fxBulgeMap'), bulgeDisp = document.getElementById('fxBulgeDisp'), smearBlur = document.getElementById('fxSmearBlur');
             const state = document.querySelector('.fx-state'), sstage = state.querySelector('.fx-sstage');
             const wipe = state.querySelector('.fx-wipe'), wipeEdge = state.querySelector('.fx-wipe-edge');
             const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
@@ -525,17 +554,20 @@
             const end = document.querySelector('.fx-end');
             const ledger = [...document.querySelectorAll('.fx-ledger [data-l]')], ledgerBlocks = [...document.querySelectorAll('[data-ledger]')];
 
-            /* mark geometry: viewBox 52 416 1872 1153; the zoom lands on the outer edge of the W's last stroke */
-            const VB = { x: 52, y: 416, w: 1872, h: 1153 };
-            const EDGE = { x: 1766, y: 935 }, INSIDE = { x: 1680, y: 935 };
-            let M = {}, mobile = false, slantA = 0;
+            /* camera over the mark (logo units: viewBox 52 416 1872 1153).
+               Zoom: a pure zoom anchored on ZP, deep inside the W's first stroke; ZP stays put on screen while
+               everything grows around it, so the stroke ends up covering the frame on any screen.
+               Pan: fixed size, sideways onto a slab whose left edge leans like the strokes. */
+            const ZP = { x: 1090, y: 1260 }, PC = { x: 988, y: 992.5 }, ZOOM_MAX = 24;   // ZP: deep inside the W's first stroke
+            const slabX = (y) => 2144 - (y - 416) * 0.3045;
+            let K0 = 1, SW = 1, SH = 1, mobile = false, slantA = 0;
             function layout() {
                 mobile = innerWidth <= 900;
-                const sw = stage.clientWidth, sh = stage.clientHeight;
-                const W = mobile ? sw * 1.18 : Math.max(sw * 1.22, sh * 1.05 * 1.62);
-                const H = W * VB.h / VB.w;
-                [mainMark, ...echoes].forEach((m) => { m.style.width = `${W}px`; m.style.height = `${H}px`; });
-                M = { sw, sh, W, H, rx: (sw - W) / 2, ry: (sh - H) / 2 + sh * 0.02 };
+                SW = stage.clientWidth; SH = stage.clientHeight;
+                const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
+                K0 = W / 1872;
+                bulgeMap.setAttribute('width', SW); bulgeMap.setAttribute('height', SH);
+                bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
                 slantA = Math.round(sstage.clientHeight * TAN);
                 panel.style.setProperty('--a', `${Math.round(Math.min(panel.offsetHeight * TAN, innerWidth * (mobile ? 0.1 : 0.16)))}px`);
                 // process: steps sit either side of the leaning beam
@@ -549,7 +581,8 @@
                     });
                 } else steps.forEach((s) => { s.style.top = ''; s.style.left = ''; });
             }
-            const local = (pt) => ({ x: (pt.x - VB.x) / VB.w * M.W, y: (pt.y - VB.y) / VB.h * M.H });
+            const vboxAt = (P, S, k) => `${(P.x - S.x / k).toFixed(3)} ${(P.y - S.y / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
+            const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
             const pinP = (sec) => { const r = sec.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight)); };
             const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
 
@@ -557,33 +590,6 @@
             function frame() {
                 ticking = false;
                 const vh = innerHeight;
-
-                /* ---- hero ---- */
-                const hp = reduce ? 0 : pinP(hero);
-                const fade = clamp(hp / 0.22), em = reduce ? 0.7 : ease(clamp((hp - 0.2) / 0.3)), zm = reduce ? 0 : clamp((hp - 0.58) / 0.42);
-                stage.style.setProperty('--fade', fade.toFixed(3));
-                stage.style.setProperty('--em', em.toFixed(3));
-                stage.style.setProperty('--zm', zm.toFixed(3));
-                letters.forEach(({ ci, d }) => {
-                    const k = clamp(fade * 1.5 - d * 0.5);
-                    ci.style.opacity = (1 - k).toFixed(3);
-                    ci.style.filter = k > 0.01 ? `blur(${(k * 16).toFixed(1)}px)` : '';
-                    ci.style.transform = k > 0.001 ? `translate3d(0, ${(-k * 0.1).toFixed(3)}em, ${(-k * 520).toFixed(0)}px)` : '';
-                });
-                glint.style.strokeDashoffset = (-em * 160).toFixed(1);
-                glint.style.opacity = em > 0.02 && em < 0.98 ? '1' : '0';
-                // the mark settles from a slightly larger hidden scale, then the camera dives into one stroke
-                const restScale = lerp(1.08, 1, em);
-                const e1 = ease(clamp(zm / 0.62)), e2 = ease(clamp((zm - 0.62) / 0.38));
-                const fl = local({ x: lerp(EDGE.x, INSIDE.x, e2), y: lerp(EDGE.y, INSIDE.y, e2) });
-                const s = restScale * Math.exp(lerp(0, Math.log(8), e1) + lerp(0, Math.log(12), e2));
-                const restScreen = { x: M.rx - M.W * (restScale - 1) / 2 + fl.x * restScale, y: M.ry - M.H * (restScale - 1) / 2 + fl.y * restScale };
-                const target = { x: lerp(restScreen.x, M.sw * (mobile ? 0.5 : 0.55), e1), y: lerp(restScreen.y, M.sh * 0.5, e1) };
-                mainMark.style.transform = `translate3d(${(target.x - s * fl.x).toFixed(2)}px, ${(target.y - s * fl.y).toFixed(2)}px, 0) scale(${s.toFixed(4)})`;
-                echoes.forEach((m) => {
-                    const es = restScale * +m.dataset.echo;
-                    m.style.transform = `translate3d(${(M.rx - M.W * (es - 1) / 2).toFixed(1)}px, ${(M.ry - M.H * (es - 1) / 2).toFixed(1)}px, 0) scale(${es.toFixed(4)})`;
-                });
 
                 /* ---- statement: lines lock into place, then black returns along the slant ---- */
                 const sp = reduce ? 0.5 : pinP(state);
@@ -662,6 +668,62 @@
                 else ledgerBlocks.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= midY && r.bottom >= midY) mode = el.dataset.ledger; });
                 ledger.forEach((l) => l.classList.toggle('is-on', mode === 'all' || l.dataset.l === mode));
             }
+            /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
+            let lastHp = null, lastT = 0, vel = 0, heroOn = true;
+            function renderHero(t) {
+                const hp = reduce ? 0 : pinP(hero);
+                if (lastHp !== null) { const dt = Math.max(8, t - lastT); vel += ((hp - lastHp) / dt * 1000 - vel) * 0.18; }
+                lastHp = hp; lastT = t;
+                const fade = clamp(hp / 0.22), em = reduce ? 0.7 : ease(clamp((hp - 0.2) / 0.3)), zm = reduce ? 0 : clamp((hp - 0.58) / 0.42);
+                stage.style.setProperty('--fade', fade.toFixed(3));
+                stage.style.setProperty('--em', em.toFixed(3));
+                stage.style.setProperty('--zm', zm.toFixed(3));
+                stage.style.setProperty('--glint', (-em * 160).toFixed(1));
+                stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
+                letters.forEach(({ ci, d }) => {
+                    const k = clamp(fade * 1.5 - d * 0.5);
+                    ci.style.opacity = (1 - k).toFixed(3);
+                    ci.style.filter = k > 0.01 ? `blur(${(k * 16).toFixed(1)}px)` : '';
+                    ci.style.transform = k > 0.001 ? `translate3d(0, ${(-k * 0.1).toFixed(3)}em, ${(-k * 520).toFixed(0)}px)` : '';
+                });
+                const tz = ease(zm);
+                // distortion strength: only while the camera is moving, scaled by scroll speed
+                const moving = zm > 0.001 && zm < 0.999 ? 1 : 0;
+                const sp = clamp(Math.abs(vel) / (mobile ? 1.6 : 1.1)) * moving * (reduce ? 0 : 1);
+                const k0 = K0 * lerp(1.08, 1, em);
+                const cy = PC.y - 0.02 * SH / K0;
+                let cx = PC.x, k;
+                // where the anchor point sits on screen while the logo is at rest
+                const SP = { x: (ZP.x - PC.x) * k0 + SW / 2, y: (ZP.y - cy) * k0 + SH / 2 };
+                if (MODE === 'zoom') {
+                    k = k0 * Math.exp(Math.log(ZOOM_MAX) * tz);
+                    bands[0].setAttribute('viewBox', vboxAt(ZP, SP, k));
+                    trails.forEach((tr, j) => { tr.setAttribute('viewBox', vboxAt(ZP, SP, k * (1 - 0.07 * (j + 1) * sp))); tr.style.opacity = (sp * 0.55 * (1 - j * 0.28)).toFixed(3); });
+                    fringes.forEach((fr, j) => { fr.setAttribute('viewBox', vboxAt(ZP, SP, k * (j ? 1 + 0.014 * sp : 1 - 0.014 * sp))); fr.style.opacity = (sp * 0.85).toFixed(3); });
+                    const bulge = mobile ? 0 : sp * 90 * Math.sin(Math.PI * clamp(zm / 0.9));
+                    if (bulge > 0.5) { bulgeDisp.setAttribute('scale', bulge.toFixed(1)); fxbox.style.filter = 'url(#fxBulge)'; } else fxbox.style.filter = '';
+                } else {
+                    k = k0;
+                    const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
+                    cx = lerp(PC.x, cxEnd, tz);
+                    const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
+                    bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                    const smear = sp * (mobile ? 8 : 16);
+                    if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
+                    bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
+                    stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
+                }
+                echoes.forEach((e) => {
+                    const f = +e.dataset.echo;
+                    if (MODE === 'zoom') { e.setAttribute('viewBox', vboxAt(ZP, SP, k * f)); return; }
+                    const ecx = lerp(PC.x, cx, 1 - (f - 1) * 4);   // in a pan the echoes lag behind: depth
+                    e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
+                });
+            }
+            const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
+            new IntersectionObserver(([e]) => { heroOn = e.isIntersecting; }).observe(hero);
+            requestAnimationFrame(heroLoop);
+
             const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
             addEventListener('scroll', req, { passive: true });
             addEventListener('resize', () => { layout(); req(); });
@@ -734,6 +796,7 @@
 
             layout();
             frame();
+            renderHero(performance.now());
             if (document.fonts) document.fonts.ready.then(() => { layout(); req(); });
         })();
     </script>
