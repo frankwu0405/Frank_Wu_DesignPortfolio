@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060606" />
     <title>Frank Wu | UI/UX Designer</title>
     <meta name="robots" content="noindex" />
     <meta name="description" content="Frank Wu, UI/UX designer who designs and builds. Shipped e-commerce pages for Nitori Taiwan, plus university case studies." />
@@ -37,6 +38,10 @@
         body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg;
             background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
         .fx .section-bg-overlay { display: none; }
+        html:has(body.fx) { background: #060606; }
+        body.fx { padding-top: 0; }
+        .fx .navbar { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; padding-top: env(safe-area-inset-top, 0px); }
+        .fx .nav-links-container { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(12, 12, 12, 0.72); }
         .fx main { max-width: none; }
         :where(.fx) section { padding: 0; max-width: none; margin: 0; }
         .fx b, .fx figcaption { font-style: normal; }
@@ -72,8 +77,9 @@
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
-        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 430); }
-        .fx-stage { position: sticky; top: var(--navbar-height); height: calc(calc(var(--fvh, 1vh) * 100) - var(--navbar-height)); overflow: hidden; background: var(--ink);
+        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 430); }   /* scroll spacer for the fixed scene */
+        .fx-stage.is-off { visibility: hidden; }
+        .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
         .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
             background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
@@ -148,7 +154,7 @@
         .mode-pan .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
         .mode-pan .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
         /* exit: the scene is cut away along the slant, revealing the next stage already in place */
-        .fx-wipe-edge { position: fixed; z-index: 30; top: var(--navbar-height); height: calc(calc(var(--fvh, 1vh) * 100) - var(--navbar-height)); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
+        .fx-wipe-edge { position: fixed; z-index: 30; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
             transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
         .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 16) 0; }
         .fx-scene.is-static .fx-sin { position: relative; }
@@ -156,8 +162,8 @@
 
         /* 3 · Skills (pinned) */
         .fx-skills { position: relative; z-index: 1; height: calc(var(--fvh, 1vh) * 330); }
-        .fx-kstage { position: sticky; top: var(--navbar-height); height: calc(calc(var(--fvh, 1vh) * 100) - var(--navbar-height)); overflow: hidden; perspective: 1100px; --p: 0; }
-        .fx-kstage .head { position: absolute; left: 6vw; top: calc(var(--fvh, 1vh) * 5); z-index: 3; }
+        .fx-kstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1100px; --p: 0; }
+        .fx-kstage .head { position: absolute; left: 6vw; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 2)); z-index: 3; }
         .fx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 68%; transform-origin: 50% 100%; transform: rotateX(76deg);
             background-image: linear-gradient(rgba(211, 22, 27, 0.32) 1px, transparent 1px), linear-gradient(90deg, rgba(211, 22, 27, 0.24) 1px, transparent 1px);
             background-size: 110px 110px; background-position: 50% calc(var(--p) * 1600px);
@@ -199,12 +205,12 @@
 
         /* 5 · Work (pinned) */
         .fx-work { position: relative; height: calc(var(--fvh, 1vh) * 470); }
-        .fx-wstage { position: sticky; top: var(--navbar-height); height: calc(calc(var(--fvh, 1vh) * 100) - var(--navbar-height)); overflow: hidden; perspective: 1400px; --wp: 0; }
+        .fx-wstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1400px; --wp: 0; }
         .fx-wbg { position: absolute; inset: -14% 0; transform: translate3d(0, calc(var(--wp) * -calc(var(--fvh, 1vh) * 8)), 0); }
         .fx-wbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transition: opacity 0.9s ease; transform: scale(1.15); }
         .fx-wbg img.is-on { opacity: 1; }
         .fx-wstage::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); pointer-events: none; }
-        .fx-wstage .head { position: absolute; left: 6vw; top: calc(var(--fvh, 1vh) * 5); z-index: 4; }
+        .fx-wstage .head { position: absolute; left: 6vw; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 2)); z-index: 4; }
         .fx-wname, .fx-wdesc { position: absolute; z-index: 4; top: calc(50% - var(--gap) / 2); transform: translateY(-50%); }
         .fx-wname { left: 6vw; width: 20vw; }
         .fx-wname .n, .fx-wdesc .d { position: absolute; top: 50%; left: 0; right: 0; opacity: 0; transform: translateY(calc(-50% + 18px)); transition: opacity 0.5s ease, transform 0.6s ease; }
@@ -272,22 +278,22 @@
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
-            .fx-kstage .head, .fx-wstage .head { left: 20px; top: calc(var(--fvh, 1vh) * 3); }
-            .fx-words { transform: none; place-items: start center; padding-top: calc(var(--fvh, 1vh) * 12); }
+            .fx-kstage .head, .fx-wstage .head { left: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 6px); }
+            .fx-words { transform: none; place-items: start center; padding-top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 8)); }
             .fx-words .w { font-size: 17vw; }
             .fx-card { width: 66vw; }
             .fx-lists { left: 20px; right: 20px; bottom: calc(calc(var(--fvh, 1vh) * 7) + var(--gap)); width: auto; }
             .fx-lists ul { text-align: left; }
-            .fx-ticks { left: auto; right: 20px; top: calc(var(--fvh, 1vh) * 3.4); bottom: auto; }
+            .fx-ticks { left: auto; right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
             .fx-results { padding: calc(var(--fvh, 1vh) * 10) 0; }
             .fx-panel { padding: calc(var(--fvh, 1vh) * 8) 9vw; }
             .fx-panel-in { grid-template-columns: 1fr; gap: calc(var(--fvh, 1vh) * 5); }
-            .fx-wname { left: 20px; right: 20px; width: auto; top: 15%; }
+            .fx-wname { left: 20px; right: 20px; width: auto; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 7)); }
             .fx-wdesc { left: 20px; right: 20px; width: auto; top: auto; bottom: calc(16% + var(--gap)); transform: none; height: 8em; }
             .fx-wdesc .d { top: 0; transform: translateY(18px); } .fx-wdesc .d.is-on { transform: none; }
             .fx-wdesc .d p { font-size: 0.86rem; }
             .fx-wcard { width: 86vw; }
-            .fx-wticks { right: 20px; top: calc(var(--fvh, 1vh) * 3.4); bottom: auto; }
+            .fx-wticks { right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-pr-body { height: auto; }
             .fx-beam { left: 6px; transform: none; }
@@ -302,7 +308,7 @@
         }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
-        .fx-reduce .fx-stage { position: relative; top: 0; }
+        .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
         .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-stage::before, .fx-reduce .fx-marq .track, .fx-reduce .fx-cue i { animation: none; }
         .fx-reduce .fx-wipe-edge { display: none; }
@@ -586,7 +592,7 @@
                 // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
                 root.style.setProperty('--fvh', `${(lprobe.offsetHeight / 100).toFixed(3)}px`);
                 SW = stage.clientWidth; SH = stage.clientHeight;
-                navH = NAV(); GAP = vprobe.offsetHeight; VH = lprobe.offsetHeight;
+                GAP = vprobe.offsetHeight; VH = lprobe.offsetHeight;
                 const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
                 K0 = W / 1872;
                 bulgeMap.setAttribute('width', SW); bulgeMap.setAttribute('height', SH);
@@ -610,7 +616,7 @@
             const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
             /* progress through a pinned section from its sticky stage's fixed height, not the changing window height */
             const NAV = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 90;
-            let navH = 90;
+            let navH = 0;   // sticky stages pin at the very top
             const pinP = (sec) => { const r = sec.getBoundingClientRect(), st = sec.firstElementChild; return clamp((navH - r.top) / (r.height - st.offsetHeight)); };
             const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
 
@@ -707,6 +713,7 @@
                 // exit: the whole scene is cut away along the slant
                 const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
                 heroSt = st; heroWk = wk;
+                stage.classList.toggle('is-off', !reduce && hp >= 0.999 && wk >= 0.999);
                 if (wk > 0.0005) {
                     const L = lerp(SW + slantA + 4, 0, wk);
                     stage.style.clipPath = `polygon(0 0, ${L.toFixed(1)}px 0, ${(L - slantA).toFixed(1)}px 100%, 0 100%)`;
@@ -759,7 +766,10 @@
                 });
             }
             const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
-            new IntersectionObserver(([e]) => { heroOn = e.isIntersecting; if (!heroOn) wipeEdge.style.opacity = '0'; }).observe(hero);
+            new IntersectionObserver(([e]) => {
+                heroOn = e.isIntersecting; heroDirty = true;
+                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); }
+            }).observe(hero);
             requestAnimationFrame(heroLoop);
 
             const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
