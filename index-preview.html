@@ -99,8 +99,27 @@
         .fx-fxbox, .fx-bands { position: absolute; inset: 0; }
         .fx-bands { transform-origin: 50% 50%; }
         .fx-cam .dark { fill: #0d0d0d; }
-        .fx-cam .redfill { fill: var(--deep); opacity: var(--em); }
-        .fx-cam .shine { opacity: calc(var(--em) * (1 - var(--zm) * 1.6)); }
+        .fx-cam .redfill { fill: var(--deep); }
+        /* finished surface: bevel facets shaded by the light, plus a soft highlight that follows it */
+        .fx-cam .bevel { opacity: var(--lit, 0); }
+        .fx-cam .spec { opacity: var(--lit, 0); }
+        .fx-cam .sweep { fill: #ff8a78; opacity: var(--sweepOn, 0); }
+        /* blueprint: the mark as a design file before it is built */
+        .fx-bp { display: none; }
+        .fx-bp * { vector-effect: non-scaling-stroke; }
+        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.78); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
+        .fx-bp .bp-meta { opacity: var(--bpMeta, 0); }
+        .fx-bp .bp-guide { fill: none; stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; stroke-dasharray: 5 6; }
+        .fx-bp .bp-sel { fill: none; stroke: var(--red); stroke-width: 1; }
+        .fx-bp .bp-hd { fill: #fff; stroke: var(--red); stroke-width: 1; }
+        .fx-bp .bp-ang { fill: none; stroke: rgba(255, 255, 255, 0.6); stroke-width: 1; }
+        .fx-bp .bp-pill { fill: var(--red); }
+        .fx-bp text { font-family: Inter, system-ui, sans-serif; font-weight: 600; fill: #fff; letter-spacing: 0.02em; }
+        .fx-bp .bp-a { opacity: 0; transition: opacity 0.18s; }
+        .fx-bp .bp-a.on { opacity: 1; }
+        .fx-bp .bp-a rect { fill: #fff; stroke: #1a1a1a; stroke-width: 1; }
+        .fx-bp .bp-a line { stroke: rgba(255, 255, 255, 0.55); stroke-width: 1; }
+        .fx-bp .bp-a circle { fill: #fff; }
         .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 + var(--em) * 0.6)); stroke-width: 1.2; }
         .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
         .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; }
@@ -357,9 +376,14 @@
             <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
                 <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
             </filter>
-            <linearGradient id="fwShine" x1="52" y1="416" x2="1924" y2="1569" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stop-color="#ff4a3d" stop-opacity="0.55"/><stop offset="0.45" stop-color="#d3161b" stop-opacity="0.15"/><stop offset="1" stop-color="#000" stop-opacity="0.35"/>
-            </linearGradient>
+            <radialGradient id="fwSpec" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1100">
+                <stop offset="0" stop-color="#ff6a58" stop-opacity="0.6"/><stop offset="0.45" stop-color="#e0201f" stop-opacity="0.18"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/>
+            </radialGradient>
+            <!-- build: the fill sweeps in along the lean; the blueprint only shows ahead of it -->
+            <clipPath id="fwBuildClip"><polygon id="fwBuildPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <clipPath id="fwAheadClip"><polygon id="fwAheadPoly" points="-3000 -3000 30000 -3000 30000 5000 -3000 5000"/></clipPath>
+            <clipPath id="fwEdgeClip"><polygon id="fwEdgePoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <g id="fwBevel"></g>
         </defs>
     </svg>
 
@@ -375,6 +399,7 @@
                 <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par markp" aria-hidden="true">
                     <div class="fx-fxbox"><div class="fx-bands"></div></div>
+                    <svg class="fx-cam fx-bp" preserveAspectRatio="none"></svg>
                 </div>
                 <div class="fx-title">
                     <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
@@ -574,8 +599,13 @@
             document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.t === MODE));
             const SVGNS = 'http://www.w3.org/2000/svg';
             const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
-            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="redfill" href="#fwMark"/>'
-                + '<use class="shine" href="#fwMark" fill="url(#fwShine)"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
+            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/>'
+                + '<g clip-path="url(#fwBuildClip)"><use class="redfill" href="#fwMark"/><use class="spec" href="#fwMark" fill="url(#fwSpec)"/><use class="bevel" href="#fwBevel"/></g>'
+                + '<use class="sweep" href="#fwMark" clip-path="url(#fwEdgeClip)"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
+            const bp = stage.querySelector('.fx-bp');
+            const buildPoly = document.getElementById('fwBuildPoly'), aheadPoly = document.getElementById('fwAheadPoly'), edgePoly = document.getElementById('fwEdgePoly');
+            const specGrad = document.getElementById('fwSpec');
+            let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
             const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
             const echoes = [...stage.querySelectorAll('[data-echo]')];
             const NB = MODE === 'pan' ? (innerWidth <= 900 ? 5 : 7) : 1;
@@ -617,6 +647,8 @@
                 const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
                 K0 = W / 1872;
                 bulgeMap.setAttribute('width', SW); bulgeMap.setAttribute('height', SH);
+                buildBevel(mobile ? 34 : 22);
+                buildBp();
                 bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
                 slantA = Math.round(SH * TAN);
                 // the skills section slides under the end of the hero, so the exit wipe reveals it already in place
@@ -735,6 +767,100 @@
                 });
                 return total / (x1 - x0);
             }
+            /* ---- the mark's own geometry: bevel facets and the blueprint drawing ---- */
+            const UNIQ = SHAPES.map((pts) => { const a = pts.slice(), f = a[0], l = a[a.length - 1]; if (f[0] === l[0] && f[1] === l[1]) a.pop(); return a; });
+            const inPoly = (x, y, pts) => { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+            const P2 = (v) => `${v[0].toFixed(1)} ${v[1].toFixed(1)}`;
+            let FACETS = [];
+            function buildBevel(d) {
+                const g = document.getElementById('fwBevel'); g.textContent = ''; FACETS = [];
+                UNIQ.forEach((P) => {
+                    const n = P.length;
+                    const E = P.map((p, i) => {
+                        const q = P[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]), ex = (q[0] - p[0]) / L, ey = (q[1] - p[1]) / L;
+                        let nx = -ey, ny = ex;   // inward normal
+                        if (!inPoly((p[0] + q[0]) / 2 + nx * 3, (p[1] + q[1]) / 2 + ny * 3, P)) { nx = -nx; ny = -ny; }
+                        return { ex, ey, nx, ny };
+                    });
+                    const Q = P.map((p, i) => {   // inner corner: where the two inset edges meet
+                        const a = E[(i - 1 + n) % n], b = E[i];
+                        const ax = p[0] + a.nx * d, ay = p[1] + a.ny * d, bx = p[0] + b.nx * d, by = p[1] + b.ny * d;
+                        const den = a.ex * b.ey - a.ey * b.ex;
+                        if (Math.abs(den) < 1e-6) return [bx, by];
+                        const t = ((bx - ax) * b.ey - (by - ay) * b.ex) / den;
+                        let q = [ax + a.ex * t, ay + a.ey * t];
+                        const m = Math.hypot(q[0] - p[0], q[1] - p[1]);
+                        if (m > d * 4) q = [p[0] + (q[0] - p[0]) * d * 4 / m, p[1] + (q[1] - p[1]) * d * 4 / m];
+                        return q;
+                    });
+                    P.forEach((p, i) => {
+                        const j = (i + 1) % n, el = document.createElementNS(SVGNS, 'polygon');
+                        el.setAttribute('points', [p, P[j], Q[j], Q[i]].map(P2).join(' '));
+                        g.appendChild(el); FACETS.push({ el, ox: -E[i].nx, oy: -E[i].ny });
+                    });
+                });
+                litKey = '';
+            }
+            let litKey = '';
+            function lightMark(lx, ly, str) {
+                const key = `${lx.toFixed(3)},${ly.toFixed(3)},${str.toFixed(2)}`;
+                if (key === litKey) return; litKey = key;
+                FACETS.forEach(({ el, ox, oy }) => {
+                    const v = (ox * lx + oy * ly) * str;
+                    el.setAttribute('fill', v > 0 ? '#ffd6cf' : '#000');
+                    el.setAttribute('fill-opacity', (v > 0 ? v * 0.62 : -v * 0.6).toFixed(3));
+                });
+                specGrad.setAttribute('cx', (PC.x + lx * 640).toFixed(0)); specGrad.setAttribute('cy', (PC.y + ly * 420).toFixed(0));
+            }
+            /* blueprint: outline, anchor points (each appears as the line reaches it), curve handles,
+               selection box with its size, guides and the 16.5 degree angle */
+            let ANCH = [];
+            function buildBp() {
+                const u = 1 / K0, f = (v) => v.toFixed(1);
+                const sq = (x, y, r) => `<rect x="${f(x - r)}" y="${f(y - r)}" width="${f(2 * r)}" height="${f(2 * r)}"/>`;
+                let a = '';
+                UNIQ.forEach((P) => {
+                    const n = P.length, len = P.map((p, i) => Math.hypot(P[(i + 1) % n][0] - p[0], P[(i + 1) % n][1] - p[1]));
+                    const tot = len.reduce((x, y) => x + y, 0);
+                    let acc = 0;
+                    P.forEach((p, i) => { a += `<g class="bp-a" data-f="${(acc / tot).toFixed(4)}">${sq(p[0], p[1], 3.5 * u)}</g>`; acc += len[i]; });
+                });
+                // curve handles on two points, pulled along the lean
+                [[1270.78, 1207.3, 0.35], [628, 657.48, 0.62]].forEach(([x, y, fr]) => {
+                    const hx = VX * 44 * u, hy = VY * 44 * u;
+                    a += `<g class="bp-a" data-f="${fr}"><line x1="${f(x - hx)}" y1="${f(y - hy)}" x2="${f(x + hx)}" y2="${f(y + hy)}"/>`
+                        + `<circle cx="${f(x - hx)}" cy="${f(y - hy)}" r="${f(3 * u)}"/><circle cx="${f(x + hx)}" cy="${f(y + hy)}" r="${f(3 * u)}"/>${sq(x, y, 3.5 * u)}</g>`;
+                });
+                const X0 = 52, Y0 = 416, X1 = 1924, Y1 = 1569, CX = (X0 + X1) / 2;
+                let m = `<line class="bp-guide" x1="-4000" y1="${Y0}" x2="6000" y2="${Y0}"/><line class="bp-guide" x1="-4000" y1="${Y1}" x2="6000" y2="${Y1}"/>`
+                    + `<line class="bp-guide" x1="${X0}" y1="-3000" x2="${X0}" y2="5000"/><line class="bp-guide" x1="${X1}" y1="-3000" x2="${X1}" y2="5000"/>`;
+                // angle: the lean of the W's last stroke against the vertical
+                const V = [1429.04, 1136.26], T = [1644.52, 416], dl = Math.hypot(T[0] - V[0], T[1] - V[1]), dx = (T[0] - V[0]) / dl, dy = (T[1] - V[1]) / dl;
+                const r = 64 * u;
+                m += `<line class="bp-guide" x1="${f(V[0] - dx * 900)}" y1="${f(V[1] - dy * 900)}" x2="${f(V[0] + dx * 1600)}" y2="${f(V[1] + dy * 1600)}"/>`
+                    + `<line class="bp-ang" x1="${f(V[0])}" y1="${f(V[1])}" x2="${f(V[0])}" y2="${f(V[1] - r * 1.5)}"/>`
+                    + `<path class="bp-ang" d="M${f(V[0])} ${f(V[1] - r)} A${f(r)} ${f(r)} 0 0 1 ${f(V[0] + dx * r)} ${f(V[1] + dy * r)}"/>`
+                    + `<text x="${f(V[0] + 6 * u)}" y="${f(V[1] - r - 10 * u)}" font-size="${f(11 * u)}" text-anchor="start" dominant-baseline="central">16.5°</text>`;
+                // redline: the width of the W's top bar, measured like a spec in the design file
+                const M0 = 1157.74, M1 = 1406.43, my = 890.78 - 26 * u, mw = 40 * u, mh = 18 * u;
+                m += `<line class="bp-sel" x1="${f(M0)}" y1="${f(my)}" x2="${f(M1)}" y2="${f(my)}"/>`
+                    + `<line class="bp-sel" x1="${f(M0)}" y1="${f(my - 6 * u)}" x2="${f(M0)}" y2="${f(my + 6 * u)}"/><line class="bp-sel" x1="${f(M1)}" y1="${f(my - 6 * u)}" x2="${f(M1)}" y2="${f(my + 6 * u)}"/>`
+                    + `<rect class="bp-pill" x="${f((M0 + M1) / 2 - mw / 2)}" y="${f(my - mh - 6 * u)}" width="${f(mw)}" height="${f(mh)}" rx="${f(4 * u)}"/>`
+                    + `<text x="${f((M0 + M1) / 2)}" y="${f(my - mh / 2 - 6 * u)}" font-size="${f(10.5 * u)}" text-anchor="middle" dominant-baseline="central">${Math.round(M1 - M0)}</text>`;
+                // selection box, handles and the size readout
+                m += `<rect class="bp-sel" x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}"/>`;
+                [[X0, Y0], [CX, Y0], [X1, Y0], [X0, (Y0 + Y1) / 2], [X1, (Y0 + Y1) / 2], [X0, Y1], [CX, Y1], [X1, Y1]].forEach(([x, y]) => { m += sq(x, y, 3.5 * u).replace('<rect', '<rect class="bp-hd"'); });
+                const pw = 92 * u, ph = 20 * u, py = Y1 + 12 * u;
+                m += `<rect class="bp-pill" x="${f(CX - pw / 2)}" y="${f(py)}" width="${f(pw)}" height="${f(ph)}" rx="${f(4 * u)}"/>`
+                    + `<text x="${f(CX)}" y="${f(py + ph / 2)}" font-size="${f(11 * u)}" text-anchor="middle" dominant-baseline="central">${X1 - X0} × ${Y1 - Y0}</text>`;
+                bp.innerHTML = `<g class="bp-meta">${m}</g><g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/>${a}</g>`;
+                ANCH = [...bp.querySelectorAll('.bp-a')].map((el) => ({ el, f: +el.dataset.f, on: false }));
+            }
+            /* the build edge leans like the strokes; X is where it crosses y = 1700 */
+            const edgeX = (X, y) => X + (1700 - y) * TAN;
+            const slantPoly = (xa, xb) => `${f1(edgeX(xa, 300))} 300 ${f1(edgeX(xb, 300))} 300 ${f1(xb)} 1700 ${f1(xa)} 1700`;
+            const f1 = (v) => v.toFixed(1);
+            const BIG = '-3000 -3000 30000 -3000 30000 5000 -3000 5000';
             function renderHero(t) {
                 const hp = reduce ? 0 : pinP(hero);
                 if (!heroDirty && lastHp !== null && Math.abs(hp - lastHp) < 1e-6 && Math.abs(vel) < 0.004) { vel = 0; lastT = t; return; }
@@ -762,6 +888,16 @@
                 stage.style.setProperty('--em', em.toFixed(3));
                 stage.style.setProperty('--zm', zm.toFixed(3));
                 stage.style.setProperty('--glint', (-em * 160).toFixed(1));
+                // build: fill sweeps across along the lean, a bright edge leading it
+                const build = reduce ? 1 : em;
+                if (build >= 0.999) { buildPoly.setAttribute('points', BIG); aheadPoly.setAttribute('points', '-3000 -3000 -2999 -3000 -2999 -2999'); }
+                else {
+                    const X = lerp(-420, 1980, build);
+                    buildPoly.setAttribute('points', `-3000 300 ${f1(edgeX(X, 300))} 300 ${f1(X)} 1700 -3000 1700`);
+                    aheadPoly.setAttribute('points', `${f1(edgeX(X, -3000))} -3000 30000 -3000 30000 5000 ${f1(edgeX(X, 5000))} 5000`);
+                    edgePoly.setAttribute('points', slantPoly(X - 46, X));
+                }
+                stage.style.setProperty('--sweepOn', (build > 0.001 && build < 0.999 ? Math.min(1, Math.sin(Math.PI * build) * 2.2) : 0).toFixed(3));
                 stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
                 letters.forEach(({ ci, d }) => {
                     const k = clamp(fade * 1.5 - d * 0.5);
@@ -796,6 +932,24 @@
                     bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
                     stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
                 }
+                // blueprint: drawn while the name fades, cleared by the build
+                const draw = reduce ? 0 : ease(clamp((hp - 0.01) / 0.13));
+                const bpOn = draw > 0.001 && build < 0.999;
+                bp.style.display = bpOn ? 'block' : 'none';
+                if (bpOn) {
+                    bp.setAttribute('viewBox', MODE === 'zoom' ? vboxAt(ZP, SP, k) : vbox(cx, cy, k));
+                    bp.style.setProperty('--bpd', (100 - draw * 100).toFixed(2));
+                    bp.style.setProperty('--bpMeta', (clamp((draw - 0.4) / 0.45) * (1 - clamp(build / 0.45))).toFixed(3));
+                    ANCH.forEach((a) => { const on = draw >= a.f - 0.002; if (on !== a.on) { a.on = on; a.el.classList.toggle('on', on); } });
+                }
+                // finish: a raised, bevelled surface lit from where the pointer is (scroll turns the light on phones)
+                const lit = reduce ? 0.55 : ease(clamp((build - 0.45) / 0.55)) * (1 - clamp(zm / 0.3));
+                stage.style.setProperty('--lit', lit.toFixed(3));
+                if (lit > 0.001) {
+                    const th = lerp(-2.45, -0.7, clamp((hp - 0.14) / 0.26));
+                    const vx = Math.cos(th) * 0.75 + MX * 0.9, vy = Math.sin(th) * 0.75 + MY * 0.9, vl = Math.hypot(vx, vy) || 1;
+                    lightMark(vx / vl, vy / vl, clamp(vl / 0.75, 0.7, 1));
+                }
                 // the colour actually at the top edge of the scene, measured from the camera
                 const vbTop = MODE === 'zoom' ? ZP.y - SP.y / k : cy - SH / 2 / k;
                 const vbLeft = MODE === 'zoom' ? ZP.x - SP.x / k : cx - SW / 2 / k;
@@ -828,6 +982,7 @@
                 const loop = () => {
                     cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
                     stage.style.setProperty('--mx', cx.toFixed(4)); stage.style.setProperty('--my', cy.toFixed(4));
+                    if (Math.abs(cx - MX) > 0.0005 || Math.abs(cy - MY) > 0.0005) { MX = cx; MY = cy; heroDirty = true; }
                     requestAnimationFrame(loop);
                 };
                 loop();
