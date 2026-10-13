@@ -88,6 +88,7 @@
             }
         @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
         .fx-par { position: absolute; inset: 0; pointer-events: none; }
+        .fx-ink { position: absolute; inset: 0; z-index: -1; background: var(--ink); pointer-events: none; }   /* behind the glow and every layer */
         .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; }
         .fx-par.echo1 { transform: translate3d(calc(var(--mx) * 22px * (1 - var(--zm))), calc(var(--my) * 12px * (1 - var(--zm))), 0); }
         .fx-par.echo2 { transform: translate3d(calc(var(--mx) * 38px * (1 - var(--zm))), calc(var(--my) * 20px * (1 - var(--zm))), 0); }
@@ -163,7 +164,7 @@
 
         /* 3 · Skills (pinned) */
         .fx-skills { position: relative; z-index: 1; height: calc(var(--fvh, 1vh) * 330); }
-        .fx-kstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1100px; --p: 0; }
+        .fx-kstage { background: var(--ink); position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1100px; --p: 0; }
         .fx-kstage .head { position: absolute; left: 6vw; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 2)); z-index: 3; }
         .fx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 68%; transform-origin: 50% 100%; transform: rotateX(76deg);
             background-image: linear-gradient(rgba(211, 22, 27, 0.32) 1px, transparent 1px), linear-gradient(90deg, rgba(211, 22, 27, 0.24) 1px, transparent 1px);
@@ -368,6 +369,7 @@
         <!-- 1 · Hero: the hidden mark -->
         <section class="fx-hero" aria-label="Introduction">
             <div class="fx-stage">
+                <div class="fx-ink" aria-hidden="true"></div>
                 <div class="fx-light" aria-hidden="true"></div>
                 <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
