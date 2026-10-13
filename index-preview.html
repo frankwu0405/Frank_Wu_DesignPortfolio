@@ -18,7 +18,7 @@
         (function () {
             var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduce) d.classList.add('fx-reduce');
-            try { if (!reduce && !sessionStorage.getItem('fw-gate')) d.classList.add('fx-gate-on'); } catch (e) {}
+            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); d.style.backgroundColor = '#8f0000'; } } catch (e) {}
             if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
         })();
     </script>
@@ -38,7 +38,8 @@
         body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg;
             background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
         .fx .section-bg-overlay { display: none; }
-        html:has(body.fx) { background: #060606; }
+        html:has(body.fx) { background-color: #060606; }
+        body.fx { transition: none; }
         body.fx { padding-top: 0; }
         .fx .navbar { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; padding-top: env(safe-area-inset-top, 0px); }
         .fx .nav-links-container { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(12, 12, 12, 0.72); }
@@ -532,8 +533,9 @@
                     try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
                     setTimeout(() => {
                         gate.classList.add('is-out');
+                        heroDirty = true;
                         setTimeout(ready, 250);
-                        setTimeout(() => { root.classList.remove('fx-gate-on'); gate.remove(); }, 950);
+                        setTimeout(() => { root.classList.remove('fx-gate-on'); gate.remove(); heroDirty = true; }, 950);
                     }, 260);
                 };
                 requestAnimationFrame(() => set(0.15));
@@ -545,6 +547,23 @@
             } else {
                 requestAnimationFrame(() => requestAnimationFrame(ready));
             }
+
+            /* ---------- top-edge colour ----------
+               iOS Safari paints the strip behind the status bar in a colour it samples from the page
+               (top-pinned elements, then the page background). Keep that colour equal to whatever is at
+               the top of the scene so the strip blends in instead of reading as a cut-off. */
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            let topColor = '';
+            function setTopColor(c) {
+                if (c === topColor) return;
+                topColor = c;
+                root.style.backgroundColor = c;
+                document.body.style.backgroundColor = c;
+                if (themeMeta) themeMeta.setAttribute('content', c);
+                const st = document.querySelector('.fx-stage');
+                if (st) st.style.backgroundColor = c;
+            }
+            if (root.classList.contains('fx-gate-on')) setTopColor('#8f0000');
 
             /* ---------- elements ---------- */
             const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
@@ -697,6 +716,23 @@
             /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
             let lastHp = null, lastT = 0, vel = 0, heroOn = true;
             let heroDirty = true;
+            const SHAPES = [...document.querySelectorAll('#fwMark polygon')].map((pl) => pl.getAttribute('points').trim().split(/\s+/).map(Number))
+                .map((a) => a.reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []));
+            const SLAB = [...document.getElementById('fwSlab').getAttribute('points').trim().split(/\s+/).map(Number)]
+                .reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []);
+            function coverage(y, x0, x1, withSlab) {
+                let total = 0;
+                (withSlab ? [...SHAPES, SLAB] : SHAPES).forEach((pts) => {
+                    const xs = [];
+                    for (let i = 0; i < pts.length; i++) {
+                        const [ax, ay] = pts[i], [bx, by] = pts[(i + 1) % pts.length];
+                        if ((ay <= y && by > y) || (by <= y && ay > y)) xs.push(ax + (y - ay) / (by - ay) * (bx - ax));
+                    }
+                    xs.sort((a, b) => a - b);
+                    for (let i = 0; i + 1 < xs.length; i += 2) total += Math.max(0, Math.min(x1, xs[i + 1]) - Math.max(x0, xs[i]));
+                });
+                return total / (x1 - x0);
+            }
             function renderHero(t) {
                 const hp = reduce ? 0 : pinP(hero);
                 if (!heroDirty && lastHp !== null && Math.abs(hp - lastHp) < 1e-6 && Math.abs(vel) < 0.004) { vel = 0; lastT = t; return; }
@@ -758,6 +794,11 @@
                     bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
                     stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
                 }
+                // the colour actually at the top edge of the scene, measured from the camera
+                const vbTop = MODE === 'zoom' ? ZP.y - SP.y / k : cy - SH / 2 / k;
+                const vbLeft = MODE === 'zoom' ? ZP.x - SP.x / k : cx - SW / 2 / k;
+                const redTop = st > 0.02 || (em > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, MODE === 'pan') > 0.5);
+                if (!root.classList.contains('fx-gate-on')) setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
                 echoes.forEach((e) => {
                     const f = +e.dataset.echo;
                     if (MODE === 'zoom') { e.setAttribute('viewBox', vboxAt(ZP, SP, k * f)); return; }
@@ -768,7 +809,7 @@
             const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
             new IntersectionObserver(([e]) => {
                 heroOn = e.isIntersecting; heroDirty = true;
-                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); }
+                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); if (!root.classList.contains('fx-gate-on')) setTopColor('#060606'); }
             }).observe(hero);
             requestAnimationFrame(heroLoop);
 
