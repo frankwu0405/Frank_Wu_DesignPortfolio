@@ -52,13 +52,14 @@
         .fx .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; margin: 0; color: #fff; }
         .fx .red { color: var(--red); }
 
-        /* Opening: the mark's outline traced in its printed rim colour while the load counts up under it; it settles into
+        /* Opening: one red scan line passes down over the hidden mark, showing only the slice it crosses; then it prints into
            the dark mark behind the name and the figure hands over to the scroll hint. Only a thin line is red and the
            edges stay ink, so Safari's bars never change colour. Sized like the stage, so the line lands on the hero's mark. */
         .fx-gate { display: none; position: fixed; left: 0; top: 0; width: 100%; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); z-index: 1100; overflow: hidden; }
         .fx-gate-on .fx-gate { display: block; }
         .fx-gate-on, .fx-gate-on body { overflow: hidden; }
-        .fx-gate .bg { position: absolute; inset: 0; background: var(--ink); opacity: var(--cover, 1); }
+        .fx-gate .room { position: absolute; inset: 0; opacity: var(--cover, 1); }
+        .fx-gate .bg { position: absolute; inset: 0; background: var(--ink); }
         .fx-gate canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
         /* set like the scroll hint (.fx-hint), so it can take its place */
         .fx-gate .pct { position: absolute; left: 0; right: 0; top: 60%; margin: 0; height: 1.4em; overflow: hidden; text-align: center;
@@ -361,7 +362,7 @@
     </style>
 </head>
 <body class="fx">
-    <div class="fx-gate" aria-hidden="true"><i class="bg"></i><canvas></canvas><p class="pct"><span>000%</span></p></div>
+    <div class="fx-gate" aria-hidden="true"><div class="room"><i class="bg"></i></div><canvas></canvas><p class="pct"><span>000%</span></p></div>
 
     <header class="navbar">
         <a href="index.html" class="logo">
@@ -1127,77 +1128,37 @@
                 odoSets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
             }
 
-            /* ---------- opening: the mark's outline is traced in the colour of its printed rim (a touch brighter), led by a
-               bright point, while the load counts up under it; it grows a little and settles into the dark mark behind the
-               name, and the figure moves down into the scroll hint's place and hands over to it. An outline, not a fill:
-               colour and texture are what the scroll adds later. ---------- */
+            /* ---------- opening: a soft red light is swept down behind the mark like a torch, so the mark only shows as a dark
+               shape against the glow with its edges catching the light, and stays hidden wherever the glow isn't. The pass follows the load (the figure sits where the scroll hint will be).
+               Then nothing for a moment, and the mark prints onto the page at its full size, a touch larger than it was
+               scanned, as the dark mark behind the name. Top down rather than along the lean, which would light each
+               slanted stroke at once. ---------- */
             function intro() {
                 const gate = document.querySelector('.fx-gate'), cvs = gate.querySelector('canvas'), g2 = cvs.getContext('2d'), pctBox = gate.querySelector('.pct'), pctEl = pctBox.querySelector('span');
-                // the outline, measured round each letter
-                const letter = (Q) => { const C = [0]; Q.forEach((p, i) => { const q = Q[(i + 1) % Q.length]; C.push(C[i] + Math.hypot(q[0] - p[0], q[1] - p[1])); }); return { Q, C, L: C[C.length - 1] }; };
-                const LET = [letter(UNIQ[1]), letter(UNIQ[0])];
-                const at = (o, d) => {
-                    let i = 1; while (i < o.C.length - 1 && o.C[i] < d) i++;
-                    const a = o.Q[i - 1], b = o.Q[i % o.Q.length], t = clamp((d - o.C[i - 1]) / (o.C[i] - o.C[i - 1] || 1));
-                    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
-                };
-                // four points leave the mark's outer corners together and all run anticlockwise on screen; each runs on
-                // until it reaches the next one's corner ([letter, corner])
-                const vtx = (o, [x, y]) => o.C[Math.max(0, o.Q.findIndex((q) => q[0] === x && q[1] === y))];
-                const acw = (o) => { let a = 0; o.Q.forEach((p, i) => { const q = o.Q[(i + 1) % o.Q.length]; a += p[0] * q[1] - q[0] * p[1]; }); return a > 0 ? -1 : 1; };   // y runs down
-                const H = [[0, [388, 416]], [0, [52, 1569.04]], [1, [1924, 416]], [1, [1572.87, 1569.04]]]
-                    .map(([li, c]) => ({ o: LET[li], p0: vtx(LET[li], c), dir: acw(LET[li]), t0: 0, v: 1, M: Infinity, T: 0, d: 0 }));
-                const SP = 2400, EASE_IN = 0.25;   // outline units per unit of trace time; how long each point takes to reach its pace
-                const dist = (h, tau) => { const u = tau - h.t0; return u <= 0 ? 0 : h.v * SP * (u < EASE_IN ? u * u / (2 * EASE_IN) : u - EASE_IN / 2); };
-                const wrap = (x, L) => ((x % L) + L) % L;
-                const covers = (j, x, dj) => { const r = wrap((x - j.p0) * j.dir, j.o.L); return r > 1e-3 && r < dj; };
-                // run it once to find where each point stops and when the last one does
-                let tauEnd = 0;
-                for (let tau = 0, live = H.length; live && tau < 20; tau += 0.001) {
-                    H.forEach((h) => {
-                        if (h.M !== Infinity) return;
-                        const d = Math.min(dist(h, tau), h.o.L); if (d <= 0) return;
-                        const x = wrap(h.p0 + h.dir * d, h.o.L);
-                        if (d >= h.o.L || H.some((j) => j !== h && j.o === h.o && covers(j, x, Math.min(dist(j, tau), j.M)))) { h.M = d; h.T = tau; live--; tauEnd = tau; }
-                    });
-                }
-                // the stretch of outline a point has drawn between distances a and b, split where it wraps
-                const span = (h, a, b) => {
-                    const L = h.o.L, lo = wrap(h.dir > 0 ? h.p0 + a : h.p0 - b, L), hi = lo + (b - a);
-                    return hi <= L ? [[lo, hi]] : [[lo, L], [0, hi - L]];
-                };
-
-                // the points ease in on their own, so the whole run only needs a gentle curve with a soft landing
                 const bez = (x1, y1, x2, y2) => (x) => {
                     const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
                     let t = x;
                     for (let i = 0; i < 8; i++) { const e = ((ax * t + bx) * t + cx) * t - x, d = (3 * ax * t + 2 * bx) * t + cx; if (Math.abs(e) < 1e-5 || !d) break; t = clamp(t - e / d); }
                     return ((ay * t + by) * t + cy) * t;
                 };
-                const TRACE = bez(0.33, 0, 0.3, 1);
-                // timing (ms); the trace holds short of the end until the page has loaded
-                const RUN = mobile ? 2300 : 2700, HOLD = 300, GROW = 1100, PRESS = 700, CAP = 6000;
-                // traced a little smaller than where it ends, so the grow is a settle rather than a zoom
-                const kRest = () => K0 * 1.08, kSmall = () => kRest() * (mobile ? 0.66 : 0.72);
+                const SCAN = bez(0.45, 0, 0.75, 0.6);   // starts unhurried and gathers pace, handing its momentum on to the settle
+                // timing (ms); the scan holds short of the end until the page has loaded
+                const RUN = mobile ? 2000 : 2400, SETTLE = 950, PRINT0 = 300, PRINT = 1000, CAP = 6000;   // the print starts PRINT0 into the settle
+                const kRest = () => K0 * 1.08, kScan = () => kRest() * 0.95;   // scanned a touch smaller than it prints
                 const camY = (k) => PC.y - (0.02 * SH * 1.08 - GAP / 2) / k;   // the frame renderHero draws at the top of the scroll
                 const scr = ([x, y], k) => [(x - PC.x) * k + SW / 2, (y - camY(k)) * k + SH / 2];
-                const path = (o, d0, d1, k) => {
-                    for (let i = 0; i < o.Q.length; i++) {
-                        const s = Math.max(d0, o.C[i]), f = Math.min(d1, o.C[i + 1]); if (s >= f) continue;
-                        const A = scr(at(o, s), k), B = scr(at(o, f), k); g2.moveTo(A[0], A[1]); g2.lineTo(B[0], B[1]);
-                    }
-                };
-                // the line: the printed mark's rim colour (.rim), brighter than its 0.22, with only a breath of glow
-                const RIM = '255, 70, 55', LINE = 0.42;
-                const line = (o, spans, k, a) => {
-                    if (a < 0.005) return;
-                    g2.beginPath(); spans.forEach(([d0, d1]) => path(o, d0, d1, k));
-                    g2.shadowColor = `rgba(${RIM}, ${(0.5 * a).toFixed(3)})`; g2.shadowBlur = 6;
-                    g2.strokeStyle = `rgba(${RIM}, ${a.toFixed(3)})`; g2.lineWidth = 1.2; g2.stroke();
-                    g2.shadowBlur = 0;
-                };
 
-                // the figure ends where the scroll hint sits, and hands over to it
+                // the light: like a torch held behind the mark and swept down over it. A soft, diffused glow (no edge to it)
+                // passes behind; the mark stands dark against it, and its edges facing the glow catch a soft rim of red.
+                // Where the glow isn't, the mark is the same dark as the page.
+                const RIM = '255, 70, 55', LINE = 0.42;   // the printed mark's rim colour (.rim)
+                const EDGES = [];
+                UNIQ.forEach((P) => {
+                    let a2 = 0; P.forEach((p, i) => { const q = P[(i + 1) % P.length]; a2 += p[0] * q[1] - q[0] * p[1]; });
+                    P.forEach((p, i) => { const q = P[(i + 1) % P.length], dx = q[0] - p[0], dy = q[1] - p[1], l = Math.hypot(dx, dy); EDGES.push({ p, q, nx: (a2 > 0 ? dy : -dy) / l, ny: (a2 > 0 ? -dx : dx) / l }); });   // outward normal (y runs down)
+                });
+
+                // the figure sits where the scroll hint will be, and hands over to it at the print
                 const hintText = hint.querySelector('.hw');
                 hintW[0].classList.remove('is-on');
                 hint.style.opacity = '0';
@@ -1207,12 +1168,12 @@
                 let fontsIn = !document.fonts, pageIn = document.readyState === 'complete';
                 if (document.fonts) document.fonts.ready.then(() => { fontsIn = true; });
                 addEventListener('load', () => { pageIn = true; }, { once: true });
-                let t0 = 0, last = 0, prog = 0, full = null, grow0 = null, pct0 = 0, handed = false, done = false, skipped = false, shown = -1;
+                let t0 = 0, last = 0, prog = 0, pace = 1, full = null, handed = false, done = false, skipped = false, shown = -1;
                 stage.style.setProperty('--imp', '0');
 
                 function step(now) {
                     if (done || skipped) return;
-                    if (scrollY || scrollX) toTop();   // fail-safe: the outline only lines up with the mark at the very top
+                    if (scrollY || scrollX) toTop();   // fail-safe: the print only lines up with the mark at the very top
                     if (!t0) t0 = last = now;
                     const t = now - t0, dt = Math.min(0.05, (now - last) / 1000); last = now;
                     const dpr = Math.min(2, devicePixelRatio || 1), cw = Math.round(SW * dpr), ch = Math.round(SH * dpr);
@@ -1220,51 +1181,96 @@
                     g2.setTransform(dpr, 0, 0, dpr, 0, 0); g2.clearRect(0, 0, SW, SH);
 
                     const loaded = (fontsIn && pageIn) || t > CAP;
-                    prog = Math.min(loaded ? 1 : 0.8, prog + dt * 1000 / RUN);
+                    // while the page is still loading the sweep eases to a hold short of the end, and eases off again once it has
+                    pace += ((loaded ? 1 : clamp((0.85 - prog) / 0.2)) - pace) * Math.min(1, dt * 8);
+                    prog = Math.min(1, prog + dt * 1000 / RUN * pace);
                     if (prog >= 1 && full === null) full = t;
-                    const run = TRACE(prog), tau = run * tauEnd * 1.06;   // a little past the last meeting, so its point can go out
-                    H.forEach((h) => { h.d = Math.min(dist(h, tau), h.M); });
-                    const pc = Math.floor(run * 100);
+                    const s = SCAN(prog), pc = Math.floor(s * 100);
                     if (pc !== shown) { shown = pc; pctEl.textContent = `${String(pc).padStart(3, '0')}%`; }
+                    pctBox.style.top = `${hintText.getBoundingClientRect().top.toFixed(1)}px`;
 
-                    let k = kSmall(), cover = 1, imp = 0, lineA = LINE, g = 0;
-                    if (full !== null && grow0 === null && t >= full + HOLD) { grow0 = t; pct0 = pctBox.offsetTop; }
-                    if (grow0 !== null) {
-                        g = clamp((t - grow0) / GROW);
-                        const m = clamp((t - grow0 - GROW) / PRESS);
-                        k = k * Math.pow(kRest() * 1.02 / k, ease(g));
-                        cover = 1 - ease(g);
-                        // it settles back onto the page and the line sinks into the dark mark's rim
-                        if (m > 0) {
-                            ready(); k = kRest() * lerp(1.02, 1, 1 - Math.pow(1 - m, 3)); imp = ease(m); lineA = LINE * (1 - ease(m));
-                            if (!handed) { handed = true; pctBox.classList.add('is-out'); hintW[0].classList.add('is-on'); }
-                        }
-                        if (m >= 1) return end();
+                    // one continuous run, so there is never a dead frame:
+                    //   the sweep:  the glow passes down behind the mark (follows the load)
+                    //   the settle: once loaded it carries on down and widens into the page's own bottom light, ending exactly
+                    //               where and as that light is; the mark's silhouette goes back to dark as the glow leaves it
+                    //   the print:  overlapping the settle, the mark lands at full size; its red outline eases in and sinks into
+                    //               the dark mark; the room comes up last, crossing over from the gate's light to the real one
+                    const tf = full === null ? -1 : t - full;   // ms since the sweep finished
+                    const sg = (x, a, b) => clamp((x - a) / (b - a)), out = (x) => 1 - Math.pow(1 - x, 3);
+                    const settle = tf < 0 ? 0 : out(sg(tf, 0, SETTLE)), m = tf < 0 ? 0 : sg(tf, PRINT0, PRINT0 + PRINT);
+                    const cover = 1 - ease(sg(m, 0.35, 1));
+                    if (m > 0) {
+                        if (!handed && m >= 0.4) { handed = true; pctBox.classList.add('is-out'); hintW[0].classList.add('is-on'); }
+                        if (m >= 0.5) ready();
                     }
                     gate.style.setProperty('--cover', cover.toFixed(3));
-                    stage.style.setProperty('--imp', imp.toFixed(3));
-                    hint.style.opacity = ease(clamp((g - 0.5) / 0.5)).toFixed(3);
-                    if (grow0 === null) pctBox.style.top = `${Math.round(scr([PC.x, 1569.04], k)[1] + 30)}px`;   // just under the mark
-                    else pctBox.style.top = `${lerp(pct0, hintText.getBoundingClientRect().top, ease(g)).toFixed(1)}px`;
+                    stage.style.setProperty('--imp', ease(sg(m, 0.1, 0.65)).toFixed(3));
+                    hint.style.opacity = ease(sg(m, 0.45, 1)).toFixed(3);
 
-                    g2.lineJoin = 'miter'; g2.lineCap = 'butt';
-                    H.forEach((h) => line(h.o, span(h, 0, h.d), k, lineA));
-                    // each point while it runs: it brightens in as it catches, and the stretch it has just drawn is a little
-                    // brighter for a moment; when it meets the line it goes out
-                    g2.globalCompositeOperation = 'lighter';
-                    H.forEach((h) => {
-                        const a = (h.d <= 0 ? 0 : h.d < h.M ? clamp(h.d / 40) : 1 - clamp((tau - h.T) / 0.06)) * (full === null ? 1 : 1 - clamp((t - full) / 250));
-                        if (a <= 0.01) return;
-                        line(h.o, span(h, Math.max(0, h.d - 60 / k), h.d), k, 0.3 * a);
-                        const [x, y] = scr(at(h.o, wrap(h.p0 + h.dir * h.d, h.o.L)), k);
-                        let gr = g2.createRadialGradient(x, y, 0, x, y, 12);
-                        gr.addColorStop(0, `rgba(255, 110, 90, ${(0.35 * a).toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 70, 55, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 12, 0, Math.PI * 2); g2.fill();
-                        gr = g2.createRadialGradient(x, y, 0, x, y, 3);
-                        gr.addColorStop(0, `rgba(255, 244, 241, ${a.toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 200, 190, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 3, 0, Math.PI * 2); g2.fill();
-                    });
-                    g2.globalCompositeOperation = 'source-over';
+                    // swept a touch smaller than it prints; as it fades out it grows to exactly where the print begins, so the
+                    // outline appears where the shape was last seen
+                    const k = kScan() * Math.pow(kRest() * 1.012 / kScan(), out(sg(tf, 0, PRINT0)));
+                    const top = scr([PC.x, 416], k)[1], bot = scr([PC.x, 1569.04], k)[1], lft = scr([52, PC.y], k)[0], rgt = scr([1924, PC.y], k)[0];
+                    // the torch: a hand's gentle drift, down and a little across; it starts inside the mark so it stays clear of the top
+                    const T = { x: lerp(lft + (rgt - lft) * 0.42, lft + (rgt - lft) * 0.58, s), y: lerp(top + (bot - top) * 0.1, bot + (bot - top) * 0.12, s),
+                        rx: (rgt - lft) * 0.62 * 1.5, ry: (bot - top) * 0.36 * 1.5 };
+                    // the page's bottom light (.fx-light at rest: its box, its 1.04 scale about the box centre, its 50% 60% ellipse)
+                    const B = { x: SW / 2, y: SH * (0.925 + 0.075 * 1.04), rx: SW * 0.4 * 1.04, ry: SH * 0.375 * 1.04 };
+                    const G = { x: lerp(T.x, B.x, settle), y: lerp(T.y, B.y, settle), rx: lerp(T.rx, B.rx, settle), ry: lerp(T.ry, B.ry, settle) };
+                    const on = clamp(s / 0.12) * cover;   // comes up at the start; hands over to the real light as the room comes up
+                    const blob = (stops, w) => {
+                        if (w <= 0.002) return;
+                        g2.save(); g2.translate(G.x, G.y); g2.scale(G.rx / G.ry, 1);
+                        const gr = g2.createRadialGradient(0, 0, 0, 0, 0, G.ry);
+                        stops.forEach(([o, c, a]) => gr.addColorStop(o, `rgba(${c}, ${(a * w).toFixed(4)})`));
+                        g2.fillStyle = gr; g2.beginPath(); g2.arc(0, 0, G.ry, 0, Math.PI * 2); g2.fill();
+                        g2.restore();
+                    };
+                    // the torch's soft falloff, crossing into the bottom light's own colours as it settles
+                    blob([[0, RIM, 0.2], [0.2, RIM, 0.164], [0.4, RIM, 0.096], [0.6, RIM, 0.04], [0.8, RIM, 0.01], [1, RIM, 0]], on * (1 - settle));
+                    blob([[0, '211, 22, 27', 0.36], [0.55, '143, 0, 0', 0.1], [0.68, '143, 0, 0', 0.04], [0.8, '143, 0, 0', 0]], on * settle);
+                    // and the stage's breathing glow at the foot of the screen (.fx-stage::before) comes up with it
+                    if (on * settle > 0.002) {
+                        g2.save(); g2.translate(SW / 2, SH); g2.scale((SW * 0.4) / (SH * 0.35), 1);
+                        const br = g2.createRadialGradient(0, 0, 0, 0, 0, SH * 0.35);
+                        br.addColorStop(0, `rgba(211, 22, 27, ${(0.165 * on * settle).toFixed(4)})`); br.addColorStop(0.7, 'rgba(211, 22, 27, 0)');
+                        g2.fillStyle = br; g2.beginPath(); g2.arc(0, 0, SH * 0.35, 0, Math.PI * 2); g2.fill();
+                        g2.restore();
+                    }
+
+                    // the mark in front of the torch: a dark shape, its edges catching the light from behind (most on the side
+                    // facing it); it goes back to dark as the glow moves off it, a beat before the print
+                    const sil = 1 - ease(sg(tf, 0, PRINT0));
+                    if (sil > 0.002) {
+                        const tx = T.x, ty = T.y, trx = T.rx / 1.5, try_ = T.ry / 1.5;
+                        g2.fillStyle = '#070707'; g2.beginPath();
+                        UNIQ.forEach((P) => { P.forEach((q, i) => { const [x, y] = scr(q, k); i ? g2.lineTo(x, y) : g2.moveTo(x, y); }); g2.closePath(); });
+                        g2.fill();
+                        g2.lineWidth = 1.2; g2.lineCap = 'round'; g2.shadowColor = `rgba(${RIM}, 0.6)`; g2.shadowBlur = 5;
+                        EDGES.forEach((e) => {
+                            const A = scr(e.p, k), B2 = scr(e.q, k), S = [];
+                            for (let j = 0; j <= 10; j++) {
+                                const x = lerp(A[0], B2[0], j / 10), y = lerp(A[1], B2[1], j / 10), dx = tx - x, dy = ty - y, d = Math.hypot(dx, dy) || 1;
+                                const glow = Math.exp(-1.7 * (((x - tx) / trx) ** 2 + ((y - ty) / try_) ** 2));
+                                S.push(on * sil * glow * (0.3 + 0.7 * Math.max(0, (e.nx * dx + e.ny * dy) / d)) * 0.6);
+                            }
+                            if (Math.max(...S) < 0.004) return;
+                            const gr = g2.createLinearGradient(A[0], A[1], B2[0], B2[1]);
+                            S.forEach((v, j) => gr.addColorStop(j / 10, `rgba(${RIM}, ${v.toFixed(3)})`));
+                            g2.strokeStyle = gr; g2.beginPath(); g2.moveTo(A[0], A[1]); g2.lineTo(B2[0], B2[1]); g2.stroke();
+                        });
+                        g2.shadowBlur = 0;
+                    }
+
+                    // the print: at full size, settling from a touch larger; the red outline eases in, then sinks into the dark mark
+                    if (m > 0) {
+                        const kp = kRest() * lerp(1.012, 1, out(sg(m, 0, 0.7)));
+                        const a = LINE * sine(sg(m, 0, 0.25)) * (1 - ease(sg(m, 0.25, 0.8)));
+                        g2.lineWidth = 1.2; g2.lineJoin = 'miter'; g2.strokeStyle = `rgba(${RIM}, ${a.toFixed(3)})`;
+                        g2.beginPath(); UNIQ.forEach((P) => { P.forEach((q, i) => { const [x, y] = scr(q, kp); i ? g2.lineTo(x, y) : g2.moveTo(x, y); }); g2.closePath(); });
+                        g2.stroke();
+                        if (m >= 1) return end();
+                    }
                     requestAnimationFrame(step);
                 }
                 function end() {
