@@ -93,10 +93,10 @@
         .fx-cam .dark { fill: #0d0d0d; opacity: calc(1 - var(--hide, 0)); }   /* the hidden mark goes fully dark before the blueprint */
         /* build: a flat grey block-in (mid-fidelity) leads, the finish sweeps in behind it with a soft bloom */
         .fx-cam .grey { fill: #1b1b1d; }
-        .fx-cam .bloom { fill: #ff4a38; opacity: var(--bloom, 0); }
+        .fx-cam .bloom, .fx-cam .feather { opacity: var(--bloom, 0); }
         .fx-cam .flat { fill: var(--deep); opacity: var(--swell, 0); }   /* the light swells into flat red as the camera leaves */
-        .is-built .fx-cam .grey, .is-built .fx-cam .bloom { display: none; }
-        .is-built .fx-cam .fin { mask: none; }
+        .is-built .fx-cam .grey, .is-built .fx-cam .bloom, .is-built .fx-cam .feather { display: none; }
+        .is-built .fx-cam .fin { clip-path: none; }
         /* finishes: light defines the shape; whatever faces away sinks into the black */
         .fx-cam .fin > g { display: none; }
         .f-glass .fx-cam .fin > .glass, .f-backlit .fx-cam .fin > .backlit, .f-lacquer .fx-cam .fin > .lacquer { display: inline; }
@@ -367,12 +367,15 @@
                 <stop offset="0" stop-color="#ff6a58" stop-opacity="0.6"/><stop offset="0.45" stop-color="#e0201f" stop-opacity="0.18"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/>
             </radialGradient>
             <!-- build: soft edges that sweep in along the lean (the blueprint only shows ahead of the grey) -->
-            <linearGradient id="fwGreyG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-            <linearGradient id="fwFinG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-            <linearGradient id="fwBloomG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#000"/><stop offset="0.7" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-            <mask id="fwGreyM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwGreyG)"/></mask>
-            <mask id="fwFinM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwFinG)"/></mask>
-            <mask id="fwBloomM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwBloomG)"/></mask>
+            <clipPath id="fwGreyC"><polygon id="fwGreyPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <clipPath id="fwFinC"><polygon id="fwFinPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <!-- the soft edge: the finish fades out ahead of its clip, and a glow rides on the seam -->
+            <linearGradient id="fwFeatherG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0">
+                <stop offset="0" stop-color="#3a0306" stop-opacity="0"/><stop offset="0.02" stop-color="#3a0306" stop-opacity="0.9"/><stop offset="1" stop-color="#3a0306" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="fwBloomG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0">
+                <stop offset="0" stop-color="#ff4a38" stop-opacity="0"/><stop offset="0.7" stop-color="#ff4a38" stop-opacity="0.9"/><stop offset="1" stop-color="#ff4a38" stop-opacity="0"/>
+            </linearGradient>
             <clipPath id="fwAheadClip"><polygon id="fwAheadPoly" points="-3000 -3000 30000 -3000 30000 5000 -3000 5000"/></clipPath>
             <!-- finishes; every centre follows the light -->
             <radialGradient id="fwGlassG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1500">
@@ -392,7 +395,6 @@
             </linearGradient>
             <linearGradient id="fwSheenG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="575" y2="170">
                 <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-                <animateTransform attributeName="gradientTransform" type="translate" values="-384 -114; -384 -114; 2014 596" keyTimes="0; 0.5; 1" dur="7s" repeatCount="indefinite"/>
             </linearGradient>
             <g id="fwBevel"></g>
         </defs>
@@ -609,12 +611,14 @@
             const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
-            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" mask="url(#fwGreyM)"/>'
-                + '<g class="fin" mask="url(#fwFinM)">' + FINISH + '</g><use class="bloom" href="#fwMark" mask="url(#fwBloomM)"/>'
+            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" clip-path="url(#fwGreyC)"/>'
+                + '<g class="fin" clip-path="url(#fwFinC)">' + FINISH + '</g><use class="feather" href="#fwMark" fill="url(#fwFeatherG)"/><use class="bloom" href="#fwMark" fill="url(#fwBloomG)"/>'
                 + '<use class="flat" href="#fwMark"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
             const bp = stage.querySelector('.fx-bp');
             const aheadPoly = document.getElementById('fwAheadPoly');
-            const greyG = document.getElementById('fwGreyG'), finG = document.getElementById('fwFinG'), bloomG = document.getElementById('fwBloomG');
+            const greyPoly = document.getElementById('fwGreyPoly'), finPoly = document.getElementById('fwFinPoly');
+            const featherG = document.getElementById('fwFeatherG'), bloomG = document.getElementById('fwBloomG'), sheenG = document.getElementById('fwSheenG');
+            let sheenKey = '';
             const LG = ['fwGlassG', 'fwRimG', 'fwRimR', 'fwSpec'].map((id) => document.getElementById(id)), glowG = document.getElementById('fwGlowG');
             const hint = stage.querySelector('.fx-hint'), hintW = [...hint.querySelectorAll('b')];
             let hintI = 0;
@@ -622,7 +626,8 @@
             let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
             const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
             const echoes = [...stage.querySelectorAll('[data-echo]')];
-            const NB = innerWidth <= 900 ? 5 : 7;
+            const NB = innerWidth <= 900 ? 1 : 7;
+            let bandClips = [], streaking = null;
             const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
             const smearBlur = document.getElementById('fxSmearBlur');
             const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
@@ -658,7 +663,8 @@
                 const markBottom = (1569.04 - PC.y) * K0 + 0.02 * SH - GAP / 2 + SH / 2;
                 stage.style.setProperty('--hintTop', `${Math.round(markBottom + (SH - GAP - markBottom) * 0.3)}px`);
                 buildBp();
-                bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
+                bandClips = bands.map((b, i) => `inset(${(i * SH / NB).toFixed(1)}px 0 ${(SH - (i + 1) * SH / NB).toFixed(1)}px 0)`);
+                streaking = null;
                 slantA = Math.round(SH * TAN);
                 // the skills section slides under the end of the hero, so the exit wipe reveals it already in place
                 skills.style.marginTop = reduce ? '' : `-${Math.round(SH + (hero.offsetHeight - SH) * (1 - WIPE0) + 4)}px`;
@@ -882,7 +888,9 @@
                 const gp = clamp(build / 0.72), fp = clamp((build - 0.18) / 0.82);
                 const gx = lerp(-500, 2400, gp), fx = lerp(-760, 2400, fp);
                 if (!built) {
-                    sweepTo(greyG, gx, 120, 0); sweepTo(finG, fx, 240, 0); sweepTo(bloomG, fx, 300, 50);
+                    const behind = (X) => `-3000 -3000 ${f1(edgeX(X, -3000))} -3000 ${f1(edgeX(X, 5000))} 5000 -3000 5000`;
+                    greyPoly.setAttribute('points', behind(gx)); finPoly.setAttribute('points', behind(fx));
+                    sweepTo(featherG, fx, 4, 200); sweepTo(bloomG, fx, 300, 50);
                     aheadPoly.setAttribute('points', `${f1(edgeX(gx, -3000))} -3000 30000 -3000 30000 5000 ${f1(edgeX(gx, 5000))} 5000`);
                 }
                 stage.style.setProperty('--bloom', (built ? 0 : 0.5 * Math.sin(Math.PI * fp)).toFixed(3));
@@ -908,7 +916,13 @@
                 const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
                 const cx = lerp(PC.x, cxEnd, tz);
                 const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
-                bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                const streak = NB > 1 && sp > 0.01;
+                if (streak !== streaking) {
+                    streaking = streak;
+                    bands.forEach((b, i) => { b.style.display = i === 0 || streak ? '' : 'none'; b.style.clipPath = streak ? bandClips[i] : ''; });
+                }
+                if (streak) bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                else bands[0].setAttribute('viewBox', vbox(cx, cy, k));
                 const smear = mobile ? 0 : sp * 16;
                 if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
                 bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
@@ -936,6 +950,9 @@
                 // finish: lit from where the pointer is (scroll turns the light on phones); as the camera
                 // leaves, the light swells and the mark becomes the flat red the next scene is made of
                 const swell = reduce ? 0 : ease(clamp(zm / 0.4));
+                const sh = Math.round(lerp(-400, 2100, clamp((hp - 0.24) / 0.14)));
+                const shKey = String(sh);
+                if (shKey !== sheenKey) { sheenKey = shKey; sheenG.setAttribute('gradientTransform', `translate(${(sh * NX).toFixed(0)} ${(sh * NY).toFixed(0)})`); }
                 stage.style.setProperty('--swell', swell.toFixed(3));
                 if (fp > 0.001 && swell < 0.999) {
                     const th = lerp(-2.45, -0.7, clamp((hp - 0.14) / 0.26));
