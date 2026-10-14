@@ -70,7 +70,7 @@
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
-        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 430); }   /* scroll spacer for the fixed scene */
+        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 560); }   /* scroll spacer for the fixed scene */
         .fx-stage.is-off { visibility: hidden; }
         .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
@@ -109,12 +109,12 @@
         /* blueprint: traced light, not interface chrome */
         .fx-bp { display: none; }
         .fx-bp * { vector-effect: non-scaling-stroke; }
-        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
-        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.5); stroke-width: 1.2; stroke-dasharray: 10 90; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
+        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.36); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
+        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.7); stroke-width: 1.3; stroke-dasharray: 16 84; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
         .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: 1.8; stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
         .fx-bp .bp-pt { fill: #fff; opacity: 0; filter: drop-shadow(0 0 4px rgba(255, 120, 100, 0.9)); }
         .fx-bp .bp-cuts { opacity: var(--bpCut, 1); }
-        .fx-bp .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+        .fx-bp .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
         .fx-bp .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: 1.2; stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
         .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)))); stroke-width: 1.2; }
         .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
@@ -284,7 +284,7 @@
         @keyframes fx-marq { to { transform: translateX(-50%); } }
 
         @media (max-width: 900px) {
-            .fx-hero { height: calc(var(--fvh, 1vh) * 340); }
+            .fx-hero { height: calc(var(--fvh, 1vh) * 520); }
             .fx-title h1 { font-size: 14vw; }
             .fx-title .role { letter-spacing: 0.3em; }
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
@@ -649,7 +649,12 @@
             let K0 = 1, SW = 1, SH = 1, GAP = 0, VH = innerHeight, mobile = false, slantA = 0;
             const vprobe = document.querySelector('.fx-vprobe'), lprobe = document.querySelector('.fx-lprobe');
             /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
-            const FADE1 = 0.14, EM0 = 0.13, EM1 = 0.32, ZM0 = 0.36, ZM1 = 0.60, ST0 = 0.56, ST1 = 0.78, WIPE0 = 0.86;
+            /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll, about 4.6 screens):
+               name fades and the mark goes dark; guides grow from behind the name; the outline is traced; a beat on the
+               finished drawing; grey block-in then the finish; a hold on the lit mark; the pan; the statement; the wipe */
+            const HIDE1 = 0.026, FADE1 = 0.098, GD0 = 0.033, GD1 = 0.163, DR0 = 0.076, DR1 = 0.272;
+            const EM0 = 0.32, EM1 = 0.48, ZM0 = 0.55, ZM1 = 0.72, ST0 = 0.645, ST1 = 0.81, WIPE0 = 0.89;
+            const sine = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
             function layout() {
                 mobile = innerWidth <= 900;
                 // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
@@ -878,7 +883,7 @@
                 } else { stage.style.clipPath = ''; wipeEdge.style.opacity = '0'; }
                 stage.style.setProperty('--fade', fade.toFixed(3));
                 stage.style.setProperty('--em', em.toFixed(3));
-                stage.style.setProperty('--hide', (reduce ? 0 : clamp(hp / 0.035)).toFixed(3));
+                stage.style.setProperty('--hide', (reduce ? 0 : clamp(hp / HIDE1)).toFixed(3));
                 stage.style.setProperty('--zm', zm.toFixed(3));
                 stage.style.setProperty('--glint', (-em * 160).toFixed(1));
                 // build: grey block-in first, then the finish behind a soft edge that blooms as it passes
@@ -895,7 +900,7 @@
                 }
                 stage.style.setProperty('--bloom', (built ? 0 : 0.5 * Math.sin(Math.PI * fp)).toFixed(3));
                 // stage hint
-                const hv = reduce ? 0 : clamp((hp - 0.05) / 0.04) * (1 - clamp((hp - 0.52) / 0.05));
+                const hv = reduce ? 0 : clamp((hp - 0.035) / 0.025) * (1 - clamp((hp - (ST0 - 0.03)) / 0.03));
                 stage.style.setProperty('--hint', hv.toFixed(3));
                 const hi = hp < EM0 + 0.01 ? 0 : hp < ZM0 ? 1 : 2;
                 if (hi !== hintI) { hintI = hi; hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
@@ -928,19 +933,20 @@
                 bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
                 stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
                 // blueprint: drawn while the name fades, cleared by the build
-                const draw = reduce ? 0 : ease(clamp((hp - 0.045) / 0.105));
-                const bpOn = draw > 0.001 && !built;
+                const draw = reduce ? 0 : sine(clamp((hp - DR0) / (DR1 - DR0)));
+                const gd = reduce ? 0 : clamp((hp - GD0) / (GD1 - GD0));
+                const bpOn = (gd > 0.001 || draw > 0.001) && !built;
                 bp.style.display = bpOn ? 'block' : 'none';
                 if (bpOn) {
                     bp.setAttribute('viewBox', vbox(cx, cy, k));
                     const D = draw * 100;
                     bp.style.setProperty('--bpd', (100 - D).toFixed(2));
                     bp.style.setProperty('--tipo', (1.4 - D).toFixed(2));
-                    bp.style.setProperty('--tailo', (10 - D).toFixed(2));
+                    bp.style.setProperty('--tailo', (16 - D).toFixed(2));
                     bp.style.setProperty('--tipOn', (clamp(D / 3) * (1 - clamp((draw - 0.94) / 0.06))).toFixed(3));
                     ANCH.forEach((pt) => { const o = draw >= pt.f ? Math.round(clamp(1 - (draw - pt.f) / 0.09) * 100) / 100 : 0; if (o !== pt.o) { pt.o = o; pt.el.style.opacity = String(o); } });
                     CUTS.forEach((ct) => {
-                        const v = Math.round(ease(clamp((draw - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
+                        const v = Math.round(ease(clamp((gd - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
                         if (v === ct.v) return;
                         ct.v = v; ct.el.style.strokeDashoffset = String(100 - v);
                         ct.tip.style.strokeDashoffset = String(2.5 - v); ct.tip.style.opacity = v > 0 && v < 100 ? (1 - v / 100).toFixed(2) : '0';
@@ -950,12 +956,12 @@
                 // finish: lit from where the pointer is (scroll turns the light on phones); as the camera
                 // leaves, the light swells and the mark becomes the flat red the next scene is made of
                 const swell = reduce ? 0 : ease(clamp(zm / 0.4));
-                const sh = Math.round(lerp(-400, 2100, clamp((hp - 0.24) / 0.14)));
+                const sh = Math.round(lerp(-400, 2100, clamp((hp - (EM1 - 0.02)) / (ZM0 - EM1 + 0.02))));
                 const shKey = String(sh);
                 if (shKey !== sheenKey) { sheenKey = shKey; sheenG.setAttribute('gradientTransform', `translate(${(sh * NX).toFixed(0)} ${(sh * NY).toFixed(0)})`); }
                 stage.style.setProperty('--swell', swell.toFixed(3));
                 if (fp > 0.001 && swell < 0.999) {
-                    const th = lerp(-2.45, -0.7, clamp((hp - 0.14) / 0.26));
+                    const th = lerp(-2.45, -0.7, clamp((hp - EM0) / (ZM0 - EM0)));
                     const vx = Math.cos(th) * 0.75 + MX * 0.9, vy = Math.sin(th) * 0.75 + MY * 0.9, vl = Math.hypot(vx, vy) || 1;
                     lightMark(vx / vl, vy / vl, clamp(vl / 0.75, 0.7, 1));
                 }
