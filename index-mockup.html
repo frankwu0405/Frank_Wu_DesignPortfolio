@@ -112,10 +112,11 @@
         .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.36); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
         .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.7); stroke-width: 1.3; stroke-dasharray: 16 84; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
         .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: 1.8; stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
-        .fx-bp .bp-pt { fill: #fff; opacity: 0; filter: drop-shadow(0 0 4px rgba(255, 120, 100, 0.9)); }
-        .fx-bp .bp-cuts { opacity: var(--bpCut, 1); }
-        .fx-bp .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
-        .fx-bp .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: 1.2; stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
+        /* guides sit behind the mark, so it is built in front of them */
+        .fx-guides { display: none; opacity: var(--gOn, 1); }
+        .fx-guides * { vector-effect: non-scaling-stroke; }
+        .fx-guides .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+        .fx-guides .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: 1.2; stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
         .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)))); stroke-width: 1.2; }
         .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
         .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; opacity: min(1, calc(var(--zm) * 8)); }   /* only once the camera starts to travel */
@@ -290,7 +291,7 @@
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
             .fx-hint { left: 0; right: 0; bottom: auto; top: var(--hintTop, 70%); flex-direction: column; gap: 10px; }
             .fx-hint .hw { text-align: center; }
-            .fx-bp .bp-tip, .fx-bp .bp-pt { filter: none; }
+            .fx-bp .bp-tip { filter: none; }
             .fx-switch { left: 12px; right: 12px; justify-content: center; }
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
@@ -411,6 +412,7 @@
                 <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par markp" aria-hidden="true">
+                    <svg class="fx-cam fx-guides" preserveAspectRatio="none"></svg>
                     <div class="fx-fxbox"><div class="fx-bands"></div></div>
                     <svg class="fx-cam fx-bp" preserveAspectRatio="none"></svg>
                 </div>
@@ -614,7 +616,7 @@
             const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" clip-path="url(#fwGreyC)"/>'
                 + '<g class="fin" clip-path="url(#fwFinC)">' + FINISH + '</g><use class="feather" href="#fwMark" fill="url(#fwFeatherG)"/><use class="bloom" href="#fwMark" fill="url(#fwBloomG)"/>'
                 + '<use class="flat" href="#fwMark"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
-            const bp = stage.querySelector('.fx-bp');
+            const bp = stage.querySelector('.fx-bp'), guidesEl = stage.querySelector('.fx-guides');
             const aheadPoly = document.getElementById('fwAheadPoly');
             const greyPoly = document.getElementById('fwGreyPoly'), finPoly = document.getElementById('fwFinPoly');
             const featherG = document.getElementById('fwFeatherG'), bloomG = document.getElementById('fwBloomG'), sheenG = document.getElementById('fwSheenG');
@@ -823,16 +825,9 @@
             }
             /* blueprint: the outline traced by a point of light (corners flare as it passes), and six
                faint guides growing out from behind the fading name, each with a bright tip */
-            let ANCH = [], CUTS = [];
+            let CUTS = [];
             function buildBp() {
-                const u = 1 / K0, f = (v) => v.toFixed(1);
-                let a = '';
-                UNIQ.forEach((P) => {
-                    const n = P.length, len = P.map((p, i) => Math.hypot(P[(i + 1) % n][0] - p[0], P[(i + 1) % n][1] - p[1]));
-                    const tot = len.reduce((x, y) => x + y, 0);
-                    let acc = 0;
-                    P.forEach((p, i) => { a += `<circle class="bp-pt" data-f="${(acc / tot).toFixed(4)}" cx="${f(p[0])}" cy="${f(p[1])}" r="${f(2.2 * u)}"/>`; acc += len[i]; });
-                });
+                const f = (v) => v.toFixed(1);
                 const O = [988, 985], GL = 0.62 * Math.hypot(SW, SH) / K0;
                 const GUIDES = [[[0, 416], [1, 0]], [[0, 890.78], [1, 0]], [[0, 1569.04], [1, 0]],
                     [[484, 1132.26], [340, 1568.04]], [[1492.7, 416], [1416.87, 658.48]], [[1924, 416], [1572.87, 1569.04]]];
@@ -847,9 +842,9 @@
                         c += `<line class="bp-cut" data-a="${d}" data-b="${d + 0.6}" ${ln}/><line class="bp-ctip" ${ln}/>`;
                     });
                 });
-                bp.innerHTML = `<g class="bp-cuts">${c}</g><g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/><use class="bp-tail" href="#fwMark"/><use class="bp-tip" href="#fwMark"/>${a}</g>`;
-                CUTS = [...bp.querySelectorAll('.bp-cut')].map((el) => ({ el, tip: el.nextElementSibling, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
-                ANCH = [...bp.querySelectorAll('.bp-pt')].map((el) => ({ el, f: +el.dataset.f, o: -1 }));
+                guidesEl.innerHTML = c;
+                bp.innerHTML = `<g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/><use class="bp-tail" href="#fwMark"/><use class="bp-tip" href="#fwMark"/></g>`;
+                CUTS = [...guidesEl.querySelectorAll('.bp-cut')].map((el) => ({ el, tip: el.nextElementSibling, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
             }
             /* the build edge leans like the strokes; X is where it crosses y = 1700 */
             const edgeX = (X, y) => X + (1700 - y) * TAN;
@@ -932,10 +927,24 @@
                 if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
                 bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
                 stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
-                // blueprint: drawn while the name fades, cleared by the build
+                // blueprint: the outline traced by a point of light, cleared by the build
                 const draw = reduce ? 0 : sine(clamp((hp - DR0) / (DR1 - DR0)));
                 const gd = reduce ? 0 : clamp((hp - GD0) / (GD1 - GD0));
-                const bpOn = (gd > 0.001 || draw > 0.001) && !built;
+                // guides: grow from behind the name, stay through the build and the hold, fade as the camera leaves
+                const gOut = reduce ? 1 : clamp((hp - ZM0) / 0.05);
+                const gOn = gd > 0.001 && gOut < 1;
+                guidesEl.style.display = gOn ? 'block' : 'none';
+                if (gOn) {
+                    guidesEl.setAttribute('viewBox', vbox(cx, cy, k));
+                    guidesEl.style.setProperty('--gOn', (1 - gOut).toFixed(3));
+                    CUTS.forEach((ct) => {
+                        const v = Math.round(ease(clamp((gd - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
+                        if (v === ct.v) return;
+                        ct.v = v; ct.el.style.strokeDashoffset = String(100 - v);
+                        ct.tip.style.strokeDashoffset = String(2.5 - v); ct.tip.style.opacity = v > 0 && v < 100 ? (1 - v / 100).toFixed(2) : '0';
+                    });
+                }
+                const bpOn = draw > 0.001 && !built;
                 bp.style.display = bpOn ? 'block' : 'none';
                 if (bpOn) {
                     bp.setAttribute('viewBox', vbox(cx, cy, k));
@@ -944,14 +953,6 @@
                     bp.style.setProperty('--tipo', (1.4 - D).toFixed(2));
                     bp.style.setProperty('--tailo', (16 - D).toFixed(2));
                     bp.style.setProperty('--tipOn', (clamp(D / 3) * (1 - clamp((draw - 0.94) / 0.06))).toFixed(3));
-                    ANCH.forEach((pt) => { const o = draw >= pt.f ? Math.round(clamp(1 - (draw - pt.f) / 0.09) * 100) / 100 : 0; if (o !== pt.o) { pt.o = o; pt.el.style.opacity = String(o); } });
-                    CUTS.forEach((ct) => {
-                        const v = Math.round(ease(clamp((gd - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
-                        if (v === ct.v) return;
-                        ct.v = v; ct.el.style.strokeDashoffset = String(100 - v);
-                        ct.tip.style.strokeDashoffset = String(2.5 - v); ct.tip.style.opacity = v > 0 && v < 100 ? (1 - v / 100).toFixed(2) : '0';
-                    });
-                    bp.style.setProperty('--bpCut', (1 - clamp(build / 0.5)).toFixed(3));
                 }
                 // finish: lit from where the pointer is (scroll turns the light on phones); as the camera
                 // leaves, the light swells and the mark becomes the flat red the next scene is made of
