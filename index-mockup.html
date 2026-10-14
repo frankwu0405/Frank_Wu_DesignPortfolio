@@ -69,7 +69,7 @@
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
-        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 560); }   /* scroll spacer for the fixed scene */
+        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 660); }   /* scroll spacer for the fixed scene */
         .fx-stage.is-off { visibility: hidden; }
         .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
@@ -307,7 +307,7 @@
         @keyframes fx-marq { to { transform: translateX(-50%); } }
 
         @media (max-width: 900px) {
-            .fx-hero { height: calc(var(--fvh, 1vh) * 520); }
+            .fx-hero { height: calc(var(--fvh, 1vh) * 620); }
             .fx-title h1 { font-size: 14vw; }
             .fx-title .role { letter-spacing: 0.3em; }
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
@@ -719,8 +719,11 @@
             /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll, about 4.6 screens):
                name fades and the mark goes dark; guides grow from behind the name; the outline is traced; a beat on the
                finished drawing; grey block-in then the finish; a hold on the lit mark; the pan; the statement; the wipe */
-            const HIDE1 = 0.026, FADE1 = 0.098, GD0 = 0.033, GD1 = 0.163, DR0 = 0.076, DR1 = 0.272;
-            const EM0 = 0.272, EM1 = 0.455, ZM0 = 0.55, ZM1 = 0.72, ST0 = 0.645, ST1 = 0.8, WIPE0 = 0.905;
+            const HIDE1 = 0.0214, FADE1 = 0.0805, GD0 = 0.0271, GD1 = 0.1339, DR0 = 0.0624, DR1 = 0.2234;
+            const EM0 = 0.2234, EM1 = 0.3737, ZM0 = 0.4518, ZM1 = 0.5914, ST0 = 0.5298, ST1 = 0.657, WIPE0 = 0.922;
+            /* the decision (about a screen and a half): both choices side by side and neutral, so they can be compared;
+               then each gets its own moment, black with its watermark; only then does the wipe begin */
+            const DEC1 = ST1 + 0.06, DECM = DEC1 + (WIPE0 - DEC1) / 2;
             const sine = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
             function layout() {
                 mobile = innerWidth <= 900;
@@ -941,7 +944,7 @@
                 // exit: the whole scene is cut away along the slant
                 const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
                 // which choice is "the answer": a tap or hover wins; otherwise the first half of the hold picks the work, the second About me
-                showPick(reduce ? -1 : pickGo >= 0 ? pickGo : pickHover >= 0 && ctaLive ? pickHover : st > 0.97 && wk < 0.3 ? (hp < (ST1 + WIPE0) / 2 ? 0 : 1) : -1);
+                showPick(reduce ? -1 : pickGo >= 0 ? pickGo : pickHover >= 0 && ctaLive ? pickHover : st > 0.97 && wk < 0.3 && hp >= DEC1 ? (hp < DECM ? 0 : 1) : -1);
                 // the links only respond once they have arrived, and stop as the wipe begins
                 const live = reduce || (st > 0.97 && wk < 0.02);
                 if (live !== ctaLive) {
@@ -983,9 +986,9 @@
                     : lerp(1.05, 1.6, clamp((hp - ZM0) / (ZM1 - ZM0)));
                 stage.style.setProperty('--glow', glow.toFixed(3));
                 // stage hint
-                const hv = reduce ? 1 : 1 - clamp((hp - (ST0 - 0.03)) / 0.03);
+                const hv = reduce ? 1 : 1 - clamp((hp - (ST0 - 0.025)) / 0.025);
                 stage.style.setProperty('--hint', hv.toFixed(3));
-                const hi = reduce || hp < 0.04 ? 0 : hp < EM0 + 0.01 ? 1 : hp < ZM0 ? 2 : 3;
+                const hi = reduce || hp < 0.033 ? 0 : hp < EM0 + 0.01 ? 1 : hp < ZM0 ? 2 : 3;
                 if (hi !== hintI) { hintI = hi; hint.classList.toggle('is-scroll', hi === 0); hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
                 stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
                 letters.forEach(({ ci, d }) => {
@@ -1019,7 +1022,7 @@
                 const draw = reduce ? 0 : sine(clamp((hp - DR0) / (DR1 - DR0)));
                 const gd = reduce ? 0 : clamp((hp - GD0) / (GD1 - GD0));
                 // guides: grow from behind the name, stay through the build and the hold, fade as the camera leaves
-                const gOut = reduce ? 1 : clamp((hp - ZM0) / 0.05);
+                const gOut = reduce ? 1 : clamp((hp - ZM0) / 0.041);
                 const gOn = gd > 0.001 && gOut < 1;
                 guidesEl.style.display = gOn ? 'block' : 'none';
                 if (gOn) {
