@@ -107,15 +107,14 @@
         .fx-cam .glow { opacity: calc(1 - var(--swell, 0)); }
         /* blueprint: traced light, not interface chrome */
         .fx-bp { display: none; }
-        .fx-bp * { vector-effect: non-scaling-stroke; }
-        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.36); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
-        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.7); stroke-width: 1.3; stroke-dasharray: 16 84; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
-        .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: 1.8; stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
+        /* drawn in the mark's own units (so the trace follows the outline exactly); --px is one screen pixel */
+        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.36); stroke-width: calc(var(--px, 1) * 1px); stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
+        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.7); stroke-width: calc(var(--px, 1) * 1.3px); stroke-dasharray: 16 84; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
+        .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: calc(var(--px, 1) * 1.8px); stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
         /* guides sit behind the mark, so it is built in front of them */
         .fx-guides { display: none; opacity: var(--gOn, 1); }
-        .fx-guides * { vector-effect: non-scaling-stroke; }
-        .fx-guides .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
-        .fx-guides .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: 1.2; stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
+        .fx-guides .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: calc(var(--px, 1) * 1px); stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+        .fx-guides .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: calc(var(--px, 1) * 1.2px); stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
         .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)))); stroke-width: 1.2; }
         .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
         .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; opacity: min(1, calc(var(--zm) * 8)); }   /* only once the camera starts to travel */
@@ -666,7 +665,7 @@
                name fades and the mark goes dark; guides grow from behind the name; the outline is traced; a beat on the
                finished drawing; grey block-in then the finish; a hold on the lit mark; the pan; the statement; the wipe */
             const HIDE1 = 0.026, FADE1 = 0.098, GD0 = 0.033, GD1 = 0.163, DR0 = 0.076, DR1 = 0.272;
-            const EM0 = 0.32, EM1 = 0.48, ZM0 = 0.55, ZM1 = 0.72, ST0 = 0.645, ST1 = 0.81, WIPE0 = 0.89;
+            const EM0 = 0.272, EM1 = 0.455, ZM0 = 0.55, ZM1 = 0.72, ST0 = 0.645, ST1 = 0.81, WIPE0 = 0.89;
             const sine = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
             function layout() {
                 mobile = innerWidth <= 900;
@@ -855,7 +854,10 @@
                     });
                 });
                 guidesEl.innerHTML = c;
-                bp.innerHTML = `<g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/><use class="bp-tail" href="#fwMark"/><use class="bp-tip" href="#fwMark"/></g>`;
+                const shape = (cls) => UNIQ.map((P) => `<polygon class="${cls}" pathLength="100" points="${P.map(P2).join(' ')}"/>`).join('');
+                bp.innerHTML = `<g clip-path="url(#fwAheadClip)">${shape('bp-out')}${shape('bp-tail')}${shape('bp-tip')}</g>`;
+                const px = (1 / (K0 * 1.08)).toFixed(3);   // the mark is at 1.08x while it is drawn
+                bp.style.setProperty('--px', px); guidesEl.style.setProperty('--px', px);
                 CUTS = [...guidesEl.querySelectorAll('.bp-cut')].map((el) => ({ el, tip: el.nextElementSibling, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
             }
             /* the build edge leans like the strokes; X is where it crosses y = 1700 */
@@ -894,11 +896,12 @@
                 stage.style.setProperty('--zm', zm.toFixed(3));
                 stage.style.setProperty('--glint', (-em * 160).toFixed(1));
                 // build: grey block-in first, then the finish behind a soft edge that blooms as it passes
-                const build = reduce ? 1 : em;
+                const build = reduce ? 1 : sine(clamp((hp - EM0) / (EM1 - EM0)));   // gentler start than em, so it picks up as the drawing ends
                 const built = build >= 0.999;
                 stage.classList.toggle('is-built', built);
-                const gp = clamp(build / 0.72), fp = clamp((build - 0.18) / 0.82);
-                const gx = lerp(-500, 2400, gp), fx = lerp(-760, 2400, fp);
+                // both sweeps start right at the mark's left edge, so the build follows straight on from the drawing
+                const gp = clamp(build / 0.7), fp = clamp((build - 0.12) / 0.88);
+                const gx = lerp(-60, 2000, gp), fx = lerp(-200, 2250, fp);
                 if (!built) {
                     const behind = (X) => `-3000 -3000 ${f1(edgeX(X, -3000))} -3000 ${f1(edgeX(X, 5000))} 5000 -3000 5000`;
                     greyPoly.setAttribute('points', behind(gx)); finPoly.setAttribute('points', behind(fx));
