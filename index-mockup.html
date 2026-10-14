@@ -19,7 +19,7 @@
             var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduce) d.classList.add('fx-reduce');
             // the opening lands on the hero's first frame, so it must not let the browser restore an old scroll position
-            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); history.scrollRestoration = 'manual'; d.style.scrollBehavior = 'auto'; scrollTo(0, 0); d.style.scrollBehavior = ''; } } catch (e) {}
+            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); history.scrollRestoration = 'manual'; try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { scrollTo(0, 0); } } } catch (e) {}
             if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
         })();
     </script>
@@ -52,7 +52,7 @@
         .fx .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; margin: 0; color: #fff; }
         .fx .red { color: var(--red); }
 
-        /* Opening: an igniting point burns the outline of the mark into the dark, with the load as a figure under it;
+        /* Opening: the mark lights up like a red neon sign as the page loads, with the load as a figure under it;
            the outline grows and imprints on the dark mark behind the name. Only a thin dim line is red and the edges
            stay ink, so Safari's bars never change colour. Sized like the stage, so the line lands on the hero's mark. */
         .fx-gate { display: none; position: fixed; left: 0; top: 0; width: 100%; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); z-index: 1100; overflow: hidden; }
@@ -62,7 +62,7 @@
         .fx-gate canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
         .fx-gate .pct { position: absolute; left: 0; right: 0; top: 60%; margin: 0; padding-left: 0.34em; text-align: center; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.34em;
             text-transform: uppercase; color: rgba(255, 255, 255, 0.36); font-variant-numeric: tabular-nums; opacity: var(--pctA, 1); transform: translate3d(0, calc((1 - var(--pctA, 1)) * 8px), 0); }
-        .fx-gate .pct b { font-weight: 600; color: rgba(255, 255, 255, 0.8); margin-left: 0.9em; }
+        .fx-gate .pct b { font-weight: 600; color: rgba(255, 255, 255, 0.82); text-shadow: 0 0 10px rgba(255, 40, 36, 0.55); }
         .fx-gate.is-skip { opacity: 0; transition: opacity 0.35s ease; }
         .fx-fxbox { opacity: var(--imp, 1); }   /* the hero's mark waits under the gate until the line lands on it */
 
@@ -359,7 +359,7 @@
     </style>
 </head>
 <body class="fx">
-    <div class="fx-gate" aria-hidden="true"><i class="bg"></i><canvas></canvas><p class="pct">Loading<b>000</b>%</p></div>
+    <div class="fx-gate" aria-hidden="true"><i class="bg"></i><canvas></canvas><p class="pct"><b>000</b>%</p></div>
 
     <header class="navbar">
         <a href="index.html" class="logo">
@@ -1125,37 +1125,53 @@
                 odoSets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
             }
 
-            /* ---------- opening: an igniting point burns the outline of the mark into the dark, with the load as a figure;
-               the outline grows and imprints on the dark mark behind the name. An outline, not a fill: colour and
-               texture are what the scroll adds later. ---------- */
+            /* ---------- opening: the mark lights up like a red neon sign, the gas running along the tube as the page loads
+               (the load is the figure under it); it stutters on, grows, and powers down to the faint red rim the dark mark
+               keeps behind the name. An outline, not a fill: colour and texture are what the scroll adds later. ---------- */
             function intro() {
                 const gate = document.querySelector('.fx-gate'), cvs = gate.querySelector('canvas'), g2 = cvs.getContext('2d'), pctBox = gate.querySelector('.pct'), pctEl = pctBox.querySelector('b');
-                // one run over the whole mark: it ignites at the tip of the F's bar, burns round the F, arcs across the
-                // gap and burns round the W, ending back at the heart of the mark
+                // one tube over the whole mark: from the tip of the F's bar round the F, through a blacked-out jumper
+                // across the gap (as on a real sign), round the W and back to the heart of the mark
                 const F = UNIQ[1], W = UNIQ[0], E = [];
                 let LT = 0;
-                const run = (P, burn) => P.slice(1).forEach((b, i) => { const a = P[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]); E.push({ a, b, l0: LT, l1: LT + l, burn }); LT += l; });
-                run([...F, F[0]], true); run([F[0], W[0]], false); run([...W, W[0]], true);
+                const run = (P, lit) => P.slice(1).forEach((b, i) => { const a = P[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]); E.push({ a, b, l0: LT, l1: LT + l, lit }); LT += l; });
+                run([...F, F[0]], true); const LF = LT;
+                run([F[0], W[0]], false); const LW = LT;
+                run([...W, W[0]], true);
                 const at = (d) => { const e = E.find((x) => d <= x.l1) || E[E.length - 1], t = clamp((d - e.l0) / (e.l1 - e.l0 || 1)); return [e.a[0] + (e.b[0] - e.a[0]) * t, e.a[1] + (e.b[1] - e.a[1]) * t]; };
 
-                // timing (ms); the burn runs at a steady pace but stalls short of the end until the page has loaded
-                const BURN = mobile ? 2100 : 2500, HOLD = 380, GROW = 1150, PRESS = 700, CAP = 6000;
-                const kRest = () => K0 * 1.08, kSmall = () => Math.min(mobile ? 160 : 230, SW * 0.42) / 1872;
+                // timing (ms); the gas runs at an eased pace but holds short of the end until the page has loaded
+                const RUN = mobile ? 2100 : 2500, HOLD = 820, GROW = 1000, PRESS = 750, CAP = 6000;
+                // lit a little smaller than where it ends, so the grow is a settle rather than a zoom
+                const kRest = () => K0 * 1.08, kSmall = () => kRest() * (mobile ? 0.66 : 0.72);
                 const camY = (k) => PC.y - (0.02 * SH * 1.08 - GAP / 2) / k;   // the frame renderHero draws at the top of the scroll
                 const scr = ([x, y], k) => [(x - PC.x) * k + SW / 2, (y - camY(k)) * k + SH / 2];
                 const path = (d0, d1, k) => E.forEach((e) => {
-                    if (!e.burn) return;
+                    if (!e.lit) return;
                     const s = Math.max(d0, e.l0), f = Math.min(d1, e.l1); if (s >= f) return;
                     const A = scr(at(s), k), B = scr(at(f), k); g2.moveTo(A[0], A[1]); g2.lineTo(B[0], B[1]);
                 });
+                // the tube: a pale core inside a red glass tube, with the red bloom around it
+                const neon = (d0, d1, k, b) => {
+                    if (b < 0.01 || d1 <= d0) return;
+                    g2.beginPath(); path(d0, d1, k);
+                    g2.shadowColor = `rgba(255, 18, 22, ${b.toFixed(3)})`; g2.lineWidth = 1.6;
+                    g2.strokeStyle = `rgba(230, 24, 28, ${(0.8 * b).toFixed(3)})`; g2.shadowBlur = 28; g2.stroke();   // the wide haze the tube throws on the dark
+                    g2.strokeStyle = `rgba(230, 24, 28, ${(0.4 * b).toFixed(3)})`; g2.shadowBlur = 8; g2.stroke();    // the tight glow on the glass
+                    g2.shadowBlur = 0;
+                    g2.strokeStyle = `rgba(255, 214, 208, ${(0.75 * b).toFixed(3)})`; g2.lineWidth = 0.75; g2.stroke();
+                };
+                // switching on: the sign stutters, then the W catches a beat late (ms after the tube is full, brightness)
+                const SIGN = [[0, 1], [80, 0.25], [130, 1], [210, 0.08], [330, 0.1], [370, 1]];
+                const LATE = [[0, 1], [520, 0.15], [570, 1], [610, 0.3], [650, 1]];
+                const flick = (tbl, ms) => { let v = 1; for (const [m, b] of tbl) if (ms >= m) v = b; return v; };
 
                 // a jump, never the site's smooth scroll
-                const toTop = () => { root.style.scrollBehavior = 'auto'; scrollTo(0, 0); root.style.scrollBehavior = ''; };
+                const toTop = () => { try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { root.style.scrollBehavior = 'auto'; scrollTo(0, 0); root.style.scrollBehavior = ''; } };
                 let fontsIn = !document.fonts, pageIn = document.readyState === 'complete';
                 if (document.fonts) document.fonts.ready.then(() => { fontsIn = true; });
                 addEventListener('load', () => { pageIn = true; }, { once: true });
-                let t0 = 0, last = 0, prog = 0, burnt = null, grow0 = null, done = false, skipped = false, shown = -1;
-                const sparks = [];
+                let t0 = 0, last = 0, prog = 0, full = null, grow0 = null, done = false, skipped = false, shown = -1;
                 stage.style.setProperty('--imp', '0');
 
                 function step(now) {
@@ -1168,20 +1184,22 @@
                     g2.setTransform(dpr, 0, 0, dpr, 0, 0); g2.clearRect(0, 0, SW, SH);
 
                     const loaded = (fontsIn && pageIn) || t > CAP;
-                    prog = Math.min(loaded ? 1 : 0.92, prog + dt * 1000 / BURN);
-                    if (prog >= 1 && burnt === null) burnt = t;
+                    prog = Math.min(loaded ? 1 : 0.92, prog + dt * 1000 / RUN);
+                    if (prog >= 1 && full === null) full = t;
                     const pc = Math.floor(prog * 100);
                     if (pc !== shown) { shown = pc; pctEl.textContent = String(pc).padStart(3, '0'); }
 
-                    let k = kSmall(), cover = 1, imp = 0, lineA = 0.5;
-                    if (burnt !== null) lineA = 0.5 + 0.25 * Math.sin(Math.PI * clamp((t - burnt) / 420));   // current runs through the closed outline once
-                    if (burnt !== null && grow0 === null && t >= burnt + HOLD) grow0 = t;
+                    let k = kSmall(), cover = 1, imp = 0, power = 1;
+                    if (full !== null && grow0 === null && t >= full + HOLD) grow0 = t;
                     if (grow0 !== null) {
                         const g = clamp((t - grow0) / GROW), m = clamp((t - grow0 - GROW) / PRESS);
                         k = k * Math.pow(kRest() * 1.02 / k, ease(g));
                         cover = 1 - ease(g);
-                        // the press: it settles back onto the page and the red sinks into the dark mark
-                        if (m > 0) { ready(); k = kRest() * lerp(1.02, 1, 1 - Math.pow(1 - m, 3)); imp = ease(m); lineA = 0.5 * (1 - ease(m)); }
+                        // powering down: one drop, then the glow sinks into the dark mark's rim as it settles onto the page
+                        if (m > 0) {
+                            ready(); k = kRest() * lerp(1.02, 1, 1 - Math.pow(1 - m, 3)); imp = ease(m);
+                            power = m < 0.1 ? 1 : m < 0.17 ? 0.35 : 1 - ease((m - 0.17) / 0.83);
+                        }
                         if (m >= 1) return end();
                     }
                     gate.style.setProperty('--cover', cover.toFixed(3));
@@ -1189,49 +1207,25 @@
                     if (grow0 === null) pctBox.style.top = `${Math.round(scr([PC.x, 1569.04], k)[1] + 30)}px`;   // just under the mark
                     stage.style.setProperty('--imp', imp.toFixed(3));
 
-                    // the burnt line: thin and dim, only where the point has been
-                    const D = prog * LT;
-                    g2.lineWidth = 1; g2.lineJoin = 'miter'; g2.strokeStyle = `rgba(214, 30, 28, ${lineA.toFixed(3)})`;
-                    g2.beginPath(); path(0, D, k); g2.stroke();
-
-                    // the point: white-hot, flickering, a short red-hot stretch cooling behind it, sparks thrown off
-                    const life = burnt === null ? 1 : 1 - clamp((t - burnt) / 320);
-                    g2.globalCompositeOperation = 'lighter';
-                    if (life > 0) {
-                        const [x, y] = scr(at(D), k), [bx, by] = scr(at(Math.max(0, D - 3 / k)), k);
-                        const ux = x - bx, uy = y - by, ul = Math.hypot(ux, uy) || 1, dx = ux / ul, dy = uy / ul;
-                        const TR = 40 / k;
-                        for (let i = 0; i < 10; i++) {
-                            const a = (1 - i / 10) * life;
-                            g2.strokeStyle = `rgba(255, ${Math.round(90 + 120 * a)}, ${Math.round(40 + 80 * a)}, ${(0.7 * a).toFixed(3)})`;
-                            g2.lineWidth = 1.2; g2.beginPath(); path(D - TR * (i + 1) / 10, D - TR * i / 10, k); g2.stroke();
-                        }
-                        const fl = 0.75 + Math.random() * 0.5, flare = burnt === null ? 1 : 1 + 1.4 * Math.sin(Math.PI * (1 - life));
-                        let gr = g2.createRadialGradient(x, y, 0, x, y, 30 * fl * flare);
-                        gr.addColorStop(0, `rgba(255, 70, 40, ${(0.22 * life).toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 30, 20, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 30 * fl * flare, 0, Math.PI * 2); g2.fill();
-                        gr = g2.createRadialGradient(x, y, 0, x, y, 6 * fl * flare);
-                        gr.addColorStop(0, `rgba(255, 255, 250, ${life.toFixed(3)})`); gr.addColorStop(0.35, `rgba(255, 200, 150, ${(0.8 * life).toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 80, 40, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 6 * fl * flare, 0, Math.PI * 2); g2.fill();
-                        if (burnt === null && Math.random() < 0.75) {
-                            const n = 1 + (Math.random() < 0.35);
-                            for (let i = 0; i < n; i++) {
-                                const a = Math.atan2(-dy, -dx) + (Math.random() - 0.5) * 2.6, v = 140 + Math.random() * 260;
-                                sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, age: 0, life: 0.06 + Math.random() * 0.16 });
-                            }
-                        }
+                    const D = sine(prog) * LT;
+                    const ms = full === null ? -1 : t - full;
+                    const bF = (ms < 0 ? 1 : flick(SIGN, ms)) * power, bW = (ms < 0 ? 1 : Math.min(flick(SIGN, ms), flick(LATE, ms))) * power;
+                    g2.globalCompositeOperation = 'lighter'; g2.lineJoin = 'round'; g2.lineCap = 'round';
+                    neon(0, Math.min(D, LF), k, bF);
+                    neon(LW, D, k, bW);
+                    // the gas front: the freshly lit stretch burns brighter for a moment, led by a bright point
+                    if (full === null) {
+                        const FR = 70 / k;
+                        [0.45, 0.28, 0.14].forEach((b, i) => neon(Math.max(0, D - FR * (i + 1) / 3), D, k, b));
+                        const [x, y] = scr(at(D), k), a = D > LF && D < LW ? 0.15 : 1, s = 1 + 0.08 * Math.sin(t / 60);
+                        let gr = g2.createRadialGradient(x, y, 0, x, y, 18 * s);
+                        gr.addColorStop(0, `rgba(255, 40, 36, ${(0.4 * a).toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 24, 24, 0)');
+                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 18 * s, 0, Math.PI * 2); g2.fill();
+                        gr = g2.createRadialGradient(x, y, 0, x, y, 4);
+                        gr.addColorStop(0, `rgba(255, 244, 241, ${a.toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 150, 140, 0)');
+                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 4, 0, Math.PI * 2); g2.fill();
                     }
-                    g2.lineCap = 'round';
-                    for (let i = sparks.length - 1; i >= 0; i--) {
-                        const s = sparks[i]; s.age += dt;
-                        if (s.age >= s.life) { sparks.splice(i, 1); continue; }
-                        s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 500 * dt; s.vx *= 0.97; s.vy *= 0.97;
-                        const a = 1 - s.age / s.life;
-                        g2.strokeStyle = `rgba(255, ${Math.round(110 + 140 * a)}, ${Math.round(60 + 160 * a * a)}, ${a.toFixed(3)})`;
-                        g2.lineWidth = 0.6 + 0.6 * a;
-                        g2.beginPath(); g2.moveTo(s.x, s.y); g2.lineTo(s.x - s.vx * 0.018, s.y - s.vy * 0.018); g2.stroke();
-                    }
-                    g2.globalCompositeOperation = 'source-over'; g2.lineCap = 'butt';
+                    g2.globalCompositeOperation = 'source-over';
                     requestAnimationFrame(step);
                 }
                 function end() {
