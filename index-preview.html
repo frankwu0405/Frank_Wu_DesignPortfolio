@@ -64,13 +64,7 @@
         .fx-gate .bar i { display: block; height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--load, 0)); transition: transform 0.35s ease; }
         .fx-gate.is-out { clip-path: polygon(0 0, 0 0, calc(var(--a, 300px) * -1) 100%, 0 100%); transition: clip-path 0.9s cubic-bezier(0.7, 0, 0.2, 1); }
 
-        /* Fixed ledger + cursor */
-        .fx-ledger { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; height: 34px; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-            align-items: center; padding: 0 24px; background: linear-gradient(to top, rgba(6, 6, 6, 0.95), rgba(6, 6, 6, 0.55)); pointer-events: none; }
-        .fx-ledger span { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.24em; color: #444; transition: color 0.4s ease; justify-self: center; text-transform: uppercase; }
-        .fx-ledger .plus { color: #333; font-weight: 300; letter-spacing: 0; }
-        .fx-ledger .plus:first-child { justify-self: start; } .fx-ledger .plus:last-child { justify-self: end; }
-        .fx-ledger span.is-on { color: #fff; }
+        /* Cursor */
         .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--red); pointer-events: none;
             display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
             transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
@@ -120,19 +114,8 @@
         .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)) + var(--em) * 0.6)); stroke-width: 1.2; }
         .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
         .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; }
-        .mode-zoom .fx-cam .slab { display: none; }
         .fx-echo { opacity: calc(var(--em) * 0.5 * (1 - var(--zm) * 2)); fill: none; stroke: rgba(211, 22, 27, 0.5); stroke-width: 1; }
-        .fx-trail, .fx-fringe { opacity: 0; pointer-events: none; }
-        .fx-trail .rim { stroke: rgba(255, 110, 90, 0.9); }
-        .fx-fringe { mix-blend-mode: screen; }
-        .fx-fringe.f1 .rim { stroke: #ff7a3d; stroke-width: 3; } .fx-fringe.f2 .rim { stroke: #ffffff; stroke-width: 2; }
         .fx-light { --pan: 0px; }
-        /* preview-only switch between the two transitions */
-        .fx-switch { position: fixed; right: 16px; bottom: 46px; z-index: 70; display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
-            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-        .fx-switch span { color: var(--dim); padding: 0 8px 0 10px; }
-        .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 12px; border-radius: 999px; }
-        .fx-switch a.is-on { background: var(--red); color: #fff; }
         .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
             transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
         .fx-title h1 { font-size: clamp(4.6rem, 15vw, 15rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.82; color: #fff; margin: 0; white-space: nowrap; transform-style: preserve-3d; }
@@ -140,8 +123,7 @@
         .fx-title h1 .ci { display: inline-block; }
         .fx-title .role { margin-top: calc(var(--fvh, 1vh) * 2.2); font-size: clamp(0.9rem, 1.6vw, 1.3rem); font-weight: 300; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); padding-left: 0.42em;
             transform: translate3d(0, calc(var(--fade) * -30px), 0); opacity: calc(1 - var(--fade) * 1.4); filter: blur(calc(var(--fade) * 10px)); }
-        .fx-intro, .fx-cue { position: absolute; z-index: 3; bottom: calc(40px + var(--gap)); font-size: 0.86rem; color: rgba(255, 255, 255, 0.72); opacity: calc(1 - var(--fade) * 2.2); }
-        .fx-intro { left: 40px; max-width: 32ch; line-height: 1.55; margin: 0; }
+        .fx-cue { position: absolute; z-index: 3; bottom: calc(40px + var(--gap)); font-size: 0.86rem; color: rgba(255, 255, 255, 0.72); opacity: calc(1 - var(--fade) * 2.2); }
         .fx-cue { right: 40px; display: inline-flex; align-items: center; gap: 12px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; }
         .fx-cue i { width: 1px; height: 38px; background: linear-gradient(to bottom, transparent, #fff); transform: skewX(calc(var(--lean) * -1)); animation: fx-cue 2.2s ease-in-out infinite; }
         @keyframes fx-cue { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
@@ -162,15 +144,10 @@
         .fx-sin .l2 .blk { color: #120000; }
         .fx-sin .sub { margin: calc(var(--fvh, 1vh) * 4) 0 0; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.6; color: rgba(255, 255, 255, 0.88);
             opacity: var(--s3); transform: translate3d(0, calc((1 - var(--s3)) * 24px), 0); }
-        /* zoom: the camera keeps moving forward, so the lines come out of depth toward you */
-        .mode-zoom .fx-sin .l1, .mode-zoom .fx-sin .l2 { transform-origin: 50% 50%; }
-        .mode-zoom .fx-sin .l1 { opacity: var(--s1); transform: scale(calc(0.42 + 0.58 * var(--s1))); filter: blur(calc((1 - var(--s1)) * 18px)); }
-        .mode-zoom .fx-sin .l2 { opacity: var(--s2); transform: scale(calc(0.42 + 0.58 * var(--s2))); filter: blur(calc((1 - var(--s2)) * 18px)); }
-        .mode-zoom .fx-scene .ghost { opacity: calc(var(--sg) * (1 - var(--sg)) * 3.2); transform: translate(-50%, -50%) scale(calc(0.35 + var(--sg) * 1.6)); }
-        /* pan: the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
-        .mode-pan .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
-        .mode-pan .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
-        .mode-pan .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
+        /* the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
+        .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
+        .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
+        .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
         /* exit: the scene is cut away along the slant, revealing the next stage already in place */
         .fx-wipe-edge { position: fixed; z-index: 30; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
             transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
@@ -292,7 +269,6 @@
             .fx-hero { height: calc(var(--fvh, 1vh) * 340); }
             .fx-title h1 { font-size: 14vw; }
             .fx-title .role { letter-spacing: 0.3em; }
-            .fx-intro { left: 20px; right: 20px; bottom: calc(76px + var(--gap)); max-width: none; font-size: 0.82rem; }
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
@@ -322,7 +298,6 @@
             .fx-end .mark2 { width: 170vw; right: -70vw; }
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
             .fx-wbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
-            .fx-ledger { padding: 0 12px; } .fx-ledger span { font-size: 0.56rem; letter-spacing: 0.16em; }
         }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
@@ -351,13 +326,9 @@
         </div>
     </header>
 
-    <div class="fx-ledger" aria-hidden="true">
-        <span class="plus">+</span><span data-l="research">Research</span><span class="plus">+</span><span data-l="design">Design</span><span class="plus">+</span><span data-l="build">Build</span><span class="plus">+</span>
-    </div>
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
     <div class="fx-vprobe" aria-hidden="true"></div><div class="fx-lprobe" aria-hidden="true"></div>
-    <div class="fx-switch" role="group" aria-label="Preview: transition style"><span>Transition</span><a href="?t=zoom" data-t="zoom">Zoom</a><a href="?t=pan" data-t="pan">Pan</a></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
         <defs>
@@ -366,10 +337,6 @@
                 <polygon pathLength="100" vector-effect="non-scaling-stroke" points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/>
             </g>
             <polygon id="fwSlab" vector-effect="non-scaling-stroke" points="3184.2 -3000 30000 -3000 30000 5000 743.3 5000"/>
-            <filter id="fxBulge" x="0" y="0" width="1" height="1" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feImage id="fxBulgeMap" x="0" y="0" width="1440" height="810" preserveAspectRatio="none" result="map" href="data:image/png;base64,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"/>
-                <feDisplacementMap id="fxBulgeDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
             <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
                 <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
             </filter>
@@ -402,7 +369,6 @@
                     <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
                     <div class="role-in"><div class="role">UI/UX Designer</div></div>
                 </div>
-                <p class="fx-intro">I design and build interfaces that make everyday decisions feel simple.</p>
                 <div class="fx-cue" aria-hidden="true"><i></i>Scroll</div>
                 <div class="fx-scene">
                     <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
@@ -434,7 +400,7 @@
         </section>
 
         <!-- 4 · Results -->
-        <section class="fx-results" data-ledger="build">
+        <section class="fx-results">
             <div class="fx-panel">
                 <div class="fx-panel-in">
                     <div><p class="label">At Nitori Taiwan</p><h2 class="display">Designed, built, and it <span class="blk">sells.</span></h2></div>
@@ -447,7 +413,7 @@
         </section>
 
         <!-- 5 · Work -->
-        <section class="fx-work" id="work" data-ledger="build" aria-label="Selected work">
+        <section class="fx-work" id="work" aria-label="Selected work">
             <div class="fx-wstage">
                 <div class="fx-wbg" aria-hidden="true">
                     <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="">
@@ -490,16 +456,16 @@
             <div class="fx-pr-body">
                 <div class="fx-beam" aria-hidden="true"><i></i><b></b></div>
                 <div class="fx-steps">
-                    <div class="fx-step left" data-ledger="research"><div class="in"><h3>Understand</h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
-                    <div class="fx-step right" data-ledger="design"><div class="in"><h3>Shape</h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
-                    <div class="fx-step left" data-ledger="build"><div class="in"><h3>Build</h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
-                    <div class="fx-step right" data-ledger="build"><div class="in"><h3>Ship &amp; refine</h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
+                    <div class="fx-step left"><div class="in"><h3>Understand</h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
+                    <div class="fx-step right"><div class="in"><h3>Shape</h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
+                    <div class="fx-step left"><div class="in"><h3>Build</h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
+                    <div class="fx-step right"><div class="in"><h3>Ship &amp; refine</h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
                 </div>
             </div>
         </section>
 
         <!-- 7 · Finale -->
-        <section class="fx-end" id="contact" data-ledger="all">
+        <section class="fx-end" id="contact">
             <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
             <p class="label">Get in touch</p>
             <h2 class="display">Let's build something worth <span class="red">remembering.</span></h2>
@@ -591,9 +557,6 @@
 
             /* ---------- elements ---------- */
             const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
-            const MODE = new URLSearchParams(location.search).get('t') === 'pan' ? 'pan' : 'zoom';
-            stage.classList.add('mode-' + MODE);
-            document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.t === MODE));
             const SVGNS = 'http://www.w3.org/2000/svg';
             const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
             const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/>'
@@ -605,12 +568,9 @@
             let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
             const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
             const echoes = [...stage.querySelectorAll('[data-echo]')];
-            const NB = MODE === 'pan' ? (innerWidth <= 900 ? 5 : 7) : 1;
+            const NB = innerWidth <= 900 ? 5 : 7;
             const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
-            const LITE = innerWidth <= 900;
-            const trails = MODE === 'zoom' && !LITE ? [1, 2, 3].map(() => fxbox.appendChild(mkCam('fx-trail', '<use class="rim" href="#fwMark"/>'))) : [];
-            const fringes = MODE === 'zoom' && !LITE ? ['f1', 'f2'].map((c) => fxbox.appendChild(mkCam('fx-fringe ' + c, '<use class="rim" href="#fwMark"/>'))) : [];
-            const bulgeMap = document.getElementById('fxBulgeMap'), bulgeDisp = document.getElementById('fxBulgeDisp'), smearBlur = document.getElementById('fxSmearBlur');
+            const smearBlur = document.getElementById('fxSmearBlur');
             const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
@@ -622,19 +582,15 @@
             const wNames = [...work.querySelectorAll('.fx-wname .n')], wDescs = [...work.querySelectorAll('.fx-wdesc .d')], wTicks = [...work.querySelectorAll('.fx-wticks i')];
             const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
             const end = document.querySelector('.fx-end');
-            const ledger = [...document.querySelectorAll('.fx-ledger [data-l]')], ledgerBlocks = [...document.querySelectorAll('[data-ledger]')];
 
-            /* camera over the mark (logo units: viewBox 52 416 1872 1153).
-               Zoom: a pure zoom anchored on ZP, deep inside the W's first stroke; ZP stays put on screen while
-               everything grows around it, so the stroke ends up covering the frame on any screen.
-               Pan: fixed size, sideways onto a slab whose left edge leans like the strokes. */
-            const ZP = { x: 1090, y: 1260 }, PC = { x: 988, y: 992.5 }, ZOOM_MAX = 24;   // ZP: deep inside the W's first stroke
+            /* camera over the mark (logo units: viewBox 52 416 1872 1153):
+               fixed size, panning sideways onto a slab whose left edge leans like the strokes */
+            const PC = { x: 988, y: 992.5 };
             const slabX = (y) => 2144 - (y - 416) * 0.3045;
             let K0 = 1, SW = 1, SH = 1, GAP = 0, VH = innerHeight, mobile = false, slantA = 0;
             const vprobe = document.querySelector('.fx-vprobe'), lprobe = document.querySelector('.fx-lprobe');
             /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
             const FADE1 = 0.14, EM0 = 0.13, EM1 = 0.32, ZM0 = 0.36, ZM1 = 0.60, ST0 = 0.56, ST1 = 0.78, WIPE0 = 0.86;
-            let heroSt = 0, heroWk = 0;
             function layout() {
                 mobile = innerWidth <= 900;
                 // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
@@ -643,7 +599,6 @@
                 GAP = vprobe.offsetHeight; VH = lprobe.offsetHeight;
                 const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
                 K0 = W / 1872;
-                bulgeMap.setAttribute('width', SW); bulgeMap.setAttribute('height', SH);
                 buildBevel(mobile ? 34 : 22);
                 buildBp();
                 bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
@@ -662,7 +617,6 @@
                     });
                 } else steps.forEach((s) => { s.style.top = ''; s.style.left = ''; });
             }
-            const vboxAt = (P, S, k) => `${(P.x - S.x / k).toFixed(3)} ${(P.y - S.y / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
             const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
             /* progress through a pinned section from its sticky stage's fixed height, not the changing window height */
             const NAV = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 90;
@@ -735,14 +689,6 @@
                 const er = end.getBoundingClientRect();
                 end.style.setProperty('--p', clamp((vh - er.top) / (vh + er.height)).toFixed(3));
 
-                /* ---- ledger ---- */
-                let mode = '';
-                const midY = vh * 0.5, kr = skills.getBoundingClientRect();
-                const hr = hero.getBoundingClientRect();
-                if (hr.top <= midY && hr.bottom >= midY && heroWk < 0.5) mode = heroSt > 0.2 ? 'research' : '';
-                else if (kr.top <= midY && kr.bottom >= midY) mode = ['research', 'design', 'build'][ks];
-                else ledgerBlocks.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= midY && r.bottom >= midY) mode = el.dataset.ledger; });
-                ledger.forEach((l) => l.classList.toggle('is-on', mode === 'all' || l.dataset.l === mode));
             }
             /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
             let lastHp = null, lastT = 0, vel = 0, heroOn = true;
@@ -872,7 +818,6 @@
                 scene.style.setProperty('--sg', st.toFixed(4));
                 // exit: the whole scene is cut away along the slant
                 const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
-                heroSt = st; heroWk = wk;
                 stage.classList.toggle('is-off', !reduce && hp >= 0.999 && wk >= 0.999);
                 if (wk > 0.0005) {
                     const L = lerp(SW + slantA + 4, 0, wk);
@@ -907,34 +852,22 @@
                 const moving = zm > 0.001 && zm < 0.999 ? 1 : 0;
                 const sp = clamp(Math.abs(vel) / (mobile ? 1.6 : 1.1)) * moving * (reduce ? 0 : 1);
                 const k0 = K0 * lerp(1.08, 1, em);
-                const cy = PC.y - 0.02 * SH / K0 + (GAP / 2) / (MODE === 'zoom' ? K0 : k0);
-                let cx = PC.x, k;
-                // where the anchor point sits on screen while the logo is at rest
-                const SP = { x: (ZP.x - PC.x) * k0 + SW / 2, y: (ZP.y - cy) * k0 + SH / 2 };   // anchor's screen spot at rest
-                if (MODE === 'zoom') {
-                    k = k0 * Math.exp(Math.log(ZOOM_MAX) * tz);
-                    bands[0].setAttribute('viewBox', vboxAt(ZP, SP, k));
-                    trails.forEach((tr, j) => { tr.setAttribute('viewBox', vboxAt(ZP, SP, k * (1 - 0.07 * (j + 1) * sp))); tr.style.opacity = (sp * 0.55 * (1 - j * 0.28)).toFixed(3); });
-                    fringes.forEach((fr, j) => { fr.setAttribute('viewBox', vboxAt(ZP, SP, k * (j ? 1 + 0.014 * sp : 1 - 0.014 * sp))); fr.style.opacity = (sp * 0.85).toFixed(3); });
-                    const bulge = mobile ? 0 : sp * 90 * Math.sin(Math.PI * clamp(zm / 0.9));
-                    if (bulge > 0.5) { bulgeDisp.setAttribute('scale', bulge.toFixed(1)); fxbox.style.filter = 'url(#fxBulge)'; } else fxbox.style.filter = '';
-                } else {
-                    k = k0;
-                    const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
-                    cx = lerp(PC.x, cxEnd, tz);
-                    const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
-                    bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
-                    const smear = mobile ? 0 : sp * 16;
-                    if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
-                    bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
-                    stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
-                }
+                const cy = PC.y - 0.02 * SH / K0 + (GAP / 2) / k0;
+                const k = k0;
+                const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
+                const cx = lerp(PC.x, cxEnd, tz);
+                const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
+                bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                const smear = mobile ? 0 : sp * 16;
+                if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
+                bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
+                stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
                 // blueprint: drawn while the name fades, cleared by the build
                 const draw = reduce ? 0 : ease(clamp((hp - 0.045) / 0.105));
                 const bpOn = draw > 0.001 && build < 0.999;
                 bp.style.display = bpOn ? 'block' : 'none';
                 if (bpOn) {
-                    bp.setAttribute('viewBox', MODE === 'zoom' ? vboxAt(ZP, SP, k) : vbox(cx, cy, k));
+                    bp.setAttribute('viewBox', vbox(cx, cy, k));
                     bp.style.setProperty('--bpd', (100 - draw * 100).toFixed(2));
                     bp.style.setProperty('--bpMeta', (clamp((draw - 0.4) / 0.45) * (1 - clamp(build / 0.45))).toFixed(3));
                     ANCH.forEach((a) => { const on = draw >= a.f - 0.002; if (on !== a.on) { a.on = on; a.el.classList.toggle('on', on); } });
@@ -950,13 +883,11 @@
                     lightMark(vx / vl, vy / vl, clamp(vl / 0.75, 0.7, 1));
                 }
                 // the colour actually at the top edge of the scene, measured from the camera
-                const vbTop = MODE === 'zoom' ? ZP.y - SP.y / k : cy - SH / 2 / k;
-                const vbLeft = MODE === 'zoom' ? ZP.x - SP.x / k : cx - SW / 2 / k;
-                const redTop = st > 0.02 || (em > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, MODE === 'pan') > 0.5);
+                const vbTop = cy - SH / 2 / k, vbLeft = cx - SW / 2 / k;
+                const redTop = st > 0.02 || (em > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, true) > 0.5);
                 if (!root.classList.contains('fx-gate-on')) setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
                 echoes.forEach((e) => {
                     const f = +e.dataset.echo;
-                    if (MODE === 'zoom') { e.setAttribute('viewBox', vboxAt(ZP, SP, k * f)); return; }
                     const ecx = lerp(PC.x, cx, 1 - (f - 1) * 4);   // in a pan the echoes lag behind: depth
                     e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
                 });
