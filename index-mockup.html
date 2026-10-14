@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060606" />
+    <title>Frank Wu | UI/UX Designer</title>
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="Frank Wu, UI/UX designer who designs and builds. Shipped e-commerce pages for Nitori Taiwan, plus university case studies." />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
+    <script>
+        // Opening gate once per visit (skipped for reduced motion), and the blur reveal used across the site.
+        (function () {
+            var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) d.classList.add('fx-reduce');
+            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); d.style.backgroundColor = '#8f0000'; } } catch (e) {}
+            if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
+        })();
+    </script>
+    <style>
+        /* PREVIEW: "The hidden mark". A giant FW mark hides behind the name,
+           emerges as the name fades, and the camera zooms into one slanted
+           stroke; that 16.5° lean then shapes every edge and path on the page.
+           Inter only, one red, transforms and opacity only (no WebGL). */
+        /* --gap: the strip that only shows when the phone's address bar collapses (large minus small viewport).
+           Stages are sized to the large viewport so they always cover the screen; content is centred
+           in the part that is always visible. */
+        .fx { --gap: 0px; }
+        @supports (height: 100lvh) { .fx { --gap: calc(100lvh - 100svh); } }
+        .fx-vprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: var(--gap); pointer-events: none; visibility: hidden; }
+        .fx-lprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: 100vh; pointer-events: none; visibility: hidden; }
+        @supports (height: 100lvh) { .fx-lprobe { height: 100lvh; } }
+        body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg;
+            background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
+        .fx .section-bg-overlay { display: none; }
+        html:has(body.fx) { background-color: #060606; }
+        body.fx { transition: none; }
+        body.fx { padding-top: 0; }
+        .fx .navbar { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; padding-top: env(safe-area-inset-top, 0px); }
+        .fx .nav-links-container { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(12, 12, 12, 0.72); }
+        .fx main { max-width: none; }
+        :where(.fx) section { padding: 0; max-width: none; margin: 0; }
+        .fx b, .fx figcaption { font-style: normal; }
+        .fx ul, .fx ol { list-style: none; margin: 0; padding: 0; font-weight: 400; }
+        .fx li { margin: 0; }
+        .fx a:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+        .fx .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; margin: 0; color: #fff; }
+        .fx .red { color: var(--red); }
+
+        /* Opening gate */
+        .fx-gate { display: none; position: fixed; inset: 0; z-index: 200; background: var(--deep); color: #fff; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+            clip-path: polygon(0 0, calc(100% + var(--a, 300px)) 0, 100% 100%, 0 100%); }
+        .fx-gate-on .fx-gate { display: flex; }
+        .fx-gate-on, .fx-gate-on body { overflow: hidden; }
+        .fx-gate p { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); }
+        .fx-gate .bar { width: min(260px, 60vw); height: 2px; background: rgba(255, 255, 255, 0.2); overflow: hidden; transform: skewX(calc(var(--lean) * -1)); }
+        .fx-gate .bar i { display: block; height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--load, 0)); transition: transform 0.35s ease; }
+        .fx-gate.is-out { clip-path: polygon(0 0, 0 0, calc(var(--a, 300px) * -1) 100%, 0 100%); transition: clip-path 0.9s cubic-bezier(0.7, 0, 0.2, 1); }
+
+        /* Cursor */
+        .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--red); pointer-events: none;
+            display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
+            transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
+        .fx-cursor.is-view { width: 84px; height: 84px; margin: -42px 0 0 -42px; font-size: 0.66rem; opacity: 1; }
+        @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
+
+        /* 1 · Hero: the hidden mark (pinned) */
+        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 430); }   /* scroll spacer for the fixed scene */
+        .fx-stage.is-off { visibility: hidden; }
+        .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
+            perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
+        .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
+            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(1 + var(--em) * 0.25)); opacity: calc(0.8 + var(--em) * 0.4 - var(--zm) * 1.2);
+            }
+        @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
+        .fx-par { position: absolute; inset: 0; pointer-events: none; }
+        .fx-ink { position: absolute; inset: 0; z-index: -1; background: var(--ink); pointer-events: none; }   /* behind the glow and every layer */
+        .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; }
+        .fx-par.echo1 { transform: translate3d(calc(var(--mx) * 22px * (1 - var(--zm))), calc(var(--my) * 12px * (1 - var(--zm))), 0); }
+        .fx-par.echo2 { transform: translate3d(calc(var(--mx) * 38px * (1 - var(--zm))), calc(var(--my) * 20px * (1 - var(--zm))), 0); }
+        .fx-par.markp { transform: translate3d(calc(var(--mx) * -12px * (1 - var(--zm))), calc(var(--my) * -6px * (1 - var(--zm))), 0); }
+        /* The mark is drawn by full-stage SVGs whose viewBox is the camera, so it is
+           re-rendered as vector at every zoom level (no stretched bitmap, no pixelation). */
+        .fx-cam { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
+        .fx-fxbox, .fx-bands { position: absolute; inset: 0; }
+        .fx-bands { transform-origin: 50% 50%; }
+        .fx-cam .dark { fill: #0d0d0d; opacity: calc(1 - var(--hide, 0)); }   /* the hidden mark goes fully dark before the blueprint */
+        /* build: a flat grey block-in (mid-fidelity) leads, the finish sweeps in behind it with a soft bloom */
+        .fx-cam .grey { fill: #1b1b1d; }
+        .fx-cam .bloom { fill: #ff4a38; opacity: var(--bloom, 0); }
+        .fx-cam .flat { fill: var(--deep); opacity: var(--swell, 0); }   /* the light swells into flat red as the camera leaves */
+        .is-built .fx-cam .grey, .is-built .fx-cam .bloom { display: none; }
+        .is-built .fx-cam .fin { mask: none; }
+        /* finishes: light defines the shape; whatever faces away sinks into the black */
+        .fx-cam .fin > g { display: none; }
+        .f-glass .fx-cam .fin > .glass, .f-backlit .fx-cam .fin > .backlit, .f-lacquer .fx-cam .fin > .lacquer { display: inline; }
+        .fx-cam .edge { fill: #ffe3dc; }
+        .fx-cam .backlit .edge { fill: #ff5a46; }
+        .fx-cam .rimlight { fill: none; stroke: url(#fwRimG); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+        .fx-cam .backlit .rimlight { stroke: url(#fwRimR); stroke-width: 1.5; }
+        .fx-cam .bl-body { fill: #080808; }
+        .fx-cam .glow { opacity: calc(1 - var(--swell, 0)); }
+        /* blueprint: traced light, not interface chrome */
+        .fx-bp { display: none; }
+        .fx-bp * { vector-effect: non-scaling-stroke; }
+        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
+        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.5); stroke-width: 1.2; stroke-dasharray: 10 90; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
+        .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: 1.8; stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
+        .fx-bp .bp-pt { fill: #fff; opacity: 0; filter: drop-shadow(0 0 4px rgba(255, 120, 100, 0.9)); }
+        .fx-bp .bp-cuts { opacity: var(--bpCut, 1); }
+        .fx-bp .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+        .fx-bp .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: 1.2; stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
+        .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)))); stroke-width: 1.2; }
+        .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
+        .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; opacity: min(1, calc(var(--zm) * 8)); }   /* only once the camera starts to travel */
+        .fx-echo { opacity: calc(var(--em) * 0.3 * (1 - var(--zm) * 2)); fill: none; stroke: rgba(211, 22, 27, 0.4); stroke-width: 1; }
+        /* a vignette the mark can sink into */
+        .fx-vig { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--swell, 0));
+            background: radial-gradient(120% 95% at 50% 42%, transparent 45%, rgba(0, 0, 0, 0.62) 100%), linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 38%); }
+        /* stage hint: design, build, ship */
+        .fx-hint { position: absolute; z-index: 3; left: 40px; bottom: calc(40px + var(--gap)); display: inline-flex; align-items: center; gap: 14px; pointer-events: none; opacity: var(--hint, 0);
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
+        .fx-hint i { width: 1px; height: 22px; background: linear-gradient(to bottom, transparent, var(--red)); transform: skewX(calc(var(--lean) * -1)); }
+        .fx-hint .hw { position: relative; display: block; height: 1.4em; width: 9em; overflow: hidden; }
+        .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
+        .fx-hint b.is-on { transform: none; opacity: 1; }
+        .fx-hint b.is-past { transform: translate3d(0, -110%, 0); opacity: 0; }
+        /* mockup-only switch between the three finishes */
+        .fx-switch { position: fixed; right: 16px; top: calc(var(--navbar-height) + 12px); z-index: 70; display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
+            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+        .fx-switch span { color: var(--dim); padding: 0 6px 0 10px; }
+        .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
+        .fx-switch a.is-on { background: var(--red); color: #fff; }
+        .fx-light { --pan: 0px; }
+        .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
+            transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
+        .fx-title h1 { font-size: clamp(4.6rem, 15vw, 15rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.82; color: #fff; margin: 0; white-space: nowrap; transform-style: preserve-3d; }
+        .fx-title h1 .ch { display: inline-block; }
+        .fx-title h1 .ci { display: inline-block; }
+        .fx-title .role { margin-top: calc(var(--fvh, 1vh) * 2.2); font-size: clamp(0.9rem, 1.6vw, 1.3rem); font-weight: 300; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); padding-left: 0.42em;
+            transform: translate3d(0, calc(var(--fade) * -30px), 0); opacity: calc(1 - var(--fade) * 1.4); filter: blur(calc(var(--fade) * 10px)); }
+        .fx-cue { position: absolute; z-index: 3; bottom: calc(40px + var(--gap)); font-size: 0.86rem; color: rgba(255, 255, 255, 0.72); opacity: calc(1 - var(--fade) * 2.2); }
+        .fx-cue { right: 40px; display: inline-flex; align-items: center; gap: 12px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; }
+        .fx-cue i { width: 1px; height: 38px; background: linear-gradient(to bottom, transparent, #fff); transform: skewX(calc(var(--lean) * -1)); animation: fx-cue 2.2s ease-in-out infinite; }
+        @keyframes fx-cue { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        /* name arrives after the gate */
+        .fx-title h1 .ch { opacity: 0; filter: blur(14px); transform: translateY(0.18em); transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--in, 0s); }
+        .fx-title .role-in { opacity: 0; transition: opacity 1s ease 0.7s; }
+        .fx-ready .fx-title h1 .ch { opacity: 1; filter: none; transform: none; }
+        .fx-ready .fx-title .role-in { opacity: 1; }
+
+        /* 2 · Statement: part of the hero scene, so it starts the moment the red completes.
+           Words are invisible until their entrance; the entrance continues the camera move. */
+        .fx-scene { position: absolute; inset: 0; z-index: 4; pointer-events: none; --s1: 0; --s2: 0; --s3: 0; --sg: 0; }
+        .fx-scene .ghost { position: absolute; left: 50%; top: 50%; width: 150vw; aspect-ratio: 1872 / 1153; fill: none; stroke: rgba(255, 255, 255, 0.1); stroke-width: 1; opacity: 0; }
+        .fx-sin { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; justify-content: center; padding: 0 6vw; }
+        .fx-sin .display { font-size: clamp(3rem, 9.6vw, 10rem); }
+        .fx-sin .l1, .fx-sin .l2 { display: block; opacity: 0; }
+        .fx-sin .l2 .blk { color: #120000; }
+        .fx-sin .sub { margin: calc(var(--fvh, 1vh) * 4) 0 0; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.6; color: rgba(255, 255, 255, 0.88);
+            opacity: var(--s3); transform: translate3d(0, calc((1 - var(--s3)) * 24px), 0); }
+        /* the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
+        .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
+        .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
+        .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
+        /* exit: the scene is cut away along the slant, revealing the next stage already in place */
+        .fx-wipe-edge { position: fixed; z-index: 30; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
+            transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
+        .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 16) 0; }
+        .fx-scene.is-static .fx-sin { position: relative; }
+        .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .sub { opacity: 1; transform: none; filter: none; }
+
+        /* 3 · Skills (pinned) */
+        .fx-skills { position: relative; z-index: 1; height: calc(var(--fvh, 1vh) * 330); }
+        .fx-kstage { background: var(--ink); position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1100px; --p: 0; }
+        .fx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 68%; transform-origin: 50% 100%; transform: rotateX(76deg);
+            background-image: linear-gradient(rgba(211, 22, 27, 0.32) 1px, transparent 1px), linear-gradient(90deg, rgba(211, 22, 27, 0.24) 1px, transparent 1px);
+            background-size: 110px 110px; background-position: 50% calc(var(--p) * 1600px);
+            -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 80%); mask-image: linear-gradient(to top, #000 5%, transparent 80%); }
+        .fx-words { position: absolute; inset: 0 0 var(--gap) 0; display: grid; place-items: center; pointer-events: none; transform: translate3d(-10vw, -calc(var(--fvh, 1vh) * 2), 0); }
+        .fx-words .w { grid-area: 1 / 1; font-size: clamp(4.4rem, 13vw, 13rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; white-space: nowrap; line-height: 1;
+            color: transparent; -webkit-text-stroke: 1.5px rgba(211, 22, 27, 0.85); opacity: 0; filter: blur(12px); transform: translate3d(0, calc(var(--fvh, 1vh) * 4), -260px);
+            transition: opacity 0.7s ease, filter 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-words .w.is-on { opacity: 1; filter: none; transform: none; }
+        .fx-card { position: absolute; left: 50%; top: calc(50% - var(--gap) / 2); width: min(28vw, 380px); margin: 0; opacity: 0; }
+        .fx-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+        .fx-card figcaption { margin-top: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); text-align: left; max-width: none; }
+        .fx-lists { position: absolute; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); width: 260px; }
+        .fx-lists ul { position: absolute; right: 0; bottom: 0; width: 100%; text-align: right; opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .fx-lists ul.is-on { opacity: 1; transform: none; }
+        .fx-lists li { font-size: 0.95rem; color: #d9d9d9; line-height: 1.8; }
+        .fx-ticks { position: absolute; left: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); display: flex; gap: 8px; }
+        .fx-ticks i { width: 22px; height: 3px; background: rgba(255, 255, 255, 0.18); transform: skewX(calc(var(--lean) * -1)); transition: background 0.4s ease, width 0.4s ease; }
+        .fx-ticks i.is-on { background: var(--red); width: 44px; }
+
+        /* 4 · Results: a slanted panel that wipes in */
+        .fx-results { position: relative; padding: calc(var(--fvh, 1vh) * 14) 4vw; --p: 0.5; }
+        .fx-panel { position: relative; background: linear-gradient(105deg, #6e0000, var(--deep) 45%, #b3080d); padding: calc(var(--fvh, 1vh) * 11) 9vw;
+            clip-path: polygon(var(--a, 120px) 0, calc(var(--a, 120px) + var(--r, 0) * (100% - var(--a, 120px))) 0, calc(var(--r, 0) * (100% - var(--a, 120px))) 100%, 0 100%); }
+        .fx-panel-in { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 5vw; align-items: end; transform: translate3d(calc((0.5 - var(--p)) * 60px), 0, 0); }
+        .fx-panel .display { font-size: clamp(2.4rem, 5.4vw, 5.4rem); }
+        .fx-panel .display .blk { color: transparent; -webkit-text-stroke: 1.5px #fff; }
+        .fx-figs { display: grid; gap: 0; transform: translate3d(calc((var(--p) - 0.5) * 40px), 0, 0); }
+        .fx-fig { padding: 18px 0; border-top: 1px solid rgba(255, 255, 255, 0.28); }
+        .fx-fig:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
+        .fx-fig b { display: flex; align-items: flex-end; height: 1.1em; line-height: 1.1; font-size: clamp(2rem, 3.8vw, 3.4rem); font-weight: 900; letter-spacing: -0.03em; color: #fff; margin: 0; font-feature-settings: "tnum"; }
+        .fx-fig span.lab { display: block; margin-top: 8px; font-size: 0.86rem; color: rgba(255, 255, 255, 0.82); }
+        .odo-ch { display: inline-block; }
+        .odo-unit { font-size: 0.55em; color: rgba(255, 255, 255, 0.7); margin: 0 0.06em 0.16em; align-self: flex-end; }
+        .odo-d { display: inline-block; height: 1.1em; overflow: hidden; }
+        .odo-strip { display: flex; flex-direction: column; transition: transform var(--dur, 1.6s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--delay, 0s); }
+        .odo-strip span { display: block; height: 1.1em; }
+
+        /* 5 · Work (pinned) */
+        .fx-work { position: relative; height: calc(var(--fvh, 1vh) * 470); }
+        .fx-wstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1400px; --wp: 0; }
+        .fx-wbg { position: absolute; inset: -14% 0; transform: translate3d(0, calc(var(--wp) * -calc(var(--fvh, 1vh) * 8)), 0); }
+        .fx-wbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transition: opacity 0.9s ease; transform: scale(1.15); }
+        .fx-wbg img.is-on { opacity: 1; }
+        .fx-wstage::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); pointer-events: none; }
+        .fx-wname, .fx-wdesc { position: absolute; z-index: 4; top: calc(50% - var(--gap) / 2); transform: translateY(-50%); }
+        .fx-wname { left: 6vw; width: 20vw; }
+        .fx-wname .n, .fx-wdesc .d { position: absolute; top: 50%; left: 0; right: 0; opacity: 0; transform: translateY(calc(-50% + 18px)); transition: opacity 0.5s ease, transform 0.6s ease; }
+        .fx-wname .n.is-on, .fx-wdesc .d.is-on { opacity: 1; transform: translateY(-50%); }
+        .fx-wname .n { font-size: clamp(1.5rem, 2.5vw, 2.3rem); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; color: #fff; line-height: 0.98; }
+        .fx-wname .n small { display: block; margin-top: 12px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; color: var(--red); line-height: 1.5; }
+        .fx-wdesc { right: 6vw; width: 20vw; }
+        .fx-wdesc .d p { font-size: 0.92rem; line-height: 1.65; color: rgba(255, 255, 255, 0.85); margin: 0 0 14px; }
+        .fx-wdesc .d a { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
+        .fx-wdesc .d:not(.is-on) { pointer-events: none; }
+        .fx-wcards { position: absolute; inset: 0; z-index: 3; transform-style: preserve-3d; }
+        .fx-wcard { position: absolute; left: 50%; top: calc(50% - var(--gap) / 2); width: min(44vw, 700px); text-decoration: none; opacity: 0; }
+        .fx-wcard img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        .fx-browser { border-radius: 6px; overflow: hidden; background: #0d0d0d; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 60px rgba(211, 22, 27, 0.22); }
+        .fx-browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #171717; }
+        .fx-browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
+        .fx-browser .url { margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
+        .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
+        .fx-wticks { position: absolute; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); z-index: 4; display: flex; gap: 8px; }
+        .fx-wticks i { width: 22px; height: 3px; background: rgba(255, 255, 255, 0.2); transform: skewX(calc(var(--lean) * -1)); transition: background 0.4s ease, width 0.4s ease; }
+        .fx-wticks i.is-on { background: var(--red); width: 44px; }
+
+        /* 6 · How I work: the beam leans with the logo */
+        .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); --bp: 0; }
+        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 12); }
+        .fx-pr-head .display { font-size: clamp(2.2rem, 5vw, 4.8rem); }
+        .fx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; height: calc(var(--fvh, 1vh) * 120); }
+        .fx-beam { position: absolute; left: 50%; top: 0; height: 100%; width: 2px; margin-left: -1px; background: rgba(211, 22, 27, 0.16); transform: rotate(var(--lean)); transform-origin: 50% 50%; }
+        .fx-beam::before { content: ""; position: absolute; left: 50%; top: 0; width: 220px; margin-left: -110px; height: calc(var(--bp) * 100%);
+            background: radial-gradient(50% 100% at 50% 100%, rgba(211, 22, 27, 0.32), transparent 70%); filter: blur(28px); }
+        .fx-beam i { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(211, 22, 27, 0.15), #ff2a20); transform-origin: top; transform: scaleY(var(--bp)); box-shadow: 0 0 16px 2px rgba(255, 30, 30, 0.55); }
+        .fx-beam b { position: absolute; left: 50%; top: calc(var(--bp) * 100%); width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px 4px #ff3b2f, 0 0 50px 18px rgba(211, 22, 27, 0.55); }
+        .fx-step { position: absolute; width: min(36%, 380px); perspective: 900px; }
+        .fx-step .in { opacity: 0.12; filter: blur(3px); transform: translate3d(var(--sx, -36px), 24px, -140px); transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-step.is-lit .in { opacity: 1; filter: none; transform: none; }
+        .fx-step.right { --sx: 36px; }
+        .fx-step.left { text-align: right; }
+        .fx-step h3 { font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: #fff; margin: 0 0 10px; }
+        .fx-step p { margin: 0; color: #c9c9c9; line-height: 1.7; }
+
+        /* 7 · Finale: the mark returns, lit */
+        .fx .fx-end { position: relative; overflow: hidden; padding: calc(var(--fvh, 1vh) * 20) 6vw calc(var(--fvh, 1vh) * 10); text-align: left; isolation: isolate; --p: 0.5; }
+        .fx-end .mark2 { position: absolute; z-index: -1; right: -18vw; top: 50%; width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none; fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
+            transform: translate3d(0, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.25 + var(--p) * 0.6); }
+        .fx-end::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--ink) 25%, rgba(6, 6, 6, 0.55) 60%, rgba(6, 6, 6, 0.2)); }
+        .fx-end .display { font-size: clamp(2.8rem, 7.2vw, 7.4rem); max-width: 12ch; transform: translate3d(0, calc((0.5 - var(--p)) * 50px), 0); }
+        .fx-mail { display: inline-flex; align-items: center; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 7); font-size: clamp(1.15rem, 2.4vw, 1.9rem); font-weight: 600; color: #fff; text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.35); padding-bottom: 8px; transition: border-color 0.3s ease; }
+        .fx-mail:hover { border-color: var(--red); }
+        .fx-mail span { color: var(--red); transition: transform 0.3s ease; } .fx-mail:hover span { transform: translateX(6px); }
+        .fx-links { display: flex; flex-wrap: wrap; gap: 10px 30px; margin-top: 26px; }
+        .fx-links a { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+        .fx-links a:hover { color: #fff; }
+        .fx-marq { margin-top: calc(var(--fvh, 1vh) * 14); white-space: nowrap; pointer-events: none; }
+        .fx-marq .track { display: inline-flex; animation: fx-marq 40s linear infinite; }
+        .fx-marq span { font-size: clamp(4rem, 12vw, 11rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28);
+            padding-right: 0.35em; display: inline-block; transform: skewX(calc(var(--lean) * -1)); line-height: 1.05; }
+        @keyframes fx-marq { to { transform: translateX(-50%); } }
+
+        @media (max-width: 900px) {
+            .fx-hero { height: calc(var(--fvh, 1vh) * 340); }
+            .fx-title h1 { font-size: 14vw; }
+            .fx-title .role { letter-spacing: 0.3em; }
+            .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
+            .fx-hint { left: 0; right: 0; bottom: auto; top: var(--hintTop, 70%); flex-direction: column; gap: 10px; }
+            .fx-hint .hw { text-align: center; }
+            .fx-bp .bp-tip, .fx-bp .bp-pt { filter: none; }
+            .fx-switch { left: 12px; right: 12px; justify-content: center; }
+            .fx-sin { padding: 0 20px; }
+            .fx-sin .display { font-size: 13vw; }
+            .fx-words { transform: none; place-items: start center; padding-top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 8)); }
+            .fx-words .w { font-size: 17vw; }
+            .fx-card { width: 66vw; }
+            .fx-lists { left: 20px; right: 20px; bottom: calc(calc(var(--fvh, 1vh) * 7) + var(--gap)); width: auto; }
+            .fx-lists ul { text-align: left; }
+            .fx-ticks { left: auto; right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
+            .fx-results { padding: calc(var(--fvh, 1vh) * 10) 0; }
+            .fx-panel { padding: calc(var(--fvh, 1vh) * 8) 9vw; }
+            .fx-panel-in { grid-template-columns: 1fr; gap: calc(var(--fvh, 1vh) * 5); }
+            .fx-wname { left: 20px; right: 20px; width: auto; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 7)); }
+            .fx-wdesc { left: 20px; right: 20px; width: auto; top: auto; bottom: calc(16% + var(--gap)); transform: none; height: 8em; }
+            .fx-wdesc .d { top: 0; transform: translateY(18px); } .fx-wdesc .d.is-on { transform: none; }
+            .fx-wdesc .d p { font-size: 0.86rem; }
+            .fx-wcard { width: 86vw; }
+            .fx-wticks { right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
+            .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
+            .fx-pr-body { height: auto; }
+            .fx-beam { left: 6px; transform: none; }
+            .fx-steps { display: grid; gap: calc(var(--fvh, 1vh) * 9); }
+            .fx-step { position: relative; width: auto; margin-left: 32px; }
+            .fx-step.left { text-align: left; --sx: 30px; }
+            .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
+            .fx-end .mark2 { width: 170vw; right: -70vw; }
+            .fx-cam .glint { filter: none; stroke-width: 2.5; }
+            .fx-wbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
+        }
+        /* Reduced motion: no pinning or fly-ins, everything shown in place */
+        .fx-reduce .fx-hero { height: auto; }
+        .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
+        .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
+        .fx-reduce .fx-stage::before, .fx-reduce .fx-marq .track, .fx-reduce .fx-cue i { animation: none; }
+        .fx-reduce .fx-hint { display: none; }
+        .fx-reduce .fx-wipe-edge { display: none; }
+    </style>
+</head>
+<body class="fx">
+    <div class="fx-gate" aria-hidden="true"><p>Frank Wu — UI/UX Designer</p><div class="bar"><i></i></div></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
+        </a>
+        <button class="nav-toggle" aria-label="toggle navigation menu">
+            <div class="hamburger"></div>
+        </button>
+        <div class="nav-links-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="fx-cursor" aria-hidden="true">VIEW</div>
+    <div class="fx-wipe-edge" aria-hidden="true"></div>
+    <div class="fx-switch" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a></div>
+    <div class="fx-vprobe" aria-hidden="true"></div><div class="fx-lprobe" aria-hidden="true"></div>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <g id="fwMark">
+                <polygon pathLength="100" vector-effect="non-scaling-stroke" points="818.61 886.07 1022.09 1569.04 1180.35 1569.04 1270.78 1207.3 1338.61 1569.04 1572.87 1569.04 1924 416 1644.52 416 1429.04 1136.26 1406.43 890.78 1157.74 890.78 1067.3 1136.26 1022.09 886.07 818.61 886.07"/>
+                <polygon pathLength="100" vector-effect="non-scaling-stroke" points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/>
+            </g>
+            <polygon id="fwSlab" vector-effect="non-scaling-stroke" points="3184.2 -3000 30000 -3000 30000 5000 743.3 5000"/>
+            <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
+                <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
+            </filter>
+            <radialGradient id="fwSpec" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1100">
+                <stop offset="0" stop-color="#ff6a58" stop-opacity="0.6"/><stop offset="0.45" stop-color="#e0201f" stop-opacity="0.18"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/>
+            </radialGradient>
+            <!-- build: soft edges that sweep in along the lean (the blueprint only shows ahead of the grey) -->
+            <linearGradient id="fwGreyG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+            <linearGradient id="fwFinG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+            <linearGradient id="fwBloomG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0"><stop offset="0" stop-color="#000"/><stop offset="0.7" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+            <mask id="fwGreyM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwGreyG)"/></mask>
+            <mask id="fwFinM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwFinG)"/></mask>
+            <mask id="fwBloomM" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="40000" height="14000"><rect x="-6000" y="-6000" width="40000" height="14000" fill="url(#fwBloomG)"/></mask>
+            <clipPath id="fwAheadClip"><polygon id="fwAheadPoly" points="-3000 -3000 30000 -3000 30000 5000 -3000 5000"/></clipPath>
+            <!-- finishes; every centre follows the light -->
+            <radialGradient id="fwGlassG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1500">
+                <stop offset="0" stop-color="#c8161d"/><stop offset="0.28" stop-color="#76060b"/><stop offset="0.62" stop-color="#1e0205"/><stop offset="1" stop-color="#090101"/>
+            </radialGradient>
+            <radialGradient id="fwRimG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1300">
+                <stop offset="0" stop-color="#ffe6de" stop-opacity="0.95"/><stop offset="0.45" stop-color="#ff5a46" stop-opacity="0.35"/><stop offset="1" stop-color="#ff3b2f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fwRimR" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1400">
+                <stop offset="0" stop-color="#ff6a55" stop-opacity="1"/><stop offset="0.5" stop-color="#d3161b" stop-opacity="0.45"/><stop offset="1" stop-color="#d3161b" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fwGlowG" gradientUnits="userSpaceOnUse" cx="988" cy="992" r="1250">
+                <stop offset="0" stop-color="#e01a20" stop-opacity="0.62"/><stop offset="0.45" stop-color="#8f0000" stop-opacity="0.25"/><stop offset="1" stop-color="#8f0000" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="fwLacqG" gradientUnits="userSpaceOnUse" x1="0" y1="416" x2="0" y2="1569">
+                <stop offset="0" stop-color="#c9161d"/><stop offset="0.55" stop-color="#8f0000"/><stop offset="1" stop-color="#3a0004"/>
+            </linearGradient>
+            <linearGradient id="fwSheenG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="575" y2="170">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+                <animateTransform attributeName="gradientTransform" type="translate" values="-384 -114; -384 -114; 2014 596" keyTimes="0; 0.5; 1" dur="7s" repeatCount="indefinite"/>
+            </linearGradient>
+            <g id="fwBevel"></g>
+        </defs>
+    </svg>
+
+    <main>
+        <div class="section-bg-overlay"></div>
+
+        <!-- 1 · Hero: the hidden mark -->
+        <section class="fx-hero" aria-label="Introduction">
+            <div class="fx-stage">
+                <div class="fx-ink" aria-hidden="true"></div>
+                <div class="fx-light" aria-hidden="true"></div>
+                <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
+                <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
+                <div class="fx-par markp" aria-hidden="true">
+                    <div class="fx-fxbox"><div class="fx-bands"></div></div>
+                    <svg class="fx-cam fx-bp" preserveAspectRatio="none"></svg>
+                </div>
+                <div class="fx-vig" aria-hidden="true"></div>
+                <div class="fx-title">
+                    <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
+                    <div class="role-in"><div class="role">UI/UX Designer</div></div>
+                </div>
+                <div class="fx-cue" aria-hidden="true"><i></i>Scroll</div>
+                <div class="fx-hint" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Design</b><b>Build</b><b>Ship</b></span></div>
+                <div class="fx-scene">
+                    <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
+                    <div class="fx-sin">
+                        <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
+                        <p class="sub">The best interfaces disappear into everyday use. I research, design and build them so that they do.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 · Skills -->
+        <section class="fx-skills" aria-label="What I do">
+            <div class="fx-kstage">
+                <div class="fx-floor" aria-hidden="true"></div>
+                <div class="fx-words" aria-hidden="true"><span class="w is-on">Research</span><span class="w">UI / UX</span><span class="w">Front-end</span></div>
+                <figure class="fx-card"><img src="assets/images/home/skill_research.webp" alt="Usability test of the CareerCourse prototype" loading="lazy"><figcaption>CareerCourse · usability testing</figcaption></figure>
+                <figure class="fx-card"><img src="assets/images/home/skill_uiux.webp" alt="One Shop design system: components for desktop and mobile" loading="lazy"><figcaption>One Shop · design system</figcaption></figure>
+                <figure class="fx-card"><img src="assets/images/home/skill_build.webp" alt="Live Nitori electric sofa guide built by Frank" loading="lazy"><figcaption>Nitori · built and shipped</figcaption></figure>
+                <div class="fx-lists">
+                    <ul class="is-on"><li>User interviews &amp; surveys</li><li>Usability testing</li><li>Personas &amp; journeys</li></ul>
+                    <ul><li>Wireframes &amp; prototypes</li><li>Design systems</li><li>High-fidelity UI</li></ul>
+                    <ul><li>HTML · CSS · JavaScript</li><li>Responsive layouts</li><li>Shipped on nitori-net.tw</li></ul>
+                </div>
+                <div class="fx-ticks" aria-hidden="true"><i class="is-on"></i><i></i><i></i></div>
+            </div>
+        </section>
+
+        <!-- 4 · Results -->
+        <section class="fx-results">
+            <div class="fx-panel">
+                <div class="fx-panel-in">
+                    <div><h2 class="display">Designed, built, and it <span class="blk">sells.</span></h2></div>
+                    <div class="fx-figs">
+                        <div class="fx-fig"><b class="odo" data-value="NT$1.67M">NT$1.67M</b><span class="lab">Father's Day campaign, in 17 days</span></div>
+                        <div class="fx-fig"><b class="odo" data-value="1.19%">1.19%</b><span class="lab">Mid-Autumn conversion, everyday kitchenware</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5 · Work -->
+        <section class="fx-work" id="work" aria-label="Selected work">
+            <div class="fx-wstage">
+                <div class="fx-wbg" aria-hidden="true">
+                    <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="">
+                    <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_careercourse.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
+                </div>
+                <div class="fx-wname" aria-hidden="true">
+                    <span class="n is-on">Shipped at Nitori<small>Professional · Nitori Taiwan</small></span>
+                    <span class="n">Smart Station<small>Interaction design · USYD</small></span>
+                    <span class="n">CareerCourse<small>EdTech site · USYD</small></span>
+                    <span class="n">One Shop<small>Mobile app · USYD</small></span>
+                </div>
+                <div class="fx-wcards">
+                    <a class="fx-wcard" href="nitori.html" data-cursor aria-label="Shipped at Nitori: open the series">
+                        <div class="fx-browser"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">nitori-net.tw/article/Sofa</span></div>
+                            <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video></div>
+                    </a>
+                    <a class="fx-wcard" href="project1.html" data-cursor aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
+                    <a class="fx-wcard" href="project2.html" data-cursor aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
+                    <a class="fx-wcard" href="project3.html" data-cursor aria-label="One Shop case study"><img src="assets/images/home/explore_oneshop.webp" alt="One Shop fashion shopping app" loading="lazy"></a>
+                </div>
+                <div class="fx-wdesc">
+                    <div class="d is-on"><p>E-commerce pages for Nitori Taiwan's online store, from seasonal campaigns to product guides, designed and coded end to end.</p><a href="nitori.html">Open the series</a></div>
+                    <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study</a></div>
+                    <div class="d"><p>A STEM learning platform built to engage students in rural and remote areas.</p><a href="project2.html">View case study</a></div>
+                    <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
+                </div>
+                <div class="fx-wticks" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></div>
+            </div>
+        </section>
+
+        <!-- 6 · How I work -->
+        <section class="fx-process" aria-label="How I work">
+            <div class="fx-pr-head">
+                <h2 class="display">From the first interview to shipped code, every step is <span class="red">intentional.</span></h2>
+            </div>
+            <div class="fx-pr-body">
+                <div class="fx-beam" aria-hidden="true"><i></i><b></b></div>
+                <div class="fx-steps">
+                    <div class="fx-step left"><div class="in"><h3>Understand</h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
+                    <div class="fx-step right"><div class="in"><h3>Shape</h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
+                    <div class="fx-step left"><div class="in"><h3>Build</h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
+                    <div class="fx-step right"><div class="in"><h3>Ship &amp; refine</h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7 · Finale -->
+        <section class="fx-end" id="contact">
+            <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
+            <h2 class="display">Let's build something worth <span class="red">remembering.</span></h2>
+            <a class="fx-mail" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com <span aria-hidden="true">→</span></a>
+            <div class="fx-links">
+                <a href="tel:+886956820832">+886 956 820 832</a>
+                <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/frankwu0405" target="_blank" rel="noopener">GitHub</a>
+                <a href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+            </div>
+            <div class="fx-marq" aria-hidden="true"><div class="track"><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span></div></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-text">&copy; 2026 Frank Wu. All rights reserved.</div>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js" defer></script>
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const reduce = root.classList.contains('fx-reduce');
+            const RAD = 16.5 * Math.PI / 180, TAN = Math.tan(RAD), VX = Math.sin(RAD), VY = -Math.cos(RAD);
+            const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+            const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            const lerp = (a, b, t) => a + (b - a) * t;
+
+            /* ---------- hero: split the name into letters (outer = arrival, inner = scroll exit) ---------- */
+            const nameEl = document.querySelector('.fx-title .name');
+            const chars = [...nameEl.textContent];
+            nameEl.textContent = '';
+            const mid = (chars.length - 1) / 2;
+            const letters = chars.map((c, i) => {
+                const ch = document.createElement('span'); ch.className = 'ch'; ch.setAttribute('aria-hidden', 'true');
+                ch.style.setProperty('--in', `${(0.15 + Math.abs(i - mid) * 0.07).toFixed(2)}s`);
+                const ci = document.createElement('span'); ci.className = 'ci'; ci.textContent = c === ' ' ? ' ' : c;
+                ch.appendChild(ci); nameEl.appendChild(ch);
+                return { ci, d: Math.abs(i - mid) / mid };
+            });
+
+            /* ---------- opening gate ---------- */
+            const ready = () => root.classList.add('fx-ready');
+            if (root.classList.contains('fx-gate-on')) {
+                const gate = document.querySelector('.fx-gate');
+                gate.style.setProperty('--a', `${Math.round(innerHeight * TAN)}px`);
+                let done = false;
+                const set = (v) => gate.style.setProperty('--load', v.toFixed(2));
+                const finish = () => {
+                    if (done) return; done = true; set(1);
+                    try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
+                    setTimeout(() => {
+                        gate.classList.add('is-out');
+                        heroDirty = true;
+                        setTimeout(ready, 250);
+                        setTimeout(() => { root.classList.remove('fx-gate-on'); gate.remove(); heroDirty = true; }, 950);
+                    }, 260);
+                };
+                requestAnimationFrame(() => set(0.15));
+                const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+                fontsReady.then(() => set(0.7));
+                Promise.all([fontsReady, new Promise((r) => setTimeout(r, 900))]).then(finish);
+                setTimeout(finish, 1500);                         // never hold the page longer than this
+                ['click', 'keydown', 'wheel', 'touchstart'].forEach((ev) => addEventListener(ev, finish, { once: true, passive: true }));
+            } else {
+                requestAnimationFrame(() => requestAnimationFrame(ready));
+            }
+
+            /* ---------- top-edge colour ----------
+               iOS Safari paints the strip behind the status bar in a colour it samples from the page
+               (top-pinned elements, then the page background). Keep that colour equal to whatever is at
+               the top of the scene so the strip blends in instead of reading as a cut-off. */
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            let topColor = '';
+            function setTopColor(c) {
+                if (c === topColor) return;
+                topColor = c;
+                root.style.backgroundColor = c;
+                document.body.style.backgroundColor = c;
+                if (themeMeta) themeMeta.setAttribute('content', c);
+                const st = document.querySelector('.fx-stage');
+                if (st) st.style.backgroundColor = c;
+            }
+            if (root.classList.contains('fx-gate-on')) setTopColor('#8f0000');
+
+            /* ---------- elements ---------- */
+            const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
+            const SVGNS = 'http://www.w3.org/2000/svg';
+            const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
+            const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
+            stage.classList.add('f-' + FIN);
+            document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
+            const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
+                + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
+                + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
+            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" mask="url(#fwGreyM)"/>'
+                + '<g class="fin" mask="url(#fwFinM)">' + FINISH + '</g><use class="bloom" href="#fwMark" mask="url(#fwBloomM)"/>'
+                + '<use class="flat" href="#fwMark"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
+            const bp = stage.querySelector('.fx-bp');
+            const aheadPoly = document.getElementById('fwAheadPoly');
+            const greyG = document.getElementById('fwGreyG'), finG = document.getElementById('fwFinG'), bloomG = document.getElementById('fwBloomG');
+            const LG = ['fwGlassG', 'fwRimG', 'fwRimR', 'fwSpec'].map((id) => document.getElementById(id)), glowG = document.getElementById('fwGlowG');
+            const hint = stage.querySelector('.fx-hint'), hintW = [...hint.querySelectorAll('b')];
+            let hintI = 0;
+            const specGrad = document.getElementById('fwSpec');
+            let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
+            const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
+            const echoes = [...stage.querySelectorAll('[data-echo]')];
+            const NB = innerWidth <= 900 ? 5 : 7;
+            const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
+            const smearBlur = document.getElementById('fxSmearBlur');
+            const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
+            if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
+            const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
+            const kWords = [...skills.querySelectorAll('.fx-words .w')], kCards = [...skills.querySelectorAll('.fx-card')];
+            const kLists = [...skills.querySelectorAll('.fx-lists ul')], kTicks = [...skills.querySelectorAll('.fx-ticks i')];
+            const results = document.querySelector('.fx-results'), panel = results.querySelector('.fx-panel');
+            const work = document.querySelector('.fx-work'), wstage = work.querySelector('.fx-wstage');
+            const wCards = [...work.querySelectorAll('.fx-wcard')], wBgs = [...work.querySelectorAll('.fx-wbg img')];
+            const wNames = [...work.querySelectorAll('.fx-wname .n')], wDescs = [...work.querySelectorAll('.fx-wdesc .d')], wTicks = [...work.querySelectorAll('.fx-wticks i')];
+            const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
+            const end = document.querySelector('.fx-end');
+
+            /* camera over the mark (logo units: viewBox 52 416 1872 1153):
+               fixed size, panning sideways onto a slab whose left edge leans like the strokes */
+            const PC = { x: 988, y: 992.5 };
+            const slabX = (y) => 2144 - (y - 416) * 0.3045;
+            let K0 = 1, SW = 1, SH = 1, GAP = 0, VH = innerHeight, mobile = false, slantA = 0;
+            const vprobe = document.querySelector('.fx-vprobe'), lprobe = document.querySelector('.fx-lprobe');
+            /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
+            const FADE1 = 0.14, EM0 = 0.13, EM1 = 0.32, ZM0 = 0.36, ZM1 = 0.60, ST0 = 0.56, ST1 = 0.78, WIPE0 = 0.86;
+            function layout() {
+                mobile = innerWidth <= 900;
+                // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
+                root.style.setProperty('--fvh', `${(lprobe.offsetHeight / 100).toFixed(3)}px`);
+                SW = stage.clientWidth; SH = stage.clientHeight;
+                GAP = vprobe.offsetHeight; VH = lprobe.offsetHeight;
+                const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
+                K0 = W / 1872;
+                buildBevel(mobile ? 9 : 5);
+                // phones: the stage hint sits in the open space under the mark
+                const markBottom = (1569.04 - PC.y) * K0 + 0.02 * SH - GAP / 2 + SH / 2;
+                stage.style.setProperty('--hintTop', `${Math.round(markBottom + (SH - GAP - markBottom) * 0.3)}px`);
+                buildBp();
+                bands.forEach((b, i) => { const t = i * SH / NB, bt = SH - (i + 1) * SH / NB; b.style.clipPath = NB > 1 ? `inset(${t.toFixed(1)}px 0 ${bt.toFixed(1)}px 0)` : ''; });
+                slantA = Math.round(SH * TAN);
+                // the skills section slides under the end of the hero, so the exit wipe reveals it already in place
+                skills.style.marginTop = reduce ? '' : `-${Math.round(SH + (hero.offsetHeight - SH) * (1 - WIPE0) + 4)}px`;
+                panel.style.setProperty('--a', `${Math.round(Math.min(panel.offsetHeight * TAN, innerWidth * (mobile ? 0.1 : 0.16)))}px`);
+                // process: steps sit either side of the leaning beam
+                if (!mobile) {
+                    const bw = prBody.clientWidth, bh = prBody.clientHeight, n = steps.length;
+                    steps.forEach((s, i) => {
+                        const y = (i + 0.5) * bh / n, beamX = bw / 2 + (bh / 2 - y) * TAN;
+                        s.style.top = `${Math.round(y - s.offsetHeight / 2)}px`;
+                        s.style.left = s.classList.contains('left') ? `${Math.round(beamX - 70 - s.offsetWidth)}px` : `${Math.round(beamX + 70)}px`;
+                        s.dataset.y = (y / bh).toFixed(3);
+                    });
+                } else steps.forEach((s) => { s.style.top = ''; s.style.left = ''; });
+            }
+            const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
+            /* progress through a pinned section from its sticky stage's fixed height, not the changing window height */
+            const NAV = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 90;
+            let navH = 0;   // sticky stages pin at the very top
+            const pinP = (sec) => { const r = sec.getBoundingClientRect(), st = sec.firstElementChild; return clamp((navH - r.top) / (r.height - st.offsetHeight)); };
+            const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
+
+            let kStep = -1, wStep = -1, ticking = false;
+            function frame() {
+                ticking = false;
+                const vh = VH;
+
+                /* ---- skills: three steps; cards travel up along the 16.5° lean ---- */
+                const kp = pinP(skills);
+                kstage.style.setProperty('--p', kp.toFixed(4));
+                const ks = Math.min(2, Math.floor(kp * 3));
+                if (ks !== kStep) { kStep = ks; setOn(kWords, ks); setOn(kLists, ks); setOn(kTicks, ks); }
+                const D = vh * 0.78, bx = mobile ? 0 : innerWidth * 0.17, by = mobile ? vh * 0.05 : vh * 0.02;
+                kCards.forEach((c, i) => {
+                    let o = kp * 3 - i - 0.5; if (reduce) o = i === ks ? 0 : 9;
+                    const ao = Math.abs(o);
+                    c.style.opacity = clamp(1.7 - ao * 1.9).toFixed(3);
+                    c.style.transform = `translate3d(calc(-50% + ${(bx + o * D * VX).toFixed(1)}px), calc(-50% + ${(by + o * D * VY).toFixed(1)}px), ${(-ao * 420).toFixed(0)}px) rotateX(${(o * -12).toFixed(2)}deg)`;
+                });
+
+                /* ---- results panel wipes in ---- */
+                const rr = results.getBoundingClientRect();
+                const rp = clamp((vh - rr.top) / (vh + rr.height));
+                results.style.setProperty('--p', rp.toFixed(3));
+                const reveal = reduce ? 1 : ease(clamp((rp - 0.12) / 0.3));
+                panel.style.setProperty('--r', reveal.toFixed(4));
+                if (reveal > 0.85) rollOdometers();
+
+                /* ---- work: one project per step, travelling along the lean ---- */
+                const n = wCards.length, wp = pinP(work);
+                wstage.style.setProperty('--wp', wp.toFixed(3));
+                const ws = Math.min(n - 1, Math.floor(wp * n));
+                if (ws !== wStep) { wStep = ws; setOn(wBgs, ws); setOn(wNames, ws); setOn(wDescs, ws); setOn(wTicks, ws); }
+                const wr = work.getBoundingClientRect();
+                playClip(ws === 0 && wr.top < vh && wr.bottom > 0);
+                let mShift = 0, mFit = 1;
+                if (mobile) {
+                    const st = wstage.getBoundingClientRect();
+                    const top = work.querySelector('.fx-wname .n.is-on').getBoundingClientRect().bottom + 16;
+                    const bottom = work.querySelector('.fx-wdesc .d.is-on').getBoundingClientRect().top - 16;
+                    mFit = Math.min(1, (bottom - top) / wCards[ws].offsetHeight);
+                    mShift = (top + bottom) / 2 - (st.top + st.height / 2);
+                }
+                const WD = vh * (mobile ? 0.36 : 0.56);
+                wCards.forEach((c, i) => {
+                    let o = wp * n - i - 0.5; if (reduce) o = i === ws ? 0 : (i < ws ? -1 : 1);
+                    const ao = Math.min(Math.abs(o), 1.6), oc = Math.sign(o) * Math.min(Math.abs(o), 1);
+                    c.style.opacity = (mobile ? clamp(1 - ao * 2) : clamp(1.25 - ao * 0.75)).toFixed(3);
+                    c.style.transform = `translate3d(calc(-50% + ${(oc * WD * VX).toFixed(1)}px), calc(-50% + ${(mShift + oc * WD * VY).toFixed(1)}px), ${(-ao * 380).toFixed(0)}px) rotateX(${(o * 22).toFixed(2)}deg) scale(${((1 - Math.min(ao, 1) * 0.6) * mFit).toFixed(3)})`;
+                    c.style.zIndex = String(10 - Math.round(ao * 4));
+                    c.style.pointerEvents = ao < 0.5 ? 'auto' : 'none';
+                    c.tabIndex = ao < 0.5 ? 0 : -1;
+                });
+
+                /* ---- process: the beam grows; steps come forward as it reaches them ---- */
+                const pb = prBody.getBoundingClientRect();
+                const bp = reduce ? 1 : clamp((vh * 0.6 - pb.top) / pb.height);
+                proc.style.setProperty('--bp', bp.toFixed(4));
+                steps.forEach((st) => {
+                    const lit = reduce || (mobile ? st.getBoundingClientRect().top < vh * 0.62 : bp >= +st.dataset.y - 0.04);
+                    st.classList.toggle('is-lit', lit);
+                });
+
+                /* ---- finale ---- */
+                const er = end.getBoundingClientRect();
+                end.style.setProperty('--p', clamp((vh - er.top) / (vh + er.height)).toFixed(3));
+
+            }
+            /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
+            let lastHp = null, lastT = 0, vel = 0, heroOn = true;
+            let heroDirty = true;
+            const SHAPES = [...document.querySelectorAll('#fwMark polygon')].map((pl) => pl.getAttribute('points').trim().split(/\s+/).map(Number))
+                .map((a) => a.reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []));
+            const SLAB = [...document.getElementById('fwSlab').getAttribute('points').trim().split(/\s+/).map(Number)]
+                .reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []);
+            function coverage(y, x0, x1, withSlab) {
+                let total = 0;
+                (withSlab ? [...SHAPES, SLAB] : SHAPES).forEach((pts) => {
+                    const xs = [];
+                    for (let i = 0; i < pts.length; i++) {
+                        const [ax, ay] = pts[i], [bx, by] = pts[(i + 1) % pts.length];
+                        if ((ay <= y && by > y) || (by <= y && ay > y)) xs.push(ax + (y - ay) / (by - ay) * (bx - ax));
+                    }
+                    xs.sort((a, b) => a - b);
+                    for (let i = 0; i + 1 < xs.length; i += 2) total += Math.max(0, Math.min(x1, xs[i + 1]) - Math.max(x0, xs[i]));
+                });
+                return total / (x1 - x0);
+            }
+            /* ---- the mark's own geometry: bevel facets and the blueprint drawing ---- */
+            const UNIQ = SHAPES.map((pts) => { const a = pts.slice(), f = a[0], l = a[a.length - 1]; if (f[0] === l[0] && f[1] === l[1]) a.pop(); return a; });
+            const inPoly = (x, y, pts) => { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+            const P2 = (v) => `${v[0].toFixed(1)} ${v[1].toFixed(1)}`;
+            let FACETS = [];
+            function buildBevel(d) {
+                const g = document.getElementById('fwBevel'); g.textContent = ''; FACETS = [];
+                UNIQ.forEach((P) => {
+                    const n = P.length;
+                    const E = P.map((p, i) => {
+                        const q = P[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]), ex = (q[0] - p[0]) / L, ey = (q[1] - p[1]) / L;
+                        let nx = -ey, ny = ex;   // inward normal
+                        if (!inPoly((p[0] + q[0]) / 2 + nx * 3, (p[1] + q[1]) / 2 + ny * 3, P)) { nx = -nx; ny = -ny; }
+                        return { ex, ey, nx, ny };
+                    });
+                    const Q = P.map((p, i) => {   // inner corner: where the two inset edges meet
+                        const a = E[(i - 1 + n) % n], b = E[i];
+                        const ax = p[0] + a.nx * d, ay = p[1] + a.ny * d, bx = p[0] + b.nx * d, by = p[1] + b.ny * d;
+                        const den = a.ex * b.ey - a.ey * b.ex;
+                        if (Math.abs(den) < 1e-6) return [bx, by];
+                        const t = ((bx - ax) * b.ey - (by - ay) * b.ex) / den;
+                        let q = [ax + a.ex * t, ay + a.ey * t];
+                        const m = Math.hypot(q[0] - p[0], q[1] - p[1]);
+                        if (m > d * 4) q = [p[0] + (q[0] - p[0]) * d * 4 / m, p[1] + (q[1] - p[1]) * d * 4 / m];
+                        return q;
+                    });
+                    P.forEach((p, i) => {
+                        const j = (i + 1) % n, el = document.createElementNS(SVGNS, 'polygon');
+                        el.setAttribute('points', [p, P[j], Q[j], Q[i]].map(P2).join(' '));
+                        g.appendChild(el); FACETS.push({ el, ox: -E[i].nx, oy: -E[i].ny });
+                    });
+                });
+                litKey = '';
+            }
+            let litKey = '';
+            function lightMark(lx, ly, str) {
+                const key = `${lx.toFixed(3)},${ly.toFixed(3)},${str.toFixed(2)}`;
+                if (key === litKey) return; litKey = key;
+                FACETS.forEach(({ el, ox, oy }) => { const v = (ox * lx + oy * ly) * str; el.setAttribute('fill-opacity', (v > 0.05 ? Math.min(1, v * 0.95) : 0).toFixed(3)); });
+                const x = (PC.x + lx * 700).toFixed(0), y = (PC.y + ly * 460).toFixed(0);
+                LG.forEach((g) => { g.setAttribute('cx', x); g.setAttribute('cy', y); });
+                glowG.setAttribute('cx', (PC.x + lx * 380).toFixed(0)); glowG.setAttribute('cy', (PC.y + ly * 260).toFixed(0));
+            }
+            /* blueprint: the outline traced by a point of light (corners flare as it passes), and six
+               faint guides growing out from behind the fading name, each with a bright tip */
+            let ANCH = [], CUTS = [];
+            function buildBp() {
+                const u = 1 / K0, f = (v) => v.toFixed(1);
+                let a = '';
+                UNIQ.forEach((P) => {
+                    const n = P.length, len = P.map((p, i) => Math.hypot(P[(i + 1) % n][0] - p[0], P[(i + 1) % n][1] - p[1]));
+                    const tot = len.reduce((x, y) => x + y, 0);
+                    let acc = 0;
+                    P.forEach((p, i) => { a += `<circle class="bp-pt" data-f="${(acc / tot).toFixed(4)}" cx="${f(p[0])}" cy="${f(p[1])}" r="${f(2.2 * u)}"/>`; acc += len[i]; });
+                });
+                const O = [988, 985], GL = 0.62 * Math.hypot(SW, SH) / K0;
+                const GUIDES = [[[0, 416], [1, 0]], [[0, 890.78], [1, 0]], [[0, 1569.04], [1, 0]],
+                    [[484, 1132.26], [340, 1568.04]], [[1492.7, 416], [1416.87, 658.48]], [[1924, 416], [1572.87, 1569.04]]];
+                let c = '';
+                GUIDES.forEach(([A, B], i) => {
+                    let o, ex, ey;
+                    if (B[1] === 0) { o = [O[0], A[1]]; ex = 1; ey = 0; }
+                    else { const l = Math.hypot(B[0] - A[0], B[1] - A[1]); ex = (B[0] - A[0]) / l; ey = (B[1] - A[1]) / l; o = [A[0] + (O[1] - A[1]) / ey * ex, O[1]]; }
+                    const d = [0, 0.1, 0.2, 0.05, 0.15, 0.25][i];
+                    [-1, 1].forEach((sg) => {
+                        const ln = `pathLength="100" x1="${f(o[0])}" y1="${f(o[1])}" x2="${f(o[0] + ex * sg * GL)}" y2="${f(o[1] + ey * sg * GL)}"`;
+                        c += `<line class="bp-cut" data-a="${d}" data-b="${d + 0.6}" ${ln}/><line class="bp-ctip" ${ln}/>`;
+                    });
+                });
+                bp.innerHTML = `<g class="bp-cuts">${c}</g><g clip-path="url(#fwAheadClip)"><use class="bp-out" href="#fwMark"/><use class="bp-tail" href="#fwMark"/><use class="bp-tip" href="#fwMark"/>${a}</g>`;
+                CUTS = [...bp.querySelectorAll('.bp-cut')].map((el) => ({ el, tip: el.nextElementSibling, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
+                ANCH = [...bp.querySelectorAll('.bp-pt')].map((el) => ({ el, f: +el.dataset.f, o: -1 }));
+            }
+            /* the build edge leans like the strokes; X is where it crosses y = 1700 */
+            const edgeX = (X, y) => X + (1700 - y) * TAN;
+            const f1 = (v) => v.toFixed(1);
+            const NX = 1 / Math.hypot(1, TAN), NY = TAN / Math.hypot(1, TAN);   // across the lean, pointing ahead
+            const sweepTo = (g, X, back, fwd) => {
+                g.setAttribute('x1', f1(X - NX * back)); g.setAttribute('y1', f1(1700 - NY * back));
+                g.setAttribute('x2', f1(X + NX * fwd)); g.setAttribute('y2', f1(1700 + NY * fwd));
+            };
+            function renderHero(t) {
+                const hp = reduce ? 0 : pinP(hero);
+                if (!heroDirty && lastHp !== null && Math.abs(hp - lastHp) < 1e-6 && Math.abs(vel) < 0.004) { vel = 0; lastT = t; return; }
+                heroDirty = false;
+                if (lastHp !== null) { const dt = Math.max(8, t - lastT); vel += ((hp - lastHp) / dt * 1000 - vel) * 0.18; }
+                lastHp = hp; lastT = t;
+                const fade = clamp(hp / FADE1), em = reduce ? 0.7 : ease(clamp((hp - EM0) / (EM1 - EM0))), zm = reduce ? 0 : clamp((hp - ZM0) / (ZM1 - ZM0));
+                // statement: starts while the red is completing, each line slightly after the last
+                const st = reduce ? 1 : clamp((hp - ST0) / (ST1 - ST0));
+                scene.style.setProperty('--s1', ease(clamp(st / 0.62)).toFixed(4));
+                scene.style.setProperty('--s2', ease(clamp((st - 0.16) / 0.62)).toFixed(4));
+                scene.style.setProperty('--s3', ease(clamp((st - 0.42) / 0.58)).toFixed(4));
+                scene.style.setProperty('--sg', st.toFixed(4));
+                // exit: the whole scene is cut away along the slant
+                const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
+                stage.classList.toggle('is-off', !reduce && hp >= 0.999 && wk >= 0.999);
+                if (wk > 0.0005) {
+                    const L = lerp(SW + slantA + 4, 0, wk);
+                    stage.style.clipPath = `polygon(0 0, ${L.toFixed(1)}px 0, ${(L - slantA).toFixed(1)}px 100%, 0 100%)`;
+                    wipeEdge.style.left = `${(L - slantA - 0.75).toFixed(1)}px`;
+                    wipeEdge.style.opacity = wk < 0.999 ? '1' : '0';
+                } else { stage.style.clipPath = ''; wipeEdge.style.opacity = '0'; }
+                stage.style.setProperty('--fade', fade.toFixed(3));
+                stage.style.setProperty('--em', em.toFixed(3));
+                stage.style.setProperty('--hide', (reduce ? 0 : clamp(hp / 0.035)).toFixed(3));
+                stage.style.setProperty('--zm', zm.toFixed(3));
+                stage.style.setProperty('--glint', (-em * 160).toFixed(1));
+                // build: grey block-in first, then the finish behind a soft edge that blooms as it passes
+                const build = reduce ? 1 : em;
+                const built = build >= 0.999;
+                stage.classList.toggle('is-built', built);
+                const gp = clamp(build / 0.72), fp = clamp((build - 0.18) / 0.82);
+                const gx = lerp(-500, 2400, gp), fx = lerp(-760, 2400, fp);
+                if (!built) {
+                    sweepTo(greyG, gx, 120, 0); sweepTo(finG, fx, 240, 0); sweepTo(bloomG, fx, 300, 50);
+                    aheadPoly.setAttribute('points', `${f1(edgeX(gx, -3000))} -3000 30000 -3000 30000 5000 ${f1(edgeX(gx, 5000))} 5000`);
+                }
+                stage.style.setProperty('--bloom', (built ? 0 : 0.5 * Math.sin(Math.PI * fp)).toFixed(3));
+                // stage hint
+                const hv = reduce ? 0 : clamp((hp - 0.05) / 0.04) * (1 - clamp((hp - 0.52) / 0.05));
+                stage.style.setProperty('--hint', hv.toFixed(3));
+                const hi = hp < EM0 + 0.01 ? 0 : hp < ZM0 ? 1 : 2;
+                if (hi !== hintI) { hintI = hi; hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
+                stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
+                letters.forEach(({ ci, d }) => {
+                    const k = clamp(fade * 1.5 - d * 0.5);
+                    ci.style.opacity = (1 - k).toFixed(3);
+                    ci.style.filter = k > 0.01 ? `blur(${(k * 16).toFixed(1)}px)` : '';
+                    ci.style.transform = k > 0.001 ? `translate3d(0, ${(-k * 0.1).toFixed(3)}em, ${(-k * 520).toFixed(0)}px)` : '';
+                });
+                const tz = ease(zm);
+                // distortion strength: only while the camera is moving, scaled by scroll speed
+                const moving = zm > 0.001 && zm < 0.999 ? 1 : 0;
+                const sp = clamp(Math.abs(vel) / (mobile ? 1.6 : 1.1)) * moving * (reduce ? 0 : 1);
+                const k0 = K0 * lerp(1.08, 1, em);
+                const cy = PC.y - 0.02 * SH / K0 + (GAP / 2) / k0;
+                const k = k0;
+                const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
+                const cx = lerp(PC.x, cxEnd, tz);
+                const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
+                bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                const smear = mobile ? 0 : sp * 16;
+                if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
+                bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
+                stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
+                // blueprint: drawn while the name fades, cleared by the build
+                const draw = reduce ? 0 : ease(clamp((hp - 0.045) / 0.105));
+                const bpOn = draw > 0.001 && !built;
+                bp.style.display = bpOn ? 'block' : 'none';
+                if (bpOn) {
+                    bp.setAttribute('viewBox', vbox(cx, cy, k));
+                    const D = draw * 100;
+                    bp.style.setProperty('--bpd', (100 - D).toFixed(2));
+                    bp.style.setProperty('--tipo', (1.4 - D).toFixed(2));
+                    bp.style.setProperty('--tailo', (10 - D).toFixed(2));
+                    bp.style.setProperty('--tipOn', (clamp(D / 3) * (1 - clamp((draw - 0.94) / 0.06))).toFixed(3));
+                    ANCH.forEach((pt) => { const o = draw >= pt.f ? Math.round(clamp(1 - (draw - pt.f) / 0.09) * 100) / 100 : 0; if (o !== pt.o) { pt.o = o; pt.el.style.opacity = String(o); } });
+                    CUTS.forEach((ct) => {
+                        const v = Math.round(ease(clamp((draw - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
+                        if (v === ct.v) return;
+                        ct.v = v; ct.el.style.strokeDashoffset = String(100 - v);
+                        ct.tip.style.strokeDashoffset = String(2.5 - v); ct.tip.style.opacity = v > 0 && v < 100 ? (1 - v / 100).toFixed(2) : '0';
+                    });
+                    bp.style.setProperty('--bpCut', (1 - clamp(build / 0.5)).toFixed(3));
+                }
+                // finish: lit from where the pointer is (scroll turns the light on phones); as the camera
+                // leaves, the light swells and the mark becomes the flat red the next scene is made of
+                const swell = reduce ? 0 : ease(clamp(zm / 0.4));
+                stage.style.setProperty('--swell', swell.toFixed(3));
+                if (fp > 0.001 && swell < 0.999) {
+                    const th = lerp(-2.45, -0.7, clamp((hp - 0.14) / 0.26));
+                    const vx = Math.cos(th) * 0.75 + MX * 0.9, vy = Math.sin(th) * 0.75 + MY * 0.9, vl = Math.hypot(vx, vy) || 1;
+                    lightMark(vx / vl, vy / vl, clamp(vl / 0.75, 0.7, 1));
+                }
+                // the colour actually at the top edge of the scene, measured from the camera
+                const vbTop = cy - SH / 2 / k, vbLeft = cx - SW / 2 / k;
+                const redTop = st > 0.02 || (swell > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, true) > 0.5);
+                if (!root.classList.contains('fx-gate-on')) setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
+                echoes.forEach((e) => {
+                    const f = +e.dataset.echo;
+                    const ecx = lerp(PC.x, cx, 1 - (f - 1) * 4);   // in a pan the echoes lag behind: depth
+                    e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
+                });
+            }
+            const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
+            new IntersectionObserver(([e]) => {
+                heroOn = e.isIntersecting; heroDirty = true;
+                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); if (!root.classList.contains('fx-gate-on')) setTopColor('#060606'); }
+            }).observe(hero);
+            requestAnimationFrame(heroLoop);
+
+            const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+            addEventListener('scroll', req, { passive: true });
+            let lastW = innerWidth;
+            addEventListener('resize', () => { if (innerWidth === lastW && matchMedia('(pointer: coarse)').matches) return; lastW = innerWidth; layout(); heroDirty = true; req(); });
+
+            /* hero: mouse depth on desktop (each layer moves by a different amount) */
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                let tx = 0, ty = 0, cx = 0, cy = 0;
+                stage.addEventListener('pointermove', (e) => { const r = stage.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width) * 2 - 1; ty = ((e.clientY - r.top) / r.height) * 2 - 1; });
+                stage.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+                const loop = () => {
+                    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+                    stage.style.setProperty('--mx', cx.toFixed(4)); stage.style.setProperty('--my', cy.toFixed(4));
+                    if (Math.abs(cx - MX) > 0.0005 || Math.abs(cy - MY) > 0.0005) { MX = cx; MY = cy; heroDirty = true; }
+                    requestAnimationFrame(loop);
+                };
+                loop();
+            }
+
+            /* Nitori card: live pages playing while it's in front */
+            const vid = work.querySelector('video'), url = work.querySelector('.fx-browser .url');
+            const clips = [
+                ['assets/images/nitori/sofa/04_desk', 'nitori-net.tw/article/Sofa'],
+                ['assets/images/nitori/electricsofa/04_desk', 'nitori-net.tw/article/Electricsofa'],
+                ['assets/images/nitori/petlife/02_desk', 'nitori-net.tw/article/PetLife'],
+            ];
+            let clipI = 0, wantPlay = false;
+            const load = (k) => { vid.poster = clips[k][0] + '_poster.webp'; vid.src = clips[k][0] + '.mp4'; url.textContent = clips[k][1]; };
+            vid.addEventListener('ended', () => { clipI = (clipI + 1) % clips.length; load(clipI); if (wantPlay) vid.play().catch(() => {}); });
+            function playClip(on) {
+                on = on && !reduce;
+                if (on === wantPlay) return;
+                wantPlay = on;
+                if (on) { if (!vid.getAttribute('src')) load(0); vid.play().catch(() => {}); } else vid.pause();
+            }
+
+            /* cursor: a red dot that opens to "View" over project cards (desktop) */
+            const cur = document.querySelector('.fx-cursor');
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                let x = 0, y = 0, cx2 = 0, cy2 = 0;
+                addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; cur.classList.toggle('is-view', !!e.target.closest('[data-cursor]')); }, { passive: true });
+                const loop2 = () => { cx2 += (x - cx2) * 0.2; cy2 += (y - cy2) * 0.2; cur.style.transform = `translate3d(${cx2.toFixed(1)}px, ${cy2.toFixed(1)}px, 0)`; requestAnimationFrame(loop2); };
+                loop2();
+            } else cur.remove();
+
+            /* odometer figures */
+            const odoSets = [...document.querySelectorAll('.odo')].map((el, si) => {
+                const value = el.dataset.value; el.setAttribute('aria-label', value);
+                if (reduce) return [];
+                el.textContent = '';
+                const strips = []; let k = 0;
+                [...value].forEach((ch) => {
+                    if (/\d/.test(ch)) {
+                        const d = document.createElement('span'); d.className = 'odo-d'; d.setAttribute('aria-hidden', 'true');
+                        const st = document.createElement('span'); st.className = 'odo-strip';
+                        for (let t = 0; t < 2 + k; t++) for (let m = 0; m < 10; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
+                        for (let m = 0; m <= +ch; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
+                        st.style.setProperty('--dur', `${1.5 + k * 0.35}s`); st.style.setProperty('--delay', `${si * 0.2 + k * 0.06}s`);
+                        st.dataset.stop = st.children.length - 1; d.appendChild(st); el.appendChild(d); strips.push(st); k++;
+                    } else {
+                        const c = document.createElement('span'); c.className = /[0-9.,]/.test(ch) ? 'odo-ch' : 'odo-ch odo-unit';
+                        c.setAttribute('aria-hidden', 'true'); c.textContent = ch; el.appendChild(c);
+                    }
+                });
+                return strips;
+            });
+            let rolled = false;
+            function rollOdometers() {
+                if (rolled) return; rolled = true;
+                odoSets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
+            }
+
+            layout();
+            frame();
+            renderHero(performance.now());
+            addEventListener('scroll', () => { heroDirty = true; }, { passive: true });
+            if (document.fonts) document.fonts.ready.then(() => { layout(); heroDirty = true; req(); });
+        })();
+    </script>
+</body>
+</html>
