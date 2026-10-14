@@ -1133,15 +1133,19 @@
                colour and texture are what the scroll adds later. ---------- */
             function intro() {
                 const gate = document.querySelector('.fx-gate'), cvs = gate.querySelector('canvas'), g2 = cvs.getContext('2d'), pctBox = gate.querySelector('.pct'), pctEl = pctBox.querySelector('span');
-                // one line over the whole mark: from the tip of the F's bar round the F, a dark hop across the gap,
-                // round the W and back to the heart of the mark
-                const F = UNIQ[1], W = UNIQ[0], E = [];
-                let LT = 0;
-                const run = (P, lit) => P.slice(1).forEach((b, i) => { const a = P[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]); E.push({ a, b, l0: LT, l1: LT + l, lit }); LT += l; });
-                run([...F, F[0]], true); const LF = LT;
-                run([F[0], W[0]], false); const LW = LT;
-                run([...W, W[0]], true);
-                const at = (d) => { const e = E.find((x) => d <= x.l1) || E[E.length - 1], t = clamp((d - e.l0) / (e.l1 - e.l0 || 1)); return [e.a[0] + (e.b[0] - e.a[0]) * t, e.a[1] + (e.b[1] - e.a[1]) * t]; };
+                // four points at once, so each one travels slowly: two leave the F's foot and two the W's top corner
+                // (opposite ends of the lean), run round their letter in opposite directions and meet halfway
+                const letter = (P, i0) => {
+                    const Q = [...P.slice(i0), ...P.slice(0, i0)], C = [0];
+                    Q.forEach((p, i) => { const q = Q[(i + 1) % Q.length]; C.push(C[i] + Math.hypot(q[0] - p[0], q[1] - p[1])); });
+                    return { Q, C, L: C[C.length - 1] };
+                };
+                const LET = [letter(UNIQ[1], Math.max(0, UNIQ[1].findIndex((p) => p[0] === 52))), letter(UNIQ[0], Math.max(0, UNIQ[0].findIndex((p) => p[0] === 1924)))];
+                const at = (o, d) => {
+                    let i = 1; while (i < o.C.length - 1 && o.C[i] < d) i++;
+                    const a = o.Q[i - 1], b = o.Q[i % o.Q.length], t = clamp((d - o.C[i - 1]) / (o.C[i] - o.C[i - 1] || 1));
+                    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+                };
 
                 // the trace eases on the site's own curve: a patient start, a confident middle, a long soft landing
                 const bez = (x1, y1, x2, y2) => (x) => {
@@ -1157,16 +1161,17 @@
                 const kRest = () => K0 * 1.08, kSmall = () => kRest() * (mobile ? 0.66 : 0.72);
                 const camY = (k) => PC.y - (0.02 * SH * 1.08 - GAP / 2) / k;   // the frame renderHero draws at the top of the scroll
                 const scr = ([x, y], k) => [(x - PC.x) * k + SW / 2, (y - camY(k)) * k + SH / 2];
-                const path = (d0, d1, k) => E.forEach((e) => {
-                    if (!e.lit) return;
-                    const s = Math.max(d0, e.l0), f = Math.min(d1, e.l1); if (s >= f) return;
-                    const A = scr(at(s), k), B = scr(at(f), k); g2.moveTo(A[0], A[1]); g2.lineTo(B[0], B[1]);
-                });
+                const path = (o, d0, d1, k) => {
+                    for (let i = 0; i < o.Q.length; i++) {
+                        const s = Math.max(d0, o.C[i]), f = Math.min(d1, o.C[i + 1]); if (s >= f) continue;
+                        const A = scr(at(o, s), k), B = scr(at(o, f), k); g2.moveTo(A[0], A[1]); g2.lineTo(B[0], B[1]);
+                    }
+                };
                 // the line: the printed mark's rim colour (.rim), brighter than its 0.22, with only a breath of glow
                 const RIM = '255, 70, 55', LINE = 0.42;
-                const line = (d0, d1, k, a) => {
+                const line = (o, d0, d1, k, a) => {
                     if (a < 0.005 || d1 <= d0) return;
-                    g2.beginPath(); path(d0, d1, k);
+                    g2.beginPath(); path(o, d0, d1, k);
                     g2.shadowColor = `rgba(${RIM}, ${(0.5 * a).toFixed(3)})`; g2.shadowBlur = 6;
                     g2.strokeStyle = `rgba(${RIM}, ${a.toFixed(3)})`; g2.lineWidth = 1.2; g2.stroke();
                     g2.shadowBlur = 0;
@@ -1220,23 +1225,26 @@
                     if (grow0 === null) pctBox.style.top = `${Math.round(scr([PC.x, 1569.04], k)[1] + 30)}px`;   // just under the mark
                     else pctBox.style.top = `${lerp(pct0, hintText.getBoundingClientRect().top, ease(g)).toFixed(1)}px`;
 
-                    const D = traced * LT;
                     g2.lineJoin = 'miter'; g2.lineCap = 'butt';
-                    line(0, Math.min(D, LF), k, lineA);
-                    line(LW, D, k, lineA);
-                    // the point leading it: the freshly drawn stretch is a little brighter for a moment
-                    if (full === null && D > 0) {
+                    LET.forEach((o) => {
+                        const h = traced * o.L / 2, ends = [h, o.L - h];   // the two points on this letter
+                        line(o, 0, h, k, lineA); line(o, o.L - h, o.L, k, lineA);
+                        // the points leading it: the freshly drawn stretch is a little brighter for a moment
+                        if (full !== null || h <= 0) return;
                         g2.globalCompositeOperation = 'lighter';
-                        line(Math.max(0, D - 60 / k), D, k, 0.3);
-                        const [x, y] = scr(at(D), k), a = D > LF && D < LW ? 0.2 : 1;
-                        let gr = g2.createRadialGradient(x, y, 0, x, y, 12);
-                        gr.addColorStop(0, `rgba(255, 110, 90, ${(0.35 * a).toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 70, 55, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 12, 0, Math.PI * 2); g2.fill();
-                        gr = g2.createRadialGradient(x, y, 0, x, y, 3);
-                        gr.addColorStop(0, `rgba(255, 244, 241, ${a.toFixed(3)})`); gr.addColorStop(1, 'rgba(255, 200, 190, 0)');
-                        g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 3, 0, Math.PI * 2); g2.fill();
+                        const FR = 60 / k;
+                        line(o, Math.max(0, h - FR), h, k, 0.3); line(o, o.L - h, Math.min(o.L, o.L - h + FR), k, 0.3);
+                        ends.forEach((d) => {
+                            const [x, y] = scr(at(o, d), k);
+                            let gr = g2.createRadialGradient(x, y, 0, x, y, 12);
+                            gr.addColorStop(0, 'rgba(255, 110, 90, 0.35)'); gr.addColorStop(1, 'rgba(255, 70, 55, 0)');
+                            g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 12, 0, Math.PI * 2); g2.fill();
+                            gr = g2.createRadialGradient(x, y, 0, x, y, 3);
+                            gr.addColorStop(0, 'rgba(255, 244, 241, 1)'); gr.addColorStop(1, 'rgba(255, 200, 190, 0)');
+                            g2.fillStyle = gr; g2.beginPath(); g2.arc(x, y, 3, 0, Math.PI * 2); g2.fill();
+                        });
                         g2.globalCompositeOperation = 'source-over';
-                    }
+                    });
                     requestAnimationFrame(step);
                 }
                 function end() {
