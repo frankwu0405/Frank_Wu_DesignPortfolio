@@ -168,33 +168,25 @@
         /* the aside lands a beat after the motto */
         .fx-sin .aside { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; font-style: italic; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
             opacity: var(--s3); transform: translate3d(calc((1 - var(--s3)) * 40px), 0, 0); }
-        /* two ways forward: a slanted card with a glimpse of the latest work, and a quiet About me */
-        .fx-cta { --cw: clamp(300px, 30vw, 440px); --ch: calc(var(--cw) * 0.56); --ca: calc(var(--ch) * 0.2962);
-            display: flex; align-items: flex-end; gap: clamp(28px, 3.4vw, 56px); margin-top: calc(var(--fvh, 1vh) * 5); }
-        .fx-cta a { pointer-events: none; }
-        .fx-scene.is-live .fx-cta a { pointer-events: auto; }
-        .fx-go { position: relative; display: block; width: calc(var(--cw) + var(--ca)); height: var(--ch); color: #fff; text-decoration: none; flex: none;
-            opacity: min(1, calc(var(--s4) * 2)); transform: translate3d(calc((1 - var(--s4)) * 70vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s4)))); }
-        .fx-go .card { position: absolute; inset: 0; clip-path: polygon(var(--ca) 0, 100% 0, calc(100% - var(--ca)) 100%, 0 100%); background: #120000; overflow: hidden; }
-        .fx-go .card img, .fx-go .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transform: scale(1.04); transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-go .card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12, 0, 0, 0.96) 0%, rgba(12, 0, 0, 0.82) 26%, rgba(12, 0, 0, 0.3) 52%, transparent 72%); }
-        .fx-go .txt { position: absolute; left: calc(var(--ca) * 0.32 + 18px); right: calc(var(--ca) + 18px); bottom: 16px; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
-        .fx-go small { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
-        .fx-go .go { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(1rem, 1.25vw, 1.2rem); font-weight: 700; }
-        .fx-go .go i { font-style: normal; transition: transform 0.35s ease; }
-        /* hover: a glint of light passes across along the lean, and the preview leans in */
-        .fx-go .sweep { position: absolute; inset: 0; z-index: 1; clip-path: polygon(var(--ca) 0, 100% 0, calc(100% - var(--ca)) 100%, 0 100%); pointer-events: none; }
-        .fx-go .sweep::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 38%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
-            transform: translate3d(-130%, 0, 0) skewX(calc(var(--lean) * -1)); }
-        .fx-go:hover .sweep::before, .fx-go:focus-visible .sweep::before { transform: translate3d(330%, 0, 0) skewX(calc(var(--lean) * -1)); transition: transform 0.9s cubic-bezier(0.25, 0.6, 0.2, 1); }
-        .fx-go:hover .card img, .fx-go:hover .card video, .fx-go:focus-visible .card img { transform: scale(1.1); }
-        .fx-go:hover .go i, .fx-go:focus-visible .go i { transform: translateX(6px); }
-        .fx-go:focus-visible { outline: none; }
-        .fx-go:focus-visible .card { box-shadow: inset 0 0 0 2px #fff; }
-        .fx-about { position: relative; padding: 6px 0; font-size: clamp(0.95rem, 1.1vw, 1.08rem); font-weight: 600; color: #fff; text-decoration: none; letter-spacing: 0.02em;
-            opacity: var(--s5); transform: translate3d(calc((1 - var(--s5)) * 30px), 0, 0); }
-        .fx-about::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(255, 255, 255, 0.75); transform-origin: left; transition: transform 0.4s ease, background 0.3s ease; }
-        .fx-about:hover::after, .fx-about:focus-visible::after { background: #fff; transform: scaleX(1.12); }
+        /* two equal choices in the motto's type; the chosen one turns black, like "SIMPLE." */
+        .fx-cta { display: flex; flex-wrap: wrap; gap: 0.4em clamp(36px, 4.4vw, 80px); margin-top: calc(var(--fvh, 1vh) * 5.5); }
+        .fx-pick { display: inline-flex; align-items: center; gap: 0.32em; font-size: clamp(1.6rem, 2.9vw, 3rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.035em; line-height: 1;
+            color: #fff; text-decoration: none; pointer-events: none; transition: color 0.35s ease;
+            opacity: min(1, calc(var(--sp, 0) * 2)); transform: translate3d(calc((1 - var(--sp, 0)) * 60vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--sp, 0)))); }
+        .fx-pick:first-child { --sp: var(--s4); } .fx-pick:last-child { --sp: var(--s5); }
+        .fx-pick i { font-style: normal; font-weight: 600; transition: transform 0.35s ease; }
+        .fx-scene.is-live .fx-pick { pointer-events: auto; }
+        .fx-cta.has-on .fx-pick { color: rgba(255, 255, 255, 0.5); }
+        .fx-cta.has-on .fx-pick.is-on { color: #120000; }
+        .fx-pick.is-on i { transform: translateX(0.18em); }
+        .fx-pick:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+        /* where each choice leads, as a watermark behind the scene (pre-tinted images: plain opacity only) */
+        .fx-wm { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .fx-wm img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 0.7s ease, transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-wm img.wm-work { object-position: 60% 30%; } .fx-wm img.wm-about { object-position: 70% 20%; }
+        .fx-wm img.is-on { opacity: 0.75; transform: scale(1); }
+        .fx-wm img.wm-work.is-on { opacity: 0.45; }   /* the page is busier than the portrait */
+        .fx-wm img.is-go { opacity: 1; transform: scale(1.03); transition-duration: 0.28s, 0.5s; }
         /* the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
         .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
         .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
@@ -204,8 +196,8 @@
             transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
         .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 16) 0; }
         .fx-scene.is-static .fx-sin { position: relative; }
-        .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-go, .fx-scene.is-static .fx-about { opacity: 1; transform: none; filter: none; }
-        .fx-scene.is-static .fx-cta a { pointer-events: auto; }
+        .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
+        .fx-scene.is-static .fx-pick { pointer-events: auto; }
 
         /* 3 · Skills (pinned) */
         .fx-skills { position: relative; z-index: 1; height: calc(var(--fvh, 1vh) * 330); }
@@ -324,7 +316,8 @@
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
             .fx-sin .aside { font-size: 1.05rem; }
-            .fx-cta { --cw: calc((100vw - 40px) / 1.1481); --ch: calc(var(--cw) * 0.5);   /* card plus its lean fills the width */ flex-direction: column; align-items: flex-start; gap: 18px; margin-top: calc(var(--fvh, 1vh) * 3.5); }
+            .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
+            .fx-pick { font-size: 8.4vw; }
             .fx-words { transform: none; place-items: start center; padding-top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 8)); }
             .fx-words .w { font-size: 17vw; }
             .fx-card { width: 66vw; }
@@ -453,17 +446,17 @@
                 </div>
                 <div class="fx-hint is-scroll" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Scroll</b><b>Design</b><b>Build</b><b>Ship</b></span></div>
                 <div class="fx-scene">
+                    <div class="fx-wm" aria-hidden="true">
+                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_work_m.webp"><img class="wm-work" src="assets/images/home/wm_work_d.webp" alt="" decoding="async"></picture>
+                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_about_m.webp"><img class="wm-about" src="assets/images/home/wm_about_d.webp" alt="" decoding="async"></picture>
+                    </div>
                     <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
                     <div class="fx-sin">
                         <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
                         <p class="aside">…including this one.</p>
                         <div class="fx-cta">
-                            <a class="fx-go" href="nitori.html" data-cursor>
-                                <span class="card"><img src="assets/images/nitori/sofa/04_desk_poster.webp" alt="" loading="lazy" decoding="async"></span>
-                                <span class="sweep" aria-hidden="true"></span>
-                                <span class="txt"><small>Nitori Taiwan · shipped</small><span class="go">See my latest work <i aria-hidden="true">→</i></span></span>
-                            </a>
-                            <a class="fx-about" href="about.html">About me</a>
+                            <a class="fx-pick" href="nitori.html" data-wm="0">Latest work <i aria-hidden="true">→</i></a>
+                            <a class="fx-pick" href="about.html" data-wm="1">About me <i aria-hidden="true">→</i></a>
                         </div>
                     </div>
                 </div>
@@ -670,17 +663,29 @@
             const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
             const smearBlur = document.getElementById('fxSmearBlur');
             const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
-            const ctaLinks = [...scene.querySelectorAll('.fx-cta a')];
-            let ctaLive = null, ctaVid = null;
-            // desktop: the card plays a short loop of the live page; phones keep the still (smoother on iPhone)
-            if (innerWidth > 900 && !reduce) {
-                ctaVid = document.createElement('video');
-                Object.assign(ctaVid, { muted: true, loop: true, playsInline: true, preload: 'none' });
-                ctaVid.setAttribute('muted', ''); ctaVid.setAttribute('playsinline', ''); ctaVid.setAttribute('aria-hidden', 'true');
-                ctaVid.dataset.src = 'assets/images/nitori/sofa/04_desk.mp4';
-                ctaVid.poster = 'assets/images/nitori/sofa/04_desk_poster.webp';
-                scene.querySelector('.fx-go .card').appendChild(ctaVid);
+            const ctaLinks = [...scene.querySelectorAll('.fx-pick')];
+            let ctaLive = null, pickHover = -1, pickGo = -1, pickOn = -2;
+            const ctaRow = scene.querySelector('.fx-cta'), wmImgs = [...scene.querySelectorAll('.fx-wm img')];
+            // the chosen one turns black and its watermark fades in: hover (or focus) on desktop, otherwise the scroll picks
+            function showPick(i) {
+                if (i === pickOn) return; pickOn = i;
+                ctaRow.classList.toggle('has-on', i >= 0);
+                ctaLinks.forEach((a, k) => a.classList.toggle('is-on', k === i));
+                wmImgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
             }
+            ctaLinks.forEach((a, k) => {
+                a.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { pickHover = k; heroDirty = true; } });
+                a.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { pickHover = -1; heroDirty = true; } });
+                a.addEventListener('focus', () => { pickHover = k; heroDirty = true; });
+                a.addEventListener('blur', () => { pickHover = -1; heroDirty = true; });
+                // a tap feels deliberate: the choice turns black and its watermark swells, then the page opens
+                a.addEventListener('click', (e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || reduce) return;
+                    e.preventDefault(); pickGo = k; showPick(k); wmImgs[k].classList.add('is-go');
+                    setTimeout(() => { location.href = a.href; }, 280);
+                });
+            });
+            addEventListener('pageshow', () => { pickGo = -1; wmImgs.forEach((im) => im.classList.remove('is-go')); heroDirty = true; });
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
             const kWords = [...skills.querySelectorAll('.fx-words .w')], kCards = [...skills.querySelectorAll('.fx-card')];
@@ -935,12 +940,13 @@
                 scene.style.setProperty('--sg', st.toFixed(4));
                 // exit: the whole scene is cut away along the slant
                 const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
+                // which choice is "the answer": a tap or hover wins; otherwise the first half of the hold picks the work, the second About me
+                showPick(reduce ? -1 : pickGo >= 0 ? pickGo : pickHover >= 0 && ctaLive ? pickHover : st > 0.97 && wk < 0.3 ? (hp < (ST1 + WIPE0) / 2 ? 0 : 1) : -1);
                 // the links only respond once they have arrived, and stop as the wipe begins
                 const live = reduce || (st > 0.97 && wk < 0.02);
                 if (live !== ctaLive) {
                     ctaLive = live; scene.classList.toggle('is-live', live);
                     ctaLinks.forEach((a) => { a.tabIndex = live ? 0 : -1; });
-                    if (ctaVid) { if (live) { if (!ctaVid.src) ctaVid.src = ctaVid.dataset.src; ctaVid.play().catch(() => {}); } else ctaVid.pause(); }
                 }
                 stage.classList.toggle('is-off', !reduce && hp >= 0.999 && wk >= 0.999);
                 if (wk > 0.0005) {
