@@ -77,6 +77,7 @@
             display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
             transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
         .fx-cursor.is-view { width: 84px; height: 84px; margin: -42px 0 0 -42px; font-size: 0.66rem; opacity: 1; }
+        .fx-cursor.is-arrow { width: 64px; height: 64px; margin: -32px 0 0 -32px; font-size: 1.2rem; letter-spacing: 0; opacity: 1; }
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
@@ -210,76 +211,80 @@
         .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
         .fx-scene.is-static .fx-pick { pointer-events: auto; }
 
-        /* 3 · Skills (pinned) */
-        .fx-skills { position: relative; z-index: 1; height: calc(var(--fvh, 1vh) * 330); }
-        .fx-kstage { background: var(--ink); position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1100px; --p: 0; }
-        .fx-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 68%; transform-origin: 50% 100%; transform: rotateX(76deg);
-            background-image: linear-gradient(rgba(211, 22, 27, 0.32) 1px, transparent 1px), linear-gradient(90deg, rgba(211, 22, 27, 0.24) 1px, transparent 1px);
-            background-size: 110px 110px; background-position: 50% calc(var(--p) * 1600px);
-            -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 80%); mask-image: linear-gradient(to top, #000 5%, transparent 80%); }
-        .fx-words { position: absolute; inset: 0 0 var(--gap) 0; display: grid; place-items: center; pointer-events: none; transform: translate3d(-10vw, -calc(var(--fvh, 1vh) * 2), 0); }
-        .fx-words .w { grid-area: 1 / 1; font-size: clamp(4.4rem, 13vw, 13rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; white-space: nowrap; line-height: 1;
-            color: transparent; -webkit-text-stroke: 1.5px rgba(211, 22, 27, 0.85); opacity: 0; filter: blur(12px); transform: translate3d(0, calc(var(--fvh, 1vh) * 4), -260px);
-            transition: opacity 0.7s ease, filter 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-words .w.is-on { opacity: 1; filter: none; transform: none; }
-        .fx-card { position: absolute; left: 50%; top: calc(50% - var(--gap) / 2); width: min(28vw, 380px); margin: 0; opacity: 0; }
-        .fx-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08); }
-        .fx-card figcaption { margin-top: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); text-align: left; max-width: none; }
-        .fx-lists { position: absolute; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); width: 260px; }
-        .fx-lists ul { position: absolute; right: 0; bottom: 0; width: 100%; text-align: right; opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
-        .fx-lists ul.is-on { opacity: 1; transform: none; }
-        .fx-lists li { font-size: 0.95rem; color: #d9d9d9; line-height: 1.8; }
-        .fx-ticks { position: absolute; left: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); display: flex; gap: 8px; }
-        .fx-ticks i { width: 22px; height: 3px; background: rgba(255, 255, 255, 0.18); transform: skewX(calc(var(--lean) * -1)); transition: background 0.4s ease, width 0.4s ease; }
-        .fx-ticks i.is-on { background: var(--red); width: 44px; }
-
-        /* 4 · Results: a slanted panel that wipes in */
-        .fx-results { position: relative; padding: calc(var(--fvh, 1vh) * 14) 4vw; --p: 0.5; }
-        .fx-panel { position: relative; background: linear-gradient(105deg, #6e0000, var(--deep) 45%, #b3080d); padding: calc(var(--fvh, 1vh) * 11) 9vw;
-            clip-path: polygon(var(--a, 120px) 0, calc(var(--a, 120px) + var(--r, 0) * (100% - var(--a, 120px))) 0, calc(var(--r, 0) * (100% - var(--a, 120px))) 100%, 0 100%); }
-        .fx-panel-in { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 5vw; align-items: end; transform: translate3d(calc((0.5 - var(--p)) * 60px), 0, 0); }
-        .fx-panel .display { font-size: clamp(2.4rem, 5.4vw, 5.4rem); }
-        .fx-panel .display .blk { color: transparent; -webkit-text-stroke: 1.5px #fff; }
-        .fx-figs { display: grid; gap: 0; transform: translate3d(calc((var(--p) - 0.5) * 40px), 0, 0); }
-        .fx-fig { padding: 18px 0; border-top: 1px solid rgba(255, 255, 255, 0.28); }
-        .fx-fig:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
-        .fx-fig b { display: flex; align-items: flex-end; height: 1.1em; line-height: 1.1; font-size: clamp(2rem, 3.8vw, 3.4rem); font-weight: 900; letter-spacing: -0.03em; color: #fff; margin: 0; font-feature-settings: "tnum"; }
-        .fx-fig span.lab { display: block; margin-top: 8px; font-size: 0.86rem; color: rgba(255, 255, 255, 0.82); }
-        .odo-ch { display: inline-block; }
-        .odo-unit { font-size: 0.55em; color: rgba(255, 255, 255, 0.7); margin: 0 0.06em 0.16em; align-self: flex-end; }
-        .odo-d { display: inline-block; height: 1.1em; overflow: hidden; }
-        .odo-strip { display: flex; flex-direction: column; transition: transform var(--dur, 1.6s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--delay, 0s); }
-        .odo-strip span { display: block; height: 1.1em; }
-
-        /* 5 · Work (pinned) */
-        .fx-work { position: relative; height: calc(var(--fvh, 1vh) * 470); }
-        .fx-wstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; perspective: 1400px; --wp: 0; }
-        .fx-wbg { position: absolute; inset: -14% 0; transform: translate3d(0, calc(var(--wp) * -calc(var(--fvh, 1vh) * 8)), 0); }
-        .fx-wbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transition: opacity 0.9s ease; transform: scale(1.15); }
-        .fx-wbg img.is-on { opacity: 1; }
-        .fx-wstage::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); pointer-events: none; }
-        .fx-wname, .fx-wdesc { position: absolute; z-index: 4; top: calc(50% - var(--gap) / 2); transform: translateY(-50%); }
-        .fx-wname { left: 6vw; width: 20vw; }
-        .fx-wname .n, .fx-wdesc .d { position: absolute; top: 50%; left: 0; right: 0; opacity: 0; transform: translateY(calc(-50% + 18px)); transition: opacity 0.5s ease, transform 0.6s ease; }
-        .fx-wname .n.is-on, .fx-wdesc .d.is-on { opacity: 1; transform: translateY(-50%); }
-        .fx-wname .n { font-size: clamp(1.5rem, 2.5vw, 2.3rem); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; color: #fff; line-height: 0.98; }
-        .fx-wname .n small { display: block; margin-top: 12px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; color: var(--red); line-height: 1.5; }
-        .fx-wdesc { right: 6vw; width: 20vw; }
-        .fx-wdesc .d p { font-size: 0.92rem; line-height: 1.65; color: rgba(255, 255, 255, 0.85); margin: 0 0 14px; }
-        .fx-wdesc .d a { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
-        .fx-wdesc .d:not(.is-on) { pointer-events: none; }
-        .fx-wcards { position: absolute; inset: 0; z-index: 3; transform-style: preserve-3d; }
-        .fx-wcard { position: absolute; left: 50%; top: calc(50% - var(--gap) / 2); width: min(44vw, 700px); text-decoration: none; opacity: 0; }
-        .fx-wcard img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        /* 3 · Proof (pinned): the results, one at a time, each a dark shape against a red light that passes back into
+           the dark along the lean; they meet in one point far back, and the Nitori work comes forward out of it */
+        .fx-proof { position: relative; z-index: 1; }
+        .fx-pstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink); touch-action: pan-y; --cw: 30vw; --slot: 30%; }
+        .fx-pbg { position: absolute; inset: -10% -6%; z-index: 0; pointer-events: none; }
+        .fx-pbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transform: scale(1.15); transition: opacity 0.9s ease; }
+        .fx-pbg img.is-on { opacity: 1; }
+        .fx-pstage::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: linear-gradient(to bottom, transparent 70%, var(--ink)), radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); }
+        /* the backlight behind the tile on the room's back wall; it follows the tile down as it falls */
+        .fx-pglow { position: absolute; left: 0; top: 0; z-index: 2; width: 100px; height: 100px; border-radius: 50%; pointer-events: none; opacity: 0; will-change: transform, opacity;
+            background: radial-gradient(closest-side, rgba(236, 34, 34, 0.9), rgba(200, 16, 22, 0.5) 45%, rgba(143, 0, 0, 0.16) 72%, transparent); }
+        /* the room: thin red perspective lines converging on a back wall, drawn in as the stage opens */
+        .fx-proom { position: absolute; left: 0; top: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; overflow: visible; will-change: transform, opacity; }
+        .fx-proom path { fill: none; stroke: rgba(211, 22, 27, 0.32); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 1 1; stroke-dashoffset: var(--rd, 1); }
+        .fx-proom .wall { stroke: rgba(211, 22, 27, 0.6); }
+        /* the stats: sentences that emerge word by word, each with a big figure elsewhere, mostly lost in the dark */
+        .fx-pstats { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+        .fx-psent { position: absolute; z-index: 2; margin: 0; max-width: 36vw; font-size: clamp(1.15rem, 1.9vw, 1.9rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.65; color: var(--red); }
+        .fx-psent em { font-style: normal; color: #fff; }
+        .fx-psent .w { display: inline-block; opacity: 0; will-change: transform, opacity, filter; }
+        .fx-psent.s0 { left: 6vw; top: 24%; max-width: 72vw; font-size: clamp(2.6rem, 6vw, 6.4rem); font-weight: 900; letter-spacing: -0.045em; line-height: 0.92; color: #fff; }
+        .fx-psent.s0 .red { color: var(--red); }
+        .fx-psent.s1 { left: 6vw; top: 17%; }
+        .fx-psent.s2 { right: 6vw; top: 22%; text-align: right; }
+        .fx-psent.s3 { left: 6vw; bottom: 22%; }
+        .fx-psent.s4 { right: 6vw; bottom: 18%; text-align: right; }
+        .fx-pbig { position: absolute; z-index: 1; margin: 0; font-weight: 900; font-style: normal; letter-spacing: -0.05em; line-height: 0.8; white-space: nowrap; opacity: 0; will-change: transform, opacity;
+            color: transparent; -webkit-text-stroke: 1px rgba(255, 70, 55, 0.12); --lx: 0%;
+            background: radial-gradient(30% 85% at var(--lx) 55%, rgba(226, 30, 32, 0.95), rgba(143, 0, 0, 0.42) 45%, rgba(20, 0, 0, 0.18) 75%, transparent);
+            -webkit-background-clip: text; background-clip: text; }
+        .fx-pbig.b1 { right: -2vw; bottom: 4%; font-size: 15vw; }
+        .fx-pbig.b2 { left: -3vw; top: 34%; font-size: 30vw; }
+        .fx-pbig.b3 { right: 4vw; top: 30%; font-size: 40vw; }
+        .fx-pbig.b4 { left: 5vw; top: 12%; font-size: 40vw; }
+        /* the title slot: each project's name, with the card covering the bottom of the letters */
+        .fx-pname { position: absolute; left: 50%; top: var(--slot); margin: 0; white-space: nowrap; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.75; color: #fff;
+            transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
+        .fx-ptitle { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+        .fx-pname { transform: translate(-50%, calc(-25% + var(--ov, 0px))); opacity: 0; }
+        .fx-pname.is-on { transform: translate(-50%, calc(-100% + var(--ov, 0px))); opacity: 1; pointer-events: auto; transition-delay: 0.15s; }
+        .fx-prow { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+        .fx-pcard { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 10; display: block; overflow: hidden; border-radius: 6px; background: #0d0d0d; text-decoration: none; pointer-events: auto; opacity: 0;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1); will-change: transform, opacity, filter; }
+        .fx-pcard img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .fx-pcard .fx-browser { display: flex; flex-direction: column; height: 100%; border-radius: 0; box-shadow: none; }
+        .fx-pcard .fx-browser video { flex: 1 1 0; min-height: 0; aspect-ratio: auto; }
+        /* the landing: a flash of the light the tile came out of */
+        .fx-pcard::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 90% at 50% 50%, rgba(255, 90, 70, 0.5), rgba(211, 22, 27, 0.15)); opacity: 0; }
+        .fx-pcard.is-hit::after { animation: fx-hit 0.8s ease-out; }
+        @keyframes fx-hit { from { opacity: 1; } to { opacity: 0; } }
+        .fx-plabs { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+        .fx-plab { position: absolute; left: 0; top: 0; padding-left: 0.3em; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; white-space: nowrap; color: rgba(255, 255, 255, 0.5); opacity: 0; transition: color 0.4s ease; }
+        .fx-plab.is-c { color: var(--red); }
+        .fx-pinfo { position: absolute; left: 50%; top: 0; z-index: 6; width: min(30vw, 440px); transform: translateX(-50%); text-align: center; }
+        .fx-pbg, .fx-pstats, .fx-ptitle, .fx-prow, .fx-plabs { will-change: transform; }
+        .fx-pinfo .d { position: absolute; left: 0; right: 0; top: 0; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-pinfo .d.is-on { opacity: 1; transform: none; pointer-events: auto; transition-delay: 0.15s; }
+        .fx-pinfo p { margin: 0 0 14px; max-width: none; font-size: 0.92rem; line-height: 1.6; color: rgba(255, 255, 255, 0.85); }
+        .fx-pinfo a, .fx-pall { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
+        .fx-pall { position: absolute; z-index: 7; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 7) + var(--gap)); opacity: 0; pointer-events: none; transition: opacity 0.6s ease 0.3s; }
+        .is-landed .fx-pall { opacity: 1; pointer-events: auto; }
+        /* keyboard: the row's arrows, shown only when focused */
+        .fx-pnav { position: absolute; z-index: 7; top: 50%; width: 46px; height: 46px; margin-top: -23px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(6, 6, 6, 0.7); color: #fff; font: 600 1rem 'Inter', sans-serif; opacity: 0; pointer-events: none; }
+        .fx-pnav.prev { left: 2vw; } .fx-pnav.next { right: 2vw; }
+        .fx-pnav:focus-visible { opacity: 1; outline: 2px solid var(--red); outline-offset: 3px; }
+        @media (hover: hover) and (pointer: fine) { .fx-pstage.is-landed, .fx-pstage.is-landed * { cursor: none; } .fx-pstage.is-landed .fx-pall { cursor: pointer; } }
+        /* the live page in the Nitori card */
         .fx-browser { border-radius: 6px; overflow: hidden; background: #0d0d0d; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 60px rgba(211, 22, 27, 0.22); }
         .fx-browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #171717; }
         .fx-browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
         .fx-browser .url { margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
         .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
-        .fx-wticks { position: absolute; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 9) + var(--gap)); z-index: 4; display: flex; gap: 8px; }
-        .fx-wticks i { width: 22px; height: 3px; background: rgba(255, 255, 255, 0.2); transform: skewX(calc(var(--lean) * -1)); transition: background 0.4s ease, width 0.4s ease; }
-        .fx-wticks i.is-on { background: var(--red); width: 44px; }
-
+        /* reduced motion: the figures sit in a plain row above the projects */
         /* 6 · How I work: the beam leans with the logo */
         .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); --bp: 0; }
         .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 12); }
@@ -329,21 +334,18 @@
             .fx-sin .aside { font-size: 1.05rem; }
             .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
             .fx-pick { font-size: 8.4vw; }
-            .fx-words { transform: none; place-items: start center; padding-top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 8)); }
-            .fx-words .w { font-size: 17vw; }
-            .fx-card { width: 66vw; }
-            .fx-lists { left: 20px; right: 20px; bottom: calc(calc(var(--fvh, 1vh) * 7) + var(--gap)); width: auto; }
-            .fx-lists ul { text-align: left; }
-            .fx-ticks { left: auto; right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
-            .fx-results { padding: calc(var(--fvh, 1vh) * 10) 0; }
-            .fx-panel { padding: calc(var(--fvh, 1vh) * 8) 9vw; }
-            .fx-panel-in { grid-template-columns: 1fr; gap: calc(var(--fvh, 1vh) * 5); }
-            .fx-wname { left: 20px; right: 20px; width: auto; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + calc(var(--fvh, 1vh) * 7)); }
-            .fx-wdesc { left: 20px; right: 20px; width: auto; top: auto; bottom: calc(16% + var(--gap)); transform: none; height: 8em; }
-            .fx-wdesc .d { top: 0; transform: translateY(18px); } .fx-wdesc .d.is-on { transform: none; }
-            .fx-wdesc .d p { font-size: 0.86rem; }
-            .fx-wcard { width: 86vw; }
-            .fx-wticks { right: 20px; top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
+            .fx-psent { max-width: none; left: 20px; right: 20px; font-size: 1.05rem; }
+            .fx-psent.s0 { top: 24%; font-size: 12vw; }
+            .fx-psent.s1 { top: 17%; } .fx-psent.s2 { top: 31%; }
+            .fx-psent.s3 { top: auto; bottom: 25%; } .fx-psent.s4 { top: auto; bottom: 13%; }
+            .fx-pbig.b1 { font-size: 24vw; right: -6vw; bottom: 34%; }
+            .fx-pbig.b2 { font-size: 48vw; left: -6vw; top: 30%; }
+            .fx-pbig.b3 { font-size: 62vw; right: -2vw; top: 26%; }
+            .fx-pbig.b4 { font-size: 62vw; left: 0; top: 28%; }
+            .fx-pinfo { width: 86vw; }
+            .fx-pinfo p { font-size: 0.86rem; }
+            .fx-pall { right: auto; left: 50%; transform: translateX(-50%); bottom: calc(calc(var(--fvh, 1vh) * 4) + var(--gap)); }
+            .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-pr-body { height: auto; }
             .fx-beam { left: 6px; transform: none; }
@@ -353,8 +355,13 @@
             .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
             .fx-end .mark2 { width: 170vw; right: -70vw; }
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
-            .fx-wbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
         }
+        .fx-reduce .fx-pglow, .fx-reduce .fx-proom, .fx-reduce .fx-pbig { display: none; }
+        .fx-pstats.is-static { position: relative; inset: auto; background: var(--ink); padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 4); }
+        .fx-pstats.is-static .fx-psent { position: static; max-width: 60rem; margin-top: 2.4vh; text-align: left; }
+        .fx-pstats.is-static .fx-psent.s0 { margin: 0 0 4vh; }
+        .fx-pstats.is-static .w { opacity: 1; }
+        .fx-reduce .fx-pname, .fx-reduce .fx-pinfo .d { transition: none; }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
         .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
@@ -474,67 +481,53 @@
             </div>
         </section>
 
-        <!-- 3 · Skills -->
-        <section class="fx-skills" aria-label="What I do">
-            <div class="fx-kstage">
-                <div class="fx-floor" aria-hidden="true"></div>
-                <div class="fx-words" aria-hidden="true"><span class="w is-on">Research</span><span class="w">UI / UX</span><span class="w">Front-end</span></div>
-                <figure class="fx-card"><img src="assets/images/home/skill_research.webp" alt="Usability test of the CareerCourse prototype" loading="lazy"><figcaption>CareerCourse · usability testing</figcaption></figure>
-                <figure class="fx-card"><img src="assets/images/home/skill_uiux.webp" alt="One Shop design system: components for desktop and mobile" loading="lazy"><figcaption>One Shop · design system</figcaption></figure>
-                <figure class="fx-card"><img src="assets/images/home/skill_build.webp" alt="Live Nitori electric sofa guide built by Frank" loading="lazy"><figcaption>Nitori · built and shipped</figcaption></figure>
-                <div class="fx-lists">
-                    <ul class="is-on"><li>User interviews &amp; surveys</li><li>Usability testing</li><li>Personas &amp; journeys</li></ul>
-                    <ul><li>Wireframes &amp; prototypes</li><li>Design systems</li><li>High-fidelity UI</li></ul>
-                    <ul><li>HTML · CSS · JavaScript</li><li>Responsive layouts</li><li>Shipped on nitori-net.tw</li></ul>
-                </div>
-                <div class="fx-ticks" aria-hidden="true"><i class="is-on"></i><i></i><i></i></div>
-            </div>
-        </section>
-
-        <!-- 4 · Results -->
-        <section class="fx-results">
-            <div class="fx-panel">
-                <div class="fx-panel-in">
-                    <div><h2 class="display">Designed, built, and it <span class="blk">sells.</span></h2></div>
-                    <div class="fx-figs">
-                        <div class="fx-fig"><b class="odo" data-value="NT$1.67M">NT$1.67M</b><span class="lab">Father's Day campaign, in 17 days</span></div>
-                        <div class="fx-fig"><b class="odo" data-value="1.19%">1.19%</b><span class="lab">Mid-Autumn conversion, everyday kitchenware</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5 · Work -->
-        <section class="fx-work" id="work" aria-label="Selected work">
-            <div class="fx-wstage">
-                <div class="fx-wbg" aria-hidden="true">
-                    <img class="is-on" src="assets/images/home/explore_nitori.webp" alt="">
-                    <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
+        <!-- 3 · Proof: the results go back into the dark, and the work comes forward out of them -->
+        <section class="fx-proof" id="work" aria-label="Results and selected work">
+            <div class="fx-pstage">
+                <div class="fx-pbg" aria-hidden="true">
+                    <img src="assets/images/home/explore_nitori.webp" alt="" loading="lazy">
                     <img src="assets/images/home/explore_careercourse.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
                     <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
                 </div>
-                <div class="fx-wname" aria-hidden="true">
-                    <span class="n is-on">Shipped at Nitori<small>Professional · Nitori Taiwan</small></span>
-                    <span class="n">Smart Station<small>Interaction design · USYD</small></span>
-                    <span class="n">CareerCourse<small>EdTech site · USYD</small></span>
-                    <span class="n">One Shop<small>Mobile app · USYD</small></span>
+                <div class="fx-pglow" aria-hidden="true"></div>
+                <svg class="fx-proom" aria-hidden="true"></svg>
+                <div class="fx-pstats">
+                    <h2 class="fx-psent s0">Designed, built, and it <span class="red">sells.</span></h2>
+                    <p class="fx-psent s1">Three campaign pages brought in <em>NT$3.31M</em> in assisted revenue</p>
+                    <p class="fx-psent s2">and <em>635</em> orders.</p>
+                    <p class="fx-psent s3">That's <em>9</em> pages designed, coded and shipped</p>
+                    <p class="fx-psent s4">in <em>one year</em> at Nitori.</p>
+                    <b class="fx-pbig b1" aria-hidden="true">NT$3.31M</b>
+                    <b class="fx-pbig b2" aria-hidden="true">635</b>
+                    <b class="fx-pbig b3" aria-hidden="true">9</b>
+                    <b class="fx-pbig b4" aria-hidden="true">1</b>
                 </div>
-                <div class="fx-wcards">
-                    <a class="fx-wcard" href="nitori.html" data-cursor aria-label="Shipped at Nitori: open the series">
+                <div class="fx-ptitle" aria-hidden="true">
+                    <span class="fx-pname" data-cursor>Shipped at Nitori</span>
+                    <span class="fx-pname" data-cursor>CareerCourse</span>
+                    <span class="fx-pname" data-cursor>Smart Station</span>
+                    <span class="fx-pname" data-cursor>One Shop</span>
+                </div>
+                <div class="fx-prow">
+                    <a class="fx-pcard" href="nitori.html" aria-label="Shipped at Nitori: open the series">
                         <div class="fx-browser"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">nitori-net.tw/article/Sofa</span></div>
                             <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video></div>
                     </a>
-                    <a class="fx-wcard" href="project1.html" data-cursor aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
-                    <a class="fx-wcard" href="project2.html" data-cursor aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
-                    <a class="fx-wcard" href="project3.html" data-cursor aria-label="One Shop case study"><img src="assets/images/home/explore_oneshop.webp" alt="One Shop fashion shopping app" loading="lazy"></a>
+                    <a class="fx-pcard" href="project2.html" aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
+                    <a class="fx-pcard" href="project1.html" aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
+                    <a class="fx-pcard" href="project3.html" aria-label="One Shop case study"><img src="assets/images/home/explore_oneshop.webp" alt="One Shop fashion shopping app" loading="lazy"></a>
                 </div>
-                <div class="fx-wdesc">
-                    <div class="d is-on"><p>E-commerce pages for Nitori Taiwan's online store, from seasonal campaigns to product guides, designed and coded end to end.</p><a href="nitori.html">Open the series</a></div>
-                    <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study</a></div>
+                <div class="fx-plabs" aria-hidden="true"><span class="fx-plab">Shipped</span><span class="fx-plab">Research</span><span class="fx-plab">Interaction</span><span class="fx-plab">Design</span></div>
+                <div class="fx-pinfo" data-cursor>
+                    <div class="d"><p>E-commerce pages for Nitori Taiwan's online store, from seasonal campaigns to product guides, designed and coded end to end.</p><a href="nitori.html">Open the series</a></div>
                     <div class="d"><p>A STEM learning platform built to engage students in rural and remote areas.</p><a href="project2.html">View case study</a></div>
+                    <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study</a></div>
                     <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
                 </div>
-                <div class="fx-wticks" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></div>
+                <button type="button" class="fx-pnav prev" aria-label="Previous project">&larr;</button>
+                <button type="button" class="fx-pnav next" aria-label="Next project">&rarr;</button>
+                <a class="fx-pall" href="projects.html">All projects <span aria-hidden="true">&rarr;</span></a>
             </div>
         </section>
 
@@ -672,13 +665,18 @@
             });
             addEventListener('pageshow', () => { pickGo = -1; wmImgs.forEach((im) => im.classList.remove('is-go')); heroDirty = true; });
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
-            const skills = document.querySelector('.fx-skills'), kstage = skills.querySelector('.fx-kstage');
-            const kWords = [...skills.querySelectorAll('.fx-words .w')], kCards = [...skills.querySelectorAll('.fx-card')];
-            const kLists = [...skills.querySelectorAll('.fx-lists ul')], kTicks = [...skills.querySelectorAll('.fx-ticks i')];
-            const results = document.querySelector('.fx-results'), panel = results.querySelector('.fx-panel');
-            const work = document.querySelector('.fx-work'), wstage = work.querySelector('.fx-wstage');
-            const wCards = [...work.querySelectorAll('.fx-wcard')], wBgs = [...work.querySelectorAll('.fx-wbg img')];
-            const wNames = [...work.querySelectorAll('.fx-wname .n')], wDescs = [...work.querySelectorAll('.fx-wdesc .d')], wTicks = [...work.querySelectorAll('.fx-wticks i')];
+            const proof = document.querySelector('.fx-proof'), pstage = proof.querySelector('.fx-pstage');
+            const pStats = proof.querySelector('.fx-pstats'), pSents = [...proof.querySelectorAll('.fx-psent')], pBigs = [...proof.querySelectorAll('.fx-pbig')];
+            const pGlow = proof.querySelector('.fx-pglow'), pRoom = proof.querySelector('.fx-proom'), pInfo = proof.querySelector('.fx-pinfo');
+            const pCards = [...proof.querySelectorAll('.fx-pcard')], pNames = [...proof.querySelectorAll('.fx-pname')], pLabs = [...proof.querySelectorAll('.fx-plab')];
+            const pDescs = [...pInfo.querySelectorAll('.d')], pBgs = [...proof.querySelectorAll('.fx-pbg img')];
+            const PN = pCards.length;
+            /* the pinned timeline after the hero's wipe. Each sentence: its words come in [a, b], it goes out [c, d]; the first two
+               and the last two share a beat. Then the tile shows on the room's back wall, and drops into the row */
+            const SENT = [[0, 0.08, 0.13, 0.17], [0.15, 0.24, 0.37, 0.41], [0.25, 0.32, 0.37, 0.41], [0.4, 0.49, 0.62, 0.66], [0.5, 0.57, 0.62, 0.66]];
+            const TILE0 = 0.64, DROP0 = 0.7, LAND = 0.9;
+            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, bx: 0, by: 0, bw: 0, bh: 0, wipe: 0, len: 1 };
+            if (reduce) { proof.insertBefore(pStats, pstage); pStats.classList.add('is-static'); }
             const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
             const end = document.querySelector('.fx-end');
 
@@ -727,9 +725,11 @@
                 bandClips = bands.map((b, i) => `inset(${(i * SH / NB).toFixed(1)}px 0 ${(SH - (i + 1) * SH / NB).toFixed(1)}px 0)`);
                 streaking = null;
                 slantA = Math.round(SH * TAN);
-                // the skills section slides under the end of the hero, so the exit wipe reveals it already in place
-                skills.style.marginTop = reduce ? '' : `-${Math.round(SH + (hero.offsetHeight - SH) * (1 - WIPE0) + 4)}px`;
-                panel.style.setProperty('--a', `${Math.round(Math.min(panel.offsetHeight * TAN, innerWidth * (mobile ? 0.1 : 0.16)))}px`);
+                // the proof slides under the end of the hero, so the exit wipe reveals it already in place
+                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.len = SH * 4.2;
+                proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
+                proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.wipe + PG.len)}px`;
+                layoutProof();
                 // process: steps sit either side of the leaning beam
                 if (!mobile) {
                     const bw = prBody.clientWidth, bh = prBody.clientHeight, n = steps.length;
@@ -748,57 +748,10 @@
             const pinP = (sec) => { const r = sec.getBoundingClientRect(), st = sec.firstElementChild; return clamp((navH - r.top) / (r.height - st.offsetHeight)); };
             const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
 
-            let kStep = -1, wStep = -1, ticking = false;
+            let ticking = false;
             function frame() {
                 ticking = false;
                 const vh = VH;
-
-                /* ---- skills: three steps; cards travel up along the 16.5° lean ---- */
-                const kp = pinP(skills);
-                kstage.style.setProperty('--p', kp.toFixed(4));
-                const ks = Math.min(2, Math.floor(kp * 3));
-                if (ks !== kStep) { kStep = ks; setOn(kWords, ks); setOn(kLists, ks); setOn(kTicks, ks); }
-                const D = vh * 0.78, bx = mobile ? 0 : innerWidth * 0.17, by = mobile ? vh * 0.05 : vh * 0.02;
-                kCards.forEach((c, i) => {
-                    let o = kp * 3 - i - 0.5; if (reduce) o = i === ks ? 0 : 9;
-                    const ao = Math.abs(o);
-                    c.style.opacity = clamp(1.7 - ao * 1.9).toFixed(3);
-                    c.style.transform = `translate3d(calc(-50% + ${(bx + o * D * VX).toFixed(1)}px), calc(-50% + ${(by + o * D * VY).toFixed(1)}px), ${(-ao * 420).toFixed(0)}px) rotateX(${(o * -12).toFixed(2)}deg)`;
-                });
-
-                /* ---- results panel wipes in ---- */
-                const rr = results.getBoundingClientRect();
-                const rp = clamp((vh - rr.top) / (vh + rr.height));
-                results.style.setProperty('--p', rp.toFixed(3));
-                const reveal = reduce ? 1 : ease(clamp((rp - 0.12) / 0.3));
-                panel.style.setProperty('--r', reveal.toFixed(4));
-                if (reveal > 0.85) rollOdometers();
-
-                /* ---- work: one project per step, travelling along the lean ---- */
-                const n = wCards.length, wp = pinP(work);
-                wstage.style.setProperty('--wp', wp.toFixed(3));
-                const ws = Math.min(n - 1, Math.floor(wp * n));
-                if (ws !== wStep) { wStep = ws; setOn(wBgs, ws); setOn(wNames, ws); setOn(wDescs, ws); setOn(wTicks, ws); }
-                const wr = work.getBoundingClientRect();
-                playClip(ws === 0 && wr.top < vh && wr.bottom > 0);
-                let mShift = 0, mFit = 1;
-                if (mobile) {
-                    const st = wstage.getBoundingClientRect();
-                    const top = work.querySelector('.fx-wname .n.is-on').getBoundingClientRect().bottom + 16;
-                    const bottom = work.querySelector('.fx-wdesc .d.is-on').getBoundingClientRect().top - 16;
-                    mFit = Math.min(1, (bottom - top) / wCards[ws].offsetHeight);
-                    mShift = (top + bottom) / 2 - (st.top + st.height / 2);
-                }
-                const WD = vh * (mobile ? 0.36 : 0.56);
-                wCards.forEach((c, i) => {
-                    let o = wp * n - i - 0.5; if (reduce) o = i === ws ? 0 : (i < ws ? -1 : 1);
-                    const ao = Math.min(Math.abs(o), 1.6), oc = Math.sign(o) * Math.min(Math.abs(o), 1);
-                    c.style.opacity = (mobile ? clamp(1 - ao * 2) : clamp(1.25 - ao * 0.75)).toFixed(3);
-                    c.style.transform = `translate3d(calc(-50% + ${(oc * WD * VX).toFixed(1)}px), calc(-50% + ${(mShift + oc * WD * VY).toFixed(1)}px), ${(-ao * 380).toFixed(0)}px) rotateX(${(o * 22).toFixed(2)}deg) scale(${((1 - Math.min(ao, 1) * 0.6) * mFit).toFixed(3)})`;
-                    c.style.zIndex = String(10 - Math.round(ao * 4));
-                    c.style.pointerEvents = ao < 0.5 ? 'auto' : 'none';
-                    c.tabIndex = ao < 0.5 ? 0 : -1;
-                });
 
                 /* ---- process: the beam grows; steps come forward as it reaches them ---- */
                 const pb = prBody.getBoundingClientRect();
@@ -1067,7 +1020,7 @@
             /* hero: mouse depth on desktop (each layer moves by a different amount) */
             if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
                 let tx = 0, ty = 0, cx = 0, cy = 0;
-                stage.addEventListener('pointermove', (e) => { const r = stage.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width) * 2 - 1; ty = ((e.clientY - r.top) / r.height) * 2 - 1; });
+                stage.addEventListener('pointermove', (e) => { const r = stage.getBoundingClientRect(); tx = (((e.clientX - r.left) / r.width) * 2 - 1) * 0.5; ty = (((e.clientY - r.top) / r.height) * 2 - 1) * 0.5; });
                 stage.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
                 const loop = () => {
                     cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
@@ -1079,7 +1032,7 @@
             }
 
             /* Nitori card: live pages playing while it's in front */
-            const vid = work.querySelector('video'), url = work.querySelector('.fx-browser .url');
+            const vid = proof.querySelector('video'), url = proof.querySelector('.fx-browser .url');
             const clips = [
                 ['assets/images/nitori/sofa/04_desk', 'nitori-net.tw/article/Sofa'],
                 ['assets/images/nitori/electricsofa/04_desk', 'nitori-net.tw/article/Electricsofa'],
@@ -1095,41 +1048,211 @@
                 if (on) { if (!vid.getAttribute('src')) load(0); vid.play().catch(() => {}); } else vid.pause();
             }
 
-            /* cursor: a red dot that opens to "View" over project cards (desktop) */
+            /* cursor: a red dot that opens to "View" over the centred project, and turns into the row's arrows either side of
+               the screen's centre line (desktop) */
             const cur = document.querySelector('.fx-cursor');
             if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                let x = 0, y = 0, cx2 = 0, cy2 = 0;
-                addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; cur.classList.toggle('is-view', !!e.target.closest('[data-cursor]')); }, { passive: true });
+                let x = 0, y = 0, cx2 = 0, cy2 = 0, curMode = '';
+                const aim = (el) => {
+                    if (!el || !el.closest) return;
+                    const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pall, .fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
+                    if (mode === curMode) return; curMode = mode;
+                    cur.classList.toggle('is-view', mode === 'view'); cur.classList.toggle('is-arrow', mode === 'prev' || mode === 'next');
+                    cur.textContent = mode === 'prev' ? '←' : mode === 'next' ? '→' : 'VIEW';
+                };
+                addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; aim(e.target); }, { passive: true });
+                addEventListener('scroll', () => aim(document.elementFromPoint(x, y)), { passive: true });
+                proof.addEventListener('fx-land', () => aim(document.elementFromPoint(x, y)));
                 const loop2 = () => { cx2 += (x - cx2) * 0.2; cy2 += (y - cy2) * 0.2; cur.style.transform = `translate3d(${cx2.toFixed(1)}px, ${cy2.toFixed(1)}px, 0)`; requestAnimationFrame(loop2); };
                 loop2();
             } else cur.remove();
 
-            /* odometer figures */
-            const odoSets = [...document.querySelectorAll('.odo')].map((el, si) => {
-                const value = el.dataset.value; el.setAttribute('aria-label', value);
-                if (reduce) return [];
-                el.textContent = '';
-                const strips = []; let k = 0;
-                [...value].forEach((ch) => {
-                    if (/\d/.test(ch)) {
-                        const d = document.createElement('span'); d.className = 'odo-d'; d.setAttribute('aria-hidden', 'true');
-                        const st = document.createElement('span'); st.className = 'odo-strip';
-                        for (let t = 0; t < 2 + k; t++) for (let m = 0; m < 10; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
-                        for (let m = 0; m <= +ch; m++) st.appendChild(Object.assign(document.createElement('span'), { textContent: m }));
-                        st.style.setProperty('--dur', `${1.5 + k * 0.35}s`); st.style.setProperty('--delay', `${si * 0.2 + k * 0.06}s`);
-                        st.dataset.stop = st.children.length - 1; d.appendChild(st); el.appendChild(d); strips.push(st); k++;
-                    } else {
-                        const c = document.createElement('span'); c.className = /[0-9.,]/.test(ch) ? 'odo-ch' : 'odo-ch odo-unit';
-                        c.setAttribute('aria-hidden', 'true'); c.textContent = ch; el.appendChild(c);
-                    }
-                });
-                return strips;
-            });
-            let rolled = false;
-            function rollOdometers() {
-                if (rolled) return; rolled = true;
-                odoSets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
+            /* ---------- proof: a dark room of thin red lines. The results come in as a sentence, word by word, each part with
+               a big figure mostly lost in the dark; then the Nitori work shows on the room's back wall, lit from behind, and
+               drops all the way into the row as the camera moves down. Then the row: the centre is the active project ---------- */
+            function fitType(el, maxW, maxFs) {
+                el.style.fontSize = '100px';
+                const fs = Math.min(maxFs, 100 * maxW / Math.max(1, el.offsetWidth));
+                el.style.fontSize = `${fs.toFixed(1)}px`;
+                return fs;
             }
+            function layoutProof() {
+                const sw = PG.sw = pstage.clientWidth, sh = PG.sh = pstage.offsetHeight;
+                PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 600); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.022);
+                pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
+                const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
+                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W * 1.2, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
+                // the room: a back wall in the middle, its edges running out past the screen, and frames receding toward us
+                const bw = PG.bw = mobile ? sw * 0.5 : sw * 0.24, bh = PG.bh = bw * 0.7, bx = PG.bx = sw / 2, by = PG.by = sh * 0.4;
+                const R = (m) => { const w = bw / 2 * m, h = bh / 2 * m; return `M${(bx - w).toFixed(1)} ${(by - h).toFixed(1)}H${(bx + w).toFixed(1)}V${(by + h).toFixed(1)}H${(bx - w).toFixed(1)}Z`; };
+                const ray = (x, y) => `M${x.toFixed(1)} ${y.toFixed(1)}L${(bx + (x - bx) * 8).toFixed(1)} ${(by + (y - by) * 8).toFixed(1)}`;
+                let d = `<path class="wall" pathLength="1" d="${R(1)}"/>`;
+                [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([u, v]) => { d += `<path pathLength="1" d="${ray(bx + u * bw / 2, by + v * bh / 2)}"/>`; });
+                [0.2, 0.4, 0.6, 0.8].forEach((f) => { d += `<path pathLength="1" d="${ray(bx - bw / 2 + bw * f, by + bh / 2)}"/>`; });
+                [1.8, 3, 5].forEach((m) => { d += `<path pathLength="1" d="${R(m)}"/>`; });
+                pRoom.setAttribute('viewBox', `0 0 ${sw} ${sh}`); pRoom.innerHTML = d;
+            }
+            // the sentences come in word by word, each word at its own height
+            const pWords = pSents.map((p, si) => {
+                const words = [];
+                const walk = (node) => [...node.childNodes].forEach((c) => {
+                    if (c.nodeType === 3) {
+                        const frag = document.createDocumentFragment();
+                        c.textContent.split(/(\s+)/).forEach((part) => {
+                            if (!part) return;
+                            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+                            const w = document.createElement('span'); w.className = 'w'; w.textContent = part; frag.appendChild(w); words.push(w);
+                        });
+                        c.replaceWith(frag);
+                    } else if (c.nodeType === 1) walk(c);
+                });
+                walk(p);
+                return words.map((w, j) => ({ w, jy: si === 0 ? 0 : Math.sin(j * 12.9898 + si * 78.233) * 0.28 }));
+            });
+            let tv = 0, rowPos = 0, rowTarget = 0, pLanded = false, pKey = -2, pLastY = scrollY, pLastT = 0, pOn = false, pJump = true;
+            const pBgWrap = proof.querySelector('.fx-pbg'), pRow = proof.querySelector('.fx-prow'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle');
+            const wrap = (v) => ((v % PN) + PN) % PN;
+            const pIdx = () => wrap(Math.round(rowTarget));
+            const goHome = () => { rowTarget = Math.round(rowPos / PN) * PN; };
+            const pStep = (d) => { if (pLanded) rowTarget = Math.round(rowTarget) + d; };
+            const place = (el, x, y, s, extra = '') => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%) ${extra}scale(${s.toFixed(4)})`; };
+            const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+            function renderProof(now) {
+                const dt = clamp((now - (pLastT || now)) / 1000, 0, 0.05) || 1 / 60; pLastT = now;
+                const k = (r) => 1 - Math.exp(-dt * r);
+                const r = proof.getBoundingClientRect(), sy = scrollY, up = sy < pLastY - 0.5; pLastY = sy;
+                let t = reduce ? 1 : clamp((-r.top - PG.wipe) / PG.len);
+                if (pJump) { pJump = false; tv = t; if (t < LAND) rowPos = rowTarget = 0; }
+                // scrolling back up into the pin: the row first glides home to Nitori, and only then can the tile lift
+                if (up && t < 0.999 && pIdx() !== 0) goHome();
+                const home = pIdx() === 0 && Math.abs(rowPos - rowTarget) < 0.01;
+                if (pLanded && !home) t = Math.max(t, LAND);
+                tv += (t - tv) * k(10); if (Math.abs(t - tv) < 1e-4) tv = t;
+                rowPos += (rowTarget - rowPos) * (reduce ? 1 : k(7));
+                if (Math.abs(rowTarget - rowPos) < 1e-3) { rowPos = rowTarget = wrap(rowTarget); }
+                const landed = reduce || tv >= LAND - 1e-4;
+                if (landed !== pLanded) {
+                    pLanded = landed; pstage.classList.toggle('is-landed', landed);
+                    if (landed && !reduce) { pCards[0].classList.remove('is-hit'); void pCards[0].offsetWidth; pCards[0].classList.add('is-hit'); }
+                    proof.dispatchEvent(new Event('fx-land'));
+                }
+                const idx = pIdx(), key = landed ? idx : -1;
+                if (key !== pKey) {
+                    pKey = key;
+                    [pNames, pDescs, pBgs].forEach((list) => list.forEach((el, i) => el.classList.toggle('is-on', i === key)));
+                    pLabs.forEach((el, i) => el.classList.toggle('is-c', i === key));
+                    pCards.forEach((c, i) => { c.toggleAttribute('data-cursor', i === key); c.tabIndex = i === key ? 0 : -1; });
+                    pDescs.forEach((d, i) => { d.querySelector('a').tabIndex = i === key ? 0 : -1; });
+                }
+
+                const W = PG.W, H = PG.H, cx = PG.sw / 2, sh = PG.sh;
+                const cardY = (sh - GAP) / 2 + sh * 0.05;
+                pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
+                pInfo.style.top = `${(cardY + H / 2 + 60).toFixed(1)}px`;
+
+                // the drop: the camera moves down, so the room rises away and the row comes up from below with its middle empty;
+                // the tile comes off the back wall and falls the whole way into the gap
+                const ap = reduce ? 1 : ease(clamp((tv - TILE0) / (DROP0 - TILE0)));
+                const dp = reduce ? 1 : clamp((tv - DROP0) / (LAND - DROP0));
+                const roomShift = -sh * 0.42 * ease(dp), rowOff = landed ? 0 : (1 - outCubic(dp)) * sh * 0.78;
+
+                // depth by scroll only: the wipe carries the stats and the room in (the room, being farther, less); the big
+                // figures drift faster than the words; when the pin lets go, the light behind lags and the text leads
+                const enter = reduce ? 1 : ease(clamp(-r.top / Math.max(1, PG.wipe)));
+                const exit = reduce ? 0 : clamp((-r.top - PG.wipe - PG.len) / sh);
+                const shift = (el, x, y) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`; };
+                shift(pBgWrap, 0, exit * 0.4 * sh);
+                pBgWrap.style.opacity = (1 - exit * 0.85).toFixed(3);   // the colour dissolves into the dark the next section rises from
+                shift(pStats, (1 - enter) * PG.sw * 0.14, 0);
+                shift(pTitle, 0, exit * 0.12 * sh);
+                shift(pRow, 0, 0);
+                shift(pLabWrap, 0, -exit * 0.1 * sh);
+                pInfo.style.transform = `translate3d(-50%, ${(-exit * 0.1 * sh).toFixed(1)}px, 0)`;
+
+                if (!reduce) {
+                    // the room draws itself in, then rises away as the camera drops
+                    pRoom.style.setProperty('--rd', (1 - ease(clamp(tv / 0.1))).toFixed(4));
+                    pRoom.style.transform = `translate3d(${((1 - enter) * PG.sw * 0.06).toFixed(1)}px, ${roomShift.toFixed(1)}px, 0)`;
+                    pRoom.style.opacity = (1 - 0.85 * ease(dp)).toFixed(3);
+                    // the sentences, word by word; the big figure that goes with each is swept by a light, the rest left dark
+                    SENT.forEach(([a, b, c, d2], si) => {
+                        const ws = pWords[si], n = ws.length, span = b - a, o = clamp((tv - c) / (d2 - c));
+                        ws.forEach(({ w, jy }, j) => {
+                            const wa = ease(clamp((tv - a - span * 0.6 * (n > 1 ? j / (n - 1) : 0)) / (span * 0.4)));
+                            const op = wa * (1 - o);
+                            w.style.opacity = op.toFixed(3);
+                            if (op <= 0.001) return;
+                            const bl = (1 - wa) * 8 + o * 6;
+                            w.style.filter = bl > 0.05 ? `blur(${bl.toFixed(1)}px)` : '';
+                            w.style.transform = `translate3d(0, calc(${jy.toFixed(3)}em + ${((1 - wa) * 16 - o * 18).toFixed(1)}px), 0)`;
+                        });
+                        const big = pBigs[si - 1];
+                        if (!big) return;
+                        const u = clamp((tv - a) / (d2 - a));
+                        big.style.opacity = (clamp((tv - a) / 0.05) * (1 - o)).toFixed(3);
+                        big.style.setProperty('--lx', `${lerp(-15, 115, u).toFixed(1)}%`);
+                        big.style.transform = `translate3d(0, ${lerp(0.1, -0.1, u) * sh}px, 0)`;
+                    });
+                }
+
+                // the tile: on the back wall, dark and lit from behind; then the fall, lighting up only as it lands
+                const sBack = PG.bw * 0.62 / W, startY = PG.by + roomShift, fall = dp * dp;
+                const tx = cx, ty = lerp(startY, cardY, fall), st = lerp(sBack, 1, 0.5 - 0.5 * Math.cos(Math.PI * dp));
+                const lightOn = ease(clamp((dp - 0.5) / 0.5));
+                if (!reduce) {
+                    const gI = ap * (1 - lightOn);
+                    pGlow.style.opacity = gI.toFixed(3);
+                    if (gI > 0.002) pGlow.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) translate(-50%, -50%) scale(${(W * st * 2.1 / 100).toFixed(3)}, ${(H * st * 2.6 / 100).toFixed(3)})`;
+                }
+
+                // the row: centre in colour, neighbours grey, the fourth peeking in; it loops, fading out at either end
+                const rowVis = landed ? 1 : clamp(dp * 1.5);
+                const s1 = 0.9 * W + PG.g, s2 = 0.8 * W + PG.g;
+                pCards.forEach((c, i) => {
+                    let o = wrap(i - rowPos); if (o >= 2.5) o -= PN;
+                    const ao = Math.abs(o), sd = Math.sign(o), grey = clamp(ao);
+                    let x = cx + (ao <= 1 ? o * s1 : sd * (s1 + (ao - 1) * s2)), y = cardY + rowOff, sc = 1 - 0.2 * Math.min(1, ao), rx = 0, bright = 1;
+                    let op = o < -1 ? clamp(1 - (-1 - o) / 0.5) : o > 2 ? clamp(1 - (o - 2) / 0.5) * 0.5 : o > 1 ? lerp(1, 0.5, o - 1) : 1;
+                    if (i === 0 && !landed) { x = tx; y = ty; sc = st; rx = 20 * Math.sin(Math.PI * dp); bright = lerp(0.28, 1, lightOn); op = ap; }
+                    else if (ao > 0.5) op *= rowVis;
+                    c.style.opacity = op.toFixed(3);
+                    c.style.visibility = op < 0.003 ? 'hidden' : '';
+                    c.style.filter = bright < 1 ? `brightness(${bright.toFixed(3)})` : grey > 0.01 ? `grayscale(${grey.toFixed(3)}) brightness(${(1 - grey * 0.4).toFixed(3)})` : '';
+                    c.style.zIndex = String(10 - Math.round(ao * 2));
+                    place(c, x, y, sc, rx > 0.01 ? `perspective(1200px) rotateX(${rx.toFixed(2)}deg) ` : '');
+                    const lb = pLabs[i];
+                    lb.style.opacity = (i === 0 && !landed ? 0 : op).toFixed(3);
+                    lb.style.transform = `translate3d(${x.toFixed(1)}px, ${(cardY + rowOff + H / 2 + 22).toFixed(1)}px, 0) translate(-50%, 0)`;
+                });
+                playClip(pOn && landed && idx === 0);
+            }
+            new IntersectionObserver(([en]) => { pOn = en.isIntersecting; if (pOn) pJump = true; else playClip(false); }).observe(proof);
+            const proofLoop = (t) => { if (pOn) renderProof(t); requestAnimationFrame(proofLoop); };
+            requestAnimationFrame(proofLoop);
+            // desktop: either side of the centre line steps the row; the centred project (and its name and line) opens it
+            pstage.addEventListener('click', (e) => {
+                if (!pLanded || pSwiped || e.target.closest('.fx-pall, .fx-pnav')) return;
+                const a = e.target.closest('a');
+                if (e.target.closest('[data-cursor]')) { if (!a) location.href = pCards[pIdx()].href; return; }
+                if (a) e.preventDefault();
+                pStep(e.clientX < innerWidth / 2 ? -1 : 1);
+            });
+            proof.querySelector('.fx-pnav.prev').addEventListener('click', () => pStep(-1));
+            proof.querySelector('.fx-pnav.next').addEventListener('click', () => pStep(1));
+            pstage.addEventListener('keydown', (e) => {
+                if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+                e.preventDefault(); pStep(e.key === 'ArrowLeft' ? -1 : 1);
+                if (pCards.includes(document.activeElement)) pCards[pIdx()].focus({ preventScroll: true });
+            });
+            // phones: a sideways swipe; vertical drags keep scrolling the page
+            let pSx = null, pSy = 0, pSwiped = false;
+            pstage.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') { pSx = e.clientX; pSy = e.clientY; } });
+            pstage.addEventListener('pointercancel', () => { pSx = null; });
+            pstage.addEventListener('pointerup', (e) => {
+                if (pSx === null) return;
+                const dx = e.clientX - pSx, dy = e.clientY - pSy; pSx = null;
+                if (pLanded && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) { pSwiped = true; pStep(dx < 0 ? 1 : -1); setTimeout(() => { pSwiped = false; }, 350); }
+            });
 
             /* ---------- opening: a soft red light is swept down behind the mark like a torch, so the mark only shows as a dark
                shape against the glow with its edges catching the light, and stays hidden wherever the glow isn't. The pass follows the load (the figure sits where the scroll hint will be).
