@@ -1141,13 +1141,12 @@
                     const a = o.Q[i - 1], b = o.Q[i % o.Q.length], t = clamp((d - o.C[i - 1]) / (o.C[i] - o.C[i - 1] || 1));
                     return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
                 };
-                // organic: points catch at different corners and moments, each easing up to its own pace, and each runs
-                // until it meets line already drawn, so they finish one by one ([letter, corner, direction, catches at, pace])
+                // four points leave the mark's outer corners together and all run anticlockwise on screen; each runs on
+                // until it reaches the next one's corner ([letter, corner])
                 const vtx = (o, [x, y]) => o.C[Math.max(0, o.Q.findIndex((q) => q[0] === x && q[1] === y))];
-                const H = [
-                    [0, [52, 1569.04], 1, 0, 1], [0, [52, 1569.04], -1, 0.05, 0.82], [0, [1492.7, 416], 1, 0.32, 0.95],
-                    [1, [1924, 416], 1, 0.12, 1.12], [1, [1924, 416], -1, 0.17, 0.88], [1, [1270.78, 1207.3], -1, 0.44, 0.78], [1, [818.61, 886.07], 1, 0.62, 1],
-                ].map(([li, c, dir, t0, v]) => ({ o: LET[li], p0: vtx(LET[li], c), dir, t0, v, M: Infinity, T: 0, d: 0 }));
+                const acw = (o) => { let a = 0; o.Q.forEach((p, i) => { const q = o.Q[(i + 1) % o.Q.length]; a += p[0] * q[1] - q[0] * p[1]; }); return a > 0 ? -1 : 1; };   // y runs down
+                const H = [[0, [388, 416]], [0, [52, 1569.04]], [1, [1924, 416]], [1, [1572.87, 1569.04]]]
+                    .map(([li, c]) => ({ o: LET[li], p0: vtx(LET[li], c), dir: acw(LET[li]), t0: 0, v: 1, M: Infinity, T: 0, d: 0 }));
                 const SP = 2400, EASE_IN = 0.25;   // outline units per unit of trace time; how long each point takes to reach its pace
                 const dist = (h, tau) => { const u = tau - h.t0; return u <= 0 ? 0 : h.v * SP * (u < EASE_IN ? u * u / (2 * EASE_IN) : u - EASE_IN / 2); };
                 const wrap = (x, L) => ((x % L) + L) % L;
