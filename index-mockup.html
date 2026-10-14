@@ -154,9 +154,6 @@
         .fx-switch span { color: var(--dim); padding: 0 6px 0 10px; }
         .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
         .fx-switch a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-        /* holding the logo is the phone's way in, so the long press shouldn't open the link/image menu */
-        .fx .navbar .logo { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-        .fx .navbar .logo img { -webkit-user-drag: none; }
         .fx-switch a.is-on { background: var(--red); color: #fff; }
         .fx-light { --pan: 0px; }
         .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
@@ -626,27 +623,16 @@
             const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
             stage.classList.add('f-' + FIN);
             document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
-            // the switch stays out of sight until Shift+F; once used it stays up for the session, across the reload a finish causes
+            // the switch stays out of sight until Shift+F (or ?switch in the URL, for phones); once used it stays up for the session
             const fxSwitch = document.querySelector('.fx-switch');
             const keepSwitch = (on) => { try { on ? sessionStorage.setItem('fw-switch', '1') : sessionStorage.removeItem('fw-switch'); } catch (e) {} };
+            if (new URLSearchParams(location.search).has('switch')) keepSwitch(true);
             try { if (sessionStorage.getItem('fw-switch')) fxSwitch.classList.add('is-shown'); } catch (e) {}
             fxSwitch.addEventListener('click', () => keepSwitch(true));
             addEventListener('keydown', (e) => {
                 if (e.key !== 'F' || !e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
                 keepSwitch(fxSwitch.classList.toggle('is-shown'));
             });
-            // phones have no Shift+F: holding the logo for half a second does the same, and that press doesn't follow the link
-            const logo = document.querySelector('.navbar .logo');
-            let holdT = 0, holding = false, held = false;
-            const holdStop = () => { clearTimeout(holdT); holding = false; };
-            logo.addEventListener('pointerdown', (e) => {
-                if (e.button !== 0) return;
-                held = false; holding = true;
-                holdT = setTimeout(() => { holding = false; held = true; keepSwitch(fxSwitch.classList.toggle('is-shown')); }, 500);
-            });
-            ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => logo.addEventListener(ev, holdStop));
-            logo.addEventListener('click', (e) => { if (held) { e.preventDefault(); held = false; } });
-            logo.addEventListener('contextmenu', (e) => { if (holding || held) e.preventDefault(); });
             const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
