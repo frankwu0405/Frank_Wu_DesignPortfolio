@@ -77,7 +77,7 @@
             display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
             transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
         .fx-cursor.is-view { width: 84px; height: 84px; margin: -42px 0 0 -42px; font-size: 0.66rem; opacity: 1; }
-        .fx-cursor.is-arrow { width: 64px; height: 64px; margin: -32px 0 0 -32px; font-size: 1.2rem; letter-spacing: 0; opacity: 1; }
+        .fx-cursor.is-arrow { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: transparent; font-size: 1.6rem; font-weight: 300; letter-spacing: 0; opacity: 1; }
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
@@ -211,8 +211,9 @@
         .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
         .fx-scene.is-static .fx-pick { pointer-events: auto; }
 
-        /* 3 · Proof (pinned): the results, one at a time, each a dark shape against a red light that passes back into
-           the dark along the lean; they meet in one point far back, and the Nitori work comes forward out of it */
+        /* 3 · Proof (pinned): the statement's red carries on. The results stack up one over the other in rows between
+           hairlines, each coming into focus; then the red closes in to a single tile, the Nitori wordmark, which turns into
+           the live page and settles into the row's empty slot as the row comes up underneath it */
         .fx-proof { position: relative; z-index: 1; }
         .fx-pstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink); touch-action: pan-y; --cw: 30vw; --slot: 30%; }
         .fx-pbg { position: absolute; inset: -10% -6%; z-index: 0; pointer-events: none; }
@@ -220,71 +221,58 @@
         .fx-pbg img.is-on { opacity: 1; }
         .fx-pstage::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
             background: linear-gradient(to bottom, transparent 70%, var(--ink)), radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); }
-        /* the backlight behind the tile on the room's back wall; it follows the tile down as it falls */
-        .fx-pglow { position: absolute; left: 0; top: 0; z-index: 2; width: 100px; height: 100px; border-radius: 50%; pointer-events: none; opacity: 0; will-change: transform, opacity;
-            background: radial-gradient(closest-side, rgba(236, 34, 34, 0.9), rgba(200, 16, 22, 0.5) 45%, rgba(143, 0, 0, 0.16) 72%, transparent); }
-        /* the room: thin red perspective lines converging on a back wall, drawn in as the stage opens */
-        .fx-proom { position: absolute; left: 0; top: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; overflow: visible; will-change: transform, opacity; }
-        .fx-proom path { fill: none; stroke: rgba(211, 22, 27, 0.32); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 1 1; stroke-dashoffset: var(--rd, 1); }
-        .fx-proom .wall { stroke: rgba(211, 22, 27, 0.6); }
-        /* the stats: sentences that emerge word by word, each with a big figure elsewhere, mostly lost in the dark */
-        .fx-pstats { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-        .fx-psent { position: absolute; z-index: 2; margin: 0; max-width: 36vw; font-size: clamp(1.15rem, 1.9vw, 1.9rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.65; color: var(--red); }
-        .fx-psent em { font-style: normal; color: #fff; }
-        .fx-psent .w { display: inline-block; opacity: 0; will-change: transform, opacity, filter; }
-        .fx-psent.s0 { left: 6vw; top: 24%; max-width: 72vw; font-size: clamp(2.6rem, 6vw, 6.4rem); font-weight: 900; letter-spacing: -0.045em; line-height: 0.92; color: #fff; }
-        .fx-psent.s0 .red { color: var(--red); }
-        .fx-psent.s1 { left: 6vw; top: 17%; }
-        .fx-psent.s2 { right: 6vw; top: 22%; text-align: right; }
-        .fx-psent.s3 { left: 6vw; bottom: 22%; }
-        .fx-psent.s4 { right: 6vw; bottom: 18%; text-align: right; }
-        .fx-pbig { position: absolute; z-index: 1; margin: 0; font-weight: 900; font-style: normal; letter-spacing: -0.05em; line-height: 0.8; white-space: nowrap; opacity: 0; will-change: transform, opacity;
-            color: transparent; -webkit-text-stroke: 1px rgba(255, 70, 55, 0.12); --lx: 0%;
-            background: radial-gradient(30% 85% at var(--lx) 55%, rgba(226, 30, 32, 0.95), rgba(143, 0, 0, 0.42) 45%, rgba(20, 0, 0, 0.18) 75%, transparent);
-            -webkit-background-clip: text; background-clip: text; }
-        .fx-pbig.b1 { right: -2vw; bottom: 4%; font-size: 15vw; }
-        .fx-pbig.b2 { left: -3vw; top: 34%; font-size: 30vw; }
-        .fx-pbig.b3 { right: 4vw; top: 30%; font-size: 40vw; }
-        .fx-pbig.b4 { left: 5vw; top: 12%; font-size: 40vw; }
+        .fx-pred { position: absolute; inset: 0; z-index: 6; background: var(--deep); }
+        .fx-pstats { position: absolute; inset: 0; }
+        .fx-phead { position: absolute; right: 6vw; top: calc(var(--navbar-height) + var(--fvh, 1vh) * 7); margin: 0; max-width: 32vw; text-align: right; font-size: clamp(1.4rem, 2.4vw, 2.5rem);
+            font-weight: 900; text-transform: uppercase; letter-spacing: -0.035em; line-height: 0.95; color: #fff; }
+        .fx-phead .blk { color: #120000; }
+        .fx-pres-list { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+        .fx-pres { position: absolute; left: 2.5vw; right: 2.5vw; top: 0; height: var(--rh, 18vh); box-sizing: border-box; padding: 0 3.5vw; display: flex; align-items: center; justify-content: space-between; gap: 4vw;
+            border-top: 1px solid rgba(0, 0, 0, 0.5); opacity: 0; will-change: transform, opacity; }
+        .fx-pres:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.5); }
+        .fx-pres b { font-size: calc(var(--rh, 18vh) * 0.66); font-weight: 300; font-style: normal; letter-spacing: -0.055em; line-height: 1; white-space: nowrap; color: #120000; will-change: filter; }
+        .fx-pres p { margin: 0; max-width: 30vw; font-size: clamp(1rem, 1.45vw, 1.35rem); line-height: 1.45; color: rgba(255, 255, 255, 0.92); }
+        .fx-pres .w { display: inline-block; opacity: 0; will-change: opacity, filter, transform; }
+        /* the wordmark, showing on the red as it closes in to the tile */
+        .fx-pmark { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 0.4); opacity: 0; pointer-events: none; }
+        /* the Nitori tile's first face, the same red and wordmark; it lifts away to show the live page */
+        .fx-pface { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; background: var(--deep); }
+        .fx-pcard .fx-pface img { width: 40%; height: auto; object-fit: contain; transform: translateY(calc(var(--mo, 0) * -14%)) scale(calc(1 - var(--mo, 0) * 0.2)); }
         /* the title slot: each project's name, with the card covering the bottom of the letters */
         .fx-pname { position: absolute; left: 50%; top: var(--slot); margin: 0; white-space: nowrap; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.75; color: #fff;
-            transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
-        .fx-ptitle { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
-        .fx-pname { transform: translate(-50%, calc(-25% + var(--ov, 0px))); opacity: 0; }
+            transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; transform: translate(-50%, calc(-25% + var(--ov, 0px))); opacity: 0; }
         .fx-pname.is-on { transform: translate(-50%, calc(-100% + var(--ov, 0px))); opacity: 1; pointer-events: auto; transition-delay: 0.15s; }
+        .fx-ptitle { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
         .fx-prow { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
-        .fx-pcard { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 10; display: block; overflow: hidden; border-radius: 6px; background: #0d0d0d; text-decoration: none; pointer-events: auto; opacity: 0;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1); will-change: transform, opacity, filter; }
+        .fx-pcard { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 10; display: block; overflow: hidden; background: #0d0d0d; text-decoration: none; pointer-events: auto; opacity: 0;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6); will-change: transform, opacity, filter; }
         .fx-pcard img { display: block; width: 100%; height: 100%; object-fit: cover; }
         .fx-pcard .fx-browser { display: flex; flex-direction: column; height: 100%; border-radius: 0; box-shadow: none; }
         .fx-pcard .fx-browser video { flex: 1 1 0; min-height: 0; aspect-ratio: auto; }
-        /* the landing: a flash of the light the tile came out of */
-        .fx-pcard::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 90% at 50% 50%, rgba(255, 90, 70, 0.5), rgba(211, 22, 27, 0.15)); opacity: 0; }
-        .fx-pcard.is-hit::after { animation: fx-hit 0.8s ease-out; }
+        .fx-pcard::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: rgba(255, 255, 255, 0.12); opacity: 0; }
+        .fx-pcard.is-hit::after { animation: fx-hit 0.7s ease-out; }
         @keyframes fx-hit { from { opacity: 1; } to { opacity: 0; } }
         .fx-plabs { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
         .fx-plab { position: absolute; left: 0; top: 0; padding-left: 0.3em; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; white-space: nowrap; color: rgba(255, 255, 255, 0.5); opacity: 0; transition: color 0.4s ease; }
         .fx-plab.is-c { color: var(--red); }
         .fx-pinfo { position: absolute; left: 50%; top: 0; z-index: 6; width: min(30vw, 440px); transform: translateX(-50%); text-align: center; }
-        .fx-pbg, .fx-pstats, .fx-ptitle, .fx-prow, .fx-plabs { will-change: transform; }
+        .fx-pbg, .fx-pstats, .fx-ptitle, .fx-plabs { will-change: transform; }
         .fx-pinfo .d { position: absolute; left: 0; right: 0; top: 0; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
         .fx-pinfo .d.is-on { opacity: 1; transform: none; pointer-events: auto; transition-delay: 0.15s; }
         .fx-pinfo p { margin: 0 0 14px; max-width: none; font-size: 0.92rem; line-height: 1.6; color: rgba(255, 255, 255, 0.85); }
-        .fx-pinfo a, .fx-pall { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
-        .fx-pall { position: absolute; z-index: 7; right: 6vw; bottom: calc(calc(var(--fvh, 1vh) * 7) + var(--gap)); opacity: 0; pointer-events: none; transition: opacity 0.6s ease 0.3s; }
-        .is-landed .fx-pall { opacity: 1; pointer-events: auto; }
+        .fx-pinfo a { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
         /* keyboard: the row's arrows, shown only when focused */
-        .fx-pnav { position: absolute; z-index: 7; top: 50%; width: 46px; height: 46px; margin-top: -23px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(6, 6, 6, 0.7); color: #fff; font: 600 1rem 'Inter', sans-serif; opacity: 0; pointer-events: none; }
+        .fx-pnav { position: absolute; z-index: 7; top: 50%; width: 46px; height: 46px; margin-top: -23px; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(6, 6, 6, 0.7); color: #fff; font: 600 1rem 'Inter', sans-serif; opacity: 0; pointer-events: none; }
         .fx-pnav.prev { left: 2vw; } .fx-pnav.next { right: 2vw; }
         .fx-pnav:focus-visible { opacity: 1; outline: 2px solid var(--red); outline-offset: 3px; }
-        @media (hover: hover) and (pointer: fine) { .fx-pstage.is-landed, .fx-pstage.is-landed * { cursor: none; } .fx-pstage.is-landed .fx-pall { cursor: pointer; } }
+        @media (hover: hover) and (pointer: fine) { .fx-pstage.is-landed, .fx-pstage.is-landed * { cursor: none; } }
         /* the live page in the Nitori card */
-        .fx-browser { border-radius: 6px; overflow: hidden; background: #0d0d0d; box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 60px rgba(211, 22, 27, 0.22); }
+        .fx-browser { overflow: hidden; background: #0d0d0d; }
         .fx-browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #171717; }
         .fx-browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
-        .fx-browser .url { margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
+        .fx-browser .url { margin-left: 8px; padding: 3px 10px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
         .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
-        /* reduced motion: the figures sit in a plain row above the projects */
+
         /* 6 · How I work: the beam leans with the logo */
         .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); --bp: 0; }
         .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 12); }
@@ -321,6 +309,19 @@
         .fx-marq span { font-size: clamp(4rem, 12vw, 11rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28);
             padding-right: 0.35em; display: inline-block; transform: skewX(calc(var(--lean) * -1)); line-height: 1.05; }
         @keyframes fx-marq { to { transform: translateX(-50%); } }
+        /* the beam carries on past the last step, through the dark, and lands as the period of "remembering."; the marquee
+           only starts once it has */
+        .fx-tail { position: relative; }
+        .fx-trail { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible; }
+        .fx-trail path { fill: none; stroke-linecap: round; }
+        .fx-trail .bg { stroke: rgba(211, 22, 27, 0.16); stroke-width: 2; }
+        .fx-trail .lit { stroke: #ff2a20; stroke-width: 2; filter: drop-shadow(0 0 6px rgba(255, 30, 30, 0.6)); }
+        .fx-trail-head { position: absolute; left: 0; top: 0; z-index: 4; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; pointer-events: none; opacity: 0;
+            box-shadow: 0 0 12px 4px #ff3b2f, 0 0 50px 18px rgba(211, 22, 27, 0.55); transition: opacity 0.35s ease; }
+        .fx-end .fx-dot { color: transparent; transition: color 0.5s ease; }
+        .fx-end.is-dotted .fx-dot { color: var(--red); }
+        .fx-marq .track { animation-play-state: paused; }
+        .fx-end.is-dotted .fx-marq .track { animation-play-state: running; }
 
         @media (max-width: 900px) {
             .fx-hero { height: calc(var(--fvh, 1vh) * 620); }
@@ -334,17 +335,12 @@
             .fx-sin .aside { font-size: 1.05rem; }
             .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
             .fx-pick { font-size: 8.4vw; }
-            .fx-psent { max-width: none; left: 20px; right: 20px; font-size: 1.05rem; }
-            .fx-psent.s0 { top: 24%; font-size: 12vw; }
-            .fx-psent.s1 { top: 17%; } .fx-psent.s2 { top: 31%; }
-            .fx-psent.s3 { top: auto; bottom: 25%; } .fx-psent.s4 { top: auto; bottom: 13%; }
-            .fx-pbig.b1 { font-size: 24vw; right: -6vw; bottom: 34%; }
-            .fx-pbig.b2 { font-size: 48vw; left: -6vw; top: 30%; }
-            .fx-pbig.b3 { font-size: 62vw; right: -2vw; top: 26%; }
-            .fx-pbig.b4 { font-size: 62vw; left: 0; top: 28%; }
+            .fx-phead { left: 20px; right: 20px; top: calc(var(--navbar-height) + var(--fvh, 1vh) * 9); max-width: none; text-align: left; font-size: 8vw; }
+            .fx-pres { left: 0; right: 0; padding: 0 20px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1vh; }
+            .fx-pres b { font-size: calc(var(--rh, 16vh) * 0.42); }
+            .fx-pres p { max-width: none; font-size: 0.92rem; }
             .fx-pinfo { width: 86vw; }
             .fx-pinfo p { font-size: 0.86rem; }
-            .fx-pall { right: auto; left: 50%; transform: translateX(-50%); bottom: calc(calc(var(--fvh, 1vh) * 4) + var(--gap)); }
             .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-pr-body { height: auto; }
@@ -356,10 +352,12 @@
             .fx-end .mark2 { width: 170vw; right: -70vw; }
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
         }
-        .fx-reduce .fx-pglow, .fx-reduce .fx-proom, .fx-reduce .fx-pbig { display: none; }
-        .fx-pstats.is-static { position: relative; inset: auto; background: var(--ink); padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 4); }
-        .fx-pstats.is-static .fx-psent { position: static; max-width: 60rem; margin-top: 2.4vh; text-align: left; }
-        .fx-pstats.is-static .fx-psent.s0 { margin: 0 0 4vh; }
+        .fx-reduce .fx-pred, .fx-reduce .fx-pface, .fx-reduce .fx-trail-head { display: none; }
+        .fx-pstats.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 6); }
+        .fx-pstats.is-static .fx-phead { position: static; text-align: left; max-width: none; font-size: clamp(2rem, 4vw, 3.6rem); margin-bottom: 4vh; }
+        .fx-pstats.is-static .fx-pres-list { position: static; }
+        .fx-pstats.is-static .fx-pres { position: static; height: auto; padding: 3vh 0; opacity: 1; }
+        .fx-pstats.is-static .fx-pres b { font-size: clamp(3rem, 8vw, 6rem); }
         .fx-pstats.is-static .w { opacity: 1; }
         .fx-reduce .fx-pname, .fx-reduce .fx-pinfo .d { transition: none; }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
@@ -481,7 +479,7 @@
             </div>
         </section>
 
-        <!-- 3 · Proof: the results go back into the dark, and the work comes forward out of them -->
+        <!-- 3 · Proof: the results stack up on the red; the red closes in to the Nitori tile, which settles into the row -->
         <section class="fx-proof" id="work" aria-label="Results and selected work">
             <div class="fx-pstage">
                 <div class="fx-pbg" aria-hidden="true">
@@ -490,29 +488,17 @@
                     <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
                     <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
                 </div>
-                <div class="fx-pglow" aria-hidden="true"></div>
-                <svg class="fx-proom" aria-hidden="true"></svg>
-                <div class="fx-pstats">
-                    <h2 class="fx-psent s0">Designed, built, and it <span class="red">sells.</span></h2>
-                    <p class="fx-psent s1">Three campaign pages brought in <em>NT$3.31M</em> in assisted revenue</p>
-                    <p class="fx-psent s2">and <em>635</em> orders.</p>
-                    <p class="fx-psent s3">That's <em>9</em> pages designed, coded and shipped</p>
-                    <p class="fx-psent s4">in <em>one year</em> at Nitori.</p>
-                    <b class="fx-pbig b1" aria-hidden="true">NT$3.31M</b>
-                    <b class="fx-pbig b2" aria-hidden="true">635</b>
-                    <b class="fx-pbig b3" aria-hidden="true">9</b>
-                    <b class="fx-pbig b4" aria-hidden="true">1</b>
-                </div>
                 <div class="fx-ptitle" aria-hidden="true">
-                    <span class="fx-pname" data-cursor>Shipped at Nitori</span>
+                    <span class="fx-pname" data-cursor>Nitori</span>
                     <span class="fx-pname" data-cursor>CareerCourse</span>
                     <span class="fx-pname" data-cursor>Smart Station</span>
                     <span class="fx-pname" data-cursor>One Shop</span>
                 </div>
                 <div class="fx-prow">
-                    <a class="fx-pcard" href="nitori.html" aria-label="Shipped at Nitori: open the series">
+                    <a class="fx-pcard" href="nitori.html" aria-label="Nitori: open the series">
                         <div class="fx-browser"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">nitori-net.tw/article/Sofa</span></div>
                             <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video></div>
+                        <div class="fx-pface" aria-hidden="true"><img src="assets/images/home/nitori_mark_white.png" alt=""></div>
                     </a>
                     <a class="fx-pcard" href="project2.html" aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
                     <a class="fx-pcard" href="project1.html" aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
@@ -525,12 +511,24 @@
                     <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study</a></div>
                     <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
                 </div>
+                <div class="fx-pred">
+                    <div class="fx-pstats">
+                        <h2 class="fx-phead">Designed, built, and it <span class="blk">sells.</span></h2>
+                        <ul class="fx-pres-list" aria-label="Results at Nitori">
+                            <li class="fx-pres"><b>NT$3.31M</b><p>in assisted revenue, from three seasonal campaign pages.</p></li>
+                            <li class="fx-pres"><b>635</b><p>orders, from people who visited those pages first.</p></li>
+                            <li class="fx-pres"><b>9</b><p>pages designed, coded and shipped to nitori-net.tw.</p></li>
+                            <li class="fx-pres"><b>1</b><p>year at Nitori Taiwan, and counting.</p></li>
+                        </ul>
+                    </div>
+                    <img class="fx-pmark" src="assets/images/home/nitori_mark_white.png" alt="" aria-hidden="true">
+                </div>
                 <button type="button" class="fx-pnav prev" aria-label="Previous project">&larr;</button>
                 <button type="button" class="fx-pnav next" aria-label="Next project">&rarr;</button>
-                <a class="fx-pall" href="projects.html">All projects <span aria-hidden="true">&rarr;</span></a>
             </div>
         </section>
 
+        <div class="fx-tail">
         <!-- 6 · How I work -->
         <section class="fx-process" aria-label="How I work">
             <div class="fx-pr-head">
@@ -550,7 +548,7 @@
         <!-- 7 · Finale -->
         <section class="fx-end" id="contact">
             <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
-            <h2 class="display">Let's build something worth <span class="red">remembering.</span></h2>
+            <h2 class="display">Let's build something worth <span class="red">remembering<span class="fx-dot">.</span></span></h2>
             <a class="fx-mail" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com <span aria-hidden="true">→</span></a>
             <div class="fx-links">
                 <a href="tel:+886956820832">+886 956 820 832</a>
@@ -560,6 +558,9 @@
             </div>
             <div class="fx-marq" aria-hidden="true"><div class="track"><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span></div></div>
         </section>
+            <svg class="fx-trail" aria-hidden="true"><path class="bg"/><path class="lit"/></svg>
+            <i class="fx-trail-head" aria-hidden="true"></i>
+        </div>
     </main>
 
     <footer class="footer">
@@ -666,19 +667,21 @@
             addEventListener('pageshow', () => { pickGo = -1; wmImgs.forEach((im) => im.classList.remove('is-go')); heroDirty = true; });
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const proof = document.querySelector('.fx-proof'), pstage = proof.querySelector('.fx-pstage');
-            const pStats = proof.querySelector('.fx-pstats'), pSents = [...proof.querySelectorAll('.fx-psent')], pBigs = [...proof.querySelectorAll('.fx-pbig')];
-            const pGlow = proof.querySelector('.fx-pglow'), pRoom = proof.querySelector('.fx-proom'), pInfo = proof.querySelector('.fx-pinfo');
+            const pRed = proof.querySelector('.fx-pred'), pStats = proof.querySelector('.fx-pstats'), pRes = [...proof.querySelectorAll('.fx-pres')], pMark = proof.querySelector('.fx-pmark');
+            const pFace = proof.querySelector('.fx-pface'), pInfo = proof.querySelector('.fx-pinfo');
             const pCards = [...proof.querySelectorAll('.fx-pcard')], pNames = [...proof.querySelectorAll('.fx-pname')], pLabs = [...proof.querySelectorAll('.fx-plab')];
             const pDescs = [...pInfo.querySelectorAll('.d')], pBgs = [...proof.querySelectorAll('.fx-pbg img')];
             const PN = pCards.length;
-            /* the pinned timeline after the hero's wipe. Each sentence: its words come in [a, b], it goes out [c, d]; the first two
-               and the last two share a beat. Then the tile shows on the room's back wall, and drops into the row */
-            const SENT = [[0, 0.08, 0.13, 0.17], [0.15, 0.24, 0.37, 0.41], [0.25, 0.32, 0.37, 0.41], [0.4, 0.49, 0.62, 0.66], [0.5, 0.57, 0.62, 0.66]];
-            const TILE0 = 0.64, DROP0 = 0.7, LAND = 0.9;
-            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, bx: 0, by: 0, bw: 0, bh: 0, wipe: 0, len: 1 };
+            /* the pinned timeline after the hero's wipe: the results come in one by one [C0, C1]; the red closes in to the tile
+               [BIRTH0, MORPH0]; the wordmark gives way to the live page [MORPH0, DROP0]; the row comes up and the tile settles
+               into it [DROP0, LAND]; a hold on the row */
+            const C0 = 0.03, C1 = 0.5, BIRTH0 = 0.56, MORPH0 = 0.7, DROP0 = 0.77, LAND = 0.93;
+            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, r0: 0, rh: 1, wipe: 0, len: 1 };
             if (reduce) { proof.insertBefore(pStats, pstage); pStats.classList.add('is-static'); }
             const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
             const end = document.querySelector('.fx-end');
+            const tail = document.querySelector('.fx-tail'), trail = tail.querySelector('.fx-trail'), trailBg = trail.querySelector('.bg'), trailLit = trail.querySelector('.lit');
+            const trailHead = tail.querySelector('.fx-trail-head'), trailDot = end.querySelector('.fx-dot'), beamHead = proc.querySelector('.fx-beam b'), endHead = end.querySelector('.display');
 
             /* camera over the mark (logo units: viewBox 52 416 1872 1153):
                fixed size, panning sideways onto a slab whose left edge leans like the strokes */
@@ -726,7 +729,7 @@
                 streaking = null;
                 slantA = Math.round(SH * TAN);
                 // the proof slides under the end of the hero, so the exit wipe reveals it already in place
-                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.len = SH * 4.2;
+                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.len = SH * 3.4;
                 proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
                 proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.wipe + PG.len)}px`;
                 layoutProof();
@@ -765,6 +768,47 @@
                 /* ---- finale ---- */
                 const er = end.getBoundingClientRect();
                 end.style.setProperty('--p', clamp((vh - er.top) / (vh + er.height)).toFixed(3));
+
+                /* ---- the beam carries on from the foot of the steps and lands as the period of "remembering." ---- */
+                const tr = tail.getBoundingClientRect();
+                if (tr.top < vh && tr.bottom > 0) {
+                    const tw = tail.clientWidth, th = tail.clientHeight;
+                    trail.setAttribute('viewBox', `0 0 ${tw} ${th}`);
+                    // where the leaning beam ends (it is turned about its middle), and where the period sits on the baseline
+                    const bx = pb.left - tr.left, by = pb.top - tr.top, A = 16.5 * Math.PI / 180;
+                    const S = mobile ? [bx + 7, by + pb.height] : [bx + pb.width / 2 - pb.height / 2 * Math.sin(A), by + pb.height / 2 + pb.height / 2 * Math.cos(A)];
+                    const dr = trailDot.getBoundingClientRect(), fs = parseFloat(getComputedStyle(trailDot).fontSize);
+                    const E = [dr.left - tr.left + dr.width / 2, dr.top - tr.top + fs * 0.89];
+                    // it carries on along the lean, swings out past the right of the heading (never across the letters), then
+                    // comes down and in to the period from the open side
+                    const rg = document.createRange(); rg.selectNodeContents(endHead);
+                    let R = 0, Top = Infinity; for (const rc of rg.getClientRects()) { R = Math.max(R, rc.right - tr.left); Top = Math.min(Top, rc.top - tr.top); }
+                    const m = mobile ? 14 : 70, X = Math.min(tw - 8, R + m), Q = [X, Top - (mobile ? 16 : 30)];
+                    const d1 = Q[1] - S[1], dir = mobile ? [0, 1] : [-Math.sin(A), Math.cos(A)];
+                    const segs = [[S, [S[0] + dir[0] * d1 * 0.3, S[1] + dir[1] * d1 * 0.3], [X, Q[1] - d1 * 0.35], Q],
+                                  [Q, [X, Q[1] + (E[1] - Q[1]) * 0.6], [E[0] + Math.min(m, X - E[0]) * 0.8, E[1]], E]];
+                    const f = (p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`, C = (sg) => `C${f(sg[1])} ${f(sg[2])} ${f(sg[3])}`;
+                    trailBg.setAttribute('d', `M${f(S)}${C(segs[0])}${C(segs[1])}`);
+                    // the head stays where the beam's head would be: 60% down the screen
+                    const L2 = (a, b, u) => [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u];
+                    const cut = ([p0, p1, p2, p3], u) => { const a = L2(p0, p1, u), b = L2(p1, p2, u), c = L2(p2, p3, u), d = L2(a, b, u), e2 = L2(b, c, u); return [p0, a, d, L2(d, e2, u)]; };
+                    const target = vh * 0.6 - tr.top;
+                    let lit = '', hp = S, done = false, on = false;
+                    if (reduce || target >= E[1]) { lit = `M${f(S)}${C(segs[0])}${C(segs[1])}`; hp = E; done = true; }
+                    else if (bp >= 1 && target > S[1]) {
+                        on = true; lit = `M${f(S)}`;
+                        for (const sg of segs) {
+                            if (target >= sg[3][1]) { lit += C(sg); hp = sg[3]; continue; }
+                            let lo = 0, hi = 1; for (let i = 0; i < 22; i++) { const md = (lo + hi) / 2; if (cut(sg, md)[3][1] < target) lo = md; else hi = md; }
+                            const part = cut(sg, lo); lit += C(part); hp = part[3]; break;
+                        }
+                    }
+                    trailLit.setAttribute('d', lit);
+                    trailHead.style.transform = `translate3d(${hp[0].toFixed(1)}px, ${hp[1].toFixed(1)}px, 0)`;
+                    trailHead.style.opacity = on ? '1' : '0';
+                    beamHead.style.opacity = on || done ? '0' : '';
+                    end.classList.toggle('is-dotted', done);
+                }
 
             }
             /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
@@ -1055,7 +1099,7 @@
                 let x = 0, y = 0, cx2 = 0, cy2 = 0, curMode = '';
                 const aim = (el) => {
                     if (!el || !el.closest) return;
-                    const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pall, .fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
+                    const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
                     if (mode === curMode) return; curMode = mode;
                     cur.classList.toggle('is-view', mode === 'view'); cur.classList.toggle('is-arrow', mode === 'prev' || mode === 'next');
                     cur.textContent = mode === 'prev' ? '←' : mode === 'next' ? '→' : 'VIEW';
@@ -1067,9 +1111,9 @@
                 loop2();
             } else cur.remove();
 
-            /* ---------- proof: a dark room of thin red lines. The results come in as a sentence, word by word, each part with
-               a big figure mostly lost in the dark; then the Nitori work shows on the room's back wall, lit from behind, and
-               drops all the way into the row as the camera moves down. Then the row: the centre is the active project ---------- */
+            /* ---------- proof: the statement's red carries on, and the results stack up on it, one over the other; then the red
+               closes in to a single tile, the Nitori wordmark, which turns into the live page and settles into the row's empty
+               slot as the row comes up under it. Then the row: the centre is the active project ---------- */
             function fitType(el, maxW, maxFs) {
                 el.style.fontSize = '100px';
                 const fs = Math.min(maxFs, 100 * maxW / Math.max(1, el.offsetWidth));
@@ -1078,45 +1122,29 @@
             }
             function layoutProof() {
                 const sw = PG.sw = pstage.clientWidth, sh = PG.sh = pstage.offsetHeight;
-                PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 600); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.022);
+                PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 620); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.025);
                 pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
                 const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
-                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W * 1.2, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
-                // the room: a back wall in the middle, its edges running out past the screen, and frames receding toward us
-                const bw = PG.bw = mobile ? sw * 0.5 : sw * 0.24, bh = PG.bh = bw * 0.7, bx = PG.bx = sw / 2, by = PG.by = sh * 0.4;
-                const R = (m) => { const w = bw / 2 * m, h = bh / 2 * m; return `M${(bx - w).toFixed(1)} ${(by - h).toFixed(1)}H${(bx + w).toFixed(1)}V${(by + h).toFixed(1)}H${(bx - w).toFixed(1)}Z`; };
-                const ray = (x, y) => `M${x.toFixed(1)} ${y.toFixed(1)}L${(bx + (x - bx) * 8).toFixed(1)} ${(by + (y - by) * 8).toFixed(1)}`;
-                let d = `<path class="wall" pathLength="1" d="${R(1)}"/>`;
-                [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([u, v]) => { d += `<path pathLength="1" d="${ray(bx + u * bw / 2, by + v * bh / 2)}"/>`; });
-                [0.2, 0.4, 0.6, 0.8].forEach((f) => { d += `<path pathLength="1" d="${ray(bx - bw / 2 + bw * f, by + bh / 2)}"/>`; });
-                [1.8, 3, 5].forEach((m) => { d += `<path pathLength="1" d="${R(m)}"/>`; });
-                pRoom.setAttribute('viewBox', `0 0 ${sw} ${sh}`); pRoom.innerHTML = d;
+                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
+                // the rows run from under the headline to the foot of the screen
+                PG.r0 = sh * (mobile ? 0.3 : 0.25); PG.rh = (sh * (mobile ? 0.94 : 0.95) - PG.r0) / pRes.length;
+                pRed.style.setProperty('--rh', `${PG.rh.toFixed(1)}px`);
             }
-            // the sentences come in word by word, each word at its own height
-            const pWords = pSents.map((p, si) => {
-                const words = [];
-                const walk = (node) => [...node.childNodes].forEach((c) => {
-                    if (c.nodeType === 3) {
-                        const frag = document.createDocumentFragment();
-                        c.textContent.split(/(\s+)/).forEach((part) => {
-                            if (!part) return;
-                            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
-                            const w = document.createElement('span'); w.className = 'w'; w.textContent = part; frag.appendChild(w); words.push(w);
-                        });
-                        c.replaceWith(frag);
-                    } else if (c.nodeType === 1) walk(c);
-                });
-                walk(p);
-                return words.map((w, j) => ({ w, jy: si === 0 ? 0 : Math.sin(j * 12.9898 + si * 78.233) * 0.28 }));
+            // each result's sentence comes into focus word by word
+            const resWords = pRes.map((li) => {
+                const p = li.querySelector('p'), words = [];
+                const parts = p.textContent.split(/\s+/).filter(Boolean);
+                p.textContent = '';
+                parts.forEach((w, j) => { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w; p.appendChild(sp); if (j < parts.length - 1) p.appendChild(document.createTextNode(' ')); words.push(sp); });
+                return { fig: li.querySelector('b'), words };
             });
             let tv = 0, rowPos = 0, rowTarget = 0, pLanded = false, pKey = -2, pLastY = scrollY, pLastT = 0, pOn = false, pJump = true;
-            const pBgWrap = proof.querySelector('.fx-pbg'), pRow = proof.querySelector('.fx-prow'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle');
+            const pBgWrap = proof.querySelector('.fx-pbg'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle');
             const wrap = (v) => ((v % PN) + PN) % PN;
             const pIdx = () => wrap(Math.round(rowTarget));
             const goHome = () => { rowTarget = Math.round(rowPos / PN) * PN; };
             const pStep = (d) => { if (pLanded) rowTarget = Math.round(rowTarget) + d; };
-            const place = (el, x, y, s, extra = '') => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%) ${extra}scale(${s.toFixed(4)})`; };
-            const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+            const place = (el, x, y, s) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${s.toFixed(4)})`; };
             function renderProof(now) {
                 const dt = clamp((now - (pLastT || now)) / 1000, 0, 0.05) || 1 / 60; pLastT = now;
                 const k = (r) => 1 - Math.exp(-dt * r);
@@ -1145,81 +1173,75 @@
                     pDescs.forEach((d, i) => { d.querySelector('a').tabIndex = i === key ? 0 : -1; });
                 }
 
-                const W = PG.W, H = PG.H, cx = PG.sw / 2, sh = PG.sh;
-                const cardY = (sh - GAP) / 2 + sh * 0.05;
+                const W = PG.W, H = PG.H, sw = PG.sw, sh = PG.sh, cx = sw / 2;
+                const cardY = (sh - GAP) / 2 + sh * (mobile ? 0.08 : 0.04);
+                const fy0 = cardY - H * (mobile ? 1.05 : 0.8);   // where the tile is born: well above its slot, so it has somewhere to settle
                 pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
                 pInfo.style.top = `${(cardY + H / 2 + 60).toFixed(1)}px`;
 
-                // the drop: the camera moves down, so the room rises away and the row comes up from below with its middle empty;
-                // the tile comes off the back wall and falls the whole way into the gap
-                const ap = reduce ? 1 : ease(clamp((tv - TILE0) / (DROP0 - TILE0)));
-                const dp = reduce ? 1 : clamp((tv - DROP0) / (LAND - DROP0));
-                const roomShift = -sh * 0.42 * ease(dp), rowOff = landed ? 0 : (1 - outCubic(dp)) * sh * 0.78;
+                const cP = reduce ? pRes.length : clamp((tv - C0) / (C1 - C0)) * pRes.length;   // how many results are in
+                const bth = reduce ? 1 : ease(clamp((tv - BIRTH0) / (MORPH0 - BIRTH0)));      // the red closing in to the tile
+                const mo = reduce ? 1 : ease(clamp((tv - MORPH0) / (DROP0 - MORPH0)));        // the wordmark giving way to the page
+                const dp = reduce ? 1 : clamp((tv - DROP0) / (LAND - DROP0));                 // the row coming up, the tile settling
+                const rowOff = landed ? 0 : (1 - ease(dp)) * sh * 0.8;
 
-                // depth by scroll only: the wipe carries the stats and the room in (the room, being farther, less); the big
-                // figures drift faster than the words; when the pin lets go, the light behind lags and the text leads
+                // scroll depth: the wipe carries the headline in with it; when the pin lets go, the colour behind lags and the text leads
                 const enter = reduce ? 1 : ease(clamp(-r.top / Math.max(1, PG.wipe)));
                 const exit = reduce ? 0 : clamp((-r.top - PG.wipe - PG.len) / sh);
                 const shift = (el, x, y) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`; };
                 shift(pBgWrap, 0, exit * 0.4 * sh);
                 pBgWrap.style.opacity = (1 - exit * 0.85).toFixed(3);   // the colour dissolves into the dark the next section rises from
-                shift(pStats, (1 - enter) * PG.sw * 0.14, 0);
                 shift(pTitle, 0, exit * 0.12 * sh);
-                shift(pRow, 0, 0);
                 shift(pLabWrap, 0, -exit * 0.1 * sh);
                 pInfo.style.transform = `translate3d(-50%, ${(-exit * 0.1 * sh).toFixed(1)}px, 0)`;
 
                 if (!reduce) {
-                    // the room draws itself in, then rises away as the camera drops
-                    pRoom.style.setProperty('--rd', (1 - ease(clamp(tv / 0.1))).toFixed(4));
-                    pRoom.style.transform = `translate3d(${((1 - enter) * PG.sw * 0.06).toFixed(1)}px, ${roomShift.toFixed(1)}px, 0)`;
-                    pRoom.style.opacity = (1 - 0.85 * ease(dp)).toFixed(3);
-                    // the sentences, word by word; the big figure that goes with each is swept by a light, the rest left dark
-                    SENT.forEach(([a, b, c, d2], si) => {
-                        const ws = pWords[si], n = ws.length, span = b - a, o = clamp((tv - c) / (d2 - c));
-                        ws.forEach(({ w, jy }, j) => {
-                            const wa = ease(clamp((tv - a - span * 0.6 * (n > 1 ? j / (n - 1) : 0)) / (span * 0.4)));
-                            const op = wa * (1 - o);
-                            w.style.opacity = op.toFixed(3);
-                            if (op <= 0.001) return;
-                            const bl = (1 - wa) * 8 + o * 6;
-                            w.style.filter = bl > 0.05 ? `blur(${bl.toFixed(1)}px)` : '';
-                            w.style.transform = `translate3d(0, calc(${jy.toFixed(3)}em + ${((1 - wa) * 16 - o * 18).toFixed(1)}px), 0)`;
+                    shift(pStats, (1 - enter) * sw * 0.14, 0);
+                    // the results: each comes in at the foot, out of focus, and pushes the ones before it up a row
+                    const bottom = PG.r0 + PG.rh * pRes.length, ce = Math.floor(cP) + ease(cP - Math.floor(cP));
+                    pRes.forEach((li, i) => {
+                        const e = clamp(ce - i);
+                        li.style.opacity = e.toFixed(3);
+                        if (e <= 0) return;
+                        li.style.transform = `translate3d(0, ${(bottom - Math.min(ce - i, pRes.length - i) * PG.rh).toFixed(1)}px, 0)`;
+                        const { fig, words } = resWords[i];
+                        fig.style.filter = e < 1 ? `blur(${((1 - e) * 14).toFixed(1)}px)` : '';
+                        const wp = clamp((ce - i - 0.3) / 0.7), n = words.length;
+                        words.forEach((w, j) => {
+                            const a = ease(clamp((wp - 0.6 * (n > 1 ? j / (n - 1) : 0)) / 0.4));
+                            w.style.opacity = a.toFixed(3);
+                            w.style.filter = a < 1 ? `blur(${((1 - a) * 8).toFixed(1)}px)` : '';
+                            w.style.transform = a < 1 ? `translate3d(0, ${((1 - a) * 0.35).toFixed(3)}em, 0)` : '';
                         });
-                        const big = pBigs[si - 1];
-                        if (!big) return;
-                        const u = clamp((tv - a) / (d2 - a));
-                        big.style.opacity = (clamp((tv - a) / 0.05) * (1 - o)).toFixed(3);
-                        big.style.setProperty('--lx', `${lerp(-15, 115, u).toFixed(1)}%`);
-                        big.style.transform = `translate3d(0, ${lerp(0.1, -0.1, u) * sh}px, 0)`;
                     });
+                    // then the red closes in to a single tile, and the Nitori wordmark comes up on it
+                    pStats.style.opacity = (1 - ease(clamp(bth * 2.4))).toFixed(3);
+                    const T = fy0 - H / 2, L = cx - W / 2, c = (v) => (v * bth).toFixed(1);
+                    pRed.style.clipPath = bth > 0 ? `inset(${c(T)}px ${c(sw - L - W)}px ${c(sh - T - H)}px ${c(L)}px)` : '';
+                    pRed.style.visibility = bth >= 1 ? 'hidden' : '';
+                    pMark.style.opacity = ease(clamp((bth - 0.45) / 0.55)).toFixed(3);
+                    pMark.style.transform = `translate3d(${cx.toFixed(1)}px, ${fy0.toFixed(1)}px, 0) translate(-50%, -50%)`;
+                    pFace.style.opacity = (1 - mo).toFixed(3);
+                    pFace.style.setProperty('--mo', mo.toFixed(3));
+                    // the strip behind the phone's status bar follows the red while it fills the screen
+                    if (enter >= 0.999) setTopColor(bth < 0.25 ? '#8f0000' : '#060606');
                 }
 
-                // the tile: on the back wall, dark and lit from behind; then the fall, lighting up only as it lands
-                const sBack = PG.bw * 0.62 / W, startY = PG.by + roomShift, fall = dp * dp;
-                const tx = cx, ty = lerp(startY, cardY, fall), st = lerp(sBack, 1, 0.5 - 0.5 * Math.cos(Math.PI * dp));
-                const lightOn = ease(clamp((dp - 0.5) / 0.5));
-                if (!reduce) {
-                    const gI = ap * (1 - lightOn);
-                    pGlow.style.opacity = gI.toFixed(3);
-                    if (gI > 0.002) pGlow.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) translate(-50%, -50%) scale(${(W * st * 2.1 / 100).toFixed(3)}, ${(H * st * 2.6 / 100).toFixed(3)})`;
-                }
-
-                // the row: centre in colour, neighbours grey, the fourth peeking in; it loops, fading out at either end
-                const rowVis = landed ? 1 : clamp(dp * 1.5);
-                const s1 = 0.9 * W + PG.g, s2 = 0.8 * W + PG.g;
-                pCards.forEach((c, i) => {
+                // the row: centre in colour, neighbours grey; it loops, fading out at either end. Before the landing it comes up
+                // from below with its middle empty, and the Nitori tile settles into the gap
+                const rowVis = landed ? 1 : clamp(dp * 1.5), s1 = W + PG.g;
+                pCards.forEach((cd, i) => {
                     let o = wrap(i - rowPos); if (o >= 2.5) o -= PN;
-                    const ao = Math.abs(o), sd = Math.sign(o), grey = clamp(ao);
-                    let x = cx + (ao <= 1 ? o * s1 : sd * (s1 + (ao - 1) * s2)), y = cardY + rowOff, sc = 1 - 0.2 * Math.min(1, ao), rx = 0, bright = 1;
+                    const ao = Math.abs(o), grey = clamp(ao);
+                    let x = cx + o * s1, y = cardY + rowOff;
                     let op = o < -1 ? clamp(1 - (-1 - o) / 0.5) : o > 2 ? clamp(1 - (o - 2) / 0.5) * 0.5 : o > 1 ? lerp(1, 0.5, o - 1) : 1;
-                    if (i === 0 && !landed) { x = tx; y = ty; sc = st; rx = 20 * Math.sin(Math.PI * dp); bright = lerp(0.28, 1, lightOn); op = ap; }
+                    if (i === 0 && !landed) { x = cx; y = lerp(fy0, cardY, ease(dp)); op = bth >= 1 ? 1 : 0; }
                     else if (ao > 0.5) op *= rowVis;
-                    c.style.opacity = op.toFixed(3);
-                    c.style.visibility = op < 0.003 ? 'hidden' : '';
-                    c.style.filter = bright < 1 ? `brightness(${bright.toFixed(3)})` : grey > 0.01 ? `grayscale(${grey.toFixed(3)}) brightness(${(1 - grey * 0.4).toFixed(3)})` : '';
-                    c.style.zIndex = String(10 - Math.round(ao * 2));
-                    place(c, x, y, sc, rx > 0.01 ? `perspective(1200px) rotateX(${rx.toFixed(2)}deg) ` : '');
+                    cd.style.opacity = op.toFixed(3);
+                    cd.style.visibility = op < 0.003 ? 'hidden' : '';
+                    cd.style.filter = grey > 0.01 ? `grayscale(${grey.toFixed(3)}) brightness(${(1 - grey * 0.4).toFixed(3)})` : '';
+                    cd.style.zIndex = String(10 - Math.round(ao * 2));
+                    place(cd, x, y, 1);
                     const lb = pLabs[i];
                     lb.style.opacity = (i === 0 && !landed ? 0 : op).toFixed(3);
                     lb.style.transform = `translate3d(${x.toFixed(1)}px, ${(cardY + rowOff + H / 2 + 22).toFixed(1)}px, 0) translate(-50%, 0)`;
@@ -1231,7 +1253,7 @@
             requestAnimationFrame(proofLoop);
             // desktop: either side of the centre line steps the row; the centred project (and its name and line) opens it
             pstage.addEventListener('click', (e) => {
-                if (!pLanded || pSwiped || e.target.closest('.fx-pall, .fx-pnav')) return;
+                if (!pLanded || pSwiped || e.target.closest('.fx-pnav')) return;
                 const a = e.target.closest('a');
                 if (e.target.closest('[data-cursor]')) { if (!a) location.href = pCards[pIdx()].href; return; }
                 if (a) e.preventDefault();
