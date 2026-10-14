@@ -58,6 +58,9 @@
         .fx-gate { display: none; position: fixed; left: 0; top: 0; width: 100%; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); z-index: 1100; overflow: hidden; }
         .fx-gate-on .fx-gate { display: block; }
         .fx-gate-on, .fx-gate-on body { overflow: hidden; }
+        /* the stage's bottom light stays off under the gate (Safari could let it show through); the opening switches it on
+           while the gate still hides it, then crosses over to it */
+        .fx-gate-on .fx-stage { --lit: 0; }
         .fx-gate .room { position: absolute; inset: 0; opacity: var(--cover, 1); }
         .fx-gate .bg { position: absolute; inset: 0; background: var(--ink); }
         .fx-gate canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
@@ -83,12 +86,12 @@
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
         .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
             background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
-            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(0.82 + var(--glow, 1) * 0.22)); opacity: calc(var(--glow, 1) * 0.85);
+            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(0.82 + var(--glow, 1) * 0.22)); opacity: calc(var(--glow, 1) * 0.85 * var(--lit, 1));
             }
         @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
         .fx-par { position: absolute; inset: 0; pointer-events: none; }
         .fx-ink { position: absolute; inset: 0; z-index: -1; background: var(--ink); pointer-events: none; }   /* behind the glow and every layer */
-        .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; }
+        .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; filter: opacity(var(--lit, 1)); }
         .fx-par.echo1 { transform: translate3d(calc(var(--mx) * 22px * (1 - var(--zm))), calc(var(--my) * 12px * (1 - var(--zm))), 0); }
         .fx-par.echo2 { transform: translate3d(calc(var(--mx) * 38px * (1 - var(--zm))), calc(var(--my) * 20px * (1 - var(--zm))), 0); }
         .fx-par.markp { transform: translate3d(calc(var(--mx) * -12px * (1 - var(--zm))), calc(var(--my) * -6px * (1 - var(--zm))), 0); }
@@ -1200,6 +1203,7 @@
                     const settle = tf < 0 ? 0 : out(sg(tf, 0, SETTLE)), m = tf < 0 ? 0 : sg(tf, PRINT0, PRINT0 + PRINT);
                     const cover = 1 - ease(sg(m, 0.35, 1));
                     if (m > 0) {
+                        stage.style.setProperty('--lit', '1');
                         if (!handed && m >= 0.4) { handed = true; pctBox.classList.add('is-out'); hintW[0].classList.add('is-on'); }
                         if (m >= 0.5) ready();
                     }
@@ -1277,7 +1281,7 @@
                     if (done) return; done = true;
                     try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
                     ready();
-                    stage.style.removeProperty('--imp');
+                    stage.style.removeProperty('--imp'); stage.style.removeProperty('--lit');
                     hint.style.opacity = ''; hintW[0].classList.add('is-on');
                     toTop();
                     root.classList.remove('fx-gate-on'); gate.remove();
@@ -1287,7 +1291,7 @@
                 // any input skips straight to the page
                 const skip = () => {
                     if (done || skipped) return; skipped = true;
-                    stage.style.removeProperty('--imp'); ready();
+                    stage.style.removeProperty('--imp'); stage.style.setProperty('--lit', '1'); ready();
                     gate.classList.add('is-skip');
                     setTimeout(end, 350);
                 };
