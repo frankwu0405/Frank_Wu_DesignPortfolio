@@ -18,7 +18,7 @@
         (function () {
             var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduce) d.classList.add('fx-reduce');
-            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); d.style.backgroundColor = '#8f0000'; } } catch (e) {}
+            try { if (!reduce && !sessionStorage.getItem('fw-gate')) d.classList.add('fx-gate-on'); } catch (e) {}
             if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
         })();
     </script>
@@ -51,15 +51,18 @@
         .fx .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; margin: 0; color: #fff; }
         .fx .red { color: var(--red); }
 
-        /* Opening gate */
-        .fx-gate { display: none; position: fixed; inset: 0; z-index: 200; background: var(--deep); color: #fff; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
-            clip-path: polygon(0 0, calc(100% + var(--a, 300px)) 0, 100% 100%, 0 100%); }
-        .fx-gate-on .fx-gate { display: flex; }
+        /* Opening: a spark traces the mark small in red; it grows and imprints on the dark mark behind the name.
+           Only a thin line is red and the edges stay ink, so Safari's bars never change colour.
+           Sized like the stage, so the line lands exactly on the hero's mark. */
+        .fx-gate { display: none; position: fixed; left: 0; top: 0; width: 100%; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); z-index: 1100; overflow: hidden; }
+        .fx-gate-on .fx-gate { display: block; }
         .fx-gate-on, .fx-gate-on body { overflow: hidden; }
-        .fx-gate p { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); }
-        .fx-gate .bar { width: min(260px, 60vw); height: 2px; background: rgba(255, 255, 255, 0.2); overflow: hidden; transform: skewX(calc(var(--lean) * -1)); }
-        .fx-gate .bar i { display: block; height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--load, 0)); transition: transform 0.35s ease; }
-        .fx-gate.is-out { clip-path: polygon(0 0, 0 0, calc(var(--a, 300px) * -1) 100%, 0 100%); transition: clip-path 0.9s cubic-bezier(0.7, 0, 0.2, 1); }
+        .fx-gate .bg { position: absolute; inset: 0; background: var(--ink); opacity: var(--cover, 1); }
+        .fx-gate svg, .fx-gate canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+        .fx-gate .ln { fill: none; stroke: var(--red); stroke-width: 1.5; stroke-linejoin: miter; vector-effect: non-scaling-stroke; stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: var(--lineA, 1); }
+        .fx-gate .ln.halo { stroke: #ff3b2f; stroke-width: 6; opacity: calc(var(--lineA, 1) * var(--halo, 0.18)); }
+        .fx-gate.is-skip { opacity: 0; transition: opacity 0.35s ease; }
+        .fx-fxbox { opacity: var(--imp, 1); }   /* the hero's mark waits under the gate until the line lands on it */
 
         /* Cursor */
         .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--red); pointer-events: none;
@@ -354,7 +357,7 @@
     </style>
 </head>
 <body class="fx">
-    <div class="fx-gate" aria-hidden="true"><p>Frank Wu — UI/UX Designer</p><div class="bar"><i></i></div></div>
+    <div class="fx-gate" aria-hidden="true"><i class="bg"></i><svg preserveAspectRatio="none"></svg><canvas></canvas></div>
 
     <header class="navbar">
         <a href="index.html" class="logo">
@@ -589,32 +592,7 @@
                 return { ci, d: Math.abs(i - mid) / mid };
             });
 
-            /* ---------- opening gate ---------- */
-            const ready = () => root.classList.add('fx-ready');
-            if (root.classList.contains('fx-gate-on')) {
-                const gate = document.querySelector('.fx-gate');
-                gate.style.setProperty('--a', `${Math.round(innerHeight * TAN)}px`);
-                let done = false;
-                const set = (v) => gate.style.setProperty('--load', v.toFixed(2));
-                const finish = () => {
-                    if (done) return; done = true; set(1);
-                    try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
-                    setTimeout(() => {
-                        gate.classList.add('is-out');
-                        heroDirty = true;
-                        setTimeout(ready, 250);
-                        setTimeout(() => { root.classList.remove('fx-gate-on'); gate.remove(); heroDirty = true; }, 950);
-                    }, 260);
-                };
-                requestAnimationFrame(() => set(0.15));
-                const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
-                fontsReady.then(() => set(0.7));
-                Promise.all([fontsReady, new Promise((r) => setTimeout(r, 900))]).then(finish);
-                setTimeout(finish, 1500);                         // never hold the page longer than this
-                ['click', 'keydown', 'wheel', 'touchstart'].forEach((ev) => addEventListener(ev, finish, { once: true, passive: true }));
-            } else {
-                requestAnimationFrame(() => requestAnimationFrame(ready));
-            }
+            const ready = () => root.classList.add('fx-ready');   // the name arrives
 
             /* ---------- top-edge colour ----------
                iOS Safari paints the strip behind the status bar in a colour it samples from the page
@@ -631,7 +609,6 @@
                 const st = document.querySelector('.fx-stage');
                 if (st) st.style.backgroundColor = c;
             }
-            if (root.classList.contains('fx-gate-on')) setTopColor('#8f0000');
 
             /* ---------- elements ---------- */
             const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
@@ -1060,7 +1037,7 @@
                 // the colour actually at the top edge of the scene, measured from the camera
                 const vbTop = cy - SH / 2 / k, vbLeft = cx - SW / 2 / k;
                 const redTop = st > 0.02 || (swell > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, true) > 0.5);
-                if (!root.classList.contains('fx-gate-on')) setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
+                setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
                 echoes.forEach((e) => {
                     const f = +e.dataset.echo;
                     const ecx = lerp(PC.x, cx, 1 - (f - 1) * 4);   // in a pan the echoes lag behind: depth
@@ -1070,7 +1047,7 @@
             const heroLoop = (t) => { easeGap(); if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
             new IntersectionObserver(([e]) => {
                 heroOn = e.isIntersecting; heroDirty = true;
-                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); if (!root.classList.contains('fx-gate-on')) setTopColor('#060606'); }
+                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); setTopColor('#060606'); }
             }).observe(hero);
             requestAnimationFrame(heroLoop);
 
@@ -1146,9 +1123,131 @@
                 odoSets.forEach((strips) => strips.forEach((st) => { st.style.transform = `translateY(-${st.dataset.stop * 1.1}em)`; }));
             }
 
+            /* ---------- opening: a spark traces the mark small in red, it grows, then imprints on the dark mark ----------
+               An outline, not a fill, because colour and texture are what the scroll adds later. */
+            function intro() {
+                const gate = document.querySelector('.fx-gate'), svg = gate.querySelector('svg'), cvs = gate.querySelector('canvas'), cx2d = cvs.getContext('2d');
+                // the F from its foot, then the W: the order a hand would draw it
+                const F = UNIQ[1], fi = Math.max(0, F.findIndex((p) => p[0] === 52));
+                const S = [[...F.slice(fi), ...F.slice(0, fi)], UNIQ[0]].map((P) => {
+                    const L = [0];
+                    P.forEach((p, i) => { const q = P[(i + 1) % P.length]; L.push(L[i] + Math.hypot(q[0] - p[0], q[1] - p[1])); });
+                    return { P, L, len: L[L.length - 1] };
+                });
+                const at = (s, d) => {
+                    let i = 1; while (i < s.L.length - 1 && s.L[i] < d) i++;
+                    const a = s.P[i - 1], b = s.P[i % s.P.length], t = (d - s.L[i - 1]) / (s.L[i] - s.L[i - 1] || 1);
+                    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+                };
+                svg.innerHTML = S.map((s) => { const d = `M${s.P.map(P2).join(' L')} Z`; return `<path class="ln halo" pathLength="100" d="${d}"/><path class="ln" pathLength="100" d="${d}"/>`; }).join('');
+                const paths = [...svg.querySelectorAll('.ln')];
+
+                // timing (ms): trace (time shared by length, a breath between letters), hold, enlarge, imprint
+                const TRACE = mobile ? 1500 : 1800, BREATH = 120, HOLD = 260, GROW = 1100, PRESS = 650, WAIT = 1200;
+                const T1 = TRACE * S[0].len / (S[0].len + S[1].len), T2 = TRACE - T1, TEND = T1 + BREATH + T2;
+                // camera: the same frame renderHero draws at the top of the scroll, zoomed about the mark's centre
+                const kRest = () => K0 * 1.08, kSmall = () => Math.min(mobile ? 150 : 210, SW * 0.4) / 1872;
+                const camY = (k) => PC.y - (0.02 * SH * 1.08 - GAP / 2) / k;
+                const toScreen = ([x, y], k) => [(x - PC.x) * k + SW / 2, (y - camY(k)) * k + SH / 2];
+
+                let loaded = !document.fonts;
+                if (document.fonts) document.fonts.ready.then(() => { loaded = true; });
+                let t0 = 0, last = 0, grow0 = null, done = false, skipped = false, closed = [false, false];
+                const sparks = [];
+                const burst = (x, y, n, sp) => { for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, v = sp * (0.3 + Math.random()); sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, age: 0, life: 0.35 + Math.random() * 0.5, r: 0.6 + Math.random() * 1.2 }); } };
+                const star = (x, y, L, rot, a) => {
+                    cx2d.save(); cx2d.translate(x, y); cx2d.rotate(rot); cx2d.globalAlpha = a; cx2d.fillStyle = '#fff6f3';
+                    cx2d.beginPath(); cx2d.moveTo(0, -L); cx2d.quadraticCurveTo(0, 0, L, 0); cx2d.quadraticCurveTo(0, 0, 0, L); cx2d.quadraticCurveTo(0, 0, -L, 0); cx2d.quadraticCurveTo(0, 0, 0, -L); cx2d.fill();
+                    cx2d.restore();
+                };
+                stage.style.setProperty('--imp', '0');
+
+                function step(now) {
+                    if (done || skipped) return;
+                    if (!t0) t0 = last = now;
+                    const t = now - t0, dt = Math.min(0.05, (now - last) / 1000); last = now;
+                    const dpr = Math.min(2, devicePixelRatio || 1), cw = Math.round(SW * dpr), ch = Math.round(SH * dpr);
+                    if (cvs.width !== cw || cvs.height !== ch) { cvs.width = cw; cvs.height = ch; }
+                    cx2d.setTransform(dpr, 0, 0, dpr, 0, 0); cx2d.clearRect(0, 0, SW, SH);
+                    cx2d.globalCompositeOperation = 'lighter';
+
+                    // the trace: each letter eases like a pen stroke
+                    const p = [sine(clamp(t / T1)), sine(clamp((t - T1 - BREATH) / T2))];
+                    p.forEach((v, i) => { const o = (100 - v * 100).toFixed(2); paths[i * 2].style.strokeDashoffset = o; paths[i * 2 + 1].style.strokeDashoffset = o; });
+
+                    // enlarge once the trace has settled and the fonts are in (never waiting longer than WAIT)
+                    if (grow0 === null && t >= TEND + HOLD && (loaded || t >= TEND + HOLD + WAIT)) grow0 = t;
+                    let k = kSmall(), cover = 1, imp = 0, lineA = 1, halo = 0.18;
+                    if (grow0 !== null) {
+                        const g = clamp((t - grow0) / GROW), m = clamp((t - grow0 - GROW) / PRESS);
+                        k = k * Math.pow(kRest() * 1.025 / k, ease(g));
+                        cover = 1 - ease(g);
+                        // the press: it settles back onto the page, the red flares once and sinks into the dark mark
+                        if (m > 0) {
+                            ready();
+                            k = kRest() * lerp(1.025, 1, 1 - Math.pow(1 - m, 3));
+                            imp = ease(m); lineA = 1 - ease(m);
+                            halo = 0.18 + 0.45 * Math.sin(Math.PI * clamp(m / 0.45));
+                        }
+                        if (m >= 1) return end();
+                    }
+                    svg.setAttribute('viewBox', vbox(PC.x, camY(k), k));
+                    gate.style.setProperty('--cover', cover.toFixed(3));
+                    gate.style.setProperty('--lineA', lineA.toFixed(3));
+                    gate.style.setProperty('--halo', halo.toFixed(3));
+                    stage.style.setProperty('--imp', imp.toFixed(3));
+
+                    // the spark: a hot point leading the line, shedding embers
+                    const li = t < T1 ? 0 : t >= T1 + BREATH && t < TEND ? 1 : -1;
+                    if (li >= 0) {
+                        const s = S[li], [x, y] = toScreen(at(s, p[li] * s.len), k), [bx, by] = toScreen(at(s, Math.max(0, p[li] * s.len - 6)), k);
+                        const mx = x - bx, my = y - by, ml = Math.hypot(mx, my) || 1;
+                        for (let i = 0; i < 2; i++) { const a = Math.random() * Math.PI * 2, v = 12 + Math.random() * 40; sparks.push({ x, y, vx: Math.cos(a) * v - mx / ml * 30, vy: Math.sin(a) * v - my / ml * 30, age: 0, life: 0.3 + Math.random() * 0.4, r: 0.5 + Math.random() * 1.1 }); }
+                        const fl = 0.8 + Math.random() * 0.4, R = 15 * fl;
+                        const gr = cx2d.createRadialGradient(x, y, 0, x, y, R);
+                        gr.addColorStop(0, 'rgba(255, 246, 242, 0.95)'); gr.addColorStop(0.22, 'rgba(255, 110, 90, 0.5)'); gr.addColorStop(1, 'rgba(211, 22, 27, 0)');
+                        cx2d.fillStyle = gr; cx2d.beginPath(); cx2d.arc(x, y, R, 0, Math.PI * 2); cx2d.fill();
+                        star(x, y, 9 * fl, t * 0.0016, 0.85);
+                    }
+                    // each letter closing gives off a small burst and a last glint
+                    [T1, TEND].forEach((tc, i) => {
+                        if (t >= tc && !closed[i]) { closed[i] = true; const [x, y] = toScreen(S[i].P[0], k); burst(x, y, 22, 70); }
+                        const since = t - tc;
+                        if (since >= 0 && since < 380) { const [x, y] = toScreen(S[i].P[0], k), f = 1 - since / 380; star(x, y, 14 * f + 4, 0.4 + since * 0.002, f); }
+                    });
+                    for (let i = sparks.length - 1; i >= 0; i--) {
+                        const e = sparks[i]; e.age += dt;
+                        if (e.age >= e.life) { sparks.splice(i, 1); continue; }
+                        e.x += e.vx * dt; e.y += e.vy * dt; e.vx *= 0.94; e.vy = e.vy * 0.94 + 18 * dt;
+                        const a = 1 - e.age / e.life;
+                        cx2d.fillStyle = `rgba(255, ${Math.round(70 + 180 * a * a)}, ${Math.round(55 + 170 * a * a)}, ${a.toFixed(3)})`;
+                        cx2d.beginPath(); cx2d.arc(e.x, e.y, e.r * (0.5 + 0.5 * a), 0, Math.PI * 2); cx2d.fill();
+                    }
+                    requestAnimationFrame(step);
+                }
+                function end() {
+                    if (done) return; done = true;
+                    try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
+                    ready();
+                    stage.style.removeProperty('--imp');
+                    root.classList.remove('fx-gate-on'); gate.remove();
+                    heroDirty = true; req();
+                }
+                // any input skips straight to the page
+                const skip = () => {
+                    if (done || skipped) return; skipped = true;
+                    stage.style.removeProperty('--imp'); ready();
+                    gate.classList.add('is-skip');
+                    setTimeout(end, 350);
+                };
+                ['click', 'keydown', 'wheel', 'touchstart'].forEach((ev) => addEventListener(ev, skip, { once: true, passive: true }));
+                requestAnimationFrame(step);
+            }
+
             layout();
             frame();
             renderHero(performance.now());
+            if (root.classList.contains('fx-gate-on')) intro(); else requestAnimationFrame(() => requestAnimationFrame(ready));
             addEventListener('scroll', () => { heroDirty = true; }, { passive: true });
             if (document.fonts) document.fonts.ready.then(() => { layout(); heroDirty = true; req(); });
         })();
