@@ -76,7 +76,7 @@
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
         .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
             background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
-            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(1 + var(--em) * 0.25)); opacity: calc(0.8 + var(--em) * 0.4 - var(--zm) * 1.2);
+            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(0.82 + var(--glow, 1) * 0.22)); opacity: calc(var(--glow, 1) * 0.85);
             }
         @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
         .fx-par { position: absolute; inset: 0; pointer-events: none; }
@@ -123,11 +123,14 @@
         .fx-echo { opacity: calc(var(--em) * 0.3 * (1 - var(--zm) * 2)); fill: none; stroke: rgba(211, 22, 27, 0.4); stroke-width: 1; }
         /* a vignette the mark can sink into */
         .fx-vig { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--swell, 0));
-            background: radial-gradient(120% 95% at 50% 42%, transparent 45%, rgba(0, 0, 0, 0.62) 100%), linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 38%); }
+            background: radial-gradient(130% 110% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.55) 100%); }
         /* stage hint: design, build, ship */
-        .fx-hint { position: absolute; z-index: 3; left: 40px; bottom: calc(40px + var(--gap)); display: inline-flex; align-items: center; gap: 14px; pointer-events: none; opacity: var(--hint, 0);
+        .fx-hint { position: absolute; z-index: 3; left: 40px; bottom: calc(40px + var(--gap)); display: inline-flex; align-items: center; gap: 14px; pointer-events: none; opacity: var(--hint, 1);
             font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
-        .fx-hint i { width: 1px; height: 22px; background: linear-gradient(to bottom, transparent, var(--red)); transform: skewX(calc(var(--lean) * -1)); }
+        .fx-hint i { position: relative; width: 1px; height: 22px; background: linear-gradient(to bottom, transparent, var(--red)); transform: skewX(calc(var(--lean) * -1)); }
+        .fx-hint i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, #fff); opacity: 0; transition: opacity 0.5s ease; }
+        .fx-hint.is-scroll i { animation: fx-cue 2.2s ease-in-out infinite; }
+        .fx-hint.is-scroll i::after { opacity: 1; }
         .fx-hint .hw { position: relative; display: block; height: 1.4em; width: 9em; overflow: hidden; }
         .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
         .fx-hint b.is-on { transform: none; opacity: 1; }
@@ -326,7 +329,7 @@
         .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
         .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-stage::before, .fx-reduce .fx-marq .track, .fx-reduce .fx-cue i { animation: none; }
-        .fx-reduce .fx-hint { display: none; }
+        .fx-reduce .fx-hint i { animation: none; }
         .fx-reduce .fx-wipe-edge { display: none; }
     </style>
 </head>
@@ -421,8 +424,7 @@
                     <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
                     <div class="role-in"><div class="role">UI/UX Designer</div></div>
                 </div>
-                <div class="fx-cue" aria-hidden="true"><i></i>Scroll</div>
-                <div class="fx-hint" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Design</b><b>Build</b><b>Ship</b></span></div>
+                <div class="fx-hint is-scroll" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Scroll</b><b>Design</b><b>Build</b><b>Ship</b></span></div>
                 <div class="fx-scene">
                     <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
                     <div class="fx-sin">
@@ -894,11 +896,19 @@
                     aheadPoly.setAttribute('points', `${f1(edgeX(gx, -3000))} -3000 30000 -3000 30000 5000 ${f1(edgeX(gx, 5000))} 5000`);
                 }
                 stage.style.setProperty('--bloom', (built ? 0 : 0.5 * Math.sin(Math.PI * fp)).toFixed(3));
+                // the red light below: dims as the mark goes dark, stays low for the drawing, rises with the
+                // build, settles on the finished mark and swells as the camera leaves
+                const glow = reduce ? 1 : hp < HIDE1 ? lerp(1, 0.4, hp / HIDE1)
+                    : hp < EM0 ? lerp(0.4, 0.6, clamp((hp - DR0) / (EM0 - DR0)))
+                    : hp < EM1 ? lerp(0.6, 1.4, sine((hp - EM0) / (EM1 - EM0)))
+                    : hp < ZM0 ? lerp(1.4, 1.05, sine((hp - EM1) / (ZM0 - EM1)))
+                    : lerp(1.05, 1.6, clamp((hp - ZM0) / (ZM1 - ZM0)));
+                stage.style.setProperty('--glow', glow.toFixed(3));
                 // stage hint
-                const hv = reduce ? 0 : clamp((hp - 0.035) / 0.025) * (1 - clamp((hp - (ST0 - 0.03)) / 0.03));
+                const hv = reduce ? 1 : 1 - clamp((hp - (ST0 - 0.03)) / 0.03);
                 stage.style.setProperty('--hint', hv.toFixed(3));
-                const hi = hp < EM0 + 0.01 ? 0 : hp < ZM0 ? 1 : 2;
-                if (hi !== hintI) { hintI = hi; hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
+                const hi = reduce || hp < 0.04 ? 0 : hp < EM0 + 0.01 ? 1 : hp < ZM0 ? 2 : 3;
+                if (hi !== hintI) { hintI = hi; hint.classList.toggle('is-scroll', hi === 0); hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
                 stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
                 letters.forEach(({ ci, d }) => {
                     const k = clamp(fade * 1.5 - d * 0.5);
