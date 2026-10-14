@@ -32,7 +32,6 @@
            in the part that is always visible. */
         .fx { --gap: 0px; }
         @supports (height: 100lvh) { .fx { --gap: calc(100lvh - 100svh); } }
-        .fx-vprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: var(--gap); pointer-events: none; visibility: hidden; }
         .fx-lprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: 100vh; pointer-events: none; visibility: hidden; }
         @supports (height: 100lvh) { .fx-lprobe { height: 100lvh; } }
         body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg;
@@ -355,7 +354,7 @@
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
     <div class="fx-switch" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a></div>
-    <div class="fx-vprobe" aria-hidden="true"></div><div class="fx-lprobe" aria-hidden="true"></div>
+    <div class="fx-lprobe" aria-hidden="true"></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
         <defs>
@@ -651,7 +650,19 @@
             const PC = { x: 988, y: 992.5 };
             const slabX = (y) => 2144 - (y - 416) * 0.3045;
             let K0 = 1, SW = 1, SH = 1, GAP = 0, VH = innerHeight, mobile = false, slantA = 0;
-            const vprobe = document.querySelector('.fx-vprobe'), lprobe = document.querySelector('.fx-lprobe');
+            const lprobe = document.querySelector('.fx-lprobe');
+            /* the visible height grows when Safari's bars collapse on the first scroll (and shrinks when they return):
+               measure it live and ease the gap, so every scene stays centred in what is actually on screen */
+            let gapNow = 0, gapTarget = 0;
+            const measureGap = () => { gapTarget = Math.max(0, Math.min(VH * 0.3, VH - innerHeight)); };
+            const applyGap = () => { GAP = gapNow; document.body.style.setProperty('--gap', `${gapNow.toFixed(1)}px`); };
+            const easeGap = () => {
+                if (Math.abs(gapTarget - gapNow) < 0.5) { if (gapNow !== gapTarget) { gapNow = gapTarget; applyGap(); heroDirty = true; } return; }
+                gapNow += (gapTarget - gapNow) * 0.18; applyGap(); heroDirty = true;
+            };
+            addEventListener('resize', measureGap);
+            if (window.visualViewport) visualViewport.addEventListener('resize', measureGap);
+            addEventListener('scroll', measureGap, { passive: true });
             /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
             /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll, about 4.6 screens):
                name fades and the mark goes dark; guides grow from behind the name; the outline is traced; a beat on the
@@ -664,13 +675,14 @@
                 // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
                 root.style.setProperty('--fvh', `${(lprobe.offsetHeight / 100).toFixed(3)}px`);
                 SW = stage.clientWidth; SH = stage.clientHeight;
-                GAP = vprobe.offsetHeight; VH = lprobe.offsetHeight;
+                VH = lprobe.offsetHeight;
+                measureGap(); gapNow = gapTarget; applyGap();
                 const W = mobile ? SW * 1.18 : Math.max(SW * 1.22, SH * 1.05 * 1.62);
                 K0 = W / 1872;
                 buildBevel(mobile ? 9 : 5);
                 // phones: the stage hint sits in the open space under the mark
-                const markBottom = (1569.04 - PC.y) * K0 + 0.02 * SH - GAP / 2 + SH / 2;
-                stage.style.setProperty('--hintTop', `${Math.round(markBottom + (SH - GAP - markBottom) * 0.3)}px`);
+                const markBase = (1569.04 - PC.y) * K0 + 0.02 * SH + SH / 2;   // the mark's bottom with no gap
+                stage.style.setProperty('--hintTop', `calc(${Math.round(0.7 * markBase + 0.3 * SH)}px - var(--gap) * 0.65)`);
                 buildBp();
                 bandClips = bands.map((b, i) => `inset(${(i * SH / NB).toFixed(1)}px 0 ${(SH - (i + 1) * SH / NB).toFixed(1)}px 0)`);
                 streaking = null;
@@ -986,7 +998,7 @@
                     e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
                 });
             }
-            const heroLoop = (t) => { if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
+            const heroLoop = (t) => { easeGap(); if (heroOn) renderHero(t); requestAnimationFrame(heroLoop); };
             new IntersectionObserver(([e]) => {
                 heroOn = e.isIntersecting; heroDirty = true;
                 if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); if (!root.classList.contains('fx-gate-on')) setTopColor('#060606'); }
