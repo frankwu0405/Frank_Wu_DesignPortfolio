@@ -396,7 +396,7 @@
             .fx-title .role { letter-spacing: 0.3em; }
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
             .fx-bp .bp-tip { filter: none; }
-            .fx-sin { padding: 0 20px; }
+            .fx-sin { padding: 0 20px calc(var(--fvh, 1vh) * 12); justify-content: flex-end; }   /* low, so the preview behind has the top half */
             .fx-sin .display { font-size: 13vw; }
             .fx-sin .aside { font-size: 1.05rem; }
             .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
