@@ -222,12 +222,21 @@
         .fx-pbg img.is-on { opacity: 1; }
         .fx-pstage::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
             background: linear-gradient(to bottom, transparent 70%, var(--ink)), radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); }
-        /* the room: clipped as it closes in; its box lifts off the black, takes a faint rim and fills with teal */
+        /* the pack-up is one card: its front is the room with the stats, its back is Nitori (white wordmark on teal). The
+           room shrinks to the tile with the scene inside it, then the card flips over bottom-first in perspective, lifting
+           toward the viewer mid-turn, the face turning away going into shade, and a teal glow on the floor as Nitori comes
+           round. All of it follows the scroll */
         .fx-pred { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
-        .fx-pbox { position: absolute; left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box; background: rgba(255, 255, 255, var(--lift, 0)); }
-        .fx-pteal { position: absolute; inset: 0; background: var(--nitori); opacity: 0; }
-        /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type */
-        .fx-pstats { position: absolute; inset: 0 0 var(--gap) 0; transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
+        .fx-pflip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-style: preserve-3d; transform-origin: 50% 50%; }
+        .fx-pfront, .fx-pback { position: absolute; inset: 0; overflow: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+        .fx-pback { transform: rotateX(180deg); background: var(--nitori); }
+        .fx-pfront::after, .fx-pback::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--shade, 0); pointer-events: none; }
+        .fx-pbox { position: absolute; inset: 0; background: rgba(255, 255, 255, var(--lift, 0)); }
+        .fx-pfloor { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 1.5); height: calc(var(--cw) * 0.36); border-radius: 50%; opacity: 0; pointer-events: none;
+            background: radial-gradient(closest-side, rgba(0, 158, 150, 0.32), rgba(0, 158, 150, 0.08) 60%, transparent); }
+        /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type;
+           it keeps the stage's size inside the card, and only scales */
+        .fx-pstats { position: absolute; left: 0; top: 0; width: var(--psw, 100vw); height: calc(var(--psh, 100vh) - var(--gap)); transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
         .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.022em; line-height: 1.02; color: #fff; }
         /* "Designed, built," arrives full size and white; as the punchline comes in, it steps back (smaller, slightly dimmed)
            so "and it sells." lands on its own */
@@ -273,7 +282,7 @@
             white-space: nowrap; color: rgba(255, 255, 255, 0.8); }
         .fx-pfig p .w { display: inline-block; opacity: 0; }
         /* the wordmark, coming up on the teal as the room closes in to the tile */
-        .fx-pmark { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 0.4); opacity: 0; pointer-events: none; }
+        .fx-pmark { position: absolute; left: 50%; top: 50%; width: calc(var(--cw) * 0.4); transform: translate(-50%, -50%); pointer-events: none; }
         /* the tile's first face is the Nitori logo; it stays a logo until the tile clicks into the row, then lifts away
            to show the live page */
         .fx-pface { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; background: var(--nitori);
@@ -399,7 +408,7 @@
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
         }
         .fx-reduce .fx-pred, .fx-reduce .fx-pface, .fx-reduce .fx-trail-head { display: none; }
-        .fx-pstats.is-static { position: relative; inset: auto; padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 8); }
+        .fx-pstats.is-static { position: relative; inset: auto; width: auto; height: auto; padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 8); }
         .fx-pstats.is-static .fx-pfigs { position: static; }
         .fx-pstats.is-static .fx-pfigs { margin-top: calc(var(--fvh, 1vh) * 8); flex-wrap: wrap; gap: 4vh 4vw; }
         .fx-pstats.is-static .hw, .fx-pstats.is-static .fx-psub, .fx-pstats.is-static .w { opacity: 1; filter: none; transform: none; transition: none; }
@@ -556,7 +565,10 @@
                     <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
                 </div>
                 <div class="fx-pred">
-                    <div class="fx-pbox"><i class="fx-pteal"></i></div>
+                    <i class="fx-pfloor" aria-hidden="true"></i>
+                    <div class="fx-pflip">
+                    <div class="fx-pfront">
+                    <div class="fx-pbox"></div>
                     <div class="fx-pstats">
                         <div class="fx-pclaim">
                             <h2 class="fx-phead"><span class="set"><span class="hw">Designed,</span> <span class="hw">built,</span></span><br><em class="punch"><span class="hw">and</span> <span class="hw">it</span> <span class="hw sold">sells.</span></em></h2>
@@ -568,7 +580,9 @@
                             <li class="fx-pfig"><div class="fx-pnum"><b>+40<span class="u">%</span></b></div><p>Growth, one launch to the next</p></li>
                         </ul>
                     </div>
-                    <img class="fx-pmark" src="assets/images/home/nitori_mark_white.png" alt="" aria-hidden="true">
+                    </div>
+                    <div class="fx-pback"><img class="fx-pmark" src="assets/images/home/nitori_mark_white.png" alt="" aria-hidden="true"></div>
+                    </div>
                 </div>
                 <button type="button" class="fx-pnav prev" aria-label="Previous project">&larr;</button>
                 <button type="button" class="fx-pnav next" aria-label="Next project">&rarr;</button>
@@ -715,7 +729,8 @@
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const proof = document.querySelector('.fx-proof'), pstage = proof.querySelector('.fx-pstage');
             const pRed = proof.querySelector('.fx-pred'), pStats = proof.querySelector('.fx-pstats'), pMark = proof.querySelector('.fx-pmark');
-            const pInfo = proof.querySelector('.fx-pinfo'), pBox = proof.querySelector('.fx-pbox'), pTeal = proof.querySelector('.fx-pteal');
+            const pInfo = proof.querySelector('.fx-pinfo'), pBox = proof.querySelector('.fx-pbox'), pFlip = proof.querySelector('.fx-pflip'), pFloor = proof.querySelector('.fx-pfloor');
+            const pFront = proof.querySelector('.fx-pfront'), pBack = proof.querySelector('.fx-pback');
             const pHead = proof.querySelector('.fx-pclaim'), pFigs = proof.querySelector('.fx-pfigs'), pFig = [...proof.querySelectorAll('.fx-pfig')];
             const pCards = [...proof.querySelectorAll('.fx-pcard')], pNames = [...proof.querySelectorAll('.fx-pname')], pLabs = [...proof.querySelectorAll('.fx-plab')];
             const pDescs = [...pInfo.querySelectorAll('.d')], pBgs = [...proof.querySelectorAll('.fx-pbg img')];
@@ -724,7 +739,11 @@
                wipe [0.1, 0.92 screens], then a slow drift; the room closes in to the tile and fills with teal [BIRTH0, MORPH0];
                a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
                onto the live page; a hold on the row */
-            const PU = 4.3, BIRTH0 = 2.4 / PU, MORPH0 = 3.2 / PU, DROP0 = 3.45 / PU, LAND = 4.0 / PU;
+            const PU = 4.55, BIRTH0 = 2.4 / PU, MORPH0 = 3.95 / PU, DROP0 = 3.6 / PU, LAND = 4.25 / PU;
+            // the pack-up, in screens: the room shrinks to the card [2.4, 2.95], then the card turns over across a full screen
+            // [2.95, 3.95], so the turn follows the scroll closely instead of snapping. The drop starts while it is still turning
+            // [3.6, 4.25]: the same card carries on down into the row's empty slot as the row comes up to meet it
+            const SHRINK = [2.4, 2.95], FLIP = [2.95, 3.95];
             // when each figure rises (left to right), in screens from the start of the wipe: after the claim and the light
             const RISE = [[0.75, 1.17], [1.2, 1.56], [1.6, 1.96]], LIGHT = [0.55, 0.8], HOLD0 = 2.0;
             const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, wipe: 0, total: 1, fs: 100 };
@@ -1178,6 +1197,7 @@
                 const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
                 pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
                 PG.fs = parseFloat(getComputedStyle(pFig[0].querySelector('.fx-pnum')).fontSize) || 100;
+                pstage.style.setProperty('--psw', `${sw}px`); pstage.style.setProperty('--psh', `${sh}px`);   // the scene keeps its size inside the card
                 // each rolling column is exactly as wide as the digit it lands on
                 figs.forEach((f) => f.cols.forEach((col) => {
                     const m = document.createElement('span'); m.className = 'dc'; m.textContent = col.d; f.num.appendChild(m);
@@ -1283,8 +1303,8 @@
                     pHead.classList.toggle('is-in', u > 0.36);
                     // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
                     const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
-                    // the pack-up moves everything as one: it sinks into the shadow while the frame closes in around it
-                    const ks = ease(clamp(bth / 0.6)), still = 1 - ks;
+                    // the pack-up moves everything as one: the room shrinks to the tile with the scene inside, then the card flips
+                    const bs = ease(clamp((u - SHRINK[0]) / (SHRINK[1] - SHRINK[0]))), still = 1 - bs;
                     shift(pHead, 0, -drift * sh * 0.012);
                     let landed0 = false, landed2 = false;
                     figs.forEach(({ num, p, words, cols }, i) => {
@@ -1314,28 +1334,31 @@
                     pHead.classList.toggle('is-grown', landed2);
                     // the light from above comes up over the empty floor before anything rises
                     pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * still).toFixed(3));
-                    // then the room closes in to the tile. The scene inside shrinks with it (the figures already sinking back
-                    // into the shadow), its box lifts off the black with a faint rim, and Nitori teal rises through it from below
+                    // the room closes in to the tile (the card), the scene shrinking with it and the card lifting off the black
                     const T = fy0 - H / 2, L = cx - W / 2;
-                    const rx = L * bth, ry = T * bth, rw = sw - (sw - W) * bth, rh = sh - (sh - H) * bth, sc = rw / sw;
-                    pRed.style.clipPath = bth > 0 ? `inset(${ry.toFixed(1)}px ${(sw - rx - rw).toFixed(1)}px ${(sh - ry - rh).toFixed(1)}px ${rx.toFixed(1)}px)` : '';
-                    pRed.style.visibility = bth >= 1 ? 'hidden' : '';
-                    pStats.style.transform = bth > 0 ? `translate3d(${rx.toFixed(1)}px, ${(ry + (rh - sh * sc) / 2 + ks * sh * 0.14 * sc).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
-                    const sm = ks > 0 ? `linear-gradient(to bottom, #000 ${(118 - ks * 140).toFixed(1)}%, transparent ${(148 - ks * 140).toFixed(1)}%)` : '';
-                    pStats.style.webkitMaskImage = sm; pStats.style.maskImage = sm;
-                    pBox.style.left = `${rx.toFixed(1)}px`; pBox.style.top = `${ry.toFixed(1)}px`;
-                    pBox.style.width = `${rw.toFixed(1)}px`; pBox.style.height = `${rh.toFixed(1)}px`;
-                    // the teal comes in from the frame's edges and floods inward, a soft inner glow closing on the centre, where the
-                    // white wordmark comes up in the last of the dark
-                    // (two soft bands, one per axis, so the dark opening keeps the tile's proportions as it closes)
-                    const tf = ease(clamp((bth - 0.38) / 0.62)), fe = lerp(16, 7, tf), hx = (1 - tf) * (50 + fe) - fe;
-                    pBox.style.setProperty('--lift', (0.035 * clamp(bth * 3)).toFixed(4));
-                    const band = (dir, c) => `linear-gradient(${dir}, #000 ${(c - hx - fe).toFixed(2)}%, transparent ${(c - hx).toFixed(2)}%, transparent ${(c + hx).toFixed(2)}%, #000 ${(c + hx + fe).toFixed(2)}%)`;
-                    const tm = `${band('to right', (cx - rx) / rw * 100)}, ${band('to bottom', (fy0 - ry) / rh * 100)}`;
-                    pTeal.style.opacity = tf > 0 ? '1' : '0';
-                    pTeal.style.webkitMaskImage = tm; pTeal.style.maskImage = tm;
-                    pMark.style.opacity = ease(clamp((tf - 0.55) / 0.4)).toFixed(3);
-                    pMark.style.transform = `translate3d(${cx.toFixed(1)}px, ${fy0.toFixed(1)}px, 0) translate(-50%, -50%)`;
+                    const rx = L * bs, ry = T * bs, rw = sw - (sw - W) * bs, rh = sh - (sh - H) * bs, sc = Math.min(rw / sw, rh / sh);   // fits both ways (a phone's scene is tall)
+                    pRed.style.visibility = landed ? 'hidden' : '';   // the card that flipped is the card that lands
+                    const dropY = (cardY - fy0) * ease(dp);
+                    pFlip.style.left = `${rx.toFixed(1)}px`; pFlip.style.top = `${(ry + dropY).toFixed(1)}px`;
+                    pFlip.style.width = `${rw.toFixed(1)}px`; pFlip.style.height = `${rh.toFixed(1)}px`;
+                    pStats.style.transform = bth > 0 ? `translate3d(${((rw - sw * sc) / 2).toFixed(1)}px, ${((rh - sh * sc) / 2).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
+                    pBox.style.setProperty('--lift', (0.04 * clamp(bth * 3)).toFixed(4));
+                    // then the flip: bottom edge first, toward the viewer and up over the top, easing past flat and back; it lifts
+                    // off the floor mid-turn, the face turning away goes into shade, and Nitori's teal glows on the floor beneath
+                    const fp = clamp((u - FLIP[0]) / (FLIP[1] - FLIP[0]));
+                    // nearly linear with the scroll (a gentle sine ease at either end), finishing a little early so it can settle
+                    const turn = 0.5 - 0.5 * Math.cos(Math.PI * clamp(fp / 0.86));
+                    const over = Math.sin(Math.PI * clamp((fp - 0.72) / 0.28)) * 5;   // a few degrees past flat as it lands, then back
+                    const ang = turn * 180 + over, arc = Math.sin(Math.PI * turn);
+                    pRed.style.perspective = `${(H * 3.2).toFixed(0)}px`;
+                    pRed.style.perspectiveOrigin = `${cx.toFixed(1)}px ${(fy0 + dropY).toFixed(1)}px`;
+                    pFlip.style.transform = fp > 0 ? `translate3d(0, ${(-arc * H * 0.12).toFixed(1)}px, ${(arc * H * 0.55).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
+                    const edge = Math.abs(Math.sin(ang * Math.PI / 180));   // 1 when the card is edge-on
+                    pFront.style.setProperty('--shade', (ang < 90 ? edge * 0.75 : 1).toFixed(3));
+                    pBack.style.setProperty('--shade', (ang > 90 ? edge * 0.6 : 1).toFixed(3));
+                    const glow = clamp((ang - 60) / 120) * (0.55 + arc * 0.45);
+                    pFloor.style.opacity = glow.toFixed(3);
+                    pFloor.style.transform = `translate3d(${cx.toFixed(1)}px, ${(fy0 + dropY + H * 0.62).toFixed(1)}px, 0) translate(-50%, -50%) scale(${(0.8 + arc * 0.35).toFixed(3)})`;
                 }
 
                 // the row: centre in colour, neighbours grey; it loops, fading out at either end. Before the landing it comes up
@@ -1346,7 +1369,7 @@
                     const ao = Math.abs(o), grey = clamp(ao);
                     let x = cx + o * s1, y = cardY + rowOff;
                     let op = o < -1 ? clamp(1 - (-1 - o) / 0.5) : o > 2 ? clamp(1 - (o - 2) / 0.5) * 0.5 : o > 1 ? lerp(1, 0.5, o - 1) : 1;
-                    if (i === 0 && !landed) { x = cx; y = lerp(fy0, cardY, ease(dp)); op = bth >= 1 ? 1 : 0; }
+                    if (i === 0 && !landed) { x = cx; y = lerp(fy0, cardY, ease(dp)); op = 0; }   // until it lands, the flipping card stands in for it
                     else if (ao > 0.5) op *= rowVis;
                     cd.style.opacity = op.toFixed(3);
                     cd.style.visibility = op < 0.003 ? 'hidden' : '';
