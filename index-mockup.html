@@ -225,7 +225,6 @@
         /* the room: clipped as it closes in; its box lifts off the black, takes a faint rim and fills with teal */
         .fx-pred { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
         .fx-pbox { position: absolute; left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box; background: rgba(255, 255, 255, var(--lift, 0)); }
-        .fx-pbox::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255, 70, 55, var(--rim, 0)); }
         .fx-pteal { position: absolute; inset: 0; background: var(--nitori); opacity: 0; }
         /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type */
         .fx-pstats { position: absolute; inset: 0 0 var(--gap) 0; transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
@@ -233,29 +232,37 @@
         /* "Designed, built," arrives full size and white; as the punchline comes in, it steps back (smaller, slightly dimmed)
            so "and it sells." lands on its own */
         .fx-phead .set { display: inline-block; margin-bottom: 0.04em; font-size: var(--set0, 1em); color: #fff; white-space: nowrap;
-            transition: font-size 1s cubic-bezier(0.65, 0, 0.25, 1) 0.72s, color 1s ease 0.72s; }
-        .fx-pclaim.is-in .set { font-size: var(--set1, 0.62em); color: rgba(255, 255, 255, 0.62); }
+            transition: font-size 0.4s ease, color 0.4s ease; }
+        .fx-pclaim.is-in .set { font-size: var(--set1, 0.62em); color: rgba(255, 255, 255, 0.62);
+            transition: font-size 1s cubic-bezier(0.65, 0, 0.25, 1) 1.32s, color 1s ease 1.32s; }
         .fx-phead .punch { font-style: italic; font-weight: 900; }
-        .fx-phead .hw.sold { transition-property: opacity, filter, transform, color; transition-duration: 0.9s, 0.9s, 1s, 0.8s; transition-delay: var(--in, 0s), var(--in, 0s), var(--in, 0s), 0s; }
         .fx-pclaim.is-sold .sold { color: var(--red); }
         /* each word arrives like the hero's name: out of a blur, rising a touch */
         .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em);
-            transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--in, 0s); }
+            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.45s ease, color 0.8s ease; }
         .fx-phead .punch .hw { transform: translateY(0.34em); }
-        .fx-pclaim.is-in .hw { opacity: 1; filter: none; transform: none; }
+        .fx-pclaim.is-in .hw { opacity: 1; filter: none; transform: none;
+            transition: opacity 0.9s ease var(--in, 0s), filter 0.9s ease var(--in, 0s), transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--in, 0s), color 0.8s ease; }
         /* the subheading, set like the statement's aside, lands a beat after the headline */
         .fx-psub { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
             opacity: 0; filter: blur(10px); transform: translateY(0.4em); transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-pclaim.is-in .fx-psub { opacity: 1; filter: none; transform: none; transition-delay: 1.45s; }
+        .fx-pclaim.is-in .fx-psub { opacity: 1; filter: none; transform: none; transition-delay: 2.35s; }
         .fx-psub span { color: rgba(255, 255, 255, 0.62); transition: color 0.8s ease; }
         .fx-pclaim.is-grown .fx-psub .iter { color: #fff; }
         /* the figures: large and light; their lower halves stay in a soft shadow (a mask on a still frame, so they rise
            through it) */
         .fx-pstats .fx-pfigs { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin: calc(var(--fvh, 1vh) * 11) 0 0; padding: 0; list-style: none; }
         .fx-pfig { position: relative; }
-        .fx-pnum { --fs: clamp(3.6rem, min(10.4vw, calc(var(--fvh, 1vh) * 20)), 11rem); height: var(--fs); font-size: var(--fs); line-height: 1;
-            -webkit-mask-image: linear-gradient(to bottom, #000 38%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.08) 72%, transparent 84%); mask-image: linear-gradient(to bottom, #000 38%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.08) 72%, transparent 84%);
-            -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+        /* the box has headroom above the digits (0.45em), so the drift and the pointer never push them out of the mask */
+        .fx-pnum { --fs: clamp(3.6rem, min(10.4vw, calc(var(--fvh, 1vh) * 20)), 11rem); height: calc(var(--fs) * 1.45); margin-top: calc(var(--fs) * -0.45); padding-top: 0.45em; box-sizing: border-box;
+            font-size: var(--fs); line-height: 1;
+            --pmask: linear-gradient(to bottom, #000 57%, rgba(0, 0, 0, 0.32) 71%, rgba(0, 0, 0, 0.08) 80.7%, transparent 89%);
+            -webkit-mask-image: var(--pmask); mask-image: var(--pmask); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+        /* the digits roll up into place as each figure rises: each one a clipped column of figures */
+        .fx-pnum .dc, .fx-pnum .dg { display: inline-block; vertical-align: top; height: 1em; }
+        .fx-pnum .dg { overflow: hidden; text-align: center; }
+        .fx-pnum .ds { display: block; white-space: pre; will-change: transform; }
+        .fx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
         .fx-pnum b { display: block; font-size: inherit; font-weight: 900; font-style: normal; letter-spacing: -0.05em; white-space: nowrap; color: #fff; will-change: transform, filter; }
         .fx-pnum .u { position: relative; top: -1.25em; margin-right: 0.06em; font-size: 0.32em; font-weight: 800; letter-spacing: -0.01em; color: var(--red); }
         /* the light falls from above; the shadow is where it runs out */
@@ -375,7 +382,7 @@
             .fx-phead { font-size: 13vw; --set0: 0.6em; --set1: 0.46em; }
             .fx-psub { font-size: 1.05rem; }
             .fx-pstats .fx-pfigs { flex-direction: column; gap: calc(var(--fvh, 1vh) * 2.6); margin-top: calc(var(--fvh, 1vh) * 6); }
-            .fx-pnum { --fs: min(20vw, calc(var(--fvh, 1vh) * 11.5)); }
+            .fx-pnum { --fs: min(20vw, calc(var(--fvh, 1vh) * 11.5)); --pmask: linear-gradient(to bottom, #000 69%, rgba(0, 0, 0, 0.4) 80.7%, rgba(0, 0, 0, 0.12) 87.6%, transparent 93%); }
             .fx-pfig p { font-size: 0.64rem; letter-spacing: 0.28em; }
             .fx-pnum b { will-change: transform; }
             .fx-pinfo { width: 86vw; }
@@ -1170,18 +1177,44 @@
                 pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
                 const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
                 pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
-                PG.fs = pFig[0].querySelector('.fx-pnum').offsetHeight || 100;
+                PG.fs = parseFloat(getComputedStyle(pFig[0].querySelector('.fx-pnum')).fontSize) || 100;
+                // each rolling column is exactly as wide as the digit it lands on
+                figs.forEach((f) => f.cols.forEach((col) => {
+                    const m = document.createElement('span'); m.className = 'dc'; m.textContent = col.d; f.num.appendChild(m);
+                    col.c.style.width = `${m.getBoundingClientRect().width.toFixed(2)}px`; m.remove();
+                }));
             }
             // the headline's words arrive one after another, like the hero's name
             // "Designed," "built," then a held breath before the punchline
-            [0.05, 0.19, 0.8, 0.9, 1.0].forEach((d, i) => pHead.querySelectorAll('.hw')[i].style.setProperty('--in', `${d}s`));
+            [0.05, 0.7, 1.4, 1.48, 1.56].forEach((d, i) => pHead.querySelectorAll('.hw')[i].style.setProperty('--in', `${d}s`));
             // each figure's description comes into focus word by word once its figure has risen
             const figs = pFig.map((li) => {
                 const p = li.querySelector('p'), words = [];
                 const parts = p.textContent.split(/\s+/).filter(Boolean);
                 p.textContent = '';
                 parts.forEach((w, j) => { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w; p.appendChild(sp); if (j < parts.length - 1) p.appendChild(document.createTextNode(' ')); words.push(sp); });
-                return { num: li.querySelector('b'), p, words };
+                return { num: li.querySelector('b'), p, words, cols: [] };
+            });
+            figs.forEach((f, fi) => {
+                const sr = document.createElement('span'); sr.className = 'fx-sr'; sr.textContent = f.num.textContent;
+                pFig[fi].prepend(sr); f.num.parentNode.setAttribute('aria-hidden', 'true');
+                [...f.num.childNodes].forEach((nd) => {
+                    if (nd.nodeType !== 3) return;
+                    const frag = document.createDocumentFragment();
+                    [...nd.textContent].forEach((ch) => {
+                        const c = document.createElement('span');
+                        if (/\d/.test(ch)) {
+                            // later columns spin further, so they settle one after another
+                            const d = +ch, n = 5 + f.cols.length * 2, strip = document.createElement('span');
+                            c.className = 'dg'; strip.className = 'ds';
+                            strip.textContent = Array.from({ length: n + 1 }, (_, k) => (d - n + k + 100) % 10).join('\n');
+                            if (reduce) strip.style.transform = `translate3d(0, ${-n}em, 0)`;
+                            c.appendChild(strip); f.cols.push({ c, strip, d, n });
+                        } else { c.className = 'dc'; c.textContent = ch; }
+                        frag.appendChild(c);
+                    });
+                    nd.replaceWith(frag);
+                });
             });
             // desktop: the figures float a little with the pointer, over a shadow that stays put
             let ptx = 0, pty = 0, pmx = 0, pmy = 0;
@@ -1247,52 +1280,61 @@
                     const u = tv * PU;   // screens since the wipe began
                     pmx += (ptx - pmx) * k(4); pmy += (pty - pmy) * k(4);
                     // the headline: in once the wipe is about halfway, out again as the room starts to close
-                    pHead.classList.toggle('is-in', u > 0.36 && bth < 0.12);
+                    pHead.classList.toggle('is-in', u > 0.36);
                     // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
-                    const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0)) + bth * 0.6;
+                    const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
+                    // the pack-up moves everything as one: it sinks into the shadow while the frame closes in around it
+                    const ks = ease(clamp(bth / 0.6)), still = 1 - ks;
                     shift(pHead, 0, -drift * sh * 0.012);
-                    const hide = ease(clamp(bth / 0.25));   // the descriptions leave first
                     let landed0 = false, landed2 = false;
-                    figs.forEach(({ num, p, words }, i) => {
+                    figs.forEach(({ num, p, words, cols }, i) => {
                         const [a0, a1] = RISE[i];
                         const e = ease(clamp((u - a0) / (a1 - a0)));
+                        // the digits roll up with the rise and lock in, left to right, just before it settles
+                        cols.forEach((col, j) => {
+                            const rr = ease(clamp((e - 0.04 - j * 0.07) / 0.72));
+                            col.strip.style.transform = `translate3d(0, ${(-rr * col.n).toFixed(3)}em, 0)`;
+                        });
                         if (i === 0) landed0 = e > 0.97; if (i === 2) landed2 = e > 0.97;
-                        // they go back into the shadow in reverse: the last to rise is the first to sink
-                        const sink = ease(clamp((bth - (2 - i) * 0.08) / 0.34));
-                        const y = (1 - e + sink) * PG.fs * 0.95 - drift * sh * 0.025;
-                        num.style.transform = `translate3d(${(pmx * 10).toFixed(1)}px, ${(y + pmy * 5).toFixed(1)}px, 0)`;
-                        num.style.filter = !mobile && (e < 1 || sink > 0) ? `blur(${((1 - e + sink) * 8).toFixed(1)}px)` : '';
+                        const y = (1 - e) * PG.fs * 0.95 - drift * sh * 0.025;
+                        num.style.transform = `translate3d(${(pmx * 10 * still).toFixed(1)}px, ${(y + pmy * 5 * still).toFixed(1)}px, 0)`;
+                        num.style.filter = !mobile && e < 1 ? `blur(${((1 - e) * 8).toFixed(1)}px)` : '';
                         // the description sharpens as its figure settles
                         const wp = clamp((u - a1 + 0.1) / 0.24), n = words.length;
                         words.forEach((w, j) => {
-                            const q = ease(clamp((wp - 0.5 * (n > 1 ? j / (n - 1) : 0)) / 0.5)) * (1 - hide);
+                            const q = ease(clamp((wp - 0.5 * (n > 1 ? j / (n - 1) : 0)) / 0.5));
                             w.style.opacity = q.toFixed(3);
                             w.style.filter = q < 1 ? `blur(${((1 - q) * 6).toFixed(1)}px)` : '';
                             w.style.transform = q < 1 ? `translate3d(0, ${((1 - q) * 0.3).toFixed(3)}em, 0)` : '';
                         });
-                        shift(p, pmx * 5, -drift * sh * 0.04);
+                        shift(p, pmx * 5 * still, -drift * sh * 0.04);
                     });
                     // the proof lights the claim: "sells." turns red with the revenue; "Iterated on every launch." brightens with the growth
-                    pHead.classList.toggle('is-sold', landed0 && bth < 0.12);
-                    pHead.classList.toggle('is-grown', landed2 && bth < 0.12);
+                    pHead.classList.toggle('is-sold', landed0);
+                    pHead.classList.toggle('is-grown', landed2);
                     // the light from above comes up over the empty floor before anything rises
-                    pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * (1 - ease(clamp(bth / 0.5)))).toFixed(3));
+                    pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * still).toFixed(3));
                     // then the room closes in to the tile. The scene inside shrinks with it (the figures already sinking back
                     // into the shadow), its box lifts off the black with a faint rim, and Nitori teal rises through it from below
                     const T = fy0 - H / 2, L = cx - W / 2;
                     const rx = L * bth, ry = T * bth, rw = sw - (sw - W) * bth, rh = sh - (sh - H) * bth, sc = rw / sw;
                     pRed.style.clipPath = bth > 0 ? `inset(${ry.toFixed(1)}px ${(sw - rx - rw).toFixed(1)}px ${(sh - ry - rh).toFixed(1)}px ${rx.toFixed(1)}px)` : '';
                     pRed.style.visibility = bth >= 1 ? 'hidden' : '';
-                    pStats.style.transform = bth > 0 ? `translate3d(${rx.toFixed(1)}px, ${(ry + (rh - sh * sc) / 2).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
+                    pStats.style.transform = bth > 0 ? `translate3d(${rx.toFixed(1)}px, ${(ry + (rh - sh * sc) / 2 + ks * sh * 0.14 * sc).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
+                    const sm = ks > 0 ? `linear-gradient(to bottom, #000 ${(118 - ks * 140).toFixed(1)}%, transparent ${(148 - ks * 140).toFixed(1)}%)` : '';
+                    pStats.style.webkitMaskImage = sm; pStats.style.maskImage = sm;
                     pBox.style.left = `${rx.toFixed(1)}px`; pBox.style.top = `${ry.toFixed(1)}px`;
                     pBox.style.width = `${rw.toFixed(1)}px`; pBox.style.height = `${rh.toFixed(1)}px`;
-                    const tf = ease(clamp((bth - 0.25) / 0.75));
+                    // the teal comes in from the frame's edges and floods inward, a soft inner glow closing on the centre, where the
+                    // white wordmark comes up in the last of the dark
+                    // (two soft bands, one per axis, so the dark opening keeps the tile's proportions as it closes)
+                    const tf = ease(clamp((bth - 0.38) / 0.62)), fe = lerp(16, 7, tf), hx = (1 - tf) * (50 + fe) - fe;
                     pBox.style.setProperty('--lift', (0.035 * clamp(bth * 3)).toFixed(4));
-                    pBox.style.setProperty('--rim', (0.3 * clamp(bth * 4) * (1 - tf)).toFixed(3));
-                    const g1 = tf * 170, g0 = g1 - 70, mask = `linear-gradient(to top, #000 ${g0.toFixed(1)}%, transparent ${g1.toFixed(1)}%)`;
+                    const band = (dir, c) => `linear-gradient(${dir}, #000 ${(c - hx - fe).toFixed(2)}%, transparent ${(c - hx).toFixed(2)}%, transparent ${(c + hx).toFixed(2)}%, #000 ${(c + hx + fe).toFixed(2)}%)`;
+                    const tm = `${band('to right', (cx - rx) / rw * 100)}, ${band('to bottom', (fy0 - ry) / rh * 100)}`;
                     pTeal.style.opacity = tf > 0 ? '1' : '0';
-                    pTeal.style.webkitMaskImage = mask; pTeal.style.maskImage = mask;
-                    pMark.style.opacity = ease(clamp((bth - 0.6) / 0.4)).toFixed(3);
+                    pTeal.style.webkitMaskImage = tm; pTeal.style.maskImage = tm;
+                    pMark.style.opacity = ease(clamp((tf - 0.55) / 0.4)).toFixed(3);
                     pMark.style.transform = `translate3d(${cx.toFixed(1)}px, ${fy0.toFixed(1)}px, 0) translate(-50%, -50%)`;
                 }
 
