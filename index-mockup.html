@@ -404,7 +404,7 @@
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-pr-body { height: auto; }
             .fx-steps { display: grid; gap: calc(var(--fvh, 1vh) * 9); }
-            .fx-step { position: relative; width: auto; margin-left: 32px; }
+            .fx-step { position: relative; width: auto; }
             .fx-step.left { text-align: left; --sx: 30px; }
             .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
             .fx-end .mark2 { width: 170vw; right: -70vw; }
@@ -810,23 +810,38 @@
             function buildHelix() {
                 const sy = scrollY, b = prBody.getBoundingClientRect(), A = 16.5 * Math.PI / 180;
                 const S = dotCenter(dotA), E = dotCenter(trailDot);
-                let P0, P1, R, turns;
-                if (!mobile) { const cx = b.left + b.width / 2; P0 = [cx + b.height / 2 * Math.sin(A), b.top + sy]; P1 = [cx - b.height / 2 * Math.sin(A), b.top + sy + b.height]; R = Math.min(170, b.width * 0.15); turns = 2; }
-                else { const x = b.left + 12; P0 = [x, b.top + sy - 8]; P1 = [x, b.top + sy + b.height]; R = 16; turns = 4.5; }
-                const ax = P1[0] - P0[0], ay = P1[1] - P0[1], al = Math.hypot(ax, ay), nx = ay / al, ny = -ax / al;   // across the spine, in the page
-                // out of the first period, easing toward the viewer onto the top of the spine
-                const ctl = [[S.x, S.y, 0], [lerp(S.x, P0[0], 0.5), lerp(S.y, P0[1], 0.62), R * 0.55]];
-                const N = Math.round(turns * 12);
-                for (let i = 0; i <= N; i++) {
-                    const t = i / N, th = Math.PI / 2 + 2 * Math.PI * turns * t;
-                    ctl.push([P0[0] + ax * t + nx * R * Math.cos(th), P0[1] + ay * t + ny * R * Math.cos(th), R * Math.sin(th)]);
+                let R, ctl;
+                if (!mobile) {
+                    const cx = b.left + b.width / 2, P0 = [cx + b.height / 2 * Math.sin(A), b.top + sy], P1 = [cx - b.height / 2 * Math.sin(A), b.top + sy + b.height], turns = 2;
+                    R = Math.min(170, b.width * 0.15);
+                    const ax = P1[0] - P0[0], ay = P1[1] - P0[1], al = Math.hypot(ax, ay), nx = ay / al, ny = -ax / al;   // across the spine, in the page
+                    // out of the first period, easing toward the viewer onto the top of the spine
+                    ctl = [[S.x, S.y, 0], [lerp(S.x, P0[0], 0.5), lerp(S.y, P0[1], 0.62), R * 0.55]];
+                    const N = Math.round(turns * 12);
+                    for (let i = 0; i <= N; i++) {
+                        const t = i / N, th = Math.PI / 2 + 2 * Math.PI * turns * t;
+                        ctl.push([P0[0] + ax * t + nx * R * Math.cos(th), P0[1] + ay * t + ny * R * Math.cos(th), R * Math.sin(th)]);
+                    }
+                } else {
+                    // phones: across the full width. Behind each step (left to right, under its words), then back across in front
+                    // through the gap before the next, so it threads through the steps one after another
+                    R = b.width * 0.44;
+                    const cx = b.left + b.width / 2, zr = R * 0.7, band = steps.map((st) => { const r = st.getBoundingClientRect(); return [r.top + sy, r.bottom + sy]; });
+                    const at = (th, y) => [cx + R * Math.cos(th), y, zr * Math.sin(th)];
+                    const yA = (i) => lerp(band[i][0], band[i][1], 0.12), yB = (i) => lerp(band[i][0], band[i][1], 0.88);
+                    ctl = [[S.x, S.y, 0], [lerp(S.x, cx - R, 0.45), lerp(S.y, yA(0), 0.55), zr * 0.5]];
+                    band.forEach((_, i) => {
+                        const th0 = Math.PI + 2 * Math.PI * i;
+                        for (let j = 0; j <= 8; j++) ctl.push(at(th0 + Math.PI * j / 8, lerp(yA(i), yB(i), j / 8)));            // behind
+                        if (i < band.length - 1) for (let j = 1; j < 8; j++) ctl.push(at(th0 + Math.PI + Math.PI * j / 8, lerp(yB(i), yA(i + 1), j / 8)));   // in front
+                    });
                 }
                 const helixEnd = ctl.length - 1;
                 // then out past the right of the last heading, toward the viewer, and down into its period from the open side
                 const rg = document.createRange(); rg.selectNodeContents(endHead);
                 let Rt = 0, Top = Infinity; for (const rc of rg.getClientRects()) { Rt = Math.max(Rt, rc.right); Top = Math.min(Top, rc.top + sy); }
-                ctl.push([Math.min(innerWidth - 24, Rt + (mobile ? 6 : 64)), Top - (mobile ? 22 : 40), (mobile ? 40 : R) * 1.4]);
-                ctl.push([E.x + (mobile ? 16 : 44), E.y - (mobile ? 10 : 16), (mobile ? 40 : R) * 0.45]);
+                ctl.push([Math.min(innerWidth - 24, Rt + (mobile ? 6 : 64)), Top - (mobile ? 22 : 40), (mobile ? 60 : R) * 1.4]);
+                ctl.push([E.x + (mobile ? 16 : 44), E.y - (mobile ? 10 : 16), (mobile ? 60 : R) * 0.45]);
                 ctl.push([E.x, E.y, 0]);
                 // one pass over the whole route, noting where the end connector begins
                 const pts = spline(ctl, mobile ? 4 : 6, helixEnd), iE0 = pts.mark || 0;
@@ -856,16 +871,22 @@
                 const f = done ? 0 : clamp((target - ya(lo)) / Math.max(1e-3, ya(lo + 1) - ya(lo)));
                 const hx = lerp(X[lo], X[Math.min(n - 1, lo + 1)], f), hy = lerp(ya(lo), ya(Math.min(n - 1, lo + 1)), f), hz = lerp(Z[lo], Z[Math.min(n - 1, lo + 1)], f);
                 const hs = lerp(L[lo], L[Math.min(n - 1, lo + 1)], f), hw = lerp(Wt[lo], Wt[Math.min(n - 1, lo + 1)], f);
-                const D = mobile ? 900 : 1500, vx = W / 2, vy = Hh / 2, FLOOR = 0.2, FADE = mobile ? 220 : 340;
+                const D = mobile ? 900 : 1500, vx = W / 2, vy = Hh / 2, FLOOR = 0.24, FADE = mobile ? 300 : 420;
                 const pj = (x, y, z) => { const k = D / (D - z); return [vx + (x - vx) * k, vy + (y - sy - vy) * k, k]; };
                 const seg = (x0, y0, x1, y1, z, dist, k) => {
                     if ((y0 < -60 && y1 < -60) || (y0 > Hh + 60 && y1 > Hh + 60)) return;
-                    const near = Math.exp(-dist / FADE) * (1 - settle), dep = clamp((z / R + 1) / 2), hot = Math.exp(-dist / 70) * (1 - settle);
-                    const a = (FLOOR + (1 - FLOOR) * near) * (0.36 + 0.64 * dep), wdt = (0.9 + 2 * near) * (0.55 + 0.75 * dep) * k * (mobile ? 0.8 : 1);
-                    const g = z < 0 ? hcB : hcF, cr = 255 - Math.round(60 * (1 - dep) * (1 - hot)), cg = Math.round(38 + 190 * hot), cb = Math.round(32 + 170 * hot);
-                    if (near > 0.08) { g.strokeStyle = `rgba(255, 50, 40, ${(a * 0.1 * near).toFixed(3)})`; g.lineWidth = wdt * 5; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); }
-                    g.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, ${a.toFixed(3)})`; g.lineWidth = wdt;
-                    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+                    const near = Math.exp(-dist / FADE) * (1 - settle), dep = clamp((z / R + 1) / 2), hot = Math.exp(-dist / 55) * (1 - settle);
+                    const a = (FLOOR + (1 - FLOOR) * near) * (0.5 + 0.5 * dep), wdt = (2 + 1.6 * near) * (0.72 + 0.48 * dep) * k;
+                    const g = z < 0 ? hcB : hcF, cr = 255 - Math.round(55 * (1 - dep) * (1 - hot)), cg = Math.round(42 + 200 * hot), cb = Math.round(34 + 190 * hot);
+                    const line = (style, w) => { g.strokeStyle = style; g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); };
+                    // neon: the light adds up near the head (a wide soft bloom and a tighter glow under a hot core)
+                    if (near > 0.04) {
+                        g.globalCompositeOperation = 'lighter';
+                        line(`rgba(255, 30, 24, ${(a * 0.13 * near).toFixed(3)})`, wdt * 6);
+                        line(`rgba(255, 52, 40, ${(a * 0.32 * near).toFixed(3)})`, wdt * 2.4);
+                        g.globalCompositeOperation = 'source-over';
+                    }
+                    line(`rgba(${cr}, ${cg}, ${cb}, ${a.toFixed(3)})`, wdt);
                 };
                 let [px, py] = pj(X[0] + Wt[0] * eDX, ya(0), Z[0]);
                 for (let i = 1; i <= lo; i++) {
@@ -877,11 +898,16 @@
                 // the head itself: born from the first period, it grows over its first few pixels; once landed it fades into the dot
                 const emerge = clamp((target - Y[0]) / 70), ha = emerge * (1 - settle);
                 if (ha > 0.01) {
-                    const g = hz < 0 ? hcB : hcF, r0 = (mobile ? 16 : 22) * hk * (0.4 + 0.6 * emerge);
+                    // a neon point: a white-hot core in a saturated red bloom, the light adding to what is behind it
+                    const g = hz < 0 ? hcB : hcF, sz = hk * (0.4 + 0.6 * emerge), r0 = (mobile ? 30 : 38) * sz;
+                    g.globalCompositeOperation = 'lighter';
                     const gr = g.createRadialGradient(hX, hY, 0, hX, hY, r0);
-                    gr.addColorStop(0, `rgba(255, 236, 228, ${ha})`); gr.addColorStop(0.16, `rgba(255, 120, 100, ${(ha * 0.8).toFixed(3)})`);
-                    gr.addColorStop(0.45, `rgba(230, 30, 30, ${(ha * 0.28).toFixed(3)})`); gr.addColorStop(1, 'rgba(211, 22, 27, 0)');
+                    gr.addColorStop(0, `rgba(255, 245, 240, ${ha})`); gr.addColorStop(0.07, `rgba(255, 210, 196, ${ha})`);
+                    gr.addColorStop(0.16, `rgba(255, 70, 50, ${(ha * 0.85).toFixed(3)})`); gr.addColorStop(0.38, `rgba(255, 26, 24, ${(ha * 0.32).toFixed(3)})`);
+                    gr.addColorStop(1, 'rgba(211, 22, 27, 0)');
                     g.fillStyle = gr; g.beginPath(); g.arc(hX, hY, r0, 0, Math.PI * 2); g.fill();
+                    g.globalCompositeOperation = 'source-over';
+                    g.fillStyle = `rgba(255, 250, 247, ${ha})`; g.beginPath(); g.arc(hX, hY, 2.6 * sz, 0, Math.PI * 2); g.fill();
                 }
                 // landing: a soft ring opens from the period as the head settles into it
                 if (done && settle < 1) {
