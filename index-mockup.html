@@ -145,12 +145,25 @@
         .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
         .fx-hint b.is-on { transform: none; opacity: 1; }
         .fx-hint b.is-past { transform: translate3d(0, -110%, 0); opacity: 0; }
-        /* mockup-only switch between the three finishes */
-        .fx-switch { position: fixed; right: 16px; top: calc(var(--navbar-height) + 12px); z-index: 70; display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
-            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-        .fx-switch span { color: var(--dim); padding: 0 6px 0 10px; }
+        /* mockup-only: the finish switch is tucked off the right edge of the screen; a thin grip on the edge slides it in,
+           and × slides it back out */
+        .fx-switch { position: fixed; right: 0; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+        .fx-switch .grip, .fx-switch .opts { pointer-events: auto; }
+        .fx-switch .grip { position: absolute; right: 0; bottom: 0; width: 22px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; transition: opacity 0.25s ease; }
+        .fx-switch .grip::before { content: ""; position: absolute; right: 4px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.38); }
+        .fx-switch .grip:hover::before, .fx-switch .grip:focus-visible::before { background: #fff; }
+        .fx-switch .opts { display: flex; align-items: center; gap: 4px; margin-right: 14px; padding: 4px; border-radius: 999px; background: rgba(20, 20, 20, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.14); transform: translate3d(calc(100% + 30px), 0, 0); visibility: hidden;
+            transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.45s; }
+        .fx-switch.is-open .opts { transform: none; visibility: visible; transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s; }
+        .fx-switch.is-open .grip { opacity: 0; pointer-events: none; }
+        .fx-switch .opts span { color: var(--dim); padding: 0 6px 0 10px; }
         .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
         .fx-switch a.is-on { background: var(--red); color: #fff; }
+        .fx-switch .x { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: #bbb; font: 400 1rem/1 'Inter', sans-serif; cursor: pointer; }
+        .fx-switch .x:hover { color: #fff; }
+        .fx-switch button:focus-visible, .fx-switch a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
         .fx-light { --pan: 0px; }
         .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
             transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
@@ -383,7 +396,6 @@
             .fx-title .role { letter-spacing: 0.3em; }
             .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
             .fx-bp .bp-tip { filter: none; }
-            .fx-switch { left: 12px; right: 12px; justify-content: center; }
             .fx-sin { padding: 0 20px; }
             .fx-sin .display { font-size: 13vw; }
             .fx-sin .aside { font-size: 1.05rem; }
@@ -445,7 +457,7 @@
 
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
-    <div class="fx-switch" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a></div>
+    <div class="fx-switch"><button type="button" class="grip" aria-label="Show the finish switch (mockup)" aria-expanded="false"></button><div class="opts" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a><button type="button" class="x" aria-label="Hide the finish switch">×</button></div></div>
     <div class="fx-lprobe" aria-hidden="true"></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -682,6 +694,11 @@
             const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
             stage.classList.add('f-' + FIN);
             document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
+            // the switch lives off the edge of the screen until its grip is tapped
+            const fxSwitch = document.querySelector('.fx-switch'), fxGrip = fxSwitch.querySelector('.grip');
+            const showSwitch = (on) => { fxSwitch.classList.toggle('is-open', on); fxGrip.setAttribute('aria-expanded', String(on)); };
+            fxGrip.addEventListener('click', () => { showSwitch(true); fxSwitch.querySelector('.is-on').focus({ preventScroll: true }); });
+            fxSwitch.querySelector('.x').addEventListener('click', () => { showSwitch(false); fxGrip.focus({ preventScroll: true }); });
             const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
