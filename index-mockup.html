@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
     <script>
         // Opening gate once per visit (skipped for reduced motion), and the blur reveal used across the site.
@@ -35,7 +35,7 @@
         @supports (height: 100lvh) { .fx { --gap: calc(100lvh - 100svh); } }
         .fx-lprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: 100vh; pointer-events: none; visibility: hidden; }
         @supports (height: 100lvh) { .fx-lprobe { height: 100lvh; } }
-        body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg;
+        body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg; --nitori: #009e96;
             background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
         .fx .section-bg-overlay { display: none; }
         html:has(body.fx) { background-color: #060606; }
@@ -145,15 +145,11 @@
         .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
         .fx-hint b.is-on { transform: none; opacity: 1; }
         .fx-hint b.is-past { transform: translate3d(0, -110%, 0); opacity: 0; }
-        /* mockup-only switch between the three finishes: kept in the tab order and the accessibility tree but faded out;
-           it shows while one of its links has focus, or after Shift+F */
+        /* mockup-only switch between the three finishes */
         .fx-switch { position: fixed; right: 16px; top: calc(var(--navbar-height) + 12px); z-index: 70; display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
-            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-            opacity: 0; transform: translate3d(0, -6px, 0); pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; }
-        .fx-switch.is-shown, .fx-switch:focus-within { opacity: 1; transform: none; pointer-events: auto; }
+            background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
         .fx-switch span { color: var(--dim); padding: 0 6px 0 10px; }
         .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
-        .fx-switch a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
         .fx-switch a.is-on { background: var(--red); color: #fff; }
         .fx-light { --pan: 0px; }
         .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
@@ -215,9 +211,10 @@
         .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
         .fx-scene.is-static .fx-pick { pointer-events: auto; }
 
-        /* 3 · Proof (pinned): the statement's red carries on. The results stack up one over the other in rows between
-           hairlines, each coming into focus; then the red closes in to a single tile, the Nitori wordmark, which turns into
-           the live page and settles into the row's empty slot as the row comes up underneath it */
+        /* 3 · Proof (pinned): the hero's wipe uncovers a dark room. The headline blurs in a word at a time and three figures
+           rise out of a soft shadow (their lower halves stay in it), right to left behind the wipe. Then the room closes in
+           to a single tile while it fills with Nitori teal from below, the figures sinking back into the shadow; the white
+           wordmark comes up on the teal, and the tile drops into the row's empty slot as the row comes up underneath it */
         .fx-proof { position: relative; z-index: 1; }
         .fx-pstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink); touch-action: pan-y; --cw: 30vw; --slot: 30%; }
         .fx-pbg { position: absolute; inset: -10% -6%; z-index: 0; pointer-events: none; }
@@ -225,23 +222,58 @@
         .fx-pbg img.is-on { opacity: 1; }
         .fx-pstage::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
             background: linear-gradient(to bottom, transparent 70%, var(--ink)), radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); }
-        .fx-pred { position: absolute; inset: 0; z-index: 6; background: var(--deep); }
-        .fx-pstats { position: absolute; inset: 0; }
-        .fx-phead { position: absolute; right: 6vw; top: calc(var(--navbar-height) + var(--fvh, 1vh) * 7); margin: 0; max-width: 32vw; text-align: right; font-size: clamp(1.4rem, 2.4vw, 2.5rem);
-            font-weight: 900; text-transform: uppercase; letter-spacing: -0.035em; line-height: 0.95; color: #fff; }
-        .fx-phead .blk { color: #120000; }
-        .fx-pres-list { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-        .fx-pres { position: absolute; left: 2.5vw; right: 2.5vw; top: 0; height: var(--rh, 18vh); box-sizing: border-box; padding: 0 3.5vw; display: flex; align-items: center; justify-content: space-between; gap: 4vw;
-            border-top: 1px solid rgba(0, 0, 0, 0.5); opacity: 0; will-change: transform, opacity; }
-        .fx-pres:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.5); }
-        .fx-pres b { font-size: calc(var(--rh, 18vh) * 0.66); font-weight: 300; font-style: normal; letter-spacing: -0.055em; line-height: 1; white-space: nowrap; color: #120000; will-change: filter; }
-        .fx-pres p { margin: 0; max-width: 30vw; font-size: clamp(1rem, 1.45vw, 1.35rem); line-height: 1.45; color: rgba(255, 255, 255, 0.92); }
-        .fx-pres .w { display: inline-block; opacity: 0; will-change: opacity, filter, transform; }
-        /* the wordmark, showing on the red as it closes in to the tile */
+        /* the room: clipped as it closes in; its box lifts off the black, takes a faint rim and fills with teal */
+        .fx-pred { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+        .fx-pbox { position: absolute; left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box; background: rgba(255, 255, 255, var(--lift, 0)); }
+        .fx-pbox::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255, 70, 55, var(--rim, 0)); }
+        .fx-pteal { position: absolute; inset: 0; background: var(--nitori); opacity: 0; }
+        /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type */
+        .fx-pstats { position: absolute; inset: 0 0 var(--gap) 0; transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
+        .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.96; color: #fff; }
+        /* "Designed, built," arrives full size and white; as the punchline comes in, it steps back (smaller, slightly dimmed)
+           so "and it sells." lands on its own */
+        .fx-phead .set { display: inline-block; margin-bottom: 0.04em; font-size: var(--set0, 1em); color: #fff; white-space: nowrap;
+            transition: font-size 1s cubic-bezier(0.65, 0, 0.25, 1) 0.72s, color 1s ease 0.72s; }
+        .fx-pclaim.is-in .set { font-size: var(--set1, 0.62em); color: rgba(255, 255, 255, 0.62); }
+        .fx-phead .punch { font-style: italic; font-weight: 900; }
+        .fx-phead .hw.sold { transition-property: opacity, filter, transform, color; transition-duration: 0.9s, 0.9s, 1s, 0.8s; transition-delay: var(--in, 0s), var(--in, 0s), var(--in, 0s), 0s; }
+        .fx-pclaim.is-sold .sold { color: var(--red); }
+        /* each word arrives like the hero's name: out of a blur, rising a touch */
+        .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em);
+            transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--in, 0s); }
+        .fx-phead .punch .hw { transform: translateY(0.34em); }
+        .fx-pclaim.is-in .hw { opacity: 1; filter: none; transform: none; }
+        /* the subheading, set like the statement's aside, lands a beat after the headline */
+        .fx-psub { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
+            opacity: 0; filter: blur(10px); transform: translateY(0.4em); transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-pclaim.is-in .fx-psub { opacity: 1; filter: none; transform: none; transition-delay: 1.45s; }
+        .fx-psub span { color: rgba(255, 255, 255, 0.62); transition: color 0.8s ease; }
+        .fx-pclaim.is-grown .fx-psub .iter { color: #fff; }
+        /* the figures: large and light; their lower halves stay in a soft shadow (a mask on a still frame, so they rise
+           through it) */
+        .fx-pstats .fx-pfigs { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin: calc(var(--fvh, 1vh) * 11) 0 0; padding: 0; list-style: none; }
+        .fx-pfig { position: relative; }
+        .fx-pnum { --fs: clamp(3.6rem, min(10.4vw, calc(var(--fvh, 1vh) * 20)), 11rem); height: var(--fs); font-size: var(--fs); line-height: 1;
+            -webkit-mask-image: linear-gradient(to bottom, #000 38%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.08) 72%, transparent 84%); mask-image: linear-gradient(to bottom, #000 38%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.08) 72%, transparent 84%);
+            -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+        .fx-pnum b { display: block; font-size: inherit; font-weight: 900; font-style: normal; letter-spacing: -0.05em; white-space: nowrap; color: #fff; will-change: transform, filter; }
+        .fx-pnum .u { position: relative; top: -1.25em; margin-right: 0.06em; font-size: 0.32em; font-weight: 800; letter-spacing: -0.01em; color: var(--red); }
+        /* the light falls from above; the shadow is where it runs out */
+        .fx-pfigs::before { content: ""; position: absolute; left: -6vw; right: -6vw; top: -30%; height: 90%; pointer-events: none;
+            background: radial-gradient(60% 70% at 50% 30%, rgba(255, 240, 236, 0.045), transparent 70%); opacity: var(--glowup, 0); }
+        /* the descriptions speak like the hero's hint (Scroll, Design, Build, Ship) */
+        .fx-pfig p { margin: calc(var(--fvh, 1vh) * 0.4) 0 0; padding-left: 0.3em; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; line-height: 1.6;
+            white-space: nowrap; color: rgba(255, 255, 255, 0.8); }
+        .fx-pfig p .w { display: inline-block; opacity: 0; }
+        /* the wordmark, coming up on the teal as the room closes in to the tile */
         .fx-pmark { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 0.4); opacity: 0; pointer-events: none; }
-        /* the Nitori tile's first face, the same red and wordmark; it lifts away to show the live page */
-        .fx-pface { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; background: var(--deep); }
-        .fx-pcard .fx-pface img { width: 40%; height: auto; object-fit: contain; transform: translateY(calc(var(--mo, 0) * -14%)) scale(calc(1 - var(--mo, 0) * 0.2)); }
+        /* the tile's first face is the Nitori logo; it stays a logo until the tile clicks into the row, then lifts away
+           to show the live page */
+        .fx-pface { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; background: var(--nitori);
+            transition: opacity 0.55s ease 0.15s; }
+        .fx-pcard .fx-pface img { width: 40%; height: auto; object-fit: contain; transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s; }
+        .fx-pstage.is-landed .fx-pface { opacity: 0; }
+        .fx-pstage.is-landed .fx-pcard .fx-pface img { transform: translateY(-14%) scale(0.8); }
         /* the title slot: each project's name, with the card covering the bottom of the letters */
         .fx-pname { position: absolute; left: 50%; top: var(--slot); margin: 0; white-space: nowrap; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.75; color: #fff;
             transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; transform: translate(-50%, calc(-25% + var(--ov, 0px))); opacity: 0; }
@@ -339,10 +371,13 @@
             .fx-sin .aside { font-size: 1.05rem; }
             .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
             .fx-pick { font-size: 8.4vw; }
-            .fx-phead { left: 20px; right: 20px; top: calc(var(--navbar-height) + var(--fvh, 1vh) * 9); max-width: none; text-align: left; font-size: 8vw; }
-            .fx-pres { left: 0; right: 0; padding: 0 20px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1vh; }
-            .fx-pres b { font-size: calc(var(--rh, 16vh) * 0.42); }
-            .fx-pres p { max-width: none; font-size: 0.92rem; }
+            .fx-pstats { padding: var(--navbar-height) 20px 0; }
+            .fx-phead { font-size: 13vw; --set0: 0.6em; --set1: 0.46em; }
+            .fx-psub { font-size: 1.05rem; }
+            .fx-pstats .fx-pfigs { flex-direction: column; gap: calc(var(--fvh, 1vh) * 2.6); margin-top: calc(var(--fvh, 1vh) * 6); }
+            .fx-pnum { --fs: min(20vw, calc(var(--fvh, 1vh) * 11.5)); }
+            .fx-pfig p { font-size: 0.64rem; letter-spacing: 0.28em; }
+            .fx-pnum b { will-change: transform; }
             .fx-pinfo { width: 86vw; }
             .fx-pinfo p { font-size: 0.86rem; }
             .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
@@ -357,12 +392,10 @@
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
         }
         .fx-reduce .fx-pred, .fx-reduce .fx-pface, .fx-reduce .fx-trail-head { display: none; }
-        .fx-pstats.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 6); }
-        .fx-pstats.is-static .fx-phead { position: static; text-align: left; max-width: none; font-size: clamp(2rem, 4vw, 3.6rem); margin-bottom: 4vh; }
-        .fx-pstats.is-static .fx-pres-list { position: static; }
-        .fx-pstats.is-static .fx-pres { position: static; height: auto; padding: 3vh 0; opacity: 1; }
-        .fx-pstats.is-static .fx-pres b { font-size: clamp(3rem, 8vw, 6rem); }
-        .fx-pstats.is-static .w { opacity: 1; }
+        .fx-pstats.is-static { position: relative; inset: auto; padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 8); }
+        .fx-pstats.is-static .fx-pfigs { position: static; }
+        .fx-pstats.is-static .fx-pfigs { margin-top: calc(var(--fvh, 1vh) * 8); flex-wrap: wrap; gap: 4vh 4vw; }
+        .fx-pstats.is-static .hw, .fx-pstats.is-static .fx-psub, .fx-pstats.is-static .w { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-pname, .fx-reduce .fx-pinfo .d { transition: none; }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
@@ -394,7 +427,7 @@
 
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
-    <div class="fx-switch" role="group" aria-label="Mockup: finish" aria-keyshortcuts="Shift+F"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a></div>
+    <div class="fx-switch" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a></div>
     <div class="fx-lprobe" aria-hidden="true"></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -516,13 +549,16 @@
                     <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
                 </div>
                 <div class="fx-pred">
+                    <div class="fx-pbox"><i class="fx-pteal"></i></div>
                     <div class="fx-pstats">
-                        <h2 class="fx-phead">Designed, built, and it <span class="blk">sells.</span></h2>
-                        <ul class="fx-pres-list" aria-label="Results at Nitori">
-                            <li class="fx-pres"><b>NT$3.31M</b><p>in assisted revenue, from three seasonal campaign pages.</p></li>
-                            <li class="fx-pres"><b>635</b><p>orders, from people who visited those pages first.</p></li>
-                            <li class="fx-pres"><b>9</b><p>pages designed, coded and shipped to nitori-net.tw.</p></li>
-                            <li class="fx-pres"><b>1</b><p>year at Nitori Taiwan, and counting.</p></li>
+                        <div class="fx-pclaim">
+                            <h2 class="fx-phead"><span class="set"><span class="hw">Designed,</span> <span class="hw">built,</span></span><br><em class="punch"><span class="hw">and</span> <span class="hw">it</span> <span class="hw sold">sells.</span></em></h2>
+                            <p class="fx-psub"><span>End to end.</span> <span class="iter">Iterated on every launch.</span></p>
+                        </div>
+                        <ul class="fx-pfigs" aria-label="Results at Nitori">
+                            <li class="fx-pfig"><div class="fx-pnum"><b><span class="u">NT$</span>3.31M</b></div><p>Revenue</p></li>
+                            <li class="fx-pfig"><div class="fx-pnum"><b>635</b></div><p>Orders</p></li>
+                            <li class="fx-pfig"><div class="fx-pnum"><b>+40<span class="u">%</span></b></div><p>Growth, one launch to the next</p></li>
                         </ul>
                     </div>
                     <img class="fx-pmark" src="assets/images/home/nitori_mark_white.png" alt="" aria-hidden="true">
@@ -623,16 +659,6 @@
             const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
             stage.classList.add('f-' + FIN);
             document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
-            // the switch stays out of sight until Shift+F (or ?switch in the URL, for phones); once used it stays up for the session
-            const fxSwitch = document.querySelector('.fx-switch');
-            const keepSwitch = (on) => { try { on ? sessionStorage.setItem('fw-switch', '1') : sessionStorage.removeItem('fw-switch'); } catch (e) {} };
-            if (new URLSearchParams(location.search).has('switch')) keepSwitch(true);
-            try { if (sessionStorage.getItem('fw-switch')) fxSwitch.classList.add('is-shown'); } catch (e) {}
-            fxSwitch.addEventListener('click', () => keepSwitch(true));
-            addEventListener('keydown', (e) => {
-                if (e.key !== 'F' || !e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
-                keepSwitch(fxSwitch.classList.toggle('is-shown'));
-            });
             const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
                 + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
@@ -681,16 +707,20 @@
             addEventListener('pageshow', () => { pickGo = -1; wmImgs.forEach((im) => im.classList.remove('is-go')); heroDirty = true; });
             if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
             const proof = document.querySelector('.fx-proof'), pstage = proof.querySelector('.fx-pstage');
-            const pRed = proof.querySelector('.fx-pred'), pStats = proof.querySelector('.fx-pstats'), pRes = [...proof.querySelectorAll('.fx-pres')], pMark = proof.querySelector('.fx-pmark');
-            const pFace = proof.querySelector('.fx-pface'), pInfo = proof.querySelector('.fx-pinfo');
+            const pRed = proof.querySelector('.fx-pred'), pStats = proof.querySelector('.fx-pstats'), pMark = proof.querySelector('.fx-pmark');
+            const pInfo = proof.querySelector('.fx-pinfo'), pBox = proof.querySelector('.fx-pbox'), pTeal = proof.querySelector('.fx-pteal');
+            const pHead = proof.querySelector('.fx-pclaim'), pFigs = proof.querySelector('.fx-pfigs'), pFig = [...proof.querySelectorAll('.fx-pfig')];
             const pCards = [...proof.querySelectorAll('.fx-pcard')], pNames = [...proof.querySelectorAll('.fx-pname')], pLabs = [...proof.querySelectorAll('.fx-plab')];
             const pDescs = [...pInfo.querySelectorAll('.d')], pBgs = [...proof.querySelectorAll('.fx-pbg img')];
             const PN = pCards.length;
-            /* the pinned timeline after the hero's wipe: the results come in one by one [C0, C1]; the red closes in to the tile
-               [BIRTH0, MORPH0]; the wordmark gives way to the live page [MORPH0, DROP0]; the row comes up and the tile settles
-               into it [DROP0, LAND]; a hold on the row */
-            const C0 = 0.03, C1 = 0.5, BIRTH0 = 0.56, MORPH0 = 0.7, DROP0 = 0.77, LAND = 0.93;
-            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, r0: 0, rh: 1, wipe: 0, len: 1 };
+            /* one timeline from the start of the hero's wipe, PU screens long: the figures rise out of the shadow behind the
+               wipe [0.1, 0.92 screens], then a slow drift; the room closes in to the tile and fills with teal [BIRTH0, MORPH0];
+               a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
+               onto the live page; a hold on the row */
+            const PU = 4.3, BIRTH0 = 2.4 / PU, MORPH0 = 3.2 / PU, DROP0 = 3.45 / PU, LAND = 4.0 / PU;
+            // when each figure rises (left to right), in screens from the start of the wipe: after the claim and the light
+            const RISE = [[0.75, 1.17], [1.2, 1.56], [1.6, 1.96]], LIGHT = [0.55, 0.8], HOLD0 = 2.0;
+            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, wipe: 0, total: 1, fs: 100 };
             if (reduce) { proof.insertBefore(pStats, pstage); pStats.classList.add('is-static'); }
             const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
             const end = document.querySelector('.fx-end');
@@ -743,9 +773,9 @@
                 streaking = null;
                 slantA = Math.round(SH * TAN);
                 // the proof slides under the end of the hero, so the exit wipe reveals it already in place
-                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.len = SH * 3.4;
+                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.total = SH * PU;
                 proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
-                proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.wipe + PG.len)}px`;
+                proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.total)}px`;
                 layoutProof();
                 // process: steps sit either side of the leaning beam
                 if (!mobile) {
@@ -1140,18 +1170,25 @@
                 pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
                 const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
                 pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
-                // the rows run from under the headline to the foot of the screen
-                PG.r0 = sh * (mobile ? 0.3 : 0.25); PG.rh = (sh * (mobile ? 0.94 : 0.95) - PG.r0) / pRes.length;
-                pRed.style.setProperty('--rh', `${PG.rh.toFixed(1)}px`);
+                PG.fs = pFig[0].querySelector('.fx-pnum').offsetHeight || 100;
             }
-            // each result's sentence comes into focus word by word
-            const resWords = pRes.map((li) => {
+            // the headline's words arrive one after another, like the hero's name
+            // "Designed," "built," then a held breath before the punchline
+            [0.05, 0.19, 0.8, 0.9, 1.0].forEach((d, i) => pHead.querySelectorAll('.hw')[i].style.setProperty('--in', `${d}s`));
+            // each figure's description comes into focus word by word once its figure has risen
+            const figs = pFig.map((li) => {
                 const p = li.querySelector('p'), words = [];
                 const parts = p.textContent.split(/\s+/).filter(Boolean);
                 p.textContent = '';
                 parts.forEach((w, j) => { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w; p.appendChild(sp); if (j < parts.length - 1) p.appendChild(document.createTextNode(' ')); words.push(sp); });
-                return { fig: li.querySelector('b'), words };
+                return { num: li.querySelector('b'), p, words };
             });
+            // desktop: the figures float a little with the pointer, over a shadow that stays put
+            let ptx = 0, pty = 0, pmx = 0, pmy = 0;
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                pstage.addEventListener('pointermove', (e) => { ptx = e.clientX / innerWidth * 2 - 1; pty = e.clientY / innerHeight * 2 - 1; });
+                pstage.addEventListener('pointerleave', () => { ptx = 0; pty = 0; });
+            }
             let tv = 0, rowPos = 0, rowTarget = 0, pLanded = false, pKey = -2, pLastY = scrollY, pLastT = 0, pOn = false, pJump = true;
             const pBgWrap = proof.querySelector('.fx-pbg'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle');
             const wrap = (v) => ((v % PN) + PN) % PN;
@@ -1163,7 +1200,7 @@
                 const dt = clamp((now - (pLastT || now)) / 1000, 0, 0.05) || 1 / 60; pLastT = now;
                 const k = (r) => 1 - Math.exp(-dt * r);
                 const r = proof.getBoundingClientRect(), sy = scrollY, up = sy < pLastY - 0.5; pLastY = sy;
-                let t = reduce ? 1 : clamp((-r.top - PG.wipe) / PG.len);
+                let t = reduce ? 1 : clamp(-r.top / PG.total);
                 if (pJump) { pJump = false; tv = t; if (t < LAND) rowPos = rowTarget = 0; }
                 // scrolling back up into the pin: the row first glides home to Nitori, and only then can the tile lift
                 if (up && t < 0.999 && pIdx() !== 0) goHome();
@@ -1193,15 +1230,12 @@
                 pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
                 pInfo.style.top = `${(cardY + H / 2 + 60).toFixed(1)}px`;
 
-                const cP = reduce ? pRes.length : clamp((tv - C0) / (C1 - C0)) * pRes.length;   // how many results are in
-                const bth = reduce ? 1 : ease(clamp((tv - BIRTH0) / (MORPH0 - BIRTH0)));      // the red closing in to the tile
-                const mo = reduce ? 1 : ease(clamp((tv - MORPH0) / (DROP0 - MORPH0)));        // the wordmark giving way to the page
+                const bth = reduce ? 1 : ease(clamp((tv - BIRTH0) / (MORPH0 - BIRTH0)));      // the room closing in to the tile
                 const dp = reduce ? 1 : clamp((tv - DROP0) / (LAND - DROP0));                 // the row coming up, the tile settling
                 const rowOff = landed ? 0 : (1 - ease(dp)) * sh * 0.8;
 
-                // scroll depth: the wipe carries the headline in with it; when the pin lets go, the colour behind lags and the text leads
-                const enter = reduce ? 1 : ease(clamp(-r.top / Math.max(1, PG.wipe)));
-                const exit = reduce ? 0 : clamp((-r.top - PG.wipe - PG.len) / sh);
+                // scroll depth: when the pin lets go, the colour behind lags and the text leads
+                const exit = reduce ? 0 : clamp((-r.top - PG.total) / sh);
                 const shift = (el, x, y) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`; };
                 shift(pBgWrap, 0, exit * 0.4 * sh);
                 pBgWrap.style.opacity = (1 - exit * 0.85).toFixed(3);   // the colour dissolves into the dark the next section rises from
@@ -1210,35 +1244,56 @@
                 pInfo.style.transform = `translate3d(-50%, ${(-exit * 0.1 * sh).toFixed(1)}px, 0)`;
 
                 if (!reduce) {
-                    shift(pStats, (1 - enter) * sw * 0.14, 0);
-                    // the results: each comes in at the foot, out of focus, and pushes the ones before it up a row
-                    const bottom = PG.r0 + PG.rh * pRes.length, ce = Math.floor(cP) + ease(cP - Math.floor(cP));
-                    pRes.forEach((li, i) => {
-                        const e = clamp(ce - i);
-                        li.style.opacity = e.toFixed(3);
-                        if (e <= 0) return;
-                        li.style.transform = `translate3d(0, ${(bottom - Math.min(ce - i, pRes.length - i) * PG.rh).toFixed(1)}px, 0)`;
-                        const { fig, words } = resWords[i];
-                        fig.style.filter = e < 1 ? `blur(${((1 - e) * 14).toFixed(1)}px)` : '';
-                        const wp = clamp((ce - i - 0.3) / 0.7), n = words.length;
+                    const u = tv * PU;   // screens since the wipe began
+                    pmx += (ptx - pmx) * k(4); pmy += (pty - pmy) * k(4);
+                    // the headline: in once the wipe is about halfway, out again as the room starts to close
+                    pHead.classList.toggle('is-in', u > 0.36 && bth < 0.12);
+                    // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
+                    const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0)) + bth * 0.6;
+                    shift(pHead, 0, -drift * sh * 0.012);
+                    const hide = ease(clamp(bth / 0.25));   // the descriptions leave first
+                    let landed0 = false, landed2 = false;
+                    figs.forEach(({ num, p, words }, i) => {
+                        const [a0, a1] = RISE[i];
+                        const e = ease(clamp((u - a0) / (a1 - a0)));
+                        if (i === 0) landed0 = e > 0.97; if (i === 2) landed2 = e > 0.97;
+                        // they go back into the shadow in reverse: the last to rise is the first to sink
+                        const sink = ease(clamp((bth - (2 - i) * 0.08) / 0.34));
+                        const y = (1 - e + sink) * PG.fs * 0.95 - drift * sh * 0.025;
+                        num.style.transform = `translate3d(${(pmx * 10).toFixed(1)}px, ${(y + pmy * 5).toFixed(1)}px, 0)`;
+                        num.style.filter = !mobile && (e < 1 || sink > 0) ? `blur(${((1 - e + sink) * 8).toFixed(1)}px)` : '';
+                        // the description sharpens as its figure settles
+                        const wp = clamp((u - a1 + 0.1) / 0.24), n = words.length;
                         words.forEach((w, j) => {
-                            const a = ease(clamp((wp - 0.6 * (n > 1 ? j / (n - 1) : 0)) / 0.4));
-                            w.style.opacity = a.toFixed(3);
-                            w.style.filter = a < 1 ? `blur(${((1 - a) * 8).toFixed(1)}px)` : '';
-                            w.style.transform = a < 1 ? `translate3d(0, ${((1 - a) * 0.35).toFixed(3)}em, 0)` : '';
+                            const q = ease(clamp((wp - 0.5 * (n > 1 ? j / (n - 1) : 0)) / 0.5)) * (1 - hide);
+                            w.style.opacity = q.toFixed(3);
+                            w.style.filter = q < 1 ? `blur(${((1 - q) * 6).toFixed(1)}px)` : '';
+                            w.style.transform = q < 1 ? `translate3d(0, ${((1 - q) * 0.3).toFixed(3)}em, 0)` : '';
                         });
+                        shift(p, pmx * 5, -drift * sh * 0.04);
                     });
-                    // then the red closes in to a single tile, and the Nitori wordmark comes up on it
-                    pStats.style.opacity = (1 - ease(clamp(bth * 2.4))).toFixed(3);
-                    const T = fy0 - H / 2, L = cx - W / 2, c = (v) => (v * bth).toFixed(1);
-                    pRed.style.clipPath = bth > 0 ? `inset(${c(T)}px ${c(sw - L - W)}px ${c(sh - T - H)}px ${c(L)}px)` : '';
+                    // the proof lights the claim: "sells." turns red with the revenue; "Iterated on every launch." brightens with the growth
+                    pHead.classList.toggle('is-sold', landed0 && bth < 0.12);
+                    pHead.classList.toggle('is-grown', landed2 && bth < 0.12);
+                    // the light from above comes up over the empty floor before anything rises
+                    pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * (1 - ease(clamp(bth / 0.5)))).toFixed(3));
+                    // then the room closes in to the tile. The scene inside shrinks with it (the figures already sinking back
+                    // into the shadow), its box lifts off the black with a faint rim, and Nitori teal rises through it from below
+                    const T = fy0 - H / 2, L = cx - W / 2;
+                    const rx = L * bth, ry = T * bth, rw = sw - (sw - W) * bth, rh = sh - (sh - H) * bth, sc = rw / sw;
+                    pRed.style.clipPath = bth > 0 ? `inset(${ry.toFixed(1)}px ${(sw - rx - rw).toFixed(1)}px ${(sh - ry - rh).toFixed(1)}px ${rx.toFixed(1)}px)` : '';
                     pRed.style.visibility = bth >= 1 ? 'hidden' : '';
-                    pMark.style.opacity = ease(clamp((bth - 0.45) / 0.55)).toFixed(3);
+                    pStats.style.transform = bth > 0 ? `translate3d(${rx.toFixed(1)}px, ${(ry + (rh - sh * sc) / 2).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
+                    pBox.style.left = `${rx.toFixed(1)}px`; pBox.style.top = `${ry.toFixed(1)}px`;
+                    pBox.style.width = `${rw.toFixed(1)}px`; pBox.style.height = `${rh.toFixed(1)}px`;
+                    const tf = ease(clamp((bth - 0.25) / 0.75));
+                    pBox.style.setProperty('--lift', (0.035 * clamp(bth * 3)).toFixed(4));
+                    pBox.style.setProperty('--rim', (0.3 * clamp(bth * 4) * (1 - tf)).toFixed(3));
+                    const g1 = tf * 170, g0 = g1 - 70, mask = `linear-gradient(to top, #000 ${g0.toFixed(1)}%, transparent ${g1.toFixed(1)}%)`;
+                    pTeal.style.opacity = tf > 0 ? '1' : '0';
+                    pTeal.style.webkitMaskImage = mask; pTeal.style.maskImage = mask;
+                    pMark.style.opacity = ease(clamp((bth - 0.6) / 0.4)).toFixed(3);
                     pMark.style.transform = `translate3d(${cx.toFixed(1)}px, ${fy0.toFixed(1)}px, 0) translate(-50%, -50%)`;
-                    pFace.style.opacity = (1 - mo).toFixed(3);
-                    pFace.style.setProperty('--mo', mo.toFixed(3));
-                    // the strip behind the phone's status bar follows the red while it fills the screen
-                    if (enter >= 0.999) setTopColor(bth < 0.25 ? '#8f0000' : '#060606');
                 }
 
                 // the row: centre in colour, neighbours grey; it loops, fading out at either end. Before the landing it comes up
