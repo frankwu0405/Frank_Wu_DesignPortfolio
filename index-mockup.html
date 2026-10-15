@@ -1213,9 +1213,9 @@
                 const sw = PG.sw = pstage.clientWidth, sh = PG.sh = pstage.offsetHeight;
                 PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 620); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.025);
                 pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
-                const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
+                const OV = 0.14, ov = (fs) => `${(fs * 0.73 * OV).toFixed(1)}px`;   // the card just tucks under the foot of the capitals
                 let nameAbove = 0;
-                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); nameAbove = Math.max(nameAbove, n.offsetHeight - fs * 0.73 * 0.3); });
+                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); nameAbove = Math.max(nameAbove, n.offsetHeight - fs * 0.73 * OV); });
                 // phones: the landed row is placed so the whole group (the name above the card, the card, and the line and link
                 // below it) is centred in what is visible under the navigation, rather than the card alone sitting low
                 const infoH = Math.max(...pDescs.map((d) => d.offsetHeight));
@@ -1268,7 +1268,7 @@
                 pstage.addEventListener('pointerleave', () => { ptx = 0; pty = 0; });
             }
             let tv = 0, rowPos = 0, rowTarget = 0, pLanded = false, pKey = -2, pLastY = scrollY, pLastT = 0, pOn = false, pJump = true;
-            const pBgWrap = proof.querySelector('.fx-pbg'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle');
+            const pBgWrap = proof.querySelector('.fx-pbg'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle'), pRowWrap = proof.querySelector('.fx-prow');
             const wrap = (v) => ((v % PN) + PN) % PN;
             const pIdx = () => wrap(Math.round(rowTarget));
             const goHome = () => { rowTarget = Math.round(rowPos / PN) * PN; };
@@ -1318,9 +1318,11 @@
                 const shift = (el, x, y) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`; };
                 shift(pBgWrap, 0, exit * 0.4 * sh);
                 pBgWrap.style.opacity = (1 - exit * 0.85).toFixed(3);   // the colour dissolves into the dark the next section rises from
-                shift(pTitle, 0, exit * 0.12 * sh);
-                shift(pLabWrap, 0, -exit * 0.1 * sh);
-                pInfo.style.transform = `translate3d(-50%, ${(-exit * 0.1 * sh).toFixed(1)}px, 0)`;
+                // the name, the cards, their labels and the line below move as one group (a touch ahead), so nothing runs
+                // into anything; only the blurred colour behind lags
+                const lead = -exit * 0.08 * sh;
+                [pTitle, pRowWrap, pLabWrap].forEach((el) => shift(el, 0, lead));
+                pInfo.style.transform = `translate3d(-50%, ${lead.toFixed(1)}px, 0)`;
 
                 if (!reduce) {
                     const u = tv * PU;   // screens since the wipe began
