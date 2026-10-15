@@ -1197,7 +1197,13 @@
                 PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 620); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.025);
                 pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
                 const ov = (fs) => `${(fs * 0.73 * 0.3).toFixed(1)}px`;   // the card covers the bottom third of the capitals
-                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); });
+                let nameAbove = 0;
+                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); nameAbove = Math.max(nameAbove, n.offsetHeight - fs * 0.73 * 0.3); });
+                // phones: the landed row is placed so the whole group (the name above the card, the card, and the line and link
+                // below it) is centred in what is visible under the navigation, rather than the card alone sitting low
+                const infoH = Math.max(...pDescs.map((d) => d.offsetHeight));
+                PG.nav = document.querySelector('.navbar').offsetHeight || 72;   // the bar as drawn (the CSS variable runs taller on phones)
+                PG.mOff = (60 + infoH - nameAbove) / 2;
                 PG.fs = parseFloat(getComputedStyle(pFig[0].querySelector('.fx-pnum')).fontSize) || 100;
                 pstage.style.setProperty('--psw', `${sw}px`); pstage.style.setProperty('--psh', `${sh}px`);   // the scene keeps its size inside the card
                 // each rolling column is exactly as wide as the digit it lands on
@@ -1280,8 +1286,9 @@
                 }
 
                 const W = PG.W, H = PG.H, sw = PG.sw, sh = PG.sh, cx = sw / 2;
-                const cardY = (sh - GAP) / 2 + sh * (mobile ? 0.08 : 0.04);
-                const fy0 = cardY - H * (mobile ? 1.05 : 0.8);   // where the tile is born: well above its slot, so it has somewhere to settle
+                const cardY = mobile ? (PG.nav + sh - GAP) / 2 - PG.mOff : (sh - GAP) / 2 + sh * 0.04;
+                // where the tile is born: well above its slot, so it has somewhere to settle (but never under the navigation)
+                const fy0 = mobile ? Math.max(cardY - H * 0.6, PG.nav + H / 2 + 48) : cardY - H * 0.8;   // phones: a real drop, clear of the bar above
                 pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
                 pInfo.style.top = `${(cardY + H / 2 + 60).toFixed(1)}px`;
 
@@ -1307,7 +1314,7 @@
                     const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
                     // the pack-up moves everything as one: the room shrinks to the tile with the scene inside, then the card flips
                     const pm = clamp((u - PACK[0]) / (PACK[1] - PACK[0]));   // one progress for the shrink and the turn
-                    const bs = ease(clamp(pm / 0.6)), still = 1 - bs;
+                    const bs = ease(clamp(pm / 0.55)), still = 1 - bs;
                     shift(pHead, 0, -drift * sh * 0.012);
                     let landed0 = false, landed2 = false;
                     figs.forEach(({ num, p, words, cols }, i) => {
@@ -1349,15 +1356,15 @@
                     // then the flip: bottom edge first, toward the viewer and up over the top, easing past flat and back; it lifts
                     // off the floor mid-turn, the face turning away goes into shade, and Nitori's teal glows on the floor beneath
                     // the turn starts while the card is still shrinking, so the two read as one move
-                    const fp = clamp((pm - 0.3) / 0.7);
+                    const fp = clamp((pm - 0.12) / 0.88);
                     // nearly linear with the scroll (a gentle sine ease at either end), finishing a little early so it can settle
                     const turn = 0.5 - 0.5 * Math.cos(Math.PI * clamp(fp / 0.86));
                     const over = Math.sin(Math.PI * clamp((fp - 0.72) / 0.28)) * 5;   // a few degrees past flat as it lands, then back
-                    const wind = pm < 0.34 ? -5 * Math.sin(Math.PI * pm / 0.34) : 0;   // tips back a touch as it's picked up, then over
-                    const ang = turn * 180 + over + wind, arc = Math.sin(Math.PI * clamp((pm - 0.12) / 0.78));   // the lift spans the whole gesture
+                    const wind = pm < 0.18 ? -5 * Math.sin(Math.PI * pm / 0.18) : 0;   // tips back a touch as it's picked up, then over
+                    const ang = turn * 180 + over + wind, arc = Math.sin(Math.PI * clamp((pm - 0.04) / 0.84));   // the lift spans the whole gesture
                     pRed.style.perspective = `${(H * 3.2).toFixed(0)}px`;
                     pRed.style.perspectiveOrigin = `${cx.toFixed(1)}px ${(fy0 + dropY).toFixed(1)}px`;
-                    pFlip.style.transform = pm > 0 ? `translate3d(0, ${(-arc * H * 0.12).toFixed(1)}px, ${(arc * H * 0.55).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
+                    pFlip.style.transform = pm > 0 ? `translate3d(0, ${(mobile ? 0 : -arc * H * 0.12).toFixed(1)}px, ${(arc * H * (mobile ? 0.28 : 0.55)).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
                     const edge = Math.abs(Math.sin(ang * Math.PI / 180));   // 1 when the card is edge-on
                     const backOn = Math.cos(ang * Math.PI / 180) < 0;   // past edge-on, the back is the side facing us
                     pFront.style.visibility = backOn ? 'hidden' : 'inherit'; pBack.style.visibility = backOn ? 'inherit' : 'hidden';
