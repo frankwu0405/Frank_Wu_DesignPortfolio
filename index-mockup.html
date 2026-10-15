@@ -253,26 +253,18 @@
            it keeps the stage's size inside the card, and only scales */
         .fx-pstats { position: absolute; left: 0; top: 0; width: var(--psw, 100vw); height: calc(var(--psh, 100vh) - var(--gap)); transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
         .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.022em; line-height: 1.02; color: #fff; }
-        /* "Designed, built," arrives full size and white; as the punchline comes in, it steps back (smaller, slightly dimmed)
-           so "and it sells." lands on its own */
-        .fx-phead .set { display: inline-block; margin-bottom: 0.04em; font-size: var(--set0, 1em); color: #fff; white-space: nowrap;
-            transition: font-size 0.4s ease, color 0.4s ease; }
-        .fx-pclaim.is-in .set { font-size: var(--set1, 0.62em); color: rgba(255, 255, 255, 0.62);
-            transition: font-size 1s cubic-bezier(0.65, 0, 0.25, 1) 1.32s, color 1s ease 1.32s; }
+        /* the claim follows the scroll, like the figures. "Designed," then "built," arrive full size and white; as the
+           punchline comes in, that first line steps back (smaller, slightly dimmed) so "and it sells." lands on its own */
+        .fx-phead .set { display: inline-block; margin-bottom: 0.04em; white-space: nowrap;
+            font-size: calc(var(--set0, 1em) + (var(--set1, 0.62em) - var(--set0, 1em)) * var(--setp, 0)); color: rgba(255, 255, 255, calc(1 - 0.38 * var(--setp, 0))); }
         .fx-phead .punch { font-style: italic; font-weight: 900; letter-spacing: -0.012em; }
-        .fx-pclaim.is-sold .sold { color: var(--red); }
-        /* each word arrives like the hero's name: out of a blur, rising a touch */
-        .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em);
-            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.45s ease, color 0.8s ease; }
+        /* each word comes out of a blur, rising a touch, like the hero's name */
+        .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em); }
         .fx-phead .punch .hw { transform: translateY(0.34em); }
-        .fx-pclaim.is-in .hw { opacity: 1; filter: none; transform: none;
-            transition: opacity 0.9s ease var(--in, 0s), filter 0.9s ease var(--in, 0s), transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--in, 0s), color 0.8s ease; }
-        /* the subheading, set like the statement's aside, lands a beat after the headline */
+        /* the subheading, set like the statement's aside, lands after the headline */
         .fx-psub { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
-            opacity: 0; filter: blur(10px); transform: translateY(0.4em); transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-pclaim.is-in .fx-psub { opacity: 1; filter: none; transform: none; transition-delay: 2.35s; }
-        .fx-psub span { color: rgba(255, 255, 255, 0.62); transition: color 0.8s ease; }
-        .fx-pclaim.is-grown .fx-psub .iter { color: #fff; }
+            opacity: 0; filter: blur(10px); transform: translateY(0.4em); }
+        .fx-psub span { color: rgba(255, 255, 255, 0.62); }
         /* the figures: large and light; their lower halves stay in a soft shadow (a mask on a still frame, so they rise
            through it) */
         .fx-pstats .fx-pfigs { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin: calc(var(--fvh, 1vh) * 11) 0 0; padding: 0; list-style: none; }
@@ -758,13 +750,15 @@
                wipe [0.1, 0.92 screens], then a slow drift; the room closes in to the tile and fills with teal [BIRTH0, MORPH0];
                a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
                onto the live page; a hold on the row */
-            const PU = 5.2, BIRTH0 = 2.4 / PU, MORPH0 = 3.95 / PU, DROP0 = 3.6 / PU, LAND = 4.25 / PU;   // ~1 screen held on the landed row
+            const PU = 5.55, BIRTH0 = 2.75 / PU, MORPH0 = 4.3 / PU, DROP0 = 3.95 / PU, LAND = 4.6 / PU;   // ~1 screen held on the landed row
             // the pack-up, in screens: one gesture [2.4, 3.95] in which the room shrinks to the card and, before it has settled,
             // the card tips back and turns over, following the scroll closely. The drop starts while it is still turning
             // [3.6, 4.25]: the same card carries on down into the row's empty slot as the row comes up to meet it
-            const PACK = [2.4, 3.95];   // one gesture: the shrink eases out as the turn picks up (see the pack-up below)
+            const PACK = [2.75, 4.3];   // one gesture: the shrink eases out as the turn picks up (see the pack-up below)
             // when each figure rises (left to right), in screens from the start of the wipe: after the claim and the light
-            const RISE = [[0.75, 1.17], [1.2, 1.56], [1.6, 1.96]], LIGHT = [0.55, 0.8], HOLD0 = 2.0;
+            const RISE = [[1.1, 1.52], [1.55, 1.91], [1.95, 2.31]], LIGHT = [0.95, 1.15], HOLD0 = 2.35;
+            // the claim, word by word: "Designed," … "built," … "and it sells." as the first line steps back; then the subheading
+            const CLAIM = [[0.36, 0.52], [0.5, 0.66], [0.64, 0.8], [0.67, 0.83], [0.7, 0.86]], SETP = [0.64, 0.86], SUB = [0.84, 1.0];
             const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, wipe: 0, total: 1, fs: 100 };
             if (reduce) { proof.insertBefore(pStats, pstage); pStats.classList.add('is-static'); }
             const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
@@ -1231,7 +1225,8 @@
             }
             // the headline's words arrive one after another, like the hero's name
             // "Designed," "built," then a held breath before the punchline
-            [0.05, 0.7, 1.4, 1.48, 1.56].forEach((d, i) => pHead.querySelectorAll('.hw')[i].style.setProperty('--in', `${d}s`));
+            const claimWords = [...pHead.querySelectorAll('.fx-phead .hw')], pSub = pHead.querySelector('.fx-psub');
+            const pSold = pHead.querySelector('.sold'), pIter = pHead.querySelector('.iter');
             // each figure's description comes into focus word by word once its figure has risen
             const figs = pFig.map((li) => {
                 const p = li.querySelector('p'), words = [];
@@ -1328,14 +1323,26 @@
                     const u = tv * PU;   // screens since the wipe began
                     pmx += (ptx - pmx) * k(4); pmy += (pty - pmy) * k(4);
                     // the headline: in once the wipe is about halfway, out again as the room starts to close
-                    pHead.classList.toggle('is-in', u > 0.36);
+                    // the claim, scrubbed by the scroll
+                    const win = ([a0, a1]) => ease(clamp((u - a0) / (a1 - a0)));
+                    claimWords.forEach((w, i) => {
+                        const q = win(CLAIM[i]), lift = i > 1 ? 0.34 : 0.18;
+                        w.style.opacity = q.toFixed(3);
+                        w.style.filter = q < 1 ? `blur(${((1 - q) * 14).toFixed(1)}px)` : 'none';
+                        w.style.transform = q < 1 ? `translate3d(0, ${((1 - q) * lift).toFixed(3)}em, 0)` : 'none';
+                    });
+                    pHead.style.setProperty('--setp', win(SETP).toFixed(3));
+                    const qs = win(SUB);
+                    pSub.style.opacity = qs.toFixed(3);
+                    pSub.style.filter = qs < 1 ? `blur(${((1 - qs) * 10).toFixed(1)}px)` : 'none';
+                    pSub.style.transform = qs < 1 ? `translate3d(0, ${((1 - qs) * 0.4).toFixed(3)}em, 0)` : 'none';
                     // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
                     const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
                     // the pack-up moves everything as one: the room shrinks to the tile with the scene inside, then the card flips
                     const pm = clamp((u - PACK[0]) / (PACK[1] - PACK[0]));   // one progress for the shrink and the turn
                     const bs = ease(clamp(pm / 0.55)), still = 1 - bs;
                     shift(pHead, 0, -drift * sh * 0.012);
-                    let landed0 = false, landed2 = false;
+                    const ev = [0, 0, 0];
                     figs.forEach(({ num, p, words, cols }, i) => {
                         const [a0, a1] = RISE[i];
                         const e = ease(clamp((u - a0) / (a1 - a0)));
@@ -1344,7 +1351,7 @@
                             const rr = ease(clamp((e - 0.04 - j * 0.07) / 0.72));
                             col.strip.style.transform = `translate3d(0, ${(-rr * col.n).toFixed(3)}em, 0)`;
                         });
-                        if (i === 0) landed0 = e > 0.97; if (i === 2) landed2 = e > 0.97;
+                        ev[i] = e;
                         const y = (1 - e) * PG.fs * 0.95 - drift * sh * 0.025;
                         num.style.transform = `translate3d(${(pmx * 10 * still).toFixed(1)}px, ${(y + pmy * 5 * still).toFixed(1)}px, 0)`;
                         num.style.filter = !mobile && e < 1 ? `blur(${((1 - e) * 8).toFixed(1)}px)` : '';
@@ -1359,8 +1366,9 @@
                         shift(p, pmx * 5 * still, -drift * sh * 0.04);
                     });
                     // the proof lights the claim: "sells." turns red with the revenue; "Iterated on every launch." brightens with the growth
-                    pHead.classList.toggle('is-sold', landed0);
-                    pHead.classList.toggle('is-grown', landed2);
+                    const sp = clamp((ev[0] - 0.8) / 0.2), ip = clamp((ev[2] - 0.8) / 0.2);
+                    pSold.style.color = `rgb(${Math.round(255 - 44 * sp)}, ${Math.round(255 - 233 * sp)}, ${Math.round(255 - 228 * sp)})`;
+                    pIter.style.color = `rgba(255, 255, 255, ${(0.62 + 0.38 * ip).toFixed(3)})`;
                     // the light from above comes up over the empty floor before anything rises
                     pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * still).toFixed(3));
                     // the room closes in to the tile (the card), the scene shrinking with it and the card lifting off the black
