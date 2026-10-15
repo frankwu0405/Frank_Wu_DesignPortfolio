@@ -228,14 +228,14 @@
         .fx-pteal { position: absolute; inset: 0; background: var(--nitori); opacity: 0; }
         /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type */
         .fx-pstats { position: absolute; inset: 0 0 var(--gap) 0; transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
-        .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.96; color: #fff; }
+        .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.022em; line-height: 1.02; color: #fff; }
         /* "Designed, built," arrives full size and white; as the punchline comes in, it steps back (smaller, slightly dimmed)
            so "and it sells." lands on its own */
         .fx-phead .set { display: inline-block; margin-bottom: 0.04em; font-size: var(--set0, 1em); color: #fff; white-space: nowrap;
             transition: font-size 0.4s ease, color 0.4s ease; }
         .fx-pclaim.is-in .set { font-size: var(--set1, 0.62em); color: rgba(255, 255, 255, 0.62);
             transition: font-size 1s cubic-bezier(0.65, 0, 0.25, 1) 1.32s, color 1s ease 1.32s; }
-        .fx-phead .punch { font-style: italic; font-weight: 900; }
+        .fx-phead .punch { font-style: italic; font-weight: 900; letter-spacing: -0.012em; }
         .fx-pclaim.is-sold .sold { color: var(--red); }
         /* each word arrives like the hero's name: out of a blur, rising a touch */
         .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em);
@@ -254,17 +254,17 @@
         .fx-pstats .fx-pfigs { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin: calc(var(--fvh, 1vh) * 11) 0 0; padding: 0; list-style: none; }
         .fx-pfig { position: relative; }
         /* the box has headroom above the digits (0.45em), so the drift and the pointer never push them out of the mask */
-        .fx-pnum { --fs: clamp(3.6rem, min(10.4vw, calc(var(--fvh, 1vh) * 20)), 11rem); height: calc(var(--fs) * 1.45); margin-top: calc(var(--fs) * -0.45); padding-top: 0.45em; box-sizing: border-box;
+        .fx-pnum { --fs: clamp(3.4rem, min(9vw, calc(var(--fvh, 1vh) * 18)), 9.6rem); height: calc(var(--fs) * 1.45); margin-top: calc(var(--fs) * -0.45); padding-top: 0.45em; box-sizing: border-box;
             font-size: var(--fs); line-height: 1;
             --pmask: linear-gradient(to bottom, #000 57%, rgba(0, 0, 0, 0.32) 71%, rgba(0, 0, 0, 0.08) 80.7%, transparent 89%);
             -webkit-mask-image: var(--pmask); mask-image: var(--pmask); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
         /* the digits roll up into place as each figure rises: each one a clipped column of figures */
         .fx-pnum .dc, .fx-pnum .dg { display: inline-block; vertical-align: top; height: 1em; }
-        .fx-pnum .dg { overflow: hidden; text-align: center; }
+        .fx-pnum .dg { clip-path: inset(0 -0.3em); text-align: center; }
         .fx-pnum .ds { display: block; white-space: pre; will-change: transform; }
         .fx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-        .fx-pnum b { display: block; font-size: inherit; font-weight: 900; font-style: normal; letter-spacing: -0.05em; white-space: nowrap; color: #fff; will-change: transform, filter; }
-        .fx-pnum .u { position: relative; top: -1.25em; margin-right: 0.06em; font-size: 0.32em; font-weight: 800; letter-spacing: -0.01em; color: var(--red); }
+        .fx-pnum b { display: block; font-size: inherit; font-weight: 900; font-style: normal; letter-spacing: -0.018em; white-space: nowrap; color: #fff; will-change: transform, filter; }
+        .fx-pnum .u { position: relative; top: -1.25em; margin-right: 0.12em; font-size: 0.32em; font-weight: 800; letter-spacing: 0.02em; color: var(--red); }
         /* the light falls from above; the shadow is where it runs out */
         .fx-pfigs::before { content: ""; position: absolute; left: -6vw; right: -6vw; top: -30%; height: 90%; pointer-events: none;
             background: radial-gradient(60% 70% at 50% 30%, rgba(255, 240, 236, 0.045), transparent 70%); opacity: var(--glowup, 0); }
@@ -379,7 +379,7 @@
             .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
             .fx-pick { font-size: 8.4vw; }
             .fx-pstats { padding: var(--navbar-height) 20px 0; }
-            .fx-phead { font-size: 13vw; --set0: 0.6em; --set1: 0.46em; }
+            .fx-phead { font-size: 12.4vw; --set0: 0.58em; --set1: 0.46em; }
             .fx-psub { font-size: 1.05rem; }
             .fx-pstats .fx-pfigs { flex-direction: column; gap: calc(var(--fvh, 1vh) * 2.6); margin-top: calc(var(--fvh, 1vh) * 6); }
             .fx-pnum { --fs: min(20vw, calc(var(--fvh, 1vh) * 11.5)); --pmask: linear-gradient(to bottom, #000 69%, rgba(0, 0, 0, 0.4) 80.7%, rgba(0, 0, 0, 0.12) 87.6%, transparent 93%); }
