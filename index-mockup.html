@@ -227,9 +227,11 @@
            toward the viewer mid-turn, the face turning away going into shade, and a teal glow on the floor as Nitori comes
            round. All of it follows the scroll */
         .fx-pred { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
-        .fx-pflip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-style: preserve-3d; transform-origin: 50% 50%; }
-        .fx-pfront, .fx-pback { position: absolute; inset: 0; overflow: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-        .fx-pback { transform: rotateX(180deg); background: var(--nitori); }
+        /* one flat card turning in perspective: it shows its front until it passes edge-on, then its back (pre-flipped so it
+           reads upright once turned). Safari mishandles hidden back faces in a true 3D card, so nothing relies on them */
+        .fx-pflip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 50%; }
+        .fx-pfront, .fx-pback { position: absolute; inset: 0; overflow: hidden; }
+        .fx-pback { transform: scaleY(-1); visibility: hidden; background: var(--nitori); }
         .fx-pfront::after, .fx-pback::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--shade, 0); pointer-events: none; }
         .fx-pbox { position: absolute; inset: 0; background: rgba(255, 255, 255, var(--lift, 0)); }
         .fx-pfloor { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 1.5); height: calc(var(--cw) * 0.36); border-radius: 50%; opacity: 0; pointer-events: none;
@@ -740,10 +742,10 @@
                a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
                onto the live page; a hold on the row */
             const PU = 4.55, BIRTH0 = 2.4 / PU, MORPH0 = 3.95 / PU, DROP0 = 3.6 / PU, LAND = 4.25 / PU;
-            // the pack-up, in screens: the room shrinks to the card [2.4, 2.95], then the card turns over across a full screen
-            // [2.95, 3.95], so the turn follows the scroll closely instead of snapping. The drop starts while it is still turning
+            // the pack-up, in screens: one gesture [2.4, 3.95] in which the room shrinks to the card and, before it has settled,
+            // the card tips back and turns over, following the scroll closely. The drop starts while it is still turning
             // [3.6, 4.25]: the same card carries on down into the row's empty slot as the row comes up to meet it
-            const SHRINK = [2.4, 2.95], FLIP = [2.95, 3.95];
+            const PACK = [2.4, 3.95];   // one gesture: the shrink eases out as the turn picks up (see the pack-up below)
             // when each figure rises (left to right), in screens from the start of the wipe: after the claim and the light
             const RISE = [[0.75, 1.17], [1.2, 1.56], [1.6, 1.96]], LIGHT = [0.55, 0.8], HOLD0 = 2.0;
             const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, wipe: 0, total: 1, fs: 100 };
@@ -1304,7 +1306,8 @@
                     // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
                     const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
                     // the pack-up moves everything as one: the room shrinks to the tile with the scene inside, then the card flips
-                    const bs = ease(clamp((u - SHRINK[0]) / (SHRINK[1] - SHRINK[0]))), still = 1 - bs;
+                    const pm = clamp((u - PACK[0]) / (PACK[1] - PACK[0]));   // one progress for the shrink and the turn
+                    const bs = ease(clamp(pm / 0.6)), still = 1 - bs;
                     shift(pHead, 0, -drift * sh * 0.012);
                     let landed0 = false, landed2 = false;
                     figs.forEach(({ num, p, words, cols }, i) => {
@@ -1345,15 +1348,19 @@
                     pBox.style.setProperty('--lift', (0.04 * clamp(bth * 3)).toFixed(4));
                     // then the flip: bottom edge first, toward the viewer and up over the top, easing past flat and back; it lifts
                     // off the floor mid-turn, the face turning away goes into shade, and Nitori's teal glows on the floor beneath
-                    const fp = clamp((u - FLIP[0]) / (FLIP[1] - FLIP[0]));
+                    // the turn starts while the card is still shrinking, so the two read as one move
+                    const fp = clamp((pm - 0.3) / 0.7);
                     // nearly linear with the scroll (a gentle sine ease at either end), finishing a little early so it can settle
                     const turn = 0.5 - 0.5 * Math.cos(Math.PI * clamp(fp / 0.86));
                     const over = Math.sin(Math.PI * clamp((fp - 0.72) / 0.28)) * 5;   // a few degrees past flat as it lands, then back
-                    const ang = turn * 180 + over, arc = Math.sin(Math.PI * turn);
+                    const wind = pm < 0.34 ? -5 * Math.sin(Math.PI * pm / 0.34) : 0;   // tips back a touch as it's picked up, then over
+                    const ang = turn * 180 + over + wind, arc = Math.sin(Math.PI * clamp((pm - 0.12) / 0.78));   // the lift spans the whole gesture
                     pRed.style.perspective = `${(H * 3.2).toFixed(0)}px`;
                     pRed.style.perspectiveOrigin = `${cx.toFixed(1)}px ${(fy0 + dropY).toFixed(1)}px`;
-                    pFlip.style.transform = fp > 0 ? `translate3d(0, ${(-arc * H * 0.12).toFixed(1)}px, ${(arc * H * 0.55).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
+                    pFlip.style.transform = pm > 0 ? `translate3d(0, ${(-arc * H * 0.12).toFixed(1)}px, ${(arc * H * 0.55).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
                     const edge = Math.abs(Math.sin(ang * Math.PI / 180));   // 1 when the card is edge-on
+                    const backOn = Math.cos(ang * Math.PI / 180) < 0;   // past edge-on, the back is the side facing us
+                    pFront.style.visibility = backOn ? 'hidden' : 'inherit'; pBack.style.visibility = backOn ? 'inherit' : 'hidden';
                     pFront.style.setProperty('--shade', (ang < 90 ? edge * 0.75 : 1).toFixed(3));
                     pBack.style.setProperty('--shade', (ang > 90 ? edge * 0.6 : 1).toFixed(3));
                     const glow = clamp((ang - 60) / 120) * (0.55 + arc * 0.45);
