@@ -41,36 +41,40 @@
         html:has(body.fx) { background-color: #060606; }
         body.fx { transition: none; }
         body.fx { padding-top: 0; }
-        /* navigation: lit, not painted. Clear over the page at the top; once the page has moved it gains a dark band and a
-           hairline that fades toward both edges. It tucks away on the way down and comes back on the way up. The current
-           tab is lit from beneath: a bright stretch of the line, its glow rising toward the label (hover gives a weaker one) */
+        /* navigation: lit, not painted, and always there. No bar and no line: a soft fade from the top edge and a dark halo
+           round the type keep it readable over anything. The current tab hangs under a light set into the top edge of the
+           screen, its cone falling onto the label; hover gives a weaker one */
         .fx .navbar { height: calc(68px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 2rem 0; align-items: stretch; border-bottom: 0; box-shadow: none;
-            background: rgba(6, 6, 6, 0); backdrop-filter: none; -webkit-backdrop-filter: none;
-            transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.35s ease, -webkit-backdrop-filter 0.35s ease, backdrop-filter 0.35s ease; }
-        .fx .navbar.is-scrolled { background: rgba(6, 6, 6, 0.74); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-        .fx .navbar.is-tucked { transform: translateY(-101%); }
-        .fx .navbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2) 18%, rgba(255, 255, 255, 0.2) 82%, rgba(255, 255, 255, 0)); }
-        .fx .navbar.is-scrolled::after { opacity: 1; }
+            background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        .fx .navbar::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: calc(130px + env(safe-area-inset-top, 0px)); pointer-events: none;
+            background: linear-gradient(rgba(6, 6, 6, 0.55), rgba(6, 6, 6, 0.22) 50%, rgba(6, 6, 6, 0)); }
         .fx .logo { align-self: center; }
-        .fx .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); transform: none; }
+        .fx .logo-img, .fx .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%) drop-shadow(0 0 8px rgba(0, 0, 0, 0.55)); transform: none; }
         .fx .nav-links-container { display: flex; align-items: stretch; padding: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .fx .navbar .nav-links { align-items: stretch; gap: 0; }
+        .fx .navbar .nav-links { position: relative; align-items: stretch; gap: 0; }
         .fx .navbar .nav-links li { display: flex; }
         .fx .navbar .nav-links li a { position: relative; display: flex; align-items: center; padding: 0 1.15rem; border-radius: 0; background: none; box-shadow: none;
-            color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; }
+            color: rgba(255, 255, 255, 0.66); font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; text-shadow: 0 0 2px rgba(0, 0, 0, 0.45), 0 0 12px rgba(0, 0, 0, 0.6); }
         .fx .navbar .nav-links li a:hover { color: #fff; background: none; border-radius: 0; }
         .fx .navbar .nav-links li a.active { color: #fff; font-weight: 600; background: none; box-shadow: none; border-radius: 0; }
-        .fx .navbar .nav-links li a::before { content: ""; position: absolute; left: 14%; right: 14%; bottom: 0; height: 1px; opacity: 0; transition: opacity 0.35s ease;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 30%, #fff 70%, rgba(255, 255, 255, 0)); }
-        .fx .navbar .nav-links li a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 62%; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
-            background: radial-gradient(75% 100% at 50% 100%, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 78%); }
+        .fx .navbar .nav-links li a::before { content: ""; position: absolute; left: 16%; right: 16%; top: calc(env(safe-area-inset-top, 0px) * -1); height: 2px; opacity: 0;
+            transition: opacity 0.35s ease; box-shadow: 0 0 10px rgba(255, 255, 255, 0.55);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 28%, #fff 72%, rgba(255, 255, 255, 0)); }
+        .fx .navbar .nav-links li a::after { content: ""; position: absolute; left: -10%; right: -10%; top: calc(env(safe-area-inset-top, 0px) * -1); height: calc(88% + env(safe-area-inset-top, 0px));
+            pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+            background: radial-gradient(60% 100% at 50% 0%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.07) 48%, rgba(255, 255, 255, 0) 80%); }
         .fx .navbar .nav-links li a.active::before, .fx .navbar .nav-links li a.active::after { opacity: 1; }
         .fx .navbar .nav-links li a:not(.active):hover::before { opacity: 0.4; }
         .fx .navbar .nav-links li a:not(.active):hover::after { opacity: 0.45; }
         .fx .navbar .nav-links .ar { width: 0.62em; height: 0.62em; margin-left: 0.45em; }
-        /* phones: logo and a two-line menu button, no hairline; the menu slides in from the right edge, its current link lit
-           from beneath the same way */
+        /* the comparison (?nav=invert): the navigation in difference blend, so it inverts whatever is behind it */
+        .fx.nav-invert .navbar { mix-blend-mode: difference; }
+        .fx.nav-invert .navbar::before { display: none; }
+        .fx.nav-invert .navbar .nav-links li a { color: #fff; text-shadow: none; }
+        .fx.nav-invert .logo-img, .fx.nav-invert .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); }
+        .fx.nav-invert.menu-open .navbar { mix-blend-mode: normal; }
+        /* phones: logo and a two-line menu button; the menu slides in from the right edge, its current link under a light
+           of its own the same way */
         .fx .nav-toggle { position: relative; width: 44px; height: 44px; align-self: center; order: 2; margin-left: auto; }
         .fx .nav-links-container { order: 3; }
         .fx .hamburger { position: absolute; left: 10px; top: 50%; width: 24px; height: 1.5px; margin-top: -0.75px; border-radius: 0; background: transparent; transition: none; }
@@ -82,16 +86,15 @@
         .fx .nav-toggle.active .hamburger::after { transform: rotate(-45deg); }
         @media (max-width: 768px) {
             .fx .navbar { height: calc(72px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 3%; }
-            .fx .navbar::after { display: none; }
             .fx .nav-links-container { position: absolute; width: 0; height: 0; padding: 0; overflow: visible; }
-            .fx .navbar .nav-links { top: 0; right: 0; height: 100vh; height: 100dvh; width: min(80vw, 380px); max-width: none; transform: translateX(100%); align-items: stretch;
+            .fx .navbar .nav-links { position: fixed; top: 0; right: 0; height: 100vh; height: 100dvh; width: min(80vw, 380px); max-width: none; transform: translateX(100%); align-items: stretch;
                 padding: calc(72px + env(safe-area-inset-top, 0px) + 18px) 0 0; background: rgba(8, 8, 8, 0.97); transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
             .fx .navbar .nav-links.show { transform: none; }
             .fx .navbar .nav-links li { margin: 0; }
             .fx .navbar .nav-links li a { width: 100%; padding: 1.15rem 2rem; font-size: 1.35rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
             .fx .navbar .nav-links li a:hover, .fx .navbar .nav-links li a.active { background: none; box-shadow: none; border-radius: 0; color: #fff; }
-            .fx .navbar .nav-links li a::before { left: 2rem; right: auto; width: 4.5em; bottom: 0.55rem; }
-            .fx .navbar .nav-links li a::after { left: 0.5rem; right: auto; width: 7em; height: 80%; bottom: 0.55rem; }
+            .fx .navbar .nav-links li a::before { left: 2rem; right: auto; width: 4.5em; top: 0.3rem; }
+            .fx .navbar .nav-links li a::after { left: 0.5rem; right: auto; width: 7em; top: 0.3rem; height: 85%; }
             body.fx.menu-open::before { z-index: 980; }
         }
         .fx main { max-width: none; }
@@ -757,17 +760,9 @@
         (() => {
             const root = document.documentElement;
             const reduce = root.classList.contains('fx-reduce');
-            /* navigation: the band and hairline once the page has moved; tucked away on the way down, back on the way up */
-            const navbar = document.querySelector('.navbar'), navTgl = document.querySelector('.nav-toggle'), navList = document.querySelector('.nav-links');
-            let navY = scrollY;
-            const navScroll = () => {
-                const y = scrollY, d = y - navY;
-                navbar.classList.toggle('is-scrolled', y > 40);
-                if (y < 80 || document.body.classList.contains('menu-open')) { navbar.classList.remove('is-tucked'); navY = y; return; }
-                if (Math.abs(d) < 8) return;
-                navbar.classList.toggle('is-tucked', d > 0); navY = y;
-            };
-            addEventListener('scroll', navScroll, { passive: true }); navScroll();
+            /* navigation: compare the inverted version with ?nav=invert */
+            const navTgl = document.querySelector('.nav-toggle'), navList = document.querySelector('.nav-links');
+            if (new URLSearchParams(location.search).get('nav') === 'invert') document.body.classList.add('nav-invert');
             // the menu button says whether the menu is open, and Escape closes it
             navTgl.setAttribute('aria-expanded', 'false');
             new MutationObserver(() => navTgl.setAttribute('aria-expanded', String(navList.classList.contains('show')))).observe(navList, { attributes: true, attributeFilter: ['class'] });
