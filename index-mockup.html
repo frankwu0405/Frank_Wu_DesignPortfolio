@@ -344,11 +344,11 @@
         .fx-step { position: relative; z-index: 2; width: 100%; text-align: center; perspective: 900px; transform: translate3d(0, var(--py, 0px), 0) scale(var(--sc, 1)); }
         .fx-step .in { opacity: 0.3; filter: blur(2px); transform: translate3d(0, 28px, -140px); transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
         .fx-step.is-lit .in { opacity: 1; filter: none; transform: none; }
-        .fx-step h3 { font-size: clamp(1.9rem, 3.6vw, 3.8rem); font-weight: 900; letter-spacing: -0.04em; line-height: 0.9; text-transform: uppercase; margin: 0 0 calc(var(--fvh, 1vh) * 1.8);
-            color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.6); }
+        .fx-step h3 { font-size: clamp(1.9rem, 3.6vw, 3.8rem); font-weight: 800; letter-spacing: 0.04em; line-height: 0.9; text-transform: uppercase; margin: 0 0 calc(var(--fvh, 1vh) * 1.8);
+            color: transparent; -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.6); }
         .fx-step h3 span { position: relative; display: inline-block; }
         /* the fill: a copy of the word, revealed in a circle that opens from where the line crossed it */
-        .fx-step h3 span::after { content: attr(data-t); position: absolute; left: 0; top: 0; color: #fff; -webkit-text-stroke: 1.5px #fff; text-shadow: none;
+        .fx-step h3 span::after { content: attr(data-t); position: absolute; left: 0; top: 0; color: #fff; -webkit-text-stroke: 1.2px #fff; text-shadow: none;
             clip-path: circle(0 at var(--lx, 50%) 55%); transition: clip-path 0.5s cubic-bezier(0.5, 0, 0.75, 0); }
         .fx-step.is-lit h3 span::after { clip-path: circle(150% at var(--lx, 50%) 55%); transition: clip-path 1.1s cubic-bezier(0.2, 0.7, 0.2, 1); }
         /* the light: a red glow as the line nears, and a shadow cast away from it (--lk, --lsx, --lsy follow the line's head) */
