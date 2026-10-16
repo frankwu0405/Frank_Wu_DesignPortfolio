@@ -333,9 +333,8 @@
         .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
 
         /* 6 · How I work: the steps stand in one centred column, each a large outlined word. The line wanders gently down
-           through them from one period to the other and is the scene's light: what it nears picks up a red glow and casts
-           a shadow away from it, and the word it touches fills from that point outward. It passes behind the near words,
-           in front of the far ones, and always behind the paragraphs */
+           behind them from one period to the other and is the scene's light: what it nears picks up a red glow and casts
+           a shadow away from it, and the word it touches fills from that point outward */
         .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); }
         .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 16); text-align: center; }
         .fx-pr-head .display { font-size: clamp(2.2rem, 5vw, 4.8rem); text-wrap: balance; }
@@ -355,17 +354,22 @@
         .fx-step h3 span, .fx-end .display, .fx-pr-head .display { text-shadow: var(--halo, 0 0 0 transparent), calc(var(--lsx, 0) * 1px) calc(var(--lsy, 0) * 1px) 14px rgba(0, 0, 0, calc(var(--lk, 0) * 0.8)),
             0 0 calc(var(--lk, 0) * 28px) rgba(255, 44, 32, calc(var(--lk, 0) * 0.65)); }
         .fx-step p { margin: 0 auto; max-width: 34ch; color: #c9c9c9; line-height: 1.7; text-shadow: 0 0 3px var(--ink), 0 0 7px var(--ink); }
-        /* the far steps sit back (smaller, dimmer) and the line crosses in front of their word, leaving it hot where it
-           crossed; the near words are solid to it (a dark edge round each letter), so where it runs behind it stops short */
-        .fx-step.z-far { --sc: 0.94; }
-        .fx-step.z-far p { color: #a9a9a9; }
-        .fx-step.z-far h3 span::after { color: transparent; -webkit-text-stroke-color: transparent; -webkit-background-clip: text; background-clip: text;
-            background-image: radial-gradient(circle at var(--lx, 50%) 55%, #ffd6cc 0, #ff4a3a 0.1em, #f2f2f2 0.55em); }
-        .fx-step.z-near h3 span, .fx-end .display { --halo: 0 0 2px var(--ink), 0 0 6px var(--ink), 0 0 12px var(--ink); }
+        /* the words are solid to the line (a dark edge round each letter), so where it runs behind them it stops short */
+        .fx-step h3 span, .fx-end .display { --halo: 0 0 2px var(--ink), 0 0 6px var(--ink), 0 0 12px var(--ink); }
         /* where the line's head is, the dark around it warms */
         .fx-thread-light { position: absolute; z-index: 0; left: 0; top: 0; width: var(--tlS, 960px); height: var(--tlS, 960px); margin: calc(var(--tlS, 960px) / -2) 0 0 calc(var(--tlS, 960px) / -2);
             border-radius: 50%; pointer-events: none; opacity: 0; will-change: transform, opacity;
             background: radial-gradient(closest-side, rgba(211, 22, 27, 0.2), rgba(211, 22, 27, 0.07) 45%, rgba(211, 22, 27, 0)); }
+        /* the two words the line runs between: white until the red passes over them (--sw, 0 to 1), "intentional." from
+           the left as it comes up the screen, setting the line off when it reaches the period; "remembering." from its
+           period back to the left once the line has landed there. A red copy over the white word, with a soft leading edge */
+        .fx-sweep { position: relative; display: inline-block; color: transparent; --swE: calc(var(--sw, 0) * (100% + 0.8em)); }
+        .fx-sweep::before, .fx-sweep::after { position: absolute; left: 0; top: 0; width: 100%; text-align: left; white-space: nowrap; text-shadow: none; pointer-events: none; }
+        .fx-sweep::before { content: attr(data-w); color: #fff;
+            -webkit-mask-image: linear-gradient(var(--swA, 90deg), transparent calc(var(--swE) - 0.8em), #000 var(--swE)); mask-image: linear-gradient(var(--swA, 90deg), transparent calc(var(--swE) - 0.8em), #000 var(--swE)); }
+        .fx-sweep::after { content: attr(data-t); color: var(--red);
+            -webkit-mask-image: linear-gradient(var(--swA, 90deg), #000 calc(var(--swE) - 0.8em), transparent var(--swE)); mask-image: linear-gradient(var(--swA, 90deg), #000 calc(var(--swE) - 0.8em), transparent var(--swE)); }
+        .fx-sweep.from-right { --swA: 270deg; }
 
         /* 7 · Finale: the mark returns, lit. Its heading stands over the line's lower layer, so the line runs behind the
            words on its way into the period */
@@ -394,18 +398,17 @@
            only starts once it has */
         .fx-tail { position: relative; }
         /* the line lives in the page (it scrolls with the words; only how far it has drawn follows the script), on two
-           layers: under the steps where it passes behind the near ones, over them everywhere else */
+           layers: under the words where it passes behind them, over everything else */
         .fx-thread { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
         .fx-thread.back { z-index: 1; }
         .fx-thread.front { z-index: 3; }
         .fx-thread use { fill: none; stroke-linecap: round; }
         .fx-thread .track { stroke: rgba(211, 22, 27, 0.16); stroke-width: 1.5; }
         .fx-thread .lit { stroke-dasharray: var(--tP, 1) var(--tP, 1); stroke-dashoffset: var(--tOff, 1); opacity: var(--tOn, 0); }
+        .fx-thread .lit.bloom, .fx-thread .lit.glow { opacity: calc(var(--tOn, 0) * var(--tGl, 1)); }
         .fx-thread .bloom { stroke: url(#thrGlow); stroke-width: 22; stroke-opacity: 0.12; }
         .fx-thread .glow { stroke: url(#thrGlow); stroke-width: 8; stroke-opacity: 0.32; }
         .fx-thread .core { stroke: url(#thrCore); stroke-width: 2.6; }
-        .fx-thread .shade { stroke: #000; stroke-width: 12; stroke-opacity: 0.4; }
-        .fx-thread .shade.tight { stroke-width: 4; stroke-opacity: 0.5; }
         .fx-thread .hd { opacity: 0; }
         .fx-end .fx-dot { color: transparent; transition: color 0.5s ease; }
         .fx-end.is-dotted .fx-dot { color: var(--red); }
@@ -436,7 +439,6 @@
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-steps { gap: calc(var(--fvh, 1vh) * 11); }
             .fx-step h3 { font-size: 10.5vw; }
-            .fx-step.z-far { --sc: 0.96; }
             .fx-thread-light { --tlS: 600px; }
             .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
             .fx-end .mark2 { width: 170vw; }
@@ -629,7 +631,7 @@
         <!-- 6 · How I work -->
         <section class="fx-process" aria-label="How I work">
             <div class="fx-pr-head">
-                <h2 class="display">From the first interview to shipped code, every step is <span class="red">intentional<span class="fx-dot0">.</span></span></h2>
+                <h2 class="display">From the first interview to shipped code, every step is <span class="fx-sweep" data-w="intentional." data-t="intentional.">intentional<span class="fx-dot0">.</span></span></h2>
             </div>
             <div class="fx-pr-body">
                 <div class="fx-steps">
@@ -644,7 +646,7 @@
         <!-- 7 · Finale -->
         <section class="fx-end" id="contact">
             <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
-            <h2 class="display">Let's build something worth <span class="red">remembering<span class="fx-dot">.</span></span></h2>
+            <h2 class="display">Let's build something worth <span class="fx-sweep from-right" data-w="remembering" data-t="remembering.">remembering<span class="fx-dot">.</span></span></h2>
             <div class="fx-contact">
                 <a class="fx-ic" href="tel:+886956820832" aria-label="Call +886 956 820 832" title="+886 956 820 832"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
                 <a class="fx-ic" href="mailto:frank.wu.0405@gmail.com" aria-label="Email frank.wu.0405@gmail.com" title="frank.wu.0405@gmail.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
@@ -665,7 +667,7 @@
                 <defs>
                     <path id="thrPath" d="M0 0"/>
                     <linearGradient id="thrCore" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0" stop-color="#d3161b" stop-opacity="0.45"/><stop offset="0.75" stop-color="#ee2a22"/><stop offset="1" stop-color="#ff6a55"/></linearGradient>
+                        <stop offset="0" stop-color="#d3161b" stop-opacity="0.26"/><stop offset="0.7" stop-color="#e3201c" stop-opacity="0.75"/><stop offset="1" stop-color="#ff6a55"/></linearGradient>
                     <linearGradient id="thrGlow" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
                         <stop offset="0" stop-color="#ff2a20" stop-opacity="0"/><stop offset="1" stop-color="#ff2a20"/></linearGradient>
                     <radialGradient id="thrHalo">
@@ -674,7 +676,6 @@
                 </defs>
                 <g clip-path="url(#thrFrontClip)">
                     <use class="track" href="#thrPath"/>
-                    <use class="lit shade" href="#thrPath" transform="translate(7 10)"/><use class="lit shade tight" href="#thrPath" transform="translate(4 6)"/>
                     <use class="lit bloom" href="#thrPath"/><use class="lit glow" href="#thrPath"/><use class="lit core" href="#thrPath"/>
                     <g class="hd"><circle r="34" fill="url(#thrHalo)"/><circle r="3.4" fill="#fff"/></g>
                 </g>
@@ -821,12 +822,14 @@
             /* ---------- the line: from the period of "intentional." to the period of "remembering." ----------
                One path in the page, so it scrolls with the words; the scroll only sets how much of it is drawn, with its head
                on a reading line 60% down the screen. It wanders gently down through the steps' words, crossing each near its
-               end, and drops into the last period. The steps alternate near and far: it passes behind the near ones and in
-               front of the far ones' words (always behind their paragraphs) */
+               end, behind each step and behind the last heading, and stops just short of the last period */
             const thrBack = tail.querySelector('.fx-thread.back'), thrFront = tail.querySelector('.fx-thread.front');
             const thrPath = document.getElementById('thrPath'), thrCore = document.getElementById('thrCore'), thrGlow = document.getElementById('thrGlow');
             const backClip = document.getElementById('thrBackClip'), frontClip = document.getElementById('thrFrontClip');
             const hdB = thrBack.querySelector('.hd'), hdF = thrFront.querySelector('.hd'), thrRing = thrFront.querySelector('.ring'), thrLight = tail.querySelector('.fx-thread-light'), headA = proc.querySelector('.fx-pr-head .display');
+            const sweepA = proc.querySelector('.fx-sweep'), sweepB = end.querySelector('.fx-sweep');
+            let swA = -1, swB = -1;
+            const setSweep = (el, v, was) => { if (Math.abs(v - was) > 0.002 || (v !== was && (v === 0 || v === 1))) el.style.setProperty('--sw', v.toFixed(3)); return v; };
             const dotA = proc.querySelector('.fx-dot0'), mctx = document.createElement('canvas').getContext('2d');
             let TH = null, thDone = false, thLandT = 0, thLoop = false;
             // where a period's dot actually sits: on the baseline (found with a zero-size marker), centred on the glyph's ink
@@ -844,26 +847,25 @@
                 const sy = scrollY, tr = tail.getBoundingClientRect(), ox = tr.left, oy = tr.top + sy;
                 const local = (el) => { const d = dotCenter(el); return [d.x - ox, d.y - oy, d.r]; };
                 const br = prBody.getBoundingClientRect(), bx = br.left - ox, by = br.top + sy - oy;
-                steps.forEach((st, i) => { st.classList.toggle('z-near', i % 2 === 0); st.classList.toggle('z-far', i % 2 === 1); });
                 const S = local(dotA), E = local(trailDot);
                 // where it crosses each word (in layout terms, transforms left out): as near the straight run between the periods
                 // as the word allows, so it only bends as far as it has to
                 const P = [[S[0], S[1]]];
-                const info = steps.map((st, i) => {
-                    const span = st.querySelector('h3 span'), p = st.querySelector('p'), x0 = bx + st.offsetLeft + span.offsetLeft, y0 = by + st.offsetTop;
+                const info = steps.map((st) => {
+                    const span = st.querySelector('h3 span'), x0 = bx + st.offsetLeft + span.offsetLeft, y0 = by + st.offsetTop;
                     const w = span.offsetWidth, st0 = y0 + span.offsetTop, ym = st0 + span.offsetHeight * 0.52;
                     const cx = clamp(lerp(S[0], E[0], (ym - S[1]) / (E[1] - S[1])), x0 + w * 0.22, x0 + w * 0.84);
                     P.push([cx, ym]); span.style.setProperty('--lx', `${Math.round(cx - x0)}px`);
-                    // where it runs behind: the whole of a near step, only the paragraph of a far one
-                    const near = i % 2 === 0, a = near ? y0 - 20 : y0 + p.offsetTop - 14, b = near ? y0 + st.offsetHeight + 20 : y0 + p.offsetTop + p.offsetHeight + 14;
-                    return { near, cy: ym, b0: a, b1: b, py: 0, el: span, box: [x0, st0, x0 + w, st0 + span.offsetHeight], k: 0 };
+                    // it runs behind each step, word and paragraph
+                    const a = y0 - 20, b = y0 + st.offsetHeight + 20;
+                    return { cy: ym, b0: a, b1: b, py: 0, el: span, box: [x0, st0, x0 + w, st0 + span.offsetHeight], k: 0 };
                 });
                 // then into the last heading: down behind its words (they stand over it) and out at the period
                 const eh = endHead.getBoundingClientRect(), ah = headA.getBoundingClientRect(), last = P[P.length - 1];
                 const abox = [ah.left - ox, ah.top + sy - oy, ah.right - ox, ah.bottom + sy - oy];
                 const ebox = [eh.left - ox, eh.top + sy - oy, eh.right - ox, eh.bottom + sy - oy];
                 P.push([lerp((ebox[0] + ebox[2]) / 2, E[0], 0.55), lerp(ebox[1], E[1], 0.5)]);
-                P.push([E[0], E[1]]);
+                P.push([E[0], E[1] - E[2] - 6]);   // it stops just short of the period and leaves it clean
                 // one smooth curve through those points (Catmull-Rom, scaled by the distances between them so it never overshoots),
                 // leaving the first period straight down and arriving straight down into the last
                 const ext = [[S[0], S[1] - 300], ...P, [E[0], E[1] + 300]], dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -889,23 +891,25 @@
                 const len = L[L.length - 1];
                 thrPath.setAttribute('pathLength', f1(len)); tail.style.setProperty('--tP', f1(len));
                 thrRing.setAttribute('cx', f1(E[0])); thrRing.setAttribute('cy', f1(E[1]));
-                // the clips: under the words across the bands where it runs behind (the last heading's until just above the
-                // period, where it comes out to land), over them everywhere else
-                const bands = [...info, { b0: ebox[1] - 14, b1: E[1] - E[2] * 2.5, py: 0 }];
+                // the clips: under the words across the bands where it runs behind (all the way into the last heading, so its
+                // period always sits over the line's end), over them everywhere else
+                const bands = [...info, { b0: ebox[1] - 14, b1: ebox[3] + 14, py: 0 }];
                 backClip.replaceChildren(); frontClip.replaceChildren();
                 const mk = (cp) => { const r = svgEl('rect', cp); r.setAttribute('x', -1e4); r.setAttribute('width', 3e4); return r; };
                 TH = { X, Y, L, P: len, n: X.length, E, steps: info, bands, bR: bands.map(() => mk(backClip)), fR: [...bands.map(() => mk(frontClip)), mk(frontClip)],
-                    recv: [...info, { el: endHead, box: ebox, py: 0, k: 0, max: 0.6 }, { el: headA, box: abox, py: 0, k: 0 }] };
+                    recv: [...info, { el: endHead, box: ebox, py: 0, k: 0, max: 0.6 }, { el: headA, box: abox, py: 0, k: 0 }], S };
             }
             const setBand = (r, a, b) => { r.setAttribute('y', a.toFixed(1)); r.setAttribute('height', Math.max(0, b - a).toFixed(1)); };
             function drawThread(now) {
                 if (!TH) return;
-                const tr = tail.getBoundingClientRect();
-                if (tr.top > VH || tr.bottom < 0) return;   // off screen: nothing to update
-                const { X, Y, L, P, n, E } = TH, target = reduce ? Infinity : VH * 0.6 - tr.top;   // the reading line, in the tail's terms
-                // depth: the near steps drift a little faster than the page, the far ones a little slower (desktop only)
+                const tr = tail.getBoundingClientRect(), target = reduce ? Infinity : VH * 0.6 - tr.top;   // the reading line, in the tail's terms
+                // "intentional." turns red over the last stretch before the reading line reaches its period, where the line sets off
+                swA = setSweep(sweepA, clamp((target - TH.S[1]) / (VH * 0.22) + 1), swA);
+                if (tr.top > VH || tr.bottom < 0) return;   // off screen: nothing more to update
+                const { X, Y, L, P, n, E } = TH;
+                // depth: the steps stand nearer than the line, so they drift a little faster than the page (desktop only)
                 TH.steps.forEach((s, i) => {
-                    const py = mobile || reduce ? 0 : clamp((s.cy + tr.top - VH / 2) * (s.near ? 0.07 : -0.05), -70, 70);
+                    const py = mobile || reduce ? 0 : clamp((s.cy + tr.top - VH / 2) * 0.07, -70, 70);
                     if (Math.abs(py - s.py) > 0.3) { s.py = py; steps[i].style.setProperty('--py', `${py.toFixed(1)}px`); }
                     steps[i].classList.toggle('is-lit', reduce || target >= s.cy);
                 });
@@ -926,9 +930,10 @@
                     }
                 }
                 tail.style.setProperty('--tOff', (P - len).toFixed(1)); tail.style.setProperty('--tOn', len > 0.5 ? 1 : 0);
-                // brightest at the head, with a long, strong tail behind it
-                thrCore.setAttribute('y1', (hy - 1100).toFixed(1)); thrCore.setAttribute('y2', hy.toFixed(1));
-                thrGlow.setAttribute('y1', (hy - 520).toFixed(1)); thrGlow.setAttribute('y2', hy.toFixed(1));
+                // brightest at the head; behind it the line cools to a dim trail, and once landed its glow goes out
+                thrCore.setAttribute('y1', (hy - (mobile ? 260 : 380)).toFixed(1)); thrCore.setAttribute('y2', hy.toFixed(1));
+                thrGlow.setAttribute('y1', (hy - (mobile ? 160 : 240)).toFixed(1)); thrGlow.setAttribute('y2', hy.toFixed(1));
+                tail.style.setProperty('--tGl', (1 - settle).toFixed(3));
                 // the head: born from the first period, it passes behind the near steps with the line; once landed it fades into the dot
                 const emerge = clamp(len / 60), ha = emerge * (1 - settle), behind = nb.some(([a, b]) => hy > a && hy < b);
                 const tf = `translate(${hx.toFixed(1)} ${hy.toFixed(1)}) scale(${(0.45 + 0.55 * emerge).toFixed(3)})`;
@@ -945,6 +950,8 @@
                     r.k = k; r.el.style.setProperty('--lk', k.toFixed(3));
                     r.el.style.setProperty('--lsx', (vx / vl * 18 * k).toFixed(1)); r.el.style.setProperty('--lsy', (vy / vl * 18 * k).toFixed(1));
                 });
+                // "remembering." turns red from the period back as the head settles into it
+                swB = setSweep(sweepB, done ? ease(settle) : 0, swB);
                 // landing: a soft ring opens from the period as the head settles into it
                 thrRing.setAttribute('r', (E[2] * (1.2 + 3.5 * ease(settle))).toFixed(1));
                 thrRing.setAttribute('opacity', done && settle < 1 ? (0.5 * (1 - settle)).toFixed(3) : 0);
