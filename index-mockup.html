@@ -73,10 +73,12 @@
         .fx-fxbox { opacity: var(--imp, 1); }   /* the hero's mark waits under the gate until the line lands on it */
 
         /* Cursor */
-        .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--red); pointer-events: none;
-            display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
-            transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
-        .fx-cursor.is-view { width: 84px; height: 84px; margin: -42px 0 0 -42px; font-size: 0.66rem; opacity: 1; }
+        .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; box-sizing: border-box; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; border: 1px solid transparent;
+            background: var(--red); pointer-events: none; display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
+            transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; }
+        /* over a project: a hairline ring, its middle softly darkened and blurred so the word reads over the live page */
+        .fx-cursor.is-view { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: rgba(6, 6, 6, 0.42); border-color: rgba(255, 255, 255, 0.6);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 0.6rem; letter-spacing: 0.24em; text-indent: 0.24em; opacity: 1; }
         .fx-cursor.is-arrow { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: transparent; font-size: 1.6rem; font-weight: 300; letter-spacing: 0; opacity: 1; }
         .fx-cursor .ar { stroke-width: 1; }
         .fx-cursor .ar.l { transform: scaleX(-1); }
