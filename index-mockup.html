@@ -380,16 +380,19 @@
             transform: translate3d(-50%, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.2 + var(--p) * 0.45); }
         .fx-end::after { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(6, 6, 6, 0.82), rgba(6, 6, 6, 0.5) 60%, rgba(6, 6, 6, 0.25)); }
         .fx-end .display { font-size: clamp(2.6rem, 7vw, 7.6rem); max-width: 12ch; margin-inline: auto; text-wrap: balance; }
-        /* contact: three round icon buttons (phone, email, LinkedIn) and the résumé as one big button under them */
-        .fx-contact { display: flex; justify-content: center; gap: 16px; margin-top: calc(var(--fvh, 1vh) * 7); }
-        .fx-ic { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.28); color: #fff; font-size: 1.3rem;
-            text-decoration: none; background: rgba(6, 6, 6, 0.4); transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-ic:hover, .fx-ic:focus-visible { background: var(--red); border-color: var(--red); transform: translateY(-3px); }
-        .fx-cv { display: flex; align-items: center; justify-content: center; gap: 12px; width: min(100%, 360px); margin: 22px auto 0; padding: 22px 32px; box-sizing: border-box;
-            border-radius: 999px; background: var(--red); color: #fff; text-decoration: none; font-size: clamp(1rem, 1.5vw, 1.2rem); font-weight: 800; letter-spacing: 0.08em;
-            text-transform: uppercase; transition: background 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-cv:hover, .fx-cv:focus-visible { background: #e8231f; transform: translateY(-3px); }
-        .fx-cv span { transition: transform 0.3s ease; } .fx-cv:hover span { transform: translate(3px, -3px); }
+        /* contact: three equal blades leaning with the mark, drawn as hairlines only (like the outlined type); on hover the
+           edge lights red with a soft glow and the label turns red from the left, as "intentional." does */
+        .fx-blades { display: flex; justify-content: center; gap: 26px; margin-top: calc(var(--fvh, 1vh) * 8); }
+        .fx-blade { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 210px; height: 58px; box-sizing: border-box;
+            text-decoration: none; font-size: clamp(0.78rem, 1vw, 0.95rem); font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+        .fx-blade::before { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255, 255, 255, 0.3); transform: skewX(-16.5deg);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+        .fx-blade span { position: relative; color: transparent; -webkit-background-clip: text; background-clip: text;
+            background-image: linear-gradient(90deg, var(--red) 40%, #fff 60%); background-size: 260% 100%; background-position: 100% 0; transition: background-position 0.55s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-blade i { font-style: normal; margin-left: 0.5em; letter-spacing: 0; }
+        .fx-blade:hover::before, .fx-blade:focus-visible::before { border-color: rgba(255, 60, 45, 0.95); box-shadow: 0 0 16px rgba(255, 40, 30, 0.35), inset 0 0 16px rgba(255, 40, 30, 0.16); }
+        .fx-blade:hover span, .fx-blade:focus-visible span { background-position: 0 0; }
+        .fx a.fx-blade:focus-visible { outline: none; }
         .fx-marq { margin-top: calc(var(--fvh, 1vh) * 14); white-space: nowrap; pointer-events: none; }
         .fx-marq .track { display: inline-flex; animation: fx-marq 40s linear infinite; }
         .fx-marq span { font-size: clamp(4rem, 12vw, 11rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28);
@@ -443,6 +446,8 @@
             .fx-thread-light { --tlS: 600px; }
             .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
             .fx-end .mark2 { width: 170vw; }
+            .fx-blades { gap: 18px; }
+            .fx-blade { width: calc((100% - 52px) / 3); height: 48px; font-size: 0.66rem; letter-spacing: 0.1em; }
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
         }
         .fx-reduce .fx-pred, .fx-reduce .fx-pface { display: none; }
@@ -648,12 +653,11 @@
         <section class="fx-end" id="contact">
             <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
             <h2 class="display">Let's build something worth <span class="fx-sweep from-right" data-w="remembering" data-t="remembering.">remembering<span class="fx-dot">.</span></span></h2>
-            <div class="fx-contact">
-                <a class="fx-ic" href="tel:+886956820832" aria-label="Call +886 956 820 832" title="+886 956 820 832"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
-                <a class="fx-ic" href="mailto:frank.wu.0405@gmail.com" aria-label="Email frank.wu.0405@gmail.com" title="frank.wu.0405@gmail.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
-                <a class="fx-ic" href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn (opens in a new tab)" title="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+            <div class="fx-blades">
+                <a class="fx-blade" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener"><span>Résumé<i aria-hidden="true">↗</i></span></a>
+                <a class="fx-blade" href="mailto:frank.wu.0405@gmail.com" title="frank.wu.0405@gmail.com"><span>Email</span></a>
+                <a class="fx-blade" href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener"><span>LinkedIn<i aria-hidden="true">↗</i></span></a>
             </div>
-            <a class="fx-cv" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a>
             <div class="fx-marq" aria-hidden="true"><div class="track"><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span></div></div>
         </section>
             <div class="fx-thread-light" aria-hidden="true"></div>
@@ -686,7 +690,7 @@
     </main>
 
     <footer class="footer">
-        <div class="footer-text">&copy; 2026 Frank Wu. All rights reserved.</div>
+        <div class="footer-text">&copy; 2026 Frank Wu. All rights reserved. <a href="tel:+886956820832" style="color: inherit; text-decoration: none; margin-left: 1.2em;">+886 956 820 832</a></div>
         <div class="footer-social">
             <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
