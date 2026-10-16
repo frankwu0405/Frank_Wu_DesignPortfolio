@@ -820,7 +820,7 @@
                wipe [0.1, 0.92 screens], then a slow drift; the room closes in to the tile and fills with teal [BIRTH0, MORPH0];
                a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
                onto the live page; a hold on the row */
-            const PU = 5.55, BIRTH0 = 2.75 / PU, MORPH0 = 4.3 / PU, DROP0 = 3.95 / PU, LAND = 4.6 / PU;   // ~1 screen held on the landed row
+            const PU = 6.05, BIRTH0 = 2.75 / PU, MORPH0 = 4.3 / PU, DROP0 = 3.95 / PU, LAND = 4.6 / PU;   // ~1.5 screens held on the landed row, so a flick doesn't skip it
             // the pack-up, in screens: one gesture [2.4, 3.95] in which the room shrinks to the card and, before it has settled,
             // the card tips back and turns over, following the scroll closely. The drop starts while it is still turning
             // [3.6, 4.25]: the same card carries on down into the row's empty slot as the row comes up to meet it
@@ -1440,6 +1440,7 @@
                     if (landed && !reduce) { pCards[0].classList.remove('is-hit'); void pCards[0].offsetWidth; pCards[0].classList.add('is-hit'); }
                     proof.dispatchEvent(new Event('fx-land'));
                 }
+                if (landed && pQueued) { pStep(pQueued); pQueued = 0; }   // a swipe made while the row was still coming up
                 const idx = pIdx(), key = landed ? idx : -1;
                 if (key !== pKey) {
                     pKey = key;
@@ -1593,15 +1594,41 @@
                 e.preventDefault(); pStep(e.key === 'ArrowLeft' ? -1 : 1);
                 if (pCards.includes(document.activeElement)) pCards[pIdx()].focus({ preventScroll: true });
             });
-            // phones: a sideways swipe; vertical drags keep scrolling the page
-            let pSx = null, pSy = 0, pSwiped = false;
-            pstage.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') { pSx = e.clientX; pSy = e.clientY; } });
-            pstage.addEventListener('pointercancel', () => { pSx = null; });
-            pstage.addEventListener('pointerup', (e) => {
-                if (pSx === null) return;
-                const dx = e.clientX - pSx, dy = e.clientY - pSy; pSx = null;
-                if (pLanded && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) { pSwiped = true; pStep(dx < 0 ? 1 : -1); setTimeout(() => { pSwiped = false; }, 350); }
+            /* phones: the row follows a sideways drag and settles on the nearest project when it's let go (a quick flick
+               counts as a step). Which way a drag goes is decided in its first few pixels: a vertical one is left to the page,
+               so scrolling stays the browser's. A swipe while the row is still coming up finishes the landing, then steps */
+            let pDrag = null, pSwiped = false, pQueued = 0, pQueueT = 0;
+            pstage.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse') return;
+                pDrag = { x: e.clientX, y: e.clientY, axis: '', p0: rowPos, live: false, trail: [[e.clientX, performance.now()]] };
             });
+            pstage.addEventListener('pointermove', (e) => {
+                if (!pDrag) return;
+                const dx = e.clientX - pDrag.x, dy = e.clientY - pDrag.y;
+                if (!pDrag.axis) {
+                    if (Math.hypot(dx, dy) < 8) return;
+                    pDrag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+                    if (pDrag.axis === 'x') { pDrag.x = e.clientX; pDrag.p0 = rowPos; }   // measured from here, so the row doesn't jump
+                    return;
+                }
+                if (pDrag.axis !== 'x') return;
+                pDrag.trail.push([e.clientX, performance.now()]); if (pDrag.trail.length > 6) pDrag.trail.shift();
+                if (pLanded) { rowTarget = rowPos = pDrag.p0 - (e.clientX - pDrag.x) / (PG.W + PG.g); pDrag.live = true; }
+            });
+            pstage.addEventListener('pointerup', (e) => {
+                const d = pDrag; pDrag = null;
+                if (!d || d.axis !== 'x') return;
+                pSwiped = true; setTimeout(() => { pSwiped = false; }, 350);
+                const [x0, t0] = d.trail[0], v = (e.clientX - x0) / Math.max(16, performance.now() - t0);   // px per ms over the last moments
+                if (d.live) {
+                    const base = Math.round(d.p0), fling = clamp(-v * 180 / (PG.W + PG.g), -0.7, 0.7);
+                    rowTarget = clamp(Math.round(rowPos + fling), base - 1, base + 1);
+                } else if (!pLanded && tv >= DROP0 && Math.abs(e.clientX - d.x) > 24) {
+                    pQueued = e.clientX < d.x ? 1 : -1; clearTimeout(pQueueT); pQueueT = setTimeout(() => { pQueued = 0; }, 1600);
+                    scrollTo({ top: proof.getBoundingClientRect().top + scrollY + LAND * PG.total + 2, behavior: 'smooth' });
+                }
+            });
+            pstage.addEventListener('pointercancel', () => { if (pDrag && pDrag.live) rowTarget = Math.round(rowPos); pDrag = null; });
 
             /* ---------- opening: a soft red light is swept down behind the mark like a torch, so the mark only shows as a dark
                shape against the glow with its edges catching the light, and stays hidden wherever the glow isn't. The pass follows the load (the figure sits where the scroll hint will be).
