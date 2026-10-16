@@ -332,25 +332,37 @@
         .fx-browser .url { margin-left: 8px; padding: 3px 10px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
         .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
 
-        /* 6 · How I work: a stroke spirals down through the steps (drawn in the script, on two layers either side of them) */
-        .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); --bp: 0; }
-        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 12); }
-        .fx-pr-head .display { font-size: clamp(2.2rem, 5vw, 4.8rem); }
-        .fx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; height: calc(var(--fvh, 1vh) * 120); }
-        .fx-step { position: absolute; z-index: 2; width: min(36%, 380px); perspective: 900px; }
-        .fx-step .in { opacity: 0.12; filter: blur(3px); transform: translate3d(var(--sx, -36px), 24px, -140px); transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        /* 6 · How I work: the steps stand in one centred column, each a large outlined word that fills as the line reaches it.
+           The line wanders gently down through them from one period to the other, crossing each word near its end: behind
+           the near ones, in front of the far ones, and always behind the paragraphs */
+        .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); }
+        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 16); text-align: center; }
+        .fx-pr-head .display { font-size: clamp(2.2rem, 5vw, 4.8rem); text-wrap: balance; }
+        .fx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; }
+        .fx-steps { display: grid; justify-items: center; gap: calc(var(--fvh, 1vh) * 17); }
+        .fx-step { position: relative; z-index: 2; width: 100%; text-align: center; perspective: 900px; transform: translate3d(0, var(--py, 0px), 0) scale(var(--sc, 1)); }
+        .fx-step .in { opacity: 0.3; filter: blur(2px); transform: translate3d(0, 28px, -140px); transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
         .fx-step.is-lit .in { opacity: 1; filter: none; transform: none; }
-        .fx-step.right { --sx: 36px; }
-        .fx-step.left { text-align: right; }
-        .fx-step h3 { font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: #fff; margin: 0 0 10px; }
-        .fx-step p { margin: 0; color: #c9c9c9; line-height: 1.7; }
+        .fx-step h3 { font-size: clamp(3rem, 7vw, 7.4rem); font-weight: 900; letter-spacing: -0.045em; line-height: 0.9; text-transform: uppercase; margin: 0 0 calc(var(--fvh, 1vh) * 2.6);
+            color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.6); transition: color 0.6s ease, -webkit-text-stroke-color 0.6s ease; }
+        .fx-step.is-lit h3 { color: #fff; -webkit-text-stroke-color: #fff; }
+        .fx-step h3 span { display: inline-block; }
+        .fx-step p { margin: 0 auto; max-width: 34ch; color: #c9c9c9; line-height: 1.7; text-shadow: 0 0 3px var(--ink), 0 0 7px var(--ink); }
+        /* the far steps sit back (smaller, dimmer) and the line passes in front of their word, lighting the letters it
+           crosses; the near words are solid to it (a dark edge round each letter), so where it runs behind it stops short */
+        .fx-step.z-far { --sc: 0.94; }
+        .fx-step.z-far p { color: #a9a9a9; }
+        .fx-step.z-far.is-lit h3 { -webkit-text-stroke-color: transparent; }
+        .fx-step.z-far.is-lit h3 span { color: transparent; -webkit-background-clip: text; background-clip: text;
+            background-image: radial-gradient(circle at var(--lx, 50%) 55%, #ffd6cc 0, #ff4a3a 0.1em, #f2f2f2 0.55em); }
+        .fx-step.z-near h3 span { text-shadow: 0 0 2px var(--ink), 0 0 6px var(--ink), 0 0 12px var(--ink); }
 
         /* 7 · Finale: the mark returns, lit */
-        .fx .fx-end { position: relative; overflow: hidden; padding: calc(var(--fvh, 1vh) * 20) 6vw calc(var(--fvh, 1vh) * 10); text-align: left; isolation: isolate; --p: 0.5; }
-        .fx-end .mark2 { position: absolute; z-index: -1; right: -18vw; top: 50%; width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none; fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
-            transform: translate3d(0, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.25 + var(--p) * 0.6); }
-        .fx-end::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--ink) 25%, rgba(6, 6, 6, 0.55) 60%, rgba(6, 6, 6, 0.2)); }
-        .fx-end .display { font-size: clamp(2.8rem, 7.2vw, 7.4rem); max-width: 12ch; transform: translate3d(0, calc((0.5 - var(--p)) * 50px), 0); }
+        .fx .fx-end { position: relative; overflow: hidden; padding: calc(var(--fvh, 1vh) * 20) 6vw calc(var(--fvh, 1vh) * 10); text-align: center; isolation: isolate; --p: 0.5; }
+        .fx-end .mark2 { position: absolute; z-index: -1; left: 50%; top: 50%; width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none; fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
+            transform: translate3d(-50%, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.2 + var(--p) * 0.45); }
+        .fx-end::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(6, 6, 6, 0.82), rgba(6, 6, 6, 0.5) 60%, rgba(6, 6, 6, 0.25)); }
+        .fx-end .display { font-size: clamp(2.8rem, 7.2vw, 7.4rem); max-width: 12ch; margin-inline: auto; text-wrap: balance; }
         /* contact: three round icon buttons (phone, email, LinkedIn) and the résumé as one big button under them */
         .fx-contact { display: flex; justify-content: center; gap: 16px; margin-top: calc(var(--fvh, 1vh) * 7); }
         .fx-ic { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.28); color: #fff; font-size: 1.3rem;
@@ -366,15 +378,23 @@
         .fx-marq span { font-size: clamp(4rem, 12vw, 11rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28);
             padding-right: 0.35em; display: inline-block; transform: skewX(calc(var(--lean) * -1)); line-height: 1.05; }
         @keyframes fx-marq { to { transform: translateX(-50%); } }
-        /* the beam carries on past the last step, through the dark, and lands as the period of "remembering."; the marquee
+        /* the line carries on past the last step, through the dark, and lands as the period of "remembering."; the marquee
            only starts once it has */
         .fx-tail { position: relative; }
-        /* the stroke is drawn on two screen-sized layers: the far half of each turn behind the steps, the near half in front */
-        .fx-helix { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; pointer-events: none; }
-        @supports (height: 100lvh) { .fx-helix { height: 100lvh; } }
-        .fx-helix.back { z-index: 1; }
-        .fx-helix.front { z-index: 3; }
-            box-shadow: 0 0 12px 4px #ff3b2f, 0 0 50px 18px rgba(211, 22, 27, 0.55); transition: opacity 0.35s ease; }
+        /* the line lives in the page (it scrolls with the words; only how far it has drawn follows the script), on two
+           layers: under the steps where it passes behind the near ones, over them everywhere else */
+        .fx-thread { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+        .fx-thread.back { z-index: 1; }
+        .fx-thread.front { z-index: 3; }
+        .fx-thread use { fill: none; stroke-linecap: round; }
+        .fx-thread .track { stroke: rgba(211, 22, 27, 0.16); stroke-width: 1.5; }
+        .fx-thread .lit { stroke-dasharray: var(--tP, 1) var(--tP, 1); stroke-dashoffset: var(--tOff, 1); opacity: var(--tOn, 0); }
+        .fx-thread .bloom { stroke: url(#thrGlow); stroke-width: 22; stroke-opacity: 0.12; }
+        .fx-thread .glow { stroke: url(#thrGlow); stroke-width: 8; stroke-opacity: 0.32; }
+        .fx-thread .core { stroke: url(#thrCore); stroke-width: 2.6; }
+        .fx-thread .shade { stroke: #000; stroke-width: 12; stroke-opacity: 0.4; }
+        .fx-thread .shade.tight { stroke-width: 4; stroke-opacity: 0.5; }
+        .fx-thread .hd { opacity: 0; }
         .fx-end .fx-dot { color: transparent; transition: color 0.5s ease; }
         .fx-end.is-dotted .fx-dot { color: var(--red); }
         .fx-marq .track { animation-play-state: paused; }
@@ -402,12 +422,11 @@
             .fx-pinfo p { font-size: 0.86rem; }
             .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
-            .fx-pr-body { height: auto; }
-            .fx-steps { display: grid; gap: calc(var(--fvh, 1vh) * 9); }
-            .fx-step { position: relative; width: auto; }
-            .fx-step.left { text-align: left; --sx: 30px; }
+            .fx-steps { gap: calc(var(--fvh, 1vh) * 11); }
+            .fx-step h3 { font-size: 10.5vw; }
+            .fx-step.z-far { --sc: 0.96; }
             .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
-            .fx-end .mark2 { width: 170vw; right: -70vw; }
+            .fx-end .mark2 { width: 170vw; }
             .fx-cam .glint { filter: none; stroke-width: 2.5; }
         }
         .fx-reduce .fx-pred, .fx-reduce .fx-pface { display: none; }
@@ -600,10 +619,10 @@
             </div>
             <div class="fx-pr-body">
                 <div class="fx-steps">
-                    <div class="fx-step left"><div class="in"><h3>Understand</h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
-                    <div class="fx-step right"><div class="in"><h3>Shape</h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
-                    <div class="fx-step left"><div class="in"><h3>Build</h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
-                    <div class="fx-step right"><div class="in"><h3>Ship &amp; refine</h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span>Understand</span></h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span>Shape</span></h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span>Build</span></h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span>Ship &amp; refine</span></h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
                 </div>
             </div>
         </section>
@@ -620,8 +639,32 @@
             <a class="fx-cv" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a>
             <div class="fx-marq" aria-hidden="true"><div class="track"><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span><span>Let's talk —</span></div></div>
         </section>
-            <canvas class="fx-helix back" aria-hidden="true"></canvas>
-            <canvas class="fx-helix front" aria-hidden="true"></canvas>
+            <svg class="fx-thread back" aria-hidden="true">
+                <defs><clipPath id="thrBackClip"></clipPath><clipPath id="thrFrontClip"></clipPath></defs>
+                <g clip-path="url(#thrBackClip)">
+                    <use class="track" href="#thrPath"/><use class="lit bloom" href="#thrPath"/><use class="lit glow" href="#thrPath"/><use class="lit core" href="#thrPath"/>
+                    <g class="hd"><circle r="34" fill="url(#thrHalo)"/><circle r="3.4" fill="#fff"/></g>
+                </g>
+            </svg>
+            <svg class="fx-thread front" aria-hidden="true">
+                <defs>
+                    <path id="thrPath" d="M0 0"/>
+                    <linearGradient id="thrCore" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#d3161b" stop-opacity="0.45"/><stop offset="0.75" stop-color="#ee2a22"/><stop offset="1" stop-color="#ff6a55"/></linearGradient>
+                    <linearGradient id="thrGlow" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#ff2a20" stop-opacity="0"/><stop offset="1" stop-color="#ff2a20"/></linearGradient>
+                    <radialGradient id="thrHalo">
+                        <stop offset="0" stop-color="#fff5f0"/><stop offset="0.1" stop-color="#ffb4a4"/><stop offset="0.22" stop-color="#ff4632" stop-opacity="0.8"/>
+                        <stop offset="0.5" stop-color="#ff1e18" stop-opacity="0.22"/><stop offset="1" stop-color="#d3161b" stop-opacity="0"/></radialGradient>
+                </defs>
+                <g clip-path="url(#thrFrontClip)">
+                    <use class="track" href="#thrPath"/>
+                    <use class="lit shade" href="#thrPath" transform="translate(7 10)"/><use class="lit shade tight" href="#thrPath" transform="translate(4 6)"/>
+                    <use class="lit bloom" href="#thrPath"/><use class="lit glow" href="#thrPath"/><use class="lit core" href="#thrPath"/>
+                    <g class="hd"><circle r="34" fill="url(#thrHalo)"/><circle r="3.4" fill="#fff"/></g>
+                </g>
+                <circle class="ring" r="0" fill="none" stroke="#ff3c2d" stroke-width="1.2" opacity="0"/>
+            </svg>
         </div>
     </main>
 
@@ -760,16 +803,17 @@
             const end = document.querySelector('.fx-end');
             const tail = document.querySelector('.fx-tail'), trailDot = end.querySelector('.fx-dot'), endHead = end.querySelector('.display');
 
-            /* ---------- the stroke: from the period of "intentional." to the period of "remembering." ----------
-               One particle. Its head is born from the first period and follows the scroll (60% down the screen); it spirals round
-               a spine that leans like the mark, reaching toward each step at its height and crossing the middle alternately in
-               front and behind, in perspective (nearer is thicker and brighter; the far half of each turn passes behind the steps'
-               words); then it sweeps toward the viewer and lands as the last period. Behind the head the trail fades to a faint
-               pathway that stays; nothing of the route shows before the head has been there */
-            const hxBack = tail.querySelector('.fx-helix.back'), hxFront = tail.querySelector('.fx-helix.front');
-            const hcB = hxBack.getContext('2d'), hcF = hxFront.getContext('2d'), dotA = proc.querySelector('.fx-dot0');
-            const mctx = document.createElement('canvas').getContext('2d');
-            let HX = null, hxDrawn = false, hxDone = false, hxLandT = 0, hxLoop = false;
+            /* ---------- the line: from the period of "intentional." to the period of "remembering." ----------
+               One path in the page, so it scrolls with the words; the scroll only sets how much of it is drawn, with its head
+               on a reading line 60% down the screen. It wanders gently down through the steps' words, crossing each near its
+               end, and drops into the last period. The steps alternate near and far: it passes behind the near ones and in
+               front of the far ones' words (always behind their paragraphs) */
+            const thrBack = tail.querySelector('.fx-thread.back'), thrFront = tail.querySelector('.fx-thread.front');
+            const thrPath = document.getElementById('thrPath'), thrCore = document.getElementById('thrCore'), thrGlow = document.getElementById('thrGlow');
+            const backClip = document.getElementById('thrBackClip'), frontClip = document.getElementById('thrFrontClip');
+            const hdB = thrBack.querySelector('.hd'), hdF = thrFront.querySelector('.hd'), thrRing = thrFront.querySelector('.ring');
+            const dotA = proc.querySelector('.fx-dot0'), mctx = document.createElement('canvas').getContext('2d');
+            let TH = null, thDone = false, thLandT = 0, thLoop = false;
             // where a period's dot actually sits: on the baseline (found with a zero-size marker), centred on the glyph's ink
             function dotCenter(el) {
                 const r = el.getBoundingClientRect(), cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
@@ -778,144 +822,103 @@
                 mctx.font = `${cs.fontStyle} ${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
                 const tm = mctx.measureText('.'), asc = tm.actualBoundingBoxAscent || fs * 0.12, desc = tm.actualBoundingBoxDescent || 0;
                 const cx = r.left + ((tm.actualBoundingBoxRight || r.width) - (tm.actualBoundingBoxLeft || 0)) / 2, cy = base - (asc - desc) / 2;
-                return { x: cx, y: cy + scrollY, dx: cx - r.left, dy: cy - r.top, r: Math.max(2, (asc + desc) / 2) };
+                return { x: cx, y: cy + scrollY, r: Math.max(2, (asc + desc) / 2) };
             }
-            function sizeHelix() {
-                const dpr = Math.min(2, devicePixelRatio || 1);
-                [[hxBack, hcB], [hxFront, hcF]].forEach(([c, g]) => {
-                    c.width = Math.round(c.clientWidth * dpr); c.height = Math.round(c.clientHeight * dpr);
-                    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.lineCap = 'round';
+            const svgEl = (tag, parent) => parent.appendChild(document.createElementNS('http://www.w3.org/2000/svg', tag));
+            function buildThread() {
+                const sy = scrollY, tr = tail.getBoundingClientRect(), ox = tr.left, oy = tr.top + sy;
+                const local = (el) => { const d = dotCenter(el); return [d.x - ox, d.y - oy, d.r]; };
+                const br = prBody.getBoundingClientRect(), bx = br.left - ox, by = br.top + sy - oy;
+                steps.forEach((st, i) => { st.classList.toggle('z-near', i % 2 === 0); st.classList.toggle('z-far', i % 2 === 1); });
+                const S = local(dotA), E = local(trailDot);
+                // where it crosses each word (in layout terms, transforms left out): as near the straight run between the periods
+                // as the word allows, so it only bends as far as it has to
+                const P = [[S[0], S[1]]];
+                const info = steps.map((st, i) => {
+                    const span = st.querySelector('h3 span'), p = st.querySelector('p'), x0 = bx + st.offsetLeft + span.offsetLeft, y0 = by + st.offsetTop;
+                    const w = span.offsetWidth, ym = y0 + span.offsetTop + span.offsetHeight * 0.52;
+                    const cx = clamp(lerp(S[0], E[0], (ym - S[1]) / (E[1] - S[1])), x0 + w * 0.22, x0 + w * 0.84);
+                    P.push([cx, ym]); span.style.setProperty('--lx', `${Math.round(cx - x0)}px`);
+                    // where it runs behind: the whole of a near step, only the paragraph of a far one
+                    const near = i % 2 === 0, a = near ? y0 - 20 : y0 + p.offsetTop - 14, b = near ? y0 + st.offsetHeight + 20 : y0 + p.offsetTop + p.offsetHeight + 14;
+                    return { near, cy: ym, b0: a, b1: b, py: 0 };
                 });
-                hxDrawn = true;   // the next frame clears whatever was there
-            }
-            // centripetal Catmull-Rom through 3D points, sampled about every `step` px: one smooth curve with no joins
-            function spline(P, step, markSeg) {
-                const out = [], d = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) || 1e-3;
-                for (let i = 0; i < P.length - 1; i++) {
-                    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
-                    const t01 = Math.sqrt(d(p0, p1)), t12 = Math.sqrt(d(p1, p2)), t23 = Math.sqrt(d(p2, p3)), m1 = [], m2 = [];
-                    for (let k = 0; k < 3; k++) {
-                        m1[k] = t12 * ((p1[k] - p0[k]) / t01 - (p2[k] - p0[k]) / (t01 + t12) + (p2[k] - p1[k]) / t12);
-                        m2[k] = t12 * ((p2[k] - p1[k]) / t12 - (p3[k] - p1[k]) / (t12 + t23) + (p3[k] - p2[k]) / t23);
-                    }
-                    if (i === markSeg) out.mark = Math.max(0, out.length - 1);   // where that segment begins
-                    const n = Math.max(2, Math.ceil(d(p1, p2) / step));
-                    for (let j = i ? 1 : 0; j <= n; j++) {
-                        const t = j / n, t2 = t * t, t3 = t2 * t, h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
-                        out.push([0, 1, 2].map((k) => h00 * p1[k] + h10 * m1[k] + h01 * p2[k] + h11 * m2[k]));
-                    }
-                }
-                return out;
-            }
-            function buildHelix() {
-                const sy = scrollY, b = prBody.getBoundingClientRect(), A = 16.5 * Math.PI / 180;
-                const S = dotCenter(dotA), E = dotCenter(trailDot);
-                let R, ctl;
-                if (!mobile) {
-                    const cx = b.left + b.width / 2, P0 = [cx + b.height / 2 * Math.sin(A), b.top + sy], P1 = [cx - b.height / 2 * Math.sin(A), b.top + sy + b.height], turns = 2;
-                    R = Math.min(170, b.width * 0.15);
-                    const ax = P1[0] - P0[0], ay = P1[1] - P0[1], al = Math.hypot(ax, ay), nx = ay / al, ny = -ax / al;   // across the spine, in the page
-                    // out of the first period, easing toward the viewer onto the top of the spine
-                    ctl = [[S.x, S.y, 0], [lerp(S.x, P0[0], 0.5), lerp(S.y, P0[1], 0.62), R * 0.55]];
-                    const N = Math.round(turns * 12);
-                    for (let i = 0; i <= N; i++) {
-                        const t = i / N, th = Math.PI / 2 + 2 * Math.PI * turns * t;
-                        ctl.push([P0[0] + ax * t + nx * R * Math.cos(th), P0[1] + ay * t + ny * R * Math.cos(th), R * Math.sin(th)]);
-                    }
-                } else {
-                    // phones: across the full width. Behind each step (left to right, under its words), then back across in front
-                    // through the gap before the next, so it threads through the steps one after another
-                    R = b.width * 0.44;
-                    const cx = b.left + b.width / 2, zr = R * 0.7, band = steps.map((st) => { const r = st.getBoundingClientRect(); return [r.top + sy, r.bottom + sy]; });
-                    const at = (th, y) => [cx + R * Math.cos(th), y, zr * Math.sin(th)];
-                    const yA = (i) => lerp(band[i][0], band[i][1], 0.12), yB = (i) => lerp(band[i][0], band[i][1], 0.88);
-                    ctl = [[S.x, S.y, 0], [lerp(S.x, cx - R, 0.45), lerp(S.y, yA(0), 0.55), zr * 0.5]];
-                    band.forEach((_, i) => {
-                        const th0 = Math.PI + 2 * Math.PI * i;
-                        for (let j = 0; j <= 8; j++) ctl.push(at(th0 + Math.PI * j / 8, lerp(yA(i), yB(i), j / 8)));            // behind
-                        if (i < band.length - 1) for (let j = 1; j < 8; j++) ctl.push(at(th0 + Math.PI + Math.PI * j / 8, lerp(yB(i), yA(i + 1), j / 8)));   // in front
-                    });
-                }
-                const helixEnd = ctl.length - 1;
-                // then out past the right of the last heading, toward the viewer, and down into its period from the open side
+                // above the last heading it settles over the period and drops straight into it, clear of the lines above
                 const rg = document.createRange(); rg.selectNodeContents(endHead);
-                let Rt = 0, Top = Infinity; for (const rc of rg.getClientRects()) { Rt = Math.max(Rt, rc.right); Top = Math.min(Top, rc.top + sy); }
-                ctl.push([Math.min(innerWidth - 24, Rt + (mobile ? 6 : 64)), Top - (mobile ? 22 : 40), (mobile ? 60 : R) * 1.4]);
-                ctl.push([E.x + (mobile ? 16 : 44), E.y - (mobile ? 10 : 16), (mobile ? 60 : R) * 0.45]);
-                ctl.push([E.x, E.y, 0]);
-                // one pass over the whole route, noting where the end connector begins
-                const pts = spline(ctl, mobile ? 4 : 6, helixEnd), iE0 = pts.mark || 0;
-                const n = pts.length, X = new Float32Array(n), Y = new Float32Array(n), Z = new Float32Array(n), L = new Float32Array(n), Wt = new Float32Array(n);
-                for (let i = 0; i < n; i++) { X[i] = pts[i][0]; Y[i] = pts[i][1]; Z[i] = pts[i][2]; if (i) L[i] = L[i - 1] + Math.hypot(X[i] - X[i - 1], Y[i] - Y[i - 1], Z[i] - Z[i - 1]); }
-                // the last heading drifts with its own parallax; the end connector bends to follow it, more toward the period
-                for (let i = iE0; i < n; i++) { const q = clamp((L[i] - L[iE0]) / Math.max(1, L[n - 1] - L[iE0])); Wt[i] = q * q * (3 - 2 * q); }
-                HX = { X, Y, Z, L, Wt, n, R, S, E, stepY: steps.map((st) => { const r = st.getBoundingClientRect(); return r.top + sy + r.height / 2; }) };
-            }
-            function drawHelix(now) {
-                if (!HX) return;
-                const W = hxFront.clientWidth, Hh = hxFront.clientHeight, sy = scrollY, tr = tail.getBoundingClientRect();
-                if (tr.top > Hh || tr.bottom < 0) { if (hxDrawn) { hcB.clearRect(0, 0, W, Hh); hcF.clearRect(0, 0, W, Hh); hxDrawn = false; } return; }
-                hcB.clearRect(0, 0, W, Hh); hcF.clearRect(0, 0, W, Hh); hxDrawn = true;
-                const { X, Y, Z, L, Wt, n, R } = HX, dr = trailDot.getBoundingClientRect();
-                const eDX = dr.left + HX.E.dx - HX.E.x, eDY = dr.top + sy + HX.E.dy - HX.E.y;
-                const ya = (i) => Y[i] + Wt[i] * eDY, target = reduce ? Infinity : sy + VH * 0.6;
-                steps.forEach((st, i) => st.classList.toggle('is-lit', reduce || target >= HX.stepY[i] - 30));
-                const done = target >= ya(n - 1);
-                if (done && !hxDone) hxLandT = now;
-                hxDone = done; end.classList.toggle('is-dotted', done);
-                if (target < Y[0]) return;   // the head has not left the first period yet: nothing to see
-                const settle = reduce ? 1 : done ? clamp((now - hxLandT) / 1400) : 0;
-                // the head: between the last sample above the line and the next
-                let lo = 0, hi = n - 1;
-                if (done) lo = n - 1; else { while (hi - lo > 1) { const md = (lo + hi) >> 1; if (ya(md) <= target) lo = md; else hi = md; } }
-                const f = done ? 0 : clamp((target - ya(lo)) / Math.max(1e-3, ya(lo + 1) - ya(lo)));
-                const hx = lerp(X[lo], X[Math.min(n - 1, lo + 1)], f), hy = lerp(ya(lo), ya(Math.min(n - 1, lo + 1)), f), hz = lerp(Z[lo], Z[Math.min(n - 1, lo + 1)], f);
-                const hs = lerp(L[lo], L[Math.min(n - 1, lo + 1)], f), hw = lerp(Wt[lo], Wt[Math.min(n - 1, lo + 1)], f);
-                const D = mobile ? 900 : 1500, vx = W / 2, vy = Hh / 2, FLOOR = 0.24, FADE = mobile ? 300 : 420;
-                const pj = (x, y, z) => { const k = D / (D - z); return [vx + (x - vx) * k, vy + (y - sy - vy) * k, k]; };
-                const seg = (x0, y0, x1, y1, z, dist, k) => {
-                    if ((y0 < -60 && y1 < -60) || (y0 > Hh + 60 && y1 > Hh + 60)) return;
-                    const near = Math.exp(-dist / FADE) * (1 - settle), dep = clamp((z / R + 1) / 2), hot = Math.exp(-dist / 55) * (1 - settle);
-                    const a = (FLOOR + (1 - FLOOR) * near) * (0.5 + 0.5 * dep), wdt = (2 + 1.6 * near) * (0.72 + 0.48 * dep) * k;
-                    const g = z < 0 ? hcB : hcF, cr = 255 - Math.round(55 * (1 - dep) * (1 - hot)), cg = Math.round(42 + 200 * hot), cb = Math.round(34 + 190 * hot);
-                    const line = (style, w) => { g.strokeStyle = style; g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); };
-                    // neon: the light adds up near the head (a wide soft bloom and a tighter glow under a hot core)
-                    if (near > 0.04) {
-                        g.globalCompositeOperation = 'lighter';
-                        line(`rgba(255, 30, 24, ${(a * 0.13 * near).toFixed(3)})`, wdt * 6);
-                        line(`rgba(255, 52, 40, ${(a * 0.32 * near).toFixed(3)})`, wdt * 2.4);
-                        g.globalCompositeOperation = 'source-over';
-                    }
-                    line(`rgba(${cr}, ${cg}, ${cb}, ${a.toFixed(3)})`, wdt);
+                const rows = [...rg.getClientRects()].map((rc) => [rc.top + sy - oy, rc.bottom + sy - oy, rc.right - ox]), top = Math.min(...rows.map((r) => r[0]));
+                if (rows.every(([, bt, rt]) => bt > E[1] || rt < E[0] - 16) && top - 40 > P[P.length - 1][1] + 120) P.push([E[0], top - 40]);
+                P.push([E[0], E[1]]);
+                // one smooth curve through those points (Catmull-Rom, scaled by the distances between them so it never overshoots),
+                // leaving the first period straight down and dropping straight into the last
+                const ext = [[S[0], S[1] - 300], ...P, [E[0], E[1] + 300]], dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+                const tan = (k) => {
+                    if (ext[k + 1][0] === ext[k][0]) return [0, 1];   // already over the period: straight down from here
+                    const a = ext[k - 1], b = ext[k + 1], s = dist(a, ext[k]) + dist(ext[k], b); return [(b[0] - a[0]) / s, (b[1] - a[1]) / s];
                 };
-                let [px, py] = pj(X[0] + Wt[0] * eDX, ya(0), Z[0]);
-                for (let i = 1; i <= lo; i++) {
-                    const [qx, qy, k] = pj(X[i] + Wt[i] * eDX, ya(i), Z[i]);
-                    seg(px, py, qx, qy, (Z[i] + Z[i - 1]) / 2, hs - L[i], k); px = qx; py = qy;
+                const seg = [];
+                for (let k = 1; k < ext.length - 2; k++) {
+                    const p0 = ext[k], p3 = ext[k + 1], d = dist(p0, p3) / 3, t0 = tan(k), t1 = tan(k + 1);
+                    seg.push([p0, [p0[0] + t0[0] * d, p0[1] + t0[1] * d], [p3[0] - t1[0] * d, p3[1] - t1[1] * d], p3]);
                 }
-                const [hX, hY, hk] = pj(hx + hw * eDX, hy, hz);
-                if (!done) seg(px, py, hX, hY, hz, 0, hk);
-                // the head itself: born from the first period, it grows over its first few pixels; once landed it fades into the dot
-                const emerge = clamp((target - Y[0]) / 70), ha = emerge * (1 - settle);
-                if (ha > 0.01) {
-                    // a neon point: a white-hot core in a saturated red bloom, the light adding to what is behind it
-                    const g = hz < 0 ? hcB : hcF, sz = hk * (0.4 + 0.6 * emerge), r0 = (mobile ? 30 : 38) * sz;
-                    g.globalCompositeOperation = 'lighter';
-                    const gr = g.createRadialGradient(hX, hY, 0, hX, hY, r0);
-                    gr.addColorStop(0, `rgba(255, 245, 240, ${ha})`); gr.addColorStop(0.07, `rgba(255, 210, 196, ${ha})`);
-                    gr.addColorStop(0.16, `rgba(255, 70, 50, ${(ha * 0.85).toFixed(3)})`); gr.addColorStop(0.38, `rgba(255, 26, 24, ${(ha * 0.32).toFixed(3)})`);
-                    gr.addColorStop(1, 'rgba(211, 22, 27, 0)');
-                    g.fillStyle = gr; g.beginPath(); g.arc(hX, hY, r0, 0, Math.PI * 2); g.fill();
-                    g.globalCompositeOperation = 'source-over';
-                    g.fillStyle = `rgba(255, 250, 247, ${ha})`; g.beginPath(); g.arc(hX, hY, 2.6 * sz, 0, Math.PI * 2); g.fill();
+                // sampled for the head's position and the drawn length at any height (the route only ever goes down)
+                const X = [], Y = [], L = [];
+                seg.forEach((p, k) => {
+                    for (let j = k ? 1 : 0; j <= 48; j++) {
+                        const t = j / 48, u = 1 - t, q = [0, 1].map((c) => u * u * u * p[0][c] + 3 * u * u * t * p[1][c] + 3 * u * t * t * p[2][c] + t * t * t * p[3][c]);
+                        L.push(X.length ? L[L.length - 1] + Math.hypot(q[0] - X[X.length - 1], q[1] - Y[Y.length - 1]) : 0); X.push(q[0]); Y.push(q[1]);
+                    }
+                });
+                const f1 = (v) => v.toFixed(1);
+                thrPath.setAttribute('d', `M${f1(S[0])} ${f1(S[1])}` + seg.map((p) => `C${p.slice(1).map((c) => `${f1(c[0])} ${f1(c[1])}`).join(' ')}`).join(''));
+                const len = L[L.length - 1];
+                thrPath.setAttribute('pathLength', f1(len)); tail.style.setProperty('--tP', f1(len));
+                thrRing.setAttribute('cx', f1(E[0])); thrRing.setAttribute('cy', f1(E[1]));
+                // the clips: under the steps across the bands where it runs behind, over them everywhere else
+                backClip.replaceChildren(); frontClip.replaceChildren();
+                const mk = (cp) => { const r = svgEl('rect', cp); r.setAttribute('x', -1e4); r.setAttribute('width', 3e4); return r; };
+                TH = { X, Y, L, P: len, n: X.length, E, steps: info, bR: info.map(() => mk(backClip)), fR: [...info.map(() => mk(frontClip)), mk(frontClip)] };
+            }
+            const setBand = (r, a, b) => { r.setAttribute('y', a.toFixed(1)); r.setAttribute('height', Math.max(0, b - a).toFixed(1)); };
+            function drawThread(now) {
+                if (!TH) return;
+                const tr = tail.getBoundingClientRect();
+                if (tr.top > VH || tr.bottom < 0) return;   // off screen: nothing to update
+                const { X, Y, L, P, n, E } = TH, target = reduce ? Infinity : VH * 0.6 - tr.top;   // the reading line, in the tail's terms
+                // depth: the near steps drift a little faster than the page, the far ones a little slower (desktop only)
+                TH.steps.forEach((s, i) => {
+                    const py = mobile || reduce ? 0 : clamp((s.cy + tr.top - VH / 2) * (s.near ? 0.07 : -0.05), -70, 70);
+                    if (Math.abs(py - s.py) > 0.3) { s.py = py; steps[i].style.setProperty('--py', `${py.toFixed(1)}px`); }
+                    steps[i].classList.toggle('is-lit', reduce || target >= s.cy - 30);
+                });
+                const nb = TH.steps.map((s) => [s.b0 + s.py, s.b1 + s.py]);
+                let prev = -1e5; nb.forEach(([a, b], k) => { setBand(TH.bR[k], a, b); setBand(TH.fR[k], prev, a); prev = b; }); setBand(TH.fR[nb.length], prev, 1e5);
+                // how far it has drawn: the head sits where the route crosses the reading line
+                const done = target >= Y[n - 1];
+                if (done && !thDone) thLandT = now;
+                thDone = done; end.classList.toggle('is-dotted', done);
+                const settle = reduce ? 1 : done ? clamp((now - thLandT) / 1400) : 0;
+                let hx = E[0], hy = E[1], len = P;
+                if (!done) {
+                    if (target <= Y[0]) { hx = X[0]; hy = Y[0]; len = 0; }
+                    else {
+                        let lo = 0, hi = n - 1; while (hi - lo > 1) { const md = (lo + hi) >> 1; if (Y[md] <= target) lo = md; else hi = md; }
+                        const f = clamp((target - Y[lo]) / Math.max(1e-3, Y[hi] - Y[lo]));
+                        hx = lerp(X[lo], X[hi], f); hy = lerp(Y[lo], Y[hi], f); len = lerp(L[lo], L[hi], f);
+                    }
                 }
+                tail.style.setProperty('--tOff', (P - len).toFixed(1)); tail.style.setProperty('--tOn', len > 0.5 ? 1 : 0);
+                // brightest at the head, with a long, strong tail behind it
+                thrCore.setAttribute('y1', (hy - 1100).toFixed(1)); thrCore.setAttribute('y2', hy.toFixed(1));
+                thrGlow.setAttribute('y1', (hy - 520).toFixed(1)); thrGlow.setAttribute('y2', hy.toFixed(1));
+                // the head: born from the first period, it passes behind the near steps with the line; once landed it fades into the dot
+                const emerge = clamp(len / 60), ha = emerge * (1 - settle), behind = nb.some(([a, b]) => hy > a && hy < b);
+                const tf = `translate(${hx.toFixed(1)} ${hy.toFixed(1)}) scale(${(0.45 + 0.55 * emerge).toFixed(3)})`;
+                hdB.setAttribute('transform', tf); hdF.setAttribute('transform', tf);
+                hdB.style.opacity = behind ? ha : 0; hdF.style.opacity = behind ? 0 : ha;
                 // landing: a soft ring opens from the period as the head settles into it
-                if (done && settle < 1) {
-                    const [eX, eY] = pj(X[n - 1] + eDX, ya(n - 1), 0);
-                    hcF.strokeStyle = `rgba(255, 60, 45, ${(0.5 * (1 - settle)).toFixed(3)})`; hcF.lineWidth = 1.2;
-                    hcF.beginPath(); hcF.arc(eX, eY, HX.E.r * (1.2 + 3.5 * ease(settle)), 0, Math.PI * 2); hcF.stroke();
-                    if (!hxLoop) { hxLoop = true; requestAnimationFrame((t) => { hxLoop = false; drawHelix(t); }); }
-                }
+                thrRing.setAttribute('r', (E[2] * (1.2 + 3.5 * ease(settle))).toFixed(1));
+                thrRing.setAttribute('opacity', done && settle < 1 ? (0.5 * (1 - settle)).toFixed(3) : 0);
+                if (done && settle < 1 && !thLoop) { thLoop = true; requestAnimationFrame((t) => { thLoop = false; drawThread(t); }); }
             }
 
             /* camera over the mark (logo units: viewBox 52 416 1872 1153):
@@ -968,17 +971,7 @@
                 proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
                 proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.total)}px`;
                 layoutProof();
-                // process: steps sit either side of the leaning beam
-                if (!mobile) {
-                    const bw = prBody.clientWidth, bh = prBody.clientHeight, n = steps.length;
-                    steps.forEach((s, i) => {
-                        const y = (i + 0.5) * bh / n, beamX = bw / 2 + (bh / 2 - y) * TAN;
-                        s.style.top = `${Math.round(y - s.offsetHeight / 2)}px`;
-                        s.style.left = s.classList.contains('left') ? `${Math.round(beamX - 70 - s.offsetWidth)}px` : `${Math.round(beamX + 70)}px`;
-                        s.dataset.y = (y / bh).toFixed(3);
-                    });
-                } else steps.forEach((s) => { s.style.top = ''; s.style.left = ''; });
-                sizeHelix(); buildHelix();
+                buildThread();
             }
             const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
             /* progress through a pinned section from its sticky stage's fixed height, not the changing window height */
@@ -996,8 +989,8 @@
                 const er = end.getBoundingClientRect();
                 end.style.setProperty('--p', clamp((vh - er.top) / (vh + er.height)).toFixed(3));
 
-                /* ---- the stroke through the steps, from one period to the other ---- */
-                drawHelix(performance.now());
+                /* ---- the line through the steps, from one period to the other ---- */
+                drawThread(performance.now());
 
             }
             /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
