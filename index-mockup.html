@@ -78,6 +78,8 @@
             transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease; }
         .fx-cursor.is-view { width: 84px; height: 84px; margin: -42px 0 0 -42px; font-size: 0.66rem; opacity: 1; }
         .fx-cursor.is-arrow { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: transparent; font-size: 1.6rem; font-weight: 300; letter-spacing: 0; opacity: 1; }
+        .fx-cursor .ar { stroke-width: 1; }
+        .fx-cursor .ar.l { transform: scaleX(-1); }
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
 
         /* 1 · Hero: the hidden mark (pinned) */
@@ -200,6 +202,8 @@
             opacity: min(1, calc(var(--sp, 0) * 2)); transform: translate3d(calc((1 - var(--sp, 0)) * 60vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--sp, 0)))); }
         .fx-pick:first-child { --sp: var(--s4); } .fx-pick:last-child { --sp: var(--s5); }
         .fx-pick i { font-style: normal; font-weight: 600; transition: transform 0.35s ease; }
+        /* arrows are drawn, not typed: Inter as Google serves it has no arrows, and iOS fills the gap with emoji */
+        .ar { display: inline-block; width: 0.78em; height: 0.78em; vertical-align: -0.06em; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; overflow: visible; }
         .fx-scene.is-live .fx-pick { pointer-events: auto; }
         .fx-cta.has-on .fx-pick { color: rgba(255, 255, 255, 0.5); }
         .fx-cta.has-on .fx-pick.is-on { color: #120000; }
@@ -379,8 +383,8 @@
         .fx #contact.fx-end { padding-bottom: 0; }
         .fx-end > :not(.mark2) { position: relative; z-index: 2; }
         .fx-end .mark2 { position: absolute; z-index: 0; left: 50%; top: calc(var(--pt) + var(--hs) * 1.8); width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none;
-            fill: url(#fwDots); stroke: rgba(255, 70, 55, 0.28); stroke-width: 1;
-            transform: translate3d(-50%, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.35 + var(--p) * 0.55); }
+            fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
+            transform: translate3d(-50%, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.2 + var(--p) * 0.45); }
         .fx-end::after { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(6, 6, 6, 0.82), rgba(6, 6, 6, 0.5) 60%, rgba(6, 6, 6, 0.25)); }
         .fx-end .display { font-size: var(--hs); max-width: 12ch; margin-inline: auto; text-wrap: balance; }
         /* footer: small aligned columns of plain links (each rolls its letters up, red, on hover) over the name, set huge and
@@ -395,6 +399,8 @@
         .fx-roll .rc > span { display: inline-block; text-shadow: 0 1.6em 0 var(--red); transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1) calc(var(--i) * 22ms); }
         .fx-roll:hover .rc > span, .fx-roll:focus-visible .rc > span { transform: translateY(-1.6em); }
         .fx-roll .rc { height: 1.6em; line-height: 1.6em; }
+        .fx-roll .ar { width: 0.62em; height: 0.62em; margin-left: 0.4em; vertical-align: 0.02em; stroke-width: 1.6; transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), color 0.3s ease; }
+        .fx-roll:hover .ar, .fx-roll:focus-visible .ar { transform: translate(2px, -2px); color: var(--red); }
         .fx-sign { display: flex; justify-content: space-between; align-items: flex-end; margin: calc(var(--fvh, 1vh) * 10) 0 -0.09em; font-size: 17.5vw; font-weight: 900;
             letter-spacing: -0.05em; line-height: 0.8; text-transform: uppercase; color: #f0f0f0; white-space: nowrap; pointer-events: none; }
         .fx-sign em { font-style: italic; padding-right: 0.04em; }
@@ -569,8 +575,8 @@
                         <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
                         <p class="aside">…including this one.</p>
                         <div class="fx-cta">
-                            <a class="fx-pick" href="nitori.html" data-wm="0">Latest work <i aria-hidden="true">→</i></a>
-                            <a class="fx-pick" href="about.html" data-wm="1">About me <i aria-hidden="true">→</i></a>
+                            <a class="fx-pick" href="nitori.html" data-wm="0">Latest work <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
+                            <a class="fx-pick" href="about.html" data-wm="1">About me <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
                         </div>
                     </div>
                 </div>
@@ -652,12 +658,12 @@
 
         <!-- 7 · Finale -->
         <section class="fx-end" id="contact">
-            <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><defs><pattern id="fwDots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="3.2" fill="#d3161b"/></pattern></defs><use href="#fwMark"/></svg>
+            <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
             <h2 class="display">Let's build something worth <span class="fx-sweep from-right" data-w="remembering" data-t="remembering.">remembering<span class="fx-dot">.</span></span></h2>
             <footer class="fx-foot">
                 <div class="fx-foot-cols">
                     <div><a class="fx-roll" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com</a><a class="fx-roll dim" href="tel:+886956820832">+886 956 820 832</a></div>
-                    <div><a class="fx-roll" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a><a class="fx-roll" href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener">LinkedIn ↗</a><a class="fx-roll" href="https://github.com/frankwu0405" target="_blank" rel="noopener">GitHub ↗</a></div>
+                    <div><a class="fx-roll" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé<svg class="ar" viewBox="0 0 12 12"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a><a class="fx-roll" href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener">LinkedIn<svg class="ar" viewBox="0 0 12 12"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a><a class="fx-roll" href="https://github.com/frankwu0405" target="_blank" rel="noopener">GitHub<svg class="ar" viewBox="0 0 12 12"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a></div>
                     <div class="fx-copy">&copy; 2026</div>
                 </div>
                 <p class="fx-sign" aria-hidden="true"><span>Frank</span><em>Wu<b>.</b></em></p>
@@ -700,13 +706,13 @@
             const reduce = root.classList.contains('fx-reduce');
             /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
             document.querySelectorAll('.fx-roll').forEach((a) => {
-                const t = a.textContent, w = document.createElement('span');
-                a.setAttribute('aria-label', t); a.textContent = ''; w.setAttribute('aria-hidden', 'true');
+                const ar = a.querySelector('.ar'), t = a.textContent.trim(), w = document.createElement('span');
+                a.setAttribute('aria-label', a.target === '_blank' ? `${t} (opens in a new tab)` : t); a.textContent = ''; w.setAttribute('aria-hidden', 'true');
                 [...t].forEach((c, i) => {
                     const o = document.createElement('span'), n = document.createElement('span');
                     o.className = 'rc'; o.style.setProperty('--i', i); n.textContent = c === ' ' ? '\u00a0' : c; o.appendChild(n); w.appendChild(o);
                 });
-                a.appendChild(w);
+                a.appendChild(w); if (ar) { ar.setAttribute('aria-hidden', 'true'); a.appendChild(ar); }
             });
             const RAD = 16.5 * Math.PI / 180, TAN = Math.tan(RAD), VX = Math.sin(RAD), VY = -Math.cos(RAD);
             const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -1332,7 +1338,7 @@
                     const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
                     if (mode === curMode) return; curMode = mode;
                     cur.classList.toggle('is-view', mode === 'view'); cur.classList.toggle('is-arrow', mode === 'prev' || mode === 'next');
-                    cur.textContent = mode === 'prev' ? '←' : mode === 'next' ? '→' : 'VIEW';
+                    if (mode === 'prev' || mode === 'next') cur.innerHTML = '<svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg>'.replace('class="ar"', mode === 'prev' ? 'class="ar l"' : 'class="ar"'); else cur.textContent = 'VIEW';
                 };
                 addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; aim(e.target); }, { passive: true });
                 addEventListener('scroll', () => aim(document.elementFromPoint(x, y)), { passive: true });
