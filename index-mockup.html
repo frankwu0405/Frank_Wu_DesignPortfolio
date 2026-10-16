@@ -41,8 +41,59 @@
         html:has(body.fx) { background-color: #060606; }
         body.fx { transition: none; }
         body.fx { padding-top: 0; }
-        .fx .navbar { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; padding-top: env(safe-area-inset-top, 0px); }
-        .fx .nav-links-container { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(12, 12, 12, 0.72); }
+        /* navigation: lit, not painted. Clear over the page at the top; once the page has moved it gains a dark band and a
+           hairline that fades toward both edges. It tucks away on the way down and comes back on the way up. The current
+           tab is lit from beneath: a bright stretch of the line, its glow rising toward the label (hover gives a weaker one) */
+        .fx .navbar { height: calc(68px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 2rem 0; align-items: stretch; border-bottom: 0; box-shadow: none;
+            background: rgba(6, 6, 6, 0); backdrop-filter: none; -webkit-backdrop-filter: none;
+            transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.35s ease, -webkit-backdrop-filter 0.35s ease, backdrop-filter 0.35s ease; }
+        .fx .navbar.is-scrolled { background: rgba(6, 6, 6, 0.74); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+        .fx .navbar.is-tucked { transform: translateY(-101%); }
+        .fx .navbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2) 18%, rgba(255, 255, 255, 0.2) 82%, rgba(255, 255, 255, 0)); }
+        .fx .navbar.is-scrolled::after { opacity: 1; }
+        .fx .logo { align-self: center; }
+        .fx .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); transform: none; }
+        .fx .nav-links-container { display: flex; align-items: stretch; padding: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        .fx .navbar .nav-links { align-items: stretch; gap: 0; }
+        .fx .navbar .nav-links li { display: flex; }
+        .fx .navbar .nav-links li a { position: relative; display: flex; align-items: center; padding: 0 1.15rem; border-radius: 0; background: none; box-shadow: none;
+            color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; }
+        .fx .navbar .nav-links li a:hover { color: #fff; background: none; border-radius: 0; }
+        .fx .navbar .nav-links li a.active { color: #fff; font-weight: 600; background: none; box-shadow: none; border-radius: 0; }
+        .fx .navbar .nav-links li a::before { content: ""; position: absolute; left: 14%; right: 14%; bottom: 0; height: 1px; opacity: 0; transition: opacity 0.35s ease;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 30%, #fff 70%, rgba(255, 255, 255, 0)); }
+        .fx .navbar .nav-links li a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 62%; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+            background: radial-gradient(75% 100% at 50% 100%, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 78%); }
+        .fx .navbar .nav-links li a.active::before, .fx .navbar .nav-links li a.active::after { opacity: 1; }
+        .fx .navbar .nav-links li a:not(.active):hover::before { opacity: 0.4; }
+        .fx .navbar .nav-links li a:not(.active):hover::after { opacity: 0.45; }
+        .fx .navbar .nav-links .ar { width: 0.62em; height: 0.62em; margin-left: 0.45em; }
+        /* phones: logo and a two-line menu button, no hairline; the menu slides in from the right edge, its current link lit
+           from beneath the same way */
+        .fx .nav-toggle { position: relative; width: 44px; height: 44px; align-self: center; order: 2; margin-left: auto; }
+        .fx .nav-links-container { order: 3; }
+        .fx .hamburger { position: absolute; left: 10px; top: 50%; width: 24px; height: 1.5px; margin-top: -0.75px; border-radius: 0; background: transparent; transition: none; }
+        .fx .hamburger::before, .fx .hamburger::after { width: 24px; height: 1.5px; border-radius: 0; background: #fff; left: 0; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s ease; }
+        .fx .hamburger::before { transform: translateY(-4px); }
+        .fx .hamburger::after { transform: translateY(4px); }
+        .fx .nav-toggle.active .hamburger { transform: none; bottom: auto; }
+        .fx .nav-toggle.active .hamburger::before { transform: rotate(45deg); opacity: 1; }
+        .fx .nav-toggle.active .hamburger::after { transform: rotate(-45deg); }
+        @media (max-width: 768px) {
+            .fx .navbar { height: calc(72px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 3%; }
+            .fx .navbar::after { display: none; }
+            .fx .nav-links-container { position: absolute; width: 0; height: 0; padding: 0; overflow: visible; }
+            .fx .navbar .nav-links { top: 0; right: 0; height: 100vh; height: 100dvh; width: min(80vw, 380px); max-width: none; transform: translateX(100%); align-items: stretch;
+                padding: calc(72px + env(safe-area-inset-top, 0px) + 18px) 0 0; background: rgba(8, 8, 8, 0.97); transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+            .fx .navbar .nav-links.show { transform: none; }
+            .fx .navbar .nav-links li { margin: 0; }
+            .fx .navbar .nav-links li a { width: 100%; padding: 1.15rem 2rem; font-size: 1.35rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+            .fx .navbar .nav-links li a:hover, .fx .navbar .nav-links li a.active { background: none; box-shadow: none; border-radius: 0; color: #fff; }
+            .fx .navbar .nav-links li a::before { left: 2rem; right: auto; width: 4.5em; bottom: 0.55rem; }
+            .fx .navbar .nav-links li a::after { left: 0.5rem; right: auto; width: 7em; height: 80%; bottom: 0.55rem; }
+            body.fx.menu-open::before { z-index: 980; }
+        }
         .fx main { max-width: none; }
         :where(.fx) section { padding: 0; max-width: none; margin: 0; }
         .fx b, .fx figcaption { font-style: normal; }
@@ -482,6 +533,7 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="projects.html">Projects</a></li>
+                <li><a href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé<svg class="ar" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a></li>
             </ul>
         </div>
     </header>
@@ -705,6 +757,23 @@
         (() => {
             const root = document.documentElement;
             const reduce = root.classList.contains('fx-reduce');
+            /* navigation: the band and hairline once the page has moved; tucked away on the way down, back on the way up */
+            const navbar = document.querySelector('.navbar'), navTgl = document.querySelector('.nav-toggle'), navList = document.querySelector('.nav-links');
+            let navY = scrollY;
+            const navScroll = () => {
+                const y = scrollY, d = y - navY;
+                navbar.classList.toggle('is-scrolled', y > 40);
+                if (y < 80 || document.body.classList.contains('menu-open')) { navbar.classList.remove('is-tucked'); navY = y; return; }
+                if (Math.abs(d) < 8) return;
+                navbar.classList.toggle('is-tucked', d > 0); navY = y;
+            };
+            addEventListener('scroll', navScroll, { passive: true }); navScroll();
+            // the menu button says whether the menu is open, and Escape closes it
+            navTgl.setAttribute('aria-expanded', 'false');
+            new MutationObserver(() => navTgl.setAttribute('aria-expanded', String(navList.classList.contains('show')))).observe(navList, { attributes: true, attributeFilter: ['class'] });
+            addEventListener('keydown', (e) => { if (e.key === 'Escape' && navList.classList.contains('show')) { navTgl.click(); navTgl.focus(); } });
+            // preview only: the shared script finds the current page by file name, which this mockup doesn't share with Home
+            addEventListener('load', () => document.querySelector('.nav-links a[href="index.html"]').classList.add('active'));
             /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
             document.querySelectorAll('.fx-roll').forEach((a) => {
                 const ar = a.querySelector('.ar'), t = a.textContent.trim(), w = document.createElement('span');
