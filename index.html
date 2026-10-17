@@ -2,28 +2,484 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Frank Wu | UX Portfolio</title>
-    <!-- Link to the redesigned CSS file -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060606" />
+    <title>Frank Wu | UI/UX Designer</title>
+    <meta name="description" content="Frank Wu, UI/UX designer who designs and builds. Shipped e-commerce pages for Nitori Taiwan, plus university case studies." />
     <link rel="stylesheet" href="assets/css/style.css" />
-    <!-- Link to Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- Link to Google Fonts for Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/images/LOGOs-10.svg">
     <script>
-        // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
-        // and show them anyway if script.js never runs.
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
+        // Opening gate once per visit (skipped for reduced motion), and the blur reveal used across the site.
+        (function () {
+            var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) d.classList.add('fx-reduce');
+            // the opening lands on the hero's first frame, so it must not let the browser restore an old scroll position
+            try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); history.scrollRestoration = 'manual'; try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { scrollTo(0, 0); } } } catch (e) {}
+            if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
+        })();
     </script>
+    <style>
+        /* PREVIEW: "The hidden mark". A giant FW mark hides behind the name,
+           emerges as the name fades, and the camera zooms into one slanted
+           stroke; that 16.5° lean then shapes every edge and path on the page.
+           Inter only, one red, transforms and opacity only (no WebGL). */
+        /* --gap: the strip that only shows when the phone's address bar collapses (large minus small viewport).
+           Stages are sized to the large viewport so they always cover the screen; content is centred
+           in the part that is always visible. */
+        .fx { --gap: 0px; }
+        @supports (height: 100lvh) { .fx { --gap: calc(100lvh - 100svh); } }
+        .fx-lprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: 100vh; pointer-events: none; visibility: hidden; }
+        @supports (height: 100lvh) { .fx-lprobe { height: 100lvh; } }
+        body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg; --nitori: #009e96;
+            background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
+        .fx .section-bg-overlay { display: none; }
+        html:has(body.fx) { background-color: #060606; }
+        body.fx { transition: none; }
+        body.fx { padding-top: 0; }
+        /* navigation: the shared one (style.css, script.js). ?nav=invert compares a version in difference blend, so it
+           inverts whatever is behind it */
+        .fx.nav-invert .navbar { mix-blend-mode: difference; }
+        .fx.nav-invert .navbar::before, .fx.nav-invert .navbar::after { display: none; }
+        .fx.nav-invert .navbar .nav-links li a { color: #fff; text-shadow: none; }
+        .fx.nav-invert .logo-img, .fx.nav-invert .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); }
+        .fx.nav-invert.menu-open .navbar { mix-blend-mode: normal; }
+        @media (max-width: 768px) {
+            /* the shared stylesheet locks scrolling with overflow: hidden on the body, which turns the body into its own scroll
+               box and unpins every sticky scene; the menu itself stops the page scrolling instead */
+            body.fx.menu-open { overflow: visible; overflow-x: clip; }
+        }
+        .fx main { max-width: none; }
+        :where(.fx) section { padding: 0; max-width: none; margin: 0; }
+        .fx b, .fx figcaption { font-style: normal; }
+        .fx ul, .fx ol { list-style: none; margin: 0; padding: 0; font-weight: 400; }
+        .fx li { margin: 0; }
+        .fx a:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+        .fx .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; margin: 0; color: #fff; }
+        .fx .red { color: var(--red); }
+
+        /* Opening: one red scan line passes down over the hidden mark, showing only the slice it crosses; then it prints into
+           the dark mark behind the name and the figure hands over to the scroll hint. Only a thin line is red and the
+           edges stay ink, so Safari's bars never change colour. Sized like the stage, so the line lands on the hero's mark. */
+        .fx-gate { display: none; position: fixed; left: 0; top: 0; width: 100%; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); z-index: 1100; overflow: hidden; }
+        .fx-gate-on .fx-gate { display: block; }
+        .fx-gate-on, .fx-gate-on body { overflow: hidden; }
+        /* the stage's bottom light stays off under the gate (Safari could let it show through); the opening switches it on
+           while the gate still hides it, then crosses over to it */
+        .fx-gate-on .fx-stage { --lit: 0; }
+        .fx-gate .room { position: absolute; inset: 0; opacity: var(--cover, 1); }
+        .fx-gate .bg { position: absolute; inset: 0; background: var(--ink); }
+        .fx-gate canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+        /* set like the scroll hint (.fx-hint), so it can take its place */
+        .fx-gate .pct { position: absolute; left: 0; right: 0; top: 60%; margin: 0; height: 1.4em; overflow: hidden; text-align: center;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; line-height: 1.4em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); font-variant-numeric: tabular-nums; }
+        .fx-gate .pct span { display: block; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
+        .fx-gate .pct.is-out span { transform: translate3d(0, -110%, 0); opacity: 0; }
+        .fx-gate.is-skip { opacity: 0; transition: opacity 0.35s ease; }
+        .fx-fxbox { opacity: var(--imp, 1); }   /* the hero's mark waits under the gate until the line lands on it */
+
+        /* Cursor */
+        .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; box-sizing: border-box; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; border: 1px solid transparent;
+            background: var(--red); pointer-events: none; display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
+            transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; }
+        /* over a project: a hairline ring, its middle softly darkened and blurred so the word reads over the live page */
+        .fx-cursor.is-view { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: rgba(6, 6, 6, 0.42); border-color: rgba(255, 255, 255, 0.6);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 0.6rem; letter-spacing: 0.24em; text-indent: 0.24em; opacity: 1; }
+        .fx-cursor.is-arrow { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: transparent; font-size: 1.6rem; font-weight: 300; letter-spacing: 0; opacity: 1; }
+        .fx-cursor .ar { stroke-width: 1; }
+        .fx-cursor .ar.l { transform: scaleX(-1); }
+        @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
+
+        /* 1 · Hero: the hidden mark (pinned) */
+        .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 660); }   /* scroll spacer for the fixed scene */
+        .fx-stage.is-off { visibility: hidden; }
+        .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
+            perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
+        .fx-light { position: absolute; left: 10%; right: 10%; bottom: -30%; height: 75%; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(50% 50% at 50% 60%, rgba(211, 22, 27, 0.42), rgba(143, 0, 0, 0.12) 55%, transparent 75%); filter: blur(30px);
+            transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(0.82 + var(--glow, 1) * 0.22)); opacity: calc(var(--glow, 1) * 0.85 * var(--lit, 1));
+            }
+        @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
+        .fx-par { position: absolute; inset: 0; pointer-events: none; }
+        .fx-ink { position: absolute; inset: 0; z-index: -1; background: var(--ink); pointer-events: none; }   /* behind the glow and every layer */
+        .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; filter: opacity(var(--lit, 1)); }
+        .fx-par.echo1 { transform: translate3d(calc(var(--mx) * 22px * (1 - var(--zm))), calc(var(--my) * 12px * (1 - var(--zm))), 0); }
+        .fx-par.echo2 { transform: translate3d(calc(var(--mx) * 38px * (1 - var(--zm))), calc(var(--my) * 20px * (1 - var(--zm))), 0); }
+        .fx-par.markp { transform: translate3d(calc(var(--mx) * -12px * (1 - var(--zm))), calc(var(--my) * -6px * (1 - var(--zm))), 0); }
+        /* The mark is drawn by full-stage SVGs whose viewBox is the camera, so it is
+           re-rendered as vector at every zoom level (no stretched bitmap, no pixelation). */
+        .fx-cam { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
+        .fx-fxbox, .fx-bands { position: absolute; inset: 0; }
+        .fx-bands { transform-origin: 50% 50%; }
+        .fx-cam .dark { fill: #0d0d0d; opacity: calc(1 - var(--hide, 0)); }   /* the hidden mark goes fully dark before the blueprint */
+        /* build: a flat grey block-in (mid-fidelity) leads, the finish sweeps in behind it with a soft bloom */
+        .fx-cam .grey { fill: #1b1b1d; }
+        .fx-cam .bloom, .fx-cam .feather { opacity: var(--bloom, 0); }
+        .fx-cam .flat { fill: var(--deep); opacity: var(--swell, 0); }   /* the light swells into flat red as the camera leaves */
+        .is-built .fx-cam .grey, .is-built .fx-cam .bloom, .is-built .fx-cam .feather { display: none; }
+        .is-built .fx-cam .fin { clip-path: none; }
+        /* finishes: light defines the shape; whatever faces away sinks into the black */
+        .fx-cam .fin > g { display: none; }
+        .f-glass .fx-cam .fin > .glass, .f-backlit .fx-cam .fin > .backlit, .f-lacquer .fx-cam .fin > .lacquer { display: inline; }
+        .fx-cam .edge { fill: #ffe3dc; }
+        .fx-cam .backlit .edge { fill: #ff5a46; }
+        .fx-cam .rimlight { fill: none; stroke: url(#fwRimG); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+        .fx-cam .backlit .rimlight { stroke: url(#fwRimR); stroke-width: 1.5; }
+        .fx-cam .bl-body { fill: #080808; }
+        .fx-cam .glow { opacity: calc(1 - var(--swell, 0)); }
+        /* blueprint: traced light, not interface chrome */
+        .fx-bp { display: none; }
+        /* drawn in the mark's own units (so the trace follows the outline exactly); --px is one screen pixel */
+        .fx-bp .bp-out { fill: none; stroke: rgba(255, 255, 255, 0.36); stroke-width: calc(var(--px, 1) * 1px); stroke-dasharray: 100 100; stroke-dashoffset: var(--bpd, 100); }
+        .fx-bp .bp-tail { fill: none; stroke: rgba(255, 214, 205, 0.7); stroke-width: calc(var(--px, 1) * 1.3px); stroke-dasharray: 16 84; stroke-dashoffset: var(--tailo, 0); opacity: var(--tipOn, 0); }
+        .fx-bp .bp-tip { fill: none; stroke: #fff4f1; stroke-width: calc(var(--px, 1) * 1.8px); stroke-dasharray: 1.4 98.6; stroke-dashoffset: var(--tipo, 0); opacity: var(--tipOn, 0); filter: drop-shadow(0 0 5px rgba(255, 110, 90, 0.95)); }
+        /* guides sit behind the mark, so it is built in front of them */
+        .fx-guides { display: none; opacity: var(--gOn, 1); }
+        .fx-guides .bp-cut { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: calc(var(--px, 1) * 1px); stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+        .fx-guides .bp-ctip { fill: none; stroke: rgba(255, 236, 230, 0.85); stroke-width: calc(var(--px, 1) * 1.2px); stroke-dasharray: 2.5 97.5; stroke-dashoffset: 100; opacity: 0; }
+        .fx-cam .rim { fill: none; stroke: rgba(255, 70, 55, calc(0.22 * (1 - var(--hide, 0)))); stroke-width: 1.2; }
+        .fx-cam .glint { fill: none; stroke: #ffd9d4; stroke-width: 2; stroke-dasharray: 7 93; stroke-dashoffset: var(--glint, 0); opacity: var(--glintOn, 0); filter: drop-shadow(0 0 6px #ff3b2f); }
+        .fx-cam .slab { fill: var(--deep); stroke: rgba(255, 84, 70, 0.95); stroke-width: 1.5; opacity: min(1, calc(var(--zm) * 8)); }   /* only once the camera starts to travel */
+        .fx-echo { opacity: calc(var(--em) * 0.3 * (1 - var(--zm) * 2)); fill: none; stroke: rgba(211, 22, 27, 0.4); stroke-width: 1; }
+        /* a vignette the mark can sink into */
+        .fx-vig { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--swell, 0));
+            background: radial-gradient(130% 110% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.55) 100%); }
+        /* stage hint: design, build, ship */
+        .fx-hint { position: absolute; z-index: 3; left: 0; right: 0; top: var(--hintTop, 80%); display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; opacity: var(--hint, 1);
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
+        .fx-hint i { position: relative; width: 1px; height: 22px; background: linear-gradient(to bottom, transparent, var(--red)); transform: skewX(calc(var(--lean) * -1)); }
+        .fx-hint i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, #fff); opacity: 0; transition: opacity 0.5s ease; }
+        .fx-hint.is-scroll i { animation: fx-cue 2.2s ease-in-out infinite; }
+        .fx-hint.is-scroll i::after { opacity: 1; }
+        .fx-hint .hw { position: relative; display: block; height: 1.4em; width: 9em; overflow: hidden; text-align: center; }
+        .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
+        .fx-hint b.is-on { transform: none; opacity: 1; }
+        .fx-hint b.is-past { transform: translate3d(0, -110%, 0); opacity: 0; }
+        /* mockup-only: the finish switch is tucked off the right edge of the screen; a thin grip on the edge slides it in,
+           and × slides it back out */
+        .fx-switch { position: fixed; right: 0; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+        .fx-switch .grip, .fx-switch .opts { pointer-events: auto; }
+        .fx-switch .grip { position: absolute; right: 0; bottom: 0; width: 22px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; transition: opacity 0.25s ease; }
+        .fx-switch .grip::before { content: ""; position: absolute; right: 4px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.38); }
+        .fx-switch .grip:hover::before, .fx-switch .grip:focus-visible::before { background: #fff; }
+        .fx-switch .opts { display: flex; align-items: center; gap: 4px; margin-right: 14px; padding: 4px; border-radius: 999px; background: rgba(20, 20, 20, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.14); transform: translate3d(calc(100% + 30px), 0, 0); visibility: hidden;
+            transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.45s; }
+        .fx-switch.is-open .opts { transform: none; visibility: visible; transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s; }
+        .fx-switch.is-open .grip { opacity: 0; pointer-events: none; }
+        .fx-switch .opts span { color: var(--dim); padding: 0 6px 0 10px; }
+        .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
+        .fx-switch a.is-on { background: var(--red); color: #fff; }
+        .fx-switch .x { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: #bbb; font: 400 1rem/1 'Inter', sans-serif; cursor: pointer; }
+        .fx-switch .x:hover { color: #fff; }
+        .fx-switch button:focus-visible, .fx-switch a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+        .fx-light { --pan: 0px; }
+        .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
+            transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
+        .fx-title h1 { font-size: clamp(4.6rem, 10vw, 10rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.82; color: #fff; margin: 0; white-space: nowrap; transform-style: preserve-3d; }
+        .fx-title h1 .ch { display: inline-block; }
+        .fx-title h1 .ci { display: inline-block; }
+        .fx-title .role { margin-top: calc(var(--fvh, 1vh) * 2.2); font-size: clamp(0.9rem, 1.6vw, 1.3rem); font-weight: 300; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); padding-left: 0.42em;
+            transform: translate3d(0, calc(var(--fade) * -30px), 0); opacity: calc(1 - var(--fade) * 1.4); filter: blur(calc(var(--fade) * 10px)); }
+        .fx-cue { position: absolute; z-index: 3; bottom: calc(40px + var(--gap)); font-size: 0.86rem; color: rgba(255, 255, 255, 0.72); opacity: calc(1 - var(--fade) * 2.2); }
+        .fx-cue { right: 40px; display: inline-flex; align-items: center; gap: 12px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; }
+        .fx-cue i { width: 1px; height: 38px; background: linear-gradient(to bottom, transparent, #fff); transform: skewX(calc(var(--lean) * -1)); animation: fx-cue 2.2s ease-in-out infinite; }
+        @keyframes fx-cue { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        /* name arrives after the gate */
+        .fx-title h1 .ch { opacity: 0; filter: blur(14px); transform: translateY(0.18em); transition: opacity 0.9s ease, filter 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--in, 0s); }
+        .fx-title .role-in { opacity: 0; transition: opacity 1s ease 0.7s; }
+        .fx-ready .fx-title h1 .ch { opacity: 1; filter: none; transform: none; }
+        .fx-ready .fx-title .role-in { opacity: 1; }
+
+        /* 2 · Statement: part of the hero scene, so it starts the moment the red completes.
+           Words are invisible until their entrance; the entrance continues the camera move. */
+        .fx-scene { position: absolute; inset: 0; z-index: 4; pointer-events: none; --s1: 0; --s2: 0; --s3: 0; --s4: 0; --s5: 0; --sg: 0; }
+        .fx-scene .ghost { position: absolute; left: 50%; top: 50%; width: 150vw; aspect-ratio: 1872 / 1153; fill: none; stroke: rgba(255, 255, 255, 0.1); stroke-width: 1; opacity: 0; }
+        .fx-sin { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; justify-content: center; padding: 0 6vw; }
+        .fx-sin .display { font-size: clamp(3rem, 6vw, 6.4rem); }
+        .fx-sin .l1, .fx-sin .l2 { display: block; opacity: 0; }
+        .fx-sin .l2 .blk { color: #120000; }
+        /* the aside lands a beat after the motto */
+        .fx-sin .aside { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; font-style: italic; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
+            opacity: var(--s3); transform: translate3d(calc((1 - var(--s3)) * 40px), 0, 0); }
+        /* two equal choices in the motto's type; the chosen one turns black, like "SIMPLE." */
+        .fx-cta { display: flex; flex-wrap: wrap; gap: 0.4em clamp(36px, 4.4vw, 80px); margin-top: calc(var(--fvh, 1vh) * 5.5); }
+        .fx-pick { display: inline-flex; align-items: center; gap: 0.32em; font-size: clamp(1.6rem, 2.9vw, 3rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.035em; line-height: 1;
+            color: #fff; text-decoration: none; pointer-events: none; transition: color 0.35s ease;
+            opacity: min(1, calc(var(--sp, 0) * 2)); transform: translate3d(calc((1 - var(--sp, 0)) * 60vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--sp, 0)))); }
+        .fx-pick:first-child { --sp: var(--s4); } .fx-pick:last-child { --sp: var(--s5); }
+        .fx-pick i { font-style: normal; font-weight: 600; transition: transform 0.35s ease; }
+        /* arrows are drawn, not typed: Inter as Google serves it has no arrows, and iOS fills the gap with emoji */
+        .ar { display: inline-block; width: 0.78em; height: 0.78em; vertical-align: -0.06em; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; overflow: visible; }
+        .fx-scene.is-live .fx-pick { pointer-events: auto; }
+        .fx-cta.has-on .fx-pick { color: rgba(255, 255, 255, 0.5); }
+        .fx-cta.has-on .fx-pick.is-on { color: #120000; }
+        .fx-pick.is-on i { transform: translateX(0.18em); }
+        .fx-pick:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+        /* where each choice leads, as a watermark behind the scene (pre-tinted images: plain opacity only) */
+        .fx-wm { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .fx-wm img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 0.7s ease, transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-wm img.wm-work { object-position: 60% 30%; } .fx-wm img.wm-about { object-position: 70% 20%; }
+        .fx-wm img.is-on { opacity: 0.75; transform: scale(1); }
+        .fx-wm img.wm-work.is-on { opacity: 0.45; }   /* the page is busier than the portrait */
+        .fx-wm img.is-go { opacity: 1; transform: scale(1.03); transition-duration: 0.28s, 0.5s; }
+        /* the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
+        .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
+        .fx-sin .l2 { opacity: min(1, calc(var(--s2) * 2.2)); transform: translate3d(calc((1 - var(--s2)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s2)))); filter: blur(calc((1 - var(--s2)) * 7px)); }
+        .fx-scene .ghost { opacity: calc(min(1, var(--sg) * 3) * 0.9); transform: translate(calc(-50% + (1 - var(--sg)) * 45vw - var(--sg) * 10vw), -50%); }
+        /* exit: the scene is cut away along the slant, revealing the next stage already in place */
+        .fx-wipe-edge { position: fixed; z-index: 30; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
+            transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
+        .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 16) 0; }
+        .fx-scene.is-static .fx-sin { position: relative; }
+        .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
+        .fx-scene.is-static .fx-pick { pointer-events: auto; }
+
+        /* 3 · Proof (pinned): the hero's wipe uncovers a dark room. The headline blurs in a word at a time and three figures
+           rise out of a soft shadow (their lower halves stay in it), right to left behind the wipe. Then the room closes in
+           to a single tile while it fills with Nitori teal from below, the figures sinking back into the shadow; the white
+           wordmark comes up on the teal, and the tile drops into the row's empty slot as the row comes up underneath it */
+        .fx-proof { position: relative; z-index: 1; }
+        .fx-pstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink); touch-action: pan-y; --cw: 30vw; --slot: 30%; }
+        .fx-pbg { position: absolute; inset: -10% -6%; z-index: 0; pointer-events: none; }
+        .fx-pbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transform: scale(1.15); transition: opacity 0.9s ease; }
+        .fx-pbg img.is-on { opacity: 1; }
+        .fx-pstage::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: linear-gradient(to bottom, transparent 70%, var(--ink)), radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(6, 6, 6, 0.88)); }
+        /* the pack-up is one card: its front is the room with the stats, its back is Nitori (white wordmark on teal). The
+           room shrinks to the tile with the scene inside it, then the card flips over bottom-first in perspective, lifting
+           toward the viewer mid-turn, the face turning away going into shade, and a teal glow on the floor as Nitori comes
+           round. All of it follows the scroll */
+        .fx-pred { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+        /* one flat card turning in perspective: it shows its front until it passes edge-on, then its back (pre-flipped so it
+           reads upright once turned). Safari mishandles hidden back faces in a true 3D card, so nothing relies on them */
+        .fx-pflip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 50%; }
+        .fx-pfront, .fx-pback { position: absolute; inset: 0; overflow: hidden; }
+        .fx-pback { transform: scaleY(-1); visibility: hidden; background: var(--nitori); }
+        .fx-pfront::after, .fx-pback::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--shade, 0); pointer-events: none; }
+        .fx-pbox { position: absolute; inset: 0; background: rgba(255, 255, 255, var(--lift, 0)); }
+        .fx-pfloor { position: absolute; left: 0; top: 0; width: calc(var(--cw) * 1.5); height: calc(var(--cw) * 0.36); border-radius: 50%; opacity: 0; pointer-events: none;
+            background: radial-gradient(closest-side, rgba(0, 158, 150, 0.32), rgba(0, 158, 150, 0.08) 60%, transparent); }
+        /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type;
+           it keeps the stage's size inside the card, and only scales */
+        .fx-pstats { position: absolute; left: 0; top: 0; width: var(--psw, 100vw); height: calc(var(--psh, 100vh) - var(--gap)); transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
+        .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.022em; line-height: 1.02; color: #fff; }
+        /* the claim follows the scroll, like the figures. "Designed," then "built," arrive full size and white; as the
+           punchline comes in, that first line steps back (smaller, slightly dimmed) so "and it sells." lands on its own */
+        .fx-phead .set { display: inline-block; margin-bottom: 0.04em; white-space: nowrap;
+            font-size: calc(var(--set0, 1em) + (var(--set1, 0.62em) - var(--set0, 1em)) * var(--setp, 0)); color: rgba(255, 255, 255, calc(1 - 0.38 * var(--setp, 0))); }
+        .fx-phead .punch { font-style: italic; font-weight: 900; letter-spacing: -0.012em; }
+        /* each word comes out of a blur, rising a touch, like the hero's name */
+        .fx-phead .hw { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(0.18em); }
+        .fx-phead .punch .hw { transform: translateY(0.34em); }
+        /* the subheading, set like the statement's aside, lands after the headline */
+        .fx-psub { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
+            opacity: 0; filter: blur(10px); transform: translateY(0.4em); }
+        .fx-psub span { color: rgba(255, 255, 255, 0.62); }
+        /* the figures: large and light; their lower halves stay in a soft shadow (a mask on a still frame, so they rise
+           through it) */
+        .fx-pstats .fx-pfigs { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin: calc(var(--fvh, 1vh) * 11) 0 0; padding: 0; list-style: none; }
+        .fx-pfig { position: relative; }
+        /* the box has headroom above the digits (0.45em), so the drift and the pointer never push them out of the mask */
+        .fx-pnum { --fs: clamp(3.4rem, min(9vw, calc(var(--fvh, 1vh) * 18)), 9.6rem); height: calc(var(--fs) * 1.45); margin-top: calc(var(--fs) * -0.45); padding-top: 0.45em; box-sizing: border-box;
+            font-size: var(--fs); line-height: 1;
+            --pmask: linear-gradient(to bottom, #000 57%, rgba(0, 0, 0, 0.32) 71%, rgba(0, 0, 0, 0.08) 80.7%, transparent 89%);
+            -webkit-mask-image: var(--pmask); mask-image: var(--pmask); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+        /* the digits roll up into place as each figure rises: each one a clipped column of figures */
+        .fx-pnum .dc, .fx-pnum .dg { display: inline-block; vertical-align: top; height: 1em; }
+        .fx-pnum .dg { clip-path: inset(0 -0.3em); text-align: center; }
+        .fx-pnum .ds { display: block; white-space: pre; will-change: transform; }
+        .fx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+        .fx-pnum b { display: block; font-size: inherit; font-weight: 900; font-style: normal; letter-spacing: -0.018em; white-space: nowrap; color: #fff; will-change: transform, filter; }
+        .fx-pnum .u { position: relative; top: -1.25em; margin-right: 0.12em; font-size: 0.32em; font-weight: 800; letter-spacing: 0.02em; color: var(--red); }
+        /* the light falls from above; the shadow is where it runs out */
+        .fx-pfigs::before { content: ""; position: absolute; left: -6vw; right: -6vw; top: -30%; height: 90%; pointer-events: none;
+            background: radial-gradient(60% 70% at 50% 30%, rgba(255, 240, 236, 0.045), transparent 70%); opacity: var(--glowup, 0); }
+        /* the descriptions speak like the hero's hint (Scroll, Design, Build, Ship) */
+        .fx-pfig p { margin: calc(var(--fvh, 1vh) * 0.4) 0 0; padding-left: 0.3em; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; line-height: 1.6;
+            white-space: nowrap; color: rgba(255, 255, 255, 0.8); }
+        .fx-pfig p .w { display: inline-block; opacity: 0; }
+        /* the wordmark, coming up on the teal as the room closes in to the tile */
+        .fx-pmark { position: absolute; left: 50%; top: 50%; width: calc(var(--cw) * 0.4); transform: translate(-50%, -50%); pointer-events: none; }
+        /* the tile's first face is the Nitori logo; it stays a logo until the tile clicks into the row, then lifts away
+           to show the live page */
+        .fx-pface { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; background: var(--nitori);
+            transition: opacity 0.55s ease 0.15s; }
+        .fx-pcard .fx-pface img { width: 40%; height: auto; object-fit: contain; transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s; }
+        .fx-pstage.is-landed .fx-pface { opacity: 0; }
+        .fx-pstage.is-landed .fx-pcard .fx-pface img { transform: translateY(-14%) scale(0.8); }
+        /* the title slot: each project's name, with the card covering the bottom of the letters */
+        .fx-pname { position: absolute; left: 50%; top: var(--slot); margin: 0; white-space: nowrap; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.75; color: #fff;
+            transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; transform: translate(-50%, calc(-25% + var(--ov, 0px))); opacity: 0; }
+        .fx-pname.is-on { transform: translate(-50%, calc(-100% + var(--ov, 0px))); opacity: 1; pointer-events: auto; transition-delay: 0.15s; }
+        .fx-ptitle { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+        .fx-prow { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+        .fx-pcard { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 10; display: block; overflow: hidden; background: #0d0d0d; text-decoration: none; pointer-events: auto; opacity: 0;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6); will-change: transform, opacity, filter; }
+        .fx-pcard img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .fx-pcard .fx-browser { display: flex; flex-direction: column; height: 100%; border-radius: 0; box-shadow: none; }
+        .fx-pcard .fx-browser video { flex: 1 1 0; min-height: 0; aspect-ratio: auto; }
+        .fx-pcard::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: rgba(255, 255, 255, 0.12); opacity: 0; }
+        .fx-pcard.is-hit::after { animation: fx-hit 0.7s ease-out; }
+        @keyframes fx-hit { from { opacity: 1; } to { opacity: 0; } }
+        .fx-plabs { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+        .fx-plab { position: absolute; left: 0; top: 0; padding-left: 0.3em; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; white-space: nowrap; color: rgba(255, 255, 255, 0.5); opacity: 0; transition: color 0.4s ease; }
+        .fx-plab.is-c { color: var(--red); }
+        .fx-pinfo { position: absolute; left: 50%; top: 0; z-index: 6; width: min(30vw, 440px); transform: translateX(-50%); text-align: center; }
+        .fx-pbg, .fx-pstats, .fx-ptitle, .fx-plabs { will-change: transform; }
+        .fx-pinfo .d { position: absolute; left: 0; right: 0; top: 0; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-pinfo .d.is-on { opacity: 1; transform: none; pointer-events: auto; transition-delay: 0.15s; }
+        .fx-pinfo p { margin: 0 0 14px; max-width: none; font-size: 0.92rem; line-height: 1.6; color: rgba(255, 255, 255, 0.85); }
+        .fx-pinfo a { color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 3px; }
+        /* keyboard: the row's arrows, shown only when focused */
+        .fx-pnav { position: absolute; z-index: 7; top: 50%; width: 46px; height: 46px; margin-top: -23px; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(6, 6, 6, 0.7); color: #fff; font: 600 1rem 'Inter', sans-serif; opacity: 0; pointer-events: none; }
+        .fx-pnav.prev { left: 2vw; } .fx-pnav.next { right: 2vw; }
+        .fx-pnav:focus-visible { opacity: 1; outline: 2px solid var(--red); outline-offset: 3px; }
+        @media (hover: hover) and (pointer: fine) { .fx-pstage.is-landed, .fx-pstage.is-landed * { cursor: none; } }
+        /* the live page in the Nitori card */
+        .fx-browser { overflow: hidden; background: #0d0d0d; }
+        .fx-browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #171717; }
+        .fx-browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
+        .fx-browser .url { margin-left: 8px; padding: 3px 10px; background: #0d0d0d; color: #9a9a9a; font-size: 0.7rem; }
+        .fx-browser video { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #111; }
+
+        /* 6 · How I work: the steps stand in one centred column, each a large outlined word. The line wanders gently down
+           behind them from one period to the other and is the scene's light: what it nears picks up a red glow and casts
+           a shadow away from it, and the word it touches fills from that point outward */
+        .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); }
+        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 16); text-align: center; }
+        /* the two mottos are a matched pair, the section's top level; the steps sit at about half their size */
+        .fx-pr-head .display { font-size: clamp(2.6rem, 7vw, 7.6rem); max-width: 15ch; margin-inline: auto; text-wrap: balance; }
+        .fx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; }
+        .fx-steps { display: grid; justify-items: center; gap: calc(var(--fvh, 1vh) * 13); }
+        .fx-step { position: relative; z-index: 2; width: 100%; text-align: center; perspective: 900px; transform: translate3d(0, var(--py, 0px), 0) scale(var(--sc, 1)); }
+        .fx-step .in { opacity: 0.3; filter: blur(2px); transform: translate3d(0, 28px, -140px); transition: opacity 0.8s ease, filter 0.8s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .fx-step.is-lit .in { opacity: 1; filter: none; transform: none; }
+        .fx-step h3 { font-size: clamp(1.9rem, 3.6vw, 3.8rem); font-weight: 800; letter-spacing: 0.04em; line-height: 0.9; text-transform: uppercase; margin: 0 0 calc(var(--fvh, 1vh) * 1.8);
+            color: transparent; -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.6); }
+        .fx-step h3 span { position: relative; display: inline-block; }
+        /* the fill: a copy of the word, revealed in a circle that opens from where the line crossed it */
+        .fx-step h3 span::after { content: attr(data-t); position: absolute; left: 0; top: 0; color: #fff; -webkit-text-stroke: 1.2px #fff; text-shadow: none;
+            clip-path: circle(0 at var(--lx, 50%) 55%); transition: clip-path 0.5s cubic-bezier(0.5, 0, 0.75, 0); }
+        .fx-step.is-lit h3 span::after { clip-path: circle(150% at var(--lx, 50%) 55%); transition: clip-path 1.1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        /* the light: a red glow as the line nears, and a shadow cast away from it (--lk, --lsx, --lsy follow the line's head) */
+        .fx-step h3 span, .fx-end .display, .fx-pr-head .display { text-shadow: var(--halo, 0 0 0 transparent), calc(var(--lsx, 0) * 1px) calc(var(--lsy, 0) * 1px) 14px rgba(0, 0, 0, calc(var(--lk, 0) * 0.8)),
+            0 0 calc(var(--lk, 0) * 28px) rgba(255, 44, 32, calc(var(--lk, 0) * 0.65)); }
+        .fx-step p { margin: 0 auto; max-width: 34ch; color: #c9c9c9; line-height: 1.7; text-shadow: 0 0 3px var(--ink), 0 0 7px var(--ink); }
+        /* the words are solid to the line (a dark edge round each letter), so where it runs behind them it stops short */
+        .fx-step h3 span, .fx-end .display { --halo: 0 0 2px var(--ink), 0 0 6px var(--ink), 0 0 12px var(--ink); }
+        /* where the line's head is, the dark around it warms */
+        .fx-thread-light { position: absolute; z-index: 0; left: 0; top: 0; width: var(--tlS, 960px); height: var(--tlS, 960px); margin: calc(var(--tlS, 960px) / -2) 0 0 calc(var(--tlS, 960px) / -2);
+            border-radius: 50%; pointer-events: none; opacity: 0; will-change: transform, opacity;
+            background: radial-gradient(closest-side, rgba(211, 22, 27, 0.2), rgba(211, 22, 27, 0.07) 45%, rgba(211, 22, 27, 0)); }
+        /* the two words the line runs between: white until the red passes over them (--sw, 0 to 1), "intentional." from
+           the left as it comes up the screen, setting the line off when it reaches the period; "remembering." from its
+           period back to the left once the line has landed there. A red copy over the white word, with a soft leading edge */
+        .fx-sweep { position: relative; display: inline-block; color: transparent; --swE: calc(var(--sw, 0) * (100% + 0.8em)); }
+        .fx-sweep::before, .fx-sweep::after { position: absolute; left: 0; top: 0; width: 100%; text-align: left; white-space: nowrap; text-shadow: none; pointer-events: none; }
+        .fx-sweep::before { content: attr(data-w); color: #fff;
+            -webkit-mask-image: linear-gradient(var(--swA, 90deg), transparent calc(var(--swE) - 0.8em), #000 var(--swE)); mask-image: linear-gradient(var(--swA, 90deg), transparent calc(var(--swE) - 0.8em), #000 var(--swE)); }
+        .fx-sweep::after { content: attr(data-t); color: var(--red);
+            -webkit-mask-image: linear-gradient(var(--swA, 90deg), #000 calc(var(--swE) - 0.8em), transparent var(--swE)); mask-image: linear-gradient(var(--swA, 90deg), #000 calc(var(--swE) - 0.8em), transparent var(--swE)); }
+        .fx-sweep.from-right { --swA: 270deg; }
+
+        /* 7 · Finale: the mark returns, lit. Its heading stands over the line's lower layer, so the line runs behind the
+           words on its way into the period */
+        .fx .fx-end { position: relative; overflow: hidden; padding: calc(var(--fvh, 1vh) * 20) 6vw 0; text-align: center; --p: 0.5; --pt: 80px; --hs: clamp(2.6rem, 7vw, 7.6rem); }
+        .fx-end > :not(.mark2) { position: relative; z-index: 2; }
+        .fx-end .mark2 { position: absolute; z-index: 0; left: 50%; top: calc(var(--pt) + var(--hs) * 1.8); width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none;
+            fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
+            transform: translate3d(-50%, calc(-50% + (0.5 - var(--p)) * calc(var(--fvh, 1vh) * 30)), 0) scale(calc(0.92 + var(--p) * 0.16)); opacity: calc(0.2 + var(--p) * 0.45); }
+        .fx-end::after { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(6, 6, 6, 0.82), rgba(6, 6, 6, 0.5) 60%, rgba(6, 6, 6, 0.25)); }
+        .fx-end .display { font-size: var(--hs); max-width: 12ch; margin-inline: auto; text-wrap: balance; }
+        /* the call to action: the email in full, then the résumé and LinkedIn as two quieter buttons. Their letters roll up
+           to a red copy on hover (--rh: the height of each letter's window) */
+        .fx-reach { display: flex; flex-direction: column; align-items: center; gap: calc(var(--fvh, 1vh) * 3.6); margin-top: calc(var(--fvh, 1vh) * 9); }
+        .fx-mailto { --rh: 1.2em; display: inline-flex; align-items: center; padding-bottom: 0.12em; border-bottom: 1px solid rgba(255, 255, 255, 0.28); color: #fff; text-decoration: none;
+            font-size: clamp(1.5rem, 3.2vw, 3rem); font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; transition: border-color 0.4s ease; }
+        .fx-mailto:hover, .fx-mailto:focus-visible { border-color: var(--red); }
+        .fx-reach-more { display: flex; gap: 12px; }
+        .fx-sbtn { display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; text-decoration: none;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; transition: border-color 0.4s ease; }
+        .fx-sbtn:hover, .fx-sbtn:focus-visible { border-color: var(--red); }
+        .fx-roll .rc { display: inline-block; overflow: hidden; vertical-align: top; height: var(--rh, 1.6em); line-height: var(--rh, 1.6em); }
+        .fx-roll .rc > span { display: inline-block; text-shadow: 0 var(--rh, 1.6em) 0 var(--red); transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1) calc(var(--i) * 18ms); }
+        .fx-roll:hover .rc > span, .fx-roll:focus-visible .rc > span { transform: translateY(calc(var(--rh, 1.6em) * -1)); }
+        .fx-roll .ar { width: 0.7em; height: 0.7em; margin-left: 0.5em; stroke-width: 1.6; transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), color 0.3s ease; }
+        /* the line carries on past the last step, through the dark, and lands as the period of "remembering."; the marquee
+           only starts once it has */
+        .fx-tail { position: relative; }
+        /* the line lives in the page (it scrolls with the words; only how far it has drawn follows the script), on two
+           layers: under the words where it passes behind them, over everything else */
+        .fx-thread { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+        .fx-thread.back { z-index: 1; }
+        .fx-thread.front { z-index: 3; }
+        .fx-thread use { fill: none; stroke-linecap: round; }
+        .fx-thread .track { stroke: rgba(211, 22, 27, 0.16); stroke-width: 1.5; }
+        .fx-thread .lit { stroke-dasharray: var(--tP, 1) var(--tP, 1); stroke-dashoffset: var(--tOff, 1); opacity: var(--tOn, 0); }
+        .fx-thread .lit.bloom, .fx-thread .lit.glow { opacity: calc(var(--tOn, 0) * var(--tGl, 1)); }
+        .fx-thread .bloom { stroke: url(#thrGlow); stroke-width: 22; stroke-opacity: 0.12; }
+        .fx-thread .glow { stroke: url(#thrGlow); stroke-width: 8; stroke-opacity: 0.32; }
+        .fx-thread .core { stroke: url(#thrCore); stroke-width: 2.6; }
+        .fx-thread .hd { opacity: 0; }
+        .fx-end .fx-dot { color: transparent; transition: color 0.5s ease; }
+        .fx-end.is-dotted .fx-dot { color: var(--red); }
+
+        @media (max-width: 900px) {
+            .fx-hero { height: calc(var(--fvh, 1vh) * 620); }
+            .fx-title h1 { font-size: 14vw; }
+            .fx-title .role { letter-spacing: 0.3em; }
+            .fx-cue { right: 20px; bottom: calc(26px + var(--gap)); }
+            .fx-bp .bp-tip { filter: none; }
+            .fx-sin { padding: 0 20px calc(var(--fvh, 1vh) * 12); justify-content: flex-end; }   /* low, so the preview behind has the top half */
+            .fx-sin .display { font-size: 13vw; }
+            .fx-sin .aside { font-size: 1.05rem; }
+            .fx-cta { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: calc(var(--fvh, 1vh) * 4.5); }
+            .fx-pick { font-size: 8.4vw; }
+            .fx-pstats { padding: var(--navbar-height) 20px 0; }
+            .fx-phead { font-size: 12.4vw; --set0: 0.58em; --set1: 0.46em; }
+            .fx-psub { font-size: 1.05rem; }
+            .fx-pstats .fx-pfigs { flex-direction: column; gap: calc(var(--fvh, 1vh) * 2.6); margin-top: calc(var(--fvh, 1vh) * 6); }
+            .fx-pnum { --fs: min(20vw, calc(var(--fvh, 1vh) * 11.5)); --pmask: linear-gradient(to bottom, #000 69%, rgba(0, 0, 0, 0.4) 80.7%, rgba(0, 0, 0, 0.12) 87.6%, transparent 93%); }
+            .fx-pfig p { font-size: 0.64rem; letter-spacing: 0.28em; }
+            .fx-pnum b { will-change: transform; }
+            .fx-pinfo { width: 86vw; }
+            .fx-pinfo p { font-size: 0.86rem; }
+            .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
+            .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
+            .fx-steps { gap: calc(var(--fvh, 1vh) * 9); }
+            .fx-step h3 { font-size: 6.6vw; }
+            .fx-thread-light { --tlS: 600px; }
+            .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
+            .fx-end .mark2 { width: 170vw; }
+            .fx-mailto { font-size: 6.2vw; }
+            .fx-sbtn { height: 42px; padding: 0 18px; font-size: 0.72rem; }
+            .fx-cam .glint { filter: none; stroke-width: 2.5; }
+        }
+        .fx-reduce .fx-pred, .fx-reduce .fx-pface { display: none; }
+        .fx-pstats.is-static { position: relative; inset: auto; width: auto; height: auto; padding: calc(var(--fvh, 1vh) * 14) 6vw calc(var(--fvh, 1vh) * 8); }
+        .fx-pstats.is-static .fx-pfigs { position: static; }
+        .fx-pstats.is-static .fx-pfigs { margin-top: calc(var(--fvh, 1vh) * 8); flex-wrap: wrap; gap: 4vh 4vw; }
+        .fx-pstats.is-static .hw, .fx-pstats.is-static .fx-psub, .fx-pstats.is-static .w { opacity: 1; filter: none; transform: none; transition: none; }
+        .fx-reduce .fx-pname, .fx-reduce .fx-pinfo .d { transition: none; }
+        .fx-reduce .fx-step h3 span::after { transition: none; }
+        /* Reduced motion: no pinning or fly-ins, everything shown in place */
+        .fx-reduce .fx-hero { height: auto; }
+        .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
+        .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
+        .fx-reduce .fx-stage::before, .fx-reduce .fx-cue i { animation: none; }
+        .fx-reduce .fx-hint i { animation: none; }
+        .fx-reduce .fx-wipe-edge { display: none; }
+    </style>
 </head>
-<body>
-    <!-- Navbar remains the same -->
+<body class="fx">
+    <div class="fx-gate" aria-hidden="true"><div class="room"><i class="bg"></i></div><canvas></canvas><p class="pct"><span>000%</span></p></div>
+
     <header class="navbar">
-        <!-- The logo text "Frank Wu" has been replaced with an image tag -->
         <a href="index.html" class="logo">
             <img src="assets/images/LOGOs-10.svg" alt="Frank Wu's Portfolio Logo" class="logo-img">
         </a>
@@ -40,100 +496,1333 @@
         </div>
     </header>
 
+    <div class="fx-cursor" aria-hidden="true">VIEW</div>
+    <div class="fx-wipe-edge" aria-hidden="true"></div>
+    <div class="fx-switch"><button type="button" class="grip" aria-label="Show the finish switch (mockup)" aria-expanded="false"></button><div class="opts" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a><button type="button" class="x" aria-label="Hide the finish switch">×</button></div></div>
+    <div class="fx-lprobe" aria-hidden="true"></div>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <g id="fwMark">
+                <polygon pathLength="100" vector-effect="non-scaling-stroke" points="818.61 886.07 1022.09 1569.04 1180.35 1569.04 1270.78 1207.3 1338.61 1569.04 1572.87 1569.04 1924 416 1644.52 416 1429.04 1136.26 1406.43 890.78 1157.74 890.78 1067.3 1136.26 1022.09 886.07 818.61 886.07"/>
+                <polygon pathLength="100" vector-effect="non-scaling-stroke" points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/>
+            </g>
+            <polygon id="fwSlab" vector-effect="non-scaling-stroke" points="3184.2 -3000 30000 -3000 30000 5000 743.3 5000"/>
+            <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
+                <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
+            </filter>
+            <radialGradient id="fwSpec" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1100">
+                <stop offset="0" stop-color="#ff6a58" stop-opacity="0.6"/><stop offset="0.45" stop-color="#e0201f" stop-opacity="0.18"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/>
+            </radialGradient>
+            <!-- build: soft edges that sweep in along the lean (the blueprint only shows ahead of the grey) -->
+            <clipPath id="fwGreyC"><polygon id="fwGreyPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <clipPath id="fwFinC"><polygon id="fwFinPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
+            <!-- the soft edge: the finish fades out ahead of its clip, and a glow rides on the seam -->
+            <linearGradient id="fwFeatherG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0">
+                <stop offset="0" stop-color="#3a0306" stop-opacity="0"/><stop offset="0.02" stop-color="#3a0306" stop-opacity="0.9"/><stop offset="1" stop-color="#3a0306" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="fwBloomG" gradientUnits="userSpaceOnUse" x1="-5000" y1="0" x2="-4999" y2="0">
+                <stop offset="0" stop-color="#ff4a38" stop-opacity="0"/><stop offset="0.7" stop-color="#ff4a38" stop-opacity="0.9"/><stop offset="1" stop-color="#ff4a38" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="fwAheadClip"><polygon id="fwAheadPoly" points="-3000 -3000 30000 -3000 30000 5000 -3000 5000"/></clipPath>
+            <!-- finishes; every centre follows the light -->
+            <radialGradient id="fwGlassG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1500">
+                <stop offset="0" stop-color="#c8161d"/><stop offset="0.28" stop-color="#76060b"/><stop offset="0.62" stop-color="#1e0205"/><stop offset="1" stop-color="#090101"/>
+            </radialGradient>
+            <radialGradient id="fwRimG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1300">
+                <stop offset="0" stop-color="#ffe6de" stop-opacity="0.95"/><stop offset="0.45" stop-color="#ff5a46" stop-opacity="0.35"/><stop offset="1" stop-color="#ff3b2f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fwRimR" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1400">
+                <stop offset="0" stop-color="#ff6a55" stop-opacity="1"/><stop offset="0.5" stop-color="#d3161b" stop-opacity="0.45"/><stop offset="1" stop-color="#d3161b" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fwGlowG" gradientUnits="userSpaceOnUse" cx="988" cy="992" r="1250">
+                <stop offset="0" stop-color="#e01a20" stop-opacity="0.62"/><stop offset="0.45" stop-color="#8f0000" stop-opacity="0.25"/><stop offset="1" stop-color="#8f0000" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="fwLacqG" gradientUnits="userSpaceOnUse" x1="0" y1="416" x2="0" y2="1569">
+                <stop offset="0" stop-color="#c9161d"/><stop offset="0.55" stop-color="#8f0000"/><stop offset="1" stop-color="#3a0004"/>
+            </linearGradient>
+            <linearGradient id="fwSheenG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="575" y2="170">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <g id="fwBevel"></g>
+        </defs>
+    </svg>
+
     <main>
         <div class="section-bg-overlay"></div>
-        <!-- Intro Section -->
-        <section id="intro">
-            <!-- Old intro div now has the fade-in class -->
-            <div class="intro fade-in">
-                <div class="intro-content">
-                    <div class="subtitle" data-blur>UI/UX Designer</div>
-                    <h1>Hi, I’m <a class="name">Frank Wu.</a></h1>
-                    <p class="description" data-blur>
-                        I design and build interfaces that make everyday decisions feel simple.
-                    </p>
-                    <div class="intro-buttons">
-                        <a href="projects.html" class="btn">
-                            View My Work
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14" />
-                                <path d="m12 5 7 7-7 7" />
-                            </svg>
-                        </a>
-                        <a href="about.html" class="btn secondary">About Me</a>
+
+        <!-- 1 · Hero: the hidden mark -->
+        <section class="fx-hero" aria-label="Introduction">
+            <div class="fx-stage">
+                <div class="fx-ink" aria-hidden="true"></div>
+                <div class="fx-light" aria-hidden="true"></div>
+                <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
+                <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
+                <div class="fx-par markp" aria-hidden="true">
+                    <svg class="fx-cam fx-guides" preserveAspectRatio="none"></svg>
+                    <div class="fx-fxbox"><div class="fx-bands"></div></div>
+                    <svg class="fx-cam fx-bp" preserveAspectRatio="none"></svg>
+                </div>
+                <div class="fx-vig" aria-hidden="true"></div>
+                <div class="fx-title">
+                    <h1 aria-label="Frank Wu"><span class="name">FRANK WU</span></h1>
+                    <div class="role-in"><div class="role">UI/UX Designer</div></div>
+                </div>
+                <div class="fx-hint is-scroll" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Scroll</b><b>Design</b><b>Build</b><b>Ship</b></span></div>
+                <div class="fx-scene">
+                    <div class="fx-wm" aria-hidden="true">
+                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_work_m.webp"><img class="wm-work" src="assets/images/home/wm_work_d.webp" alt="" decoding="async"></picture>
+                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_about_m.webp"><img class="wm-about" src="assets/images/home/wm_about_d.webp" alt="" decoding="async"></picture>
+                    </div>
+                    <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
+                    <div class="fx-sin">
+                        <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
+                        <p class="aside">…including this one.</p>
+                        <div class="fx-cta">
+                            <a class="fx-pick" href="nitori.html" data-wm="0">Latest work <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
+                            <a class="fx-pick" href="about.html" data-wm="1">About me <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- What I Do Section -->
-        <section id="what-i-do">
-            <!-- Content Container now has the fade-in class -->
-            <div class="content-container fade-in">
-                <h2>What I Do</h2>
-                <p class="section-description" data-blur>I create thoughtful and intuitive digital products with empathy and a user-centered approach.</p>
-                <div class="services-grid">
-                    <!-- The fade-in class is now on the grid items themselves -->
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-magic"></i>
-                        </div>
-                        <h3 data-blur>UI/UX Design</h3>
-                        <p data-blur>Crafting intuitive and engaging user interfaces and experiences that delight users and achieve business goals.</p>
-                    </div>
-
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-drafting-compass"></i>
-                        </div>
-                        <h3 data-blur>Prototyping & Wireframing</h3>
-                        <p data-blur>Bringing ideas to life with interactive prototypes and detailed wireframes to test and validate concepts early.</p>
-                    </div>
-
-                    <div class="service-card fade-in">
-                        <div class="service-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 data-blur>User Research</h3>
-                        <p data-blur>Conducting in-depth user interviews and surveys to gather insights and inform data-driven design decisions.</p>
-                    </div>
+        <!-- 3 · Proof: the results stack up on the red; the red closes in to the Nitori tile, which settles into the row -->
+        <section class="fx-proof" id="work" aria-label="Results and selected work">
+            <div class="fx-pstage">
+                <div class="fx-pbg" aria-hidden="true">
+                    <img src="assets/images/home/explore_nitori.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_careercourse.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_smartstation.webp" alt="" loading="lazy">
+                    <img src="assets/images/home/explore_oneshop.webp" alt="" loading="lazy">
                 </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact">
-            <!-- Old contact div now has the fade-in class -->
-            <div class="contact-section fade-in">
-                <h2>Get In Touch</h2>
-                <p class="contact-description" data-blur>I'm always open to new opportunities and collaborations. <br>Feel free to reach out!</p>
-                <div class="contact-info">
-                    <a href="tel:+886956820832" class="contact-link">
-                        <i class="fas fa-phone"></i>
-                        <span>+886 956 820 832</span>
+                <div class="fx-ptitle" aria-hidden="true">
+                    <span class="fx-pname" data-cursor>Nitori</span>
+                    <span class="fx-pname" data-cursor>CareerCourse</span>
+                    <span class="fx-pname" data-cursor>Smart Station</span>
+                    <span class="fx-pname" data-cursor>One Shop</span>
+                </div>
+                <div class="fx-prow">
+                    <a class="fx-pcard" href="nitori.html" aria-label="Nitori: open the series">
+                        <div class="fx-browser"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">nitori-net.tw/article/Sofa</span></div>
+                            <video muted playsinline preload="metadata" poster="assets/images/nitori/sofa/04_desk_poster.webp" aria-label="Recording of a live Nitori page"></video></div>
+                        <div class="fx-pface" aria-hidden="true"><img src="assets/images/home/nitori_mark_white.png" alt=""></div>
                     </a>
-                    <a href="mailto:frank.wu.0405@gmail.com" class="contact-link">
-                        <i class="fas fa-envelope"></i>
-                        <span>frank.wu.0405@gmail.com</span>
-                    </a>
+                    <a class="fx-pcard" href="project2.html" aria-label="CareerCourse case study"><img src="assets/images/home/explore_careercourse.webp" alt="CareerCourse learning platform" loading="lazy"></a>
+                    <a class="fx-pcard" href="project1.html" aria-label="Smart Station case study"><img src="assets/images/home/explore_smartstation.webp" alt="Smart Station trolley return screen" loading="lazy"></a>
+                    <a class="fx-pcard" href="project3.html" aria-label="One Shop case study"><img src="assets/images/home/explore_oneshop.webp" alt="One Shop fashion shopping app" loading="lazy"></a>
+                </div>
+                <div class="fx-plabs" aria-hidden="true"><span class="fx-plab">Shipped</span><span class="fx-plab">Research</span><span class="fx-plab">Interaction</span><span class="fx-plab">Design</span></div>
+                <div class="fx-pinfo" data-cursor>
+                    <div class="d"><p>E-commerce pages for Nitori Taiwan's online store, from seasonal campaigns to product guides, designed and coded end to end.</p><a href="nitori.html">Open the series</a></div>
+                    <div class="d"><p>A STEM learning platform built to engage students in rural and remote areas.</p><a href="project2.html">View case study</a></div>
+                    <div class="d"><p>A multi-sensory system that gets shoppers to return trolleys, through gamification and clear feedback.</p><a href="project1.html">View case study</a></div>
+                    <div class="d"><p>A shopping app with AI support, so people can buy clothes with confidence.</p><a href="project3.html">View case study</a></div>
+                </div>
+                <div class="fx-pred">
+                    <i class="fx-pfloor" aria-hidden="true"></i>
+                    <div class="fx-pflip">
+                    <div class="fx-pfront">
+                    <div class="fx-pbox"></div>
+                    <div class="fx-pstats">
+                        <div class="fx-pclaim">
+                            <h2 class="fx-phead"><span class="set"><span class="hw">Designed,</span> <span class="hw">built,</span></span><br><em class="punch"><span class="hw">and</span> <span class="hw">it</span> <span class="hw sold">sells.</span></em></h2>
+                            <p class="fx-psub"><span>End to end.</span> <span class="iter">Iterated on every launch.</span></p>
+                        </div>
+                        <ul class="fx-pfigs" aria-label="Results at Nitori">
+                            <li class="fx-pfig"><div class="fx-pnum"><b><span class="u">NT$</span>3.31M</b></div><p>Assisted revenue</p></li>
+                            <li class="fx-pfig"><div class="fx-pnum"><b>635</b></div><p>Orders</p></li>
+                            <li class="fx-pfig"><div class="fx-pnum"><b>+40<span class="u">%</span></b></div><p>Growth, one launch to the next</p></li>
+                        </ul>
+                    </div>
+                    </div>
+                    <div class="fx-pback"><img class="fx-pmark" src="assets/images/home/nitori_mark_white.png" alt="" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <button type="button" class="fx-pnav prev" aria-label="Previous project">&larr;</button>
+                <button type="button" class="fx-pnav next" aria-label="Next project">&rarr;</button>
+            </div>
+        </section>
+
+        <div class="fx-tail">
+        <!-- 6 · How I work -->
+        <section class="fx-process" aria-label="How I work">
+            <div class="fx-pr-head">
+                <h2 class="display">From research to release, every step is <span class="fx-sweep" data-w="intentional." data-t="intentional.">intentional<span class="fx-dot0">.</span></span></h2>
+            </div>
+            <div class="fx-pr-body">
+                <div class="fx-steps">
+                    <div class="fx-step"><div class="in"><h3><span data-t="Understand">Understand</span></h3><p>Interviews, surveys and testing, so every decision rests on real evidence rather than assumptions.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span data-t="Shape">Shape</span></h3><p>Wireframes, prototypes and design systems that turn something complex into something effortless.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span data-t="Build">Build</span></h3><p>I write the front end myself, so what ships behaves exactly the way it was designed.</p></div></div>
+                    <div class="fx-step"><div class="in"><h3><span data-t="Ship &amp; refine">Ship &amp; refine</span></h3><p>Launch, read the results, and carry what worked into the next page.</p></div></div>
                 </div>
             </div>
         </section>
+
+        <!-- 7 · Finale -->
+        <section class="fx-end" id="contact">
+            <svg class="mark2" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
+            <h2 class="display">Let's build something worth <span class="fx-sweep from-right" data-w="remembering" data-t="remembering.">remembering<span class="fx-dot">.</span></span></h2>
+            <div class="fx-reach">
+                <a class="fx-mailto fx-roll" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com</a>
+                <div class="fx-reach-more">
+                    <a class="fx-sbtn fx-roll" href="assets/images/Yen-Ting (Frank) Wu Resume.pdf" target="_blank" rel="noopener">Résumé<svg class="ar" viewBox="0 0 12 12"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a>
+                    <a class="fx-sbtn fx-roll" href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener">LinkedIn<svg class="ar" viewBox="0 0 12 12"><path d="M2.2 9.8 9.6 2.4M3.8 2.4h5.8v5.8"/></svg></a>
+                </div>
+            </div>
+        </section>
+            <div class="fx-thread-light" aria-hidden="true"></div>
+            <svg class="fx-thread back" aria-hidden="true">
+                <defs><clipPath id="thrBackClip"></clipPath><clipPath id="thrFrontClip"></clipPath></defs>
+                <g clip-path="url(#thrBackClip)">
+                    <use class="track" href="#thrPath"/><use class="lit bloom" href="#thrPath"/><use class="lit glow" href="#thrPath"/><use class="lit core" href="#thrPath"/>
+                    <g class="hd"><circle r="34" fill="url(#thrHalo)"/><circle r="3.4" fill="#fff"/></g>
+                </g>
+            </svg>
+            <svg class="fx-thread front" aria-hidden="true">
+                <defs>
+                    <path id="thrPath" d="M0 0"/>
+                    <linearGradient id="thrCore" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#d3161b" stop-opacity="0.26"/><stop offset="0.7" stop-color="#e3201c" stop-opacity="0.75"/><stop offset="1" stop-color="#ff6a55"/></linearGradient>
+                    <linearGradient id="thrGlow" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#ff2a20" stop-opacity="0"/><stop offset="1" stop-color="#ff2a20"/></linearGradient>
+                    <radialGradient id="thrHalo">
+                        <stop offset="0" stop-color="#fff5f0"/><stop offset="0.1" stop-color="#ffb4a4"/><stop offset="0.22" stop-color="#ff4632" stop-opacity="0.8"/>
+                        <stop offset="0.5" stop-color="#ff1e18" stop-opacity="0.22"/><stop offset="1" stop-color="#d3161b" stop-opacity="0"/></radialGradient>
+                </defs>
+                <g clip-path="url(#thrFrontClip)">
+                    <use class="track" href="#thrPath"/>
+                    <use class="lit bloom" href="#thrPath"/><use class="lit glow" href="#thrPath"/><use class="lit core" href="#thrPath"/>
+                    <g class="hd"><circle r="34" fill="url(#thrHalo)"/><circle r="3.4" fill="#fff"/></g>
+                </g>
+                <circle class="ring" r="0" fill="none" stroke="#ff3c2d" stroke-width="1.2" opacity="0"/>
+            </svg>
+        </div>
     </main>
 
-
-    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-text">
-            &copy; 2026 Frank Wu. All rights reserved.
-        </div>
+        <div class="footer-text">&copy; 2026 Frank Wu. All rights reserved.</div>
         <div class="footer-social">
             <a href="https://www.linkedin.com/in/frank-wu-a481b62a2" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://github.com/frankwu0405" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github-square"></i></a>
         </div>
     </footer>
 
-    <!-- The link to the external JavaScript file -->
+
     <script src="assets/js/script.js" defer></script>
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const reduce = root.classList.contains('fx-reduce');
+            /* navigation: compare the inverted version with ?nav=invert. The menu itself is the shared one (script.js);
+               while it is open, and until the page is back, the scroll-driven scenes hold still (scaled, the page would
+               look to them like a scroll) */
+            if (new URLSearchParams(location.search).get('nav') === 'invert') document.body.classList.add('nav-invert');
+            const navHold = () => root.classList.contains('nav-hold');
+            /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
+            document.querySelectorAll('.fx-roll').forEach((a) => {
+                const ar = a.querySelector('.ar'), t = a.textContent.trim(), w = document.createElement('span');
+                a.setAttribute('aria-label', a.target === '_blank' ? `${t} (opens in a new tab)` : t); a.textContent = ''; w.setAttribute('aria-hidden', 'true');
+                [...t].forEach((c, i) => {
+                    const o = document.createElement('span'), n = document.createElement('span');
+                    o.className = 'rc'; o.style.setProperty('--i', i); n.textContent = c === ' ' ? '\u00a0' : c; o.appendChild(n); w.appendChild(o);
+                });
+                a.appendChild(w); if (ar) { ar.setAttribute('aria-hidden', 'true'); a.appendChild(ar); }
+            });
+            const RAD = 16.5 * Math.PI / 180, TAN = Math.tan(RAD), VX = Math.sin(RAD), VY = -Math.cos(RAD);
+            const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+            const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            const lerp = (a, b, t) => a + (b - a) * t;
+
+            /* ---------- hero: split the name into letters (outer = arrival, inner = scroll exit) ---------- */
+            const nameEl = document.querySelector('.fx-title .name');
+            const chars = [...nameEl.textContent];
+            nameEl.textContent = '';
+            const mid = (chars.length - 1) / 2;
+            const letters = chars.map((c, i) => {
+                const ch = document.createElement('span'); ch.className = 'ch'; ch.setAttribute('aria-hidden', 'true');
+                ch.style.setProperty('--in', `${(0.15 + Math.abs(i - mid) * 0.07).toFixed(2)}s`);
+                const ci = document.createElement('span'); ci.className = 'ci'; ci.textContent = c === ' ' ? ' ' : c;
+                ch.appendChild(ci); nameEl.appendChild(ch);
+                return { ci, d: Math.abs(i - mid) / mid };
+            });
+
+            const ready = () => root.classList.add('fx-ready');   // the name arrives
+
+            /* ---------- top-edge colour ----------
+               iOS Safari paints the strip behind the status bar in a colour it samples from the page
+               (top-pinned elements, then the page background). Keep that colour equal to whatever is at
+               the top of the scene so the strip blends in instead of reading as a cut-off. */
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            let topColor = '';
+            function setTopColor(c) {
+                if (c === topColor) return;
+                topColor = c;
+                root.style.backgroundColor = c;
+                document.body.style.backgroundColor = c;
+                if (themeMeta) themeMeta.setAttribute('content', c);
+                const st = document.querySelector('.fx-stage');
+                if (st) st.style.backgroundColor = c;
+            }
+
+            /* ---------- elements ---------- */
+            const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
+            const SVGNS = 'http://www.w3.org/2000/svg';
+            const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
+            const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
+            stage.classList.add('f-' + FIN);
+            document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
+            // the switch lives off the edge of the screen until its grip is tapped
+            const fxSwitch = document.querySelector('.fx-switch'), fxGrip = fxSwitch.querySelector('.grip');
+            const showSwitch = (on) => { fxSwitch.classList.toggle('is-open', on); fxGrip.setAttribute('aria-expanded', String(on)); };
+            fxGrip.addEventListener('click', () => { showSwitch(true); fxSwitch.querySelector('.is-on').focus({ preventScroll: true }); });
+            fxSwitch.querySelector('.x').addEventListener('click', () => { showSwitch(false); fxGrip.focus({ preventScroll: true }); });
+            const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
+                + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
+                + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
+            const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" clip-path="url(#fwGreyC)"/>'
+                + '<g class="fin" clip-path="url(#fwFinC)">' + FINISH + '</g><use class="feather" href="#fwMark" fill="url(#fwFeatherG)"/><use class="bloom" href="#fwMark" fill="url(#fwBloomG)"/>'
+                + '<use class="flat" href="#fwMark"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
+            const bp = stage.querySelector('.fx-bp'), guidesEl = stage.querySelector('.fx-guides');
+            const aheadPoly = document.getElementById('fwAheadPoly');
+            const greyPoly = document.getElementById('fwGreyPoly'), finPoly = document.getElementById('fwFinPoly');
+            const featherG = document.getElementById('fwFeatherG'), bloomG = document.getElementById('fwBloomG'), sheenG = document.getElementById('fwSheenG');
+            let sheenKey = '';
+            const LG = ['fwGlassG', 'fwRimG', 'fwRimR', 'fwSpec'].map((id) => document.getElementById(id)), glowG = document.getElementById('fwGlowG');
+            const hint = stage.querySelector('.fx-hint'), hintW = [...hint.querySelectorAll('b')];
+            let hintI = 0;
+            const specGrad = document.getElementById('fwSpec');
+            let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
+            const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
+            const echoes = [...stage.querySelectorAll('[data-echo]')];
+            const NB = innerWidth <= 900 ? 1 : 7;
+            let bandClips = [], streaking = null;
+            const bands = Array.from({ length: NB }, () => bandsEl.appendChild(mkCam('fx-band', FULL)));
+            const smearBlur = document.getElementById('fxSmearBlur');
+            const scene = stage.querySelector('.fx-scene'), wipeEdge = document.querySelector('.fx-wipe-edge');
+            const ctaLinks = [...scene.querySelectorAll('.fx-pick')];
+            let ctaLive = null, pickHover = -1, pickGo = -1, pickOn = -2;
+            const ctaRow = scene.querySelector('.fx-cta'), wmImgs = [...scene.querySelectorAll('.fx-wm img')];
+            // the chosen one turns black and its watermark fades in: hover (or focus) on desktop, otherwise the scroll picks
+            function showPick(i) {
+                if (i === pickOn) return; pickOn = i;
+                ctaRow.classList.toggle('has-on', i >= 0);
+                ctaLinks.forEach((a, k) => a.classList.toggle('is-on', k === i));
+                wmImgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
+            }
+            ctaLinks.forEach((a, k) => {
+                a.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { pickHover = k; heroDirty = true; } });
+                a.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { pickHover = -1; heroDirty = true; } });
+                a.addEventListener('focus', () => { pickHover = k; heroDirty = true; });
+                a.addEventListener('blur', () => { pickHover = -1; heroDirty = true; });
+                // a tap feels deliberate: the choice turns black and its watermark swells, then the page opens
+                a.addEventListener('click', (e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || reduce) return;
+                    e.preventDefault(); pickGo = k; showPick(k); wmImgs[k].classList.add('is-go');
+                    setTimeout(() => { location.href = a.href; }, 280);
+                });
+            });
+            addEventListener('pageshow', () => { pickGo = -1; wmImgs.forEach((im) => im.classList.remove('is-go')); heroDirty = true; });
+            if (reduce) { const sec = document.createElement('section'); sec.setAttribute('aria-label', 'What I care about'); hero.after(sec); sec.appendChild(scene); scene.classList.add('is-static'); }
+            const proof = document.querySelector('.fx-proof'), pstage = proof.querySelector('.fx-pstage');
+            const pRed = proof.querySelector('.fx-pred'), pStats = proof.querySelector('.fx-pstats'), pMark = proof.querySelector('.fx-pmark');
+            const pInfo = proof.querySelector('.fx-pinfo'), pBox = proof.querySelector('.fx-pbox'), pFlip = proof.querySelector('.fx-pflip'), pFloor = proof.querySelector('.fx-pfloor');
+            const pFront = proof.querySelector('.fx-pfront'), pBack = proof.querySelector('.fx-pback');
+            const pHead = proof.querySelector('.fx-pclaim'), pFigs = proof.querySelector('.fx-pfigs'), pFig = [...proof.querySelectorAll('.fx-pfig')];
+            const pCards = [...proof.querySelectorAll('.fx-pcard')], pNames = [...proof.querySelectorAll('.fx-pname')], pLabs = [...proof.querySelectorAll('.fx-plab')];
+            const pDescs = [...pInfo.querySelectorAll('.d')], pBgs = [...proof.querySelectorAll('.fx-pbg img')];
+            const PN = pCards.length;
+            /* one timeline from the start of the hero's wipe, PU screens long: the figures rise out of the shadow behind the
+               wipe [0.1, 0.92 screens], then a slow drift; the room closes in to the tile and fills with teal [BIRTH0, MORPH0];
+               a hold on the logo [MORPH0, DROP0]; the row comes up and the tile settles into it [DROP0, LAND], where it opens
+               onto the live page; a hold on the row */
+            const PU = 6.05, BIRTH0 = 2.75 / PU, MORPH0 = 4.3 / PU, DROP0 = 3.95 / PU, LAND = 4.6 / PU;   // ~1.5 screens held on the landed row, so a flick doesn't skip it
+            // the pack-up, in screens: one gesture [2.4, 3.95] in which the room shrinks to the card and, before it has settled,
+            // the card tips back and turns over, following the scroll closely. The drop starts while it is still turning
+            // [3.6, 4.25]: the same card carries on down into the row's empty slot as the row comes up to meet it
+            const PACK = [2.75, 4.3];   // one gesture: the shrink eases out as the turn picks up (see the pack-up below)
+            // when each figure rises (left to right), in screens from the start of the wipe: after the claim and the light
+            const RISE = [[1.1, 1.52], [1.55, 1.91], [1.95, 2.31]], LIGHT = [0.95, 1.15], HOLD0 = 2.35;
+            // the claim, word by word: "Designed," … "built," … "and it sells." as the first line steps back; then the subheading
+            const CLAIM = [[0.36, 0.52], [0.5, 0.66], [0.64, 0.8], [0.67, 0.83], [0.7, 0.86]], SETP = [0.64, 0.86], SUB = [0.84, 1.0];
+            const PG = { sw: 1, sh: 1, W: 0, H: 0, g: 0, wipe: 0, total: 1, fs: 100 };
+            if (reduce) { proof.insertBefore(pStats, pstage); pStats.classList.add('is-static'); }
+            const proc = document.querySelector('.fx-process'), prBody = proc.querySelector('.fx-pr-body'), steps = [...proc.querySelectorAll('.fx-step')];
+            const end = document.querySelector('.fx-end');
+            const tail = document.querySelector('.fx-tail'), trailDot = end.querySelector('.fx-dot'), endHead = end.querySelector('.display');
+
+            /* ---------- the line: from the period of "intentional." to the period of "remembering." ----------
+               One path in the page, so it scrolls with the words; the scroll only sets how much of it is drawn, with its head
+               on a reading line 60% down the screen. It wanders gently down through the steps' words, crossing each near its
+               end, behind each step and behind the last heading, and stops just short of the last period */
+            const thrBack = tail.querySelector('.fx-thread.back'), thrFront = tail.querySelector('.fx-thread.front');
+            const thrPath = document.getElementById('thrPath'), thrCore = document.getElementById('thrCore'), thrGlow = document.getElementById('thrGlow');
+            const backClip = document.getElementById('thrBackClip'), frontClip = document.getElementById('thrFrontClip');
+            const hdB = thrBack.querySelector('.hd'), hdF = thrFront.querySelector('.hd'), thrRing = thrFront.querySelector('.ring'), thrLight = tail.querySelector('.fx-thread-light'), headA = proc.querySelector('.fx-pr-head .display');
+            const sweepA = proc.querySelector('.fx-sweep'), sweepB = end.querySelector('.fx-sweep');
+            let swA = -1, swB = -1;
+            const setSweep = (el, v, was) => { if (Math.abs(v - was) > 0.002 || (v !== was && (v === 0 || v === 1))) el.style.setProperty('--sw', v.toFixed(3)); return v; };
+            const dotA = proc.querySelector('.fx-dot0'), mctx = document.createElement('canvas').getContext('2d');
+            let TH = null, thDone = false, thLandT = 0, thLoop = false;
+            // where a period's dot actually sits: on the baseline (found with a zero-size marker), centred on the glyph's ink
+            function dotCenter(el) {
+                const r = el.getBoundingClientRect(), cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+                const m = document.createElement('i'); m.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+                el.after(m); const base = m.getBoundingClientRect().top; m.remove();
+                mctx.font = `${cs.fontStyle} ${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+                const tm = mctx.measureText('.'), asc = tm.actualBoundingBoxAscent || fs * 0.12, desc = tm.actualBoundingBoxDescent || 0;
+                const cx = r.left + ((tm.actualBoundingBoxRight || r.width) - (tm.actualBoundingBoxLeft || 0)) / 2, cy = base - (asc - desc) / 2;
+                return { x: cx, y: cy + scrollY, r: Math.max(2, (asc + desc) / 2) };
+            }
+            const svgEl = (tag, parent) => parent.appendChild(document.createElementNS('http://www.w3.org/2000/svg', tag));
+            function buildThread() {
+                const sy = scrollY, tr = tail.getBoundingClientRect(), ox = tr.left, oy = tr.top + sy;
+                const local = (el) => { const d = dotCenter(el); return [d.x - ox, d.y - oy, d.r]; };
+                const br = prBody.getBoundingClientRect(), bx = br.left - ox, by = br.top + sy - oy;
+                const S = local(dotA), E = local(trailDot);
+                // where it crosses each word (in layout terms, transforms left out): as near the straight run between the periods
+                // as the word allows, so it only bends as far as it has to
+                const P = [[S[0], S[1]]];
+                const info = steps.map((st) => {
+                    const span = st.querySelector('h3 span'), x0 = bx + st.offsetLeft + span.offsetLeft, y0 = by + st.offsetTop;
+                    const w = span.offsetWidth, st0 = y0 + span.offsetTop, ym = st0 + span.offsetHeight * 0.52;
+                    const cx = clamp(lerp(S[0], E[0], (ym - S[1]) / (E[1] - S[1])), x0 + w * 0.22, x0 + w * 0.84);
+                    P.push([cx, ym]); span.style.setProperty('--lx', `${Math.round(cx - x0)}px`);
+                    // it runs behind each step, word and paragraph
+                    const a = y0 - 20, b = y0 + st.offsetHeight + 20;
+                    return { cy: ym, b0: a, b1: b, py: 0, el: span, box: [x0, st0, x0 + w, st0 + span.offsetHeight], k: 0 };
+                });
+                // then into the last heading: down behind its words (they stand over it) and out at the period
+                const eh = endHead.getBoundingClientRect(), ah = headA.getBoundingClientRect(), last = P[P.length - 1];
+                const abox = [ah.left - ox, ah.top + sy - oy, ah.right - ox, ah.bottom + sy - oy];
+                const ebox = [eh.left - ox, eh.top + sy - oy, eh.right - ox, eh.bottom + sy - oy];
+                P.push([lerp((ebox[0] + ebox[2]) / 2, E[0], 0.55), lerp(ebox[1], E[1], 0.5)]);
+                P.push([E[0], E[1] - E[2] - 6]);   // it stops just short of the period and leaves it clean
+                // one smooth curve through those points (Catmull-Rom, scaled by the distances between them so it never overshoots),
+                // leaving the first period straight down and arriving straight down into the last
+                const ext = [[S[0], S[1] - 300], ...P, [E[0], E[1] + 300]], dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+                const tan = (k) => {
+                    if (k === ext.length - 2) return [0, 1];
+                    const a = ext[k - 1], b = ext[k + 1], s = dist(a, ext[k]) + dist(ext[k], b); return [(b[0] - a[0]) / s, (b[1] - a[1]) / s];
+                };
+                const seg = [];
+                for (let k = 1; k < ext.length - 2; k++) {
+                    const p0 = ext[k], p3 = ext[k + 1], d = dist(p0, p3) / 3, t0 = tan(k), t1 = tan(k + 1);
+                    seg.push([p0, [p0[0] + t0[0] * d, p0[1] + t0[1] * d], [p3[0] - t1[0] * d, p3[1] - t1[1] * d], p3]);
+                }
+                // sampled for the head's position and the drawn length at any height (the route only ever goes down)
+                const X = [], Y = [], L = [];
+                seg.forEach((p, k) => {
+                    for (let j = k ? 1 : 0; j <= 48; j++) {
+                        const t = j / 48, u = 1 - t, q = [0, 1].map((c) => u * u * u * p[0][c] + 3 * u * u * t * p[1][c] + 3 * u * t * t * p[2][c] + t * t * t * p[3][c]);
+                        L.push(X.length ? L[L.length - 1] + Math.hypot(q[0] - X[X.length - 1], q[1] - Y[Y.length - 1]) : 0); X.push(q[0]); Y.push(q[1]);
+                    }
+                });
+                const f1 = (v) => v.toFixed(1);
+                thrPath.setAttribute('d', `M${f1(S[0])} ${f1(S[1])}` + seg.map((p) => `C${p.slice(1).map((c) => `${f1(c[0])} ${f1(c[1])}`).join(' ')}`).join(''));
+                const len = L[L.length - 1];
+                thrPath.setAttribute('pathLength', f1(len)); tail.style.setProperty('--tP', f1(len));
+                thrRing.setAttribute('cx', f1(E[0])); thrRing.setAttribute('cy', f1(E[1]));
+                // the clips: under the words across the bands where it runs behind (all the way into the last heading, so its
+                // period always sits over the line's end), over them everywhere else
+                const bands = [...info, { b0: ebox[1] - 14, b1: ebox[3] + 14, py: 0 }];
+                backClip.replaceChildren(); frontClip.replaceChildren();
+                const mk = (cp) => { const r = svgEl('rect', cp); r.setAttribute('x', -1e4); r.setAttribute('width', 3e4); return r; };
+                TH = { X, Y, L, P: len, n: X.length, E, steps: info, bands, bR: bands.map(() => mk(backClip)), fR: [...bands.map(() => mk(frontClip)), mk(frontClip)],
+                    recv: [...info, { el: endHead, box: ebox, py: 0, k: 0, max: 0.6 }, { el: headA, box: abox, py: 0, k: 0 }], S };
+            }
+            const setBand = (r, a, b) => { r.setAttribute('y', a.toFixed(1)); r.setAttribute('height', Math.max(0, b - a).toFixed(1)); };
+            function drawThread(now) {
+                if (!TH) return;
+                const tr = tail.getBoundingClientRect(), target = reduce ? Infinity : VH * 0.6 - tr.top;   // the reading line, in the tail's terms
+                // "intentional." turns red over the last stretch before the reading line reaches its period, where the line sets off
+                swA = setSweep(sweepA, clamp((target - TH.S[1]) / (VH * 0.22) + 1), swA);
+                if (tr.top > VH || tr.bottom < 0) return;   // off screen: nothing more to update
+                const { X, Y, L, P, n, E } = TH;
+                // depth: the steps stand nearer than the line, so they drift a little faster than the page (desktop only)
+                TH.steps.forEach((s, i) => {
+                    const py = mobile || reduce ? 0 : clamp((s.cy + tr.top - VH / 2) * 0.07, -70, 70);
+                    if (Math.abs(py - s.py) > 0.3) { s.py = py; steps[i].style.setProperty('--py', `${py.toFixed(1)}px`); }
+                    steps[i].classList.toggle('is-lit', reduce || target >= s.cy);
+                });
+                const nb = TH.bands.map((s) => [s.b0 + s.py, s.b1 + s.py]);
+                let prev = -1e5; nb.forEach(([a, b], k) => { setBand(TH.bR[k], a, b); setBand(TH.fR[k], prev, a); prev = b; }); setBand(TH.fR[nb.length], prev, 1e5);
+                // how far it has drawn: the head sits where the route crosses the reading line
+                const done = target >= Y[n - 1];
+                if (done && !thDone) thLandT = now;
+                thDone = done; end.classList.toggle('is-dotted', done);
+                const settle = reduce ? 1 : done ? clamp((now - thLandT) / 1400) : 0;
+                let hx = E[0], hy = E[1], len = P;
+                if (!done) {
+                    if (target <= Y[0]) { hx = X[0]; hy = Y[0]; len = 0; }
+                    else {
+                        let lo = 0, hi = n - 1; while (hi - lo > 1) { const md = (lo + hi) >> 1; if (Y[md] <= target) lo = md; else hi = md; }
+                        const f = clamp((target - Y[lo]) / Math.max(1e-3, Y[hi] - Y[lo]));
+                        hx = lerp(X[lo], X[hi], f); hy = lerp(Y[lo], Y[hi], f); len = lerp(L[lo], L[hi], f);
+                    }
+                }
+                tail.style.setProperty('--tOff', (P - len).toFixed(1)); tail.style.setProperty('--tOn', len > 0.5 ? 1 : 0);
+                // brightest at the head; behind it the line cools to a dim trail, and once landed its glow goes out
+                thrCore.setAttribute('y1', (hy - (mobile ? 260 : 380)).toFixed(1)); thrCore.setAttribute('y2', hy.toFixed(1));
+                thrGlow.setAttribute('y1', (hy - (mobile ? 160 : 240)).toFixed(1)); thrGlow.setAttribute('y2', hy.toFixed(1));
+                tail.style.setProperty('--tGl', (1 - settle).toFixed(3));
+                // the head: born from the first period, it passes behind the near steps with the line; once landed it fades into the dot
+                const emerge = clamp(len / 60), ha = emerge * (1 - settle), behind = nb.some(([a, b]) => hy > a && hy < b);
+                const tf = `translate(${hx.toFixed(1)} ${hy.toFixed(1)}) scale(${(0.45 + 0.55 * emerge).toFixed(3)})`;
+                hdB.setAttribute('transform', tf); hdF.setAttribute('transform', tf);
+                hdB.style.opacity = behind ? ha : 0; hdF.style.opacity = behind ? 0 : ha;
+                // it lights the scene: the dark warms round the head, and the words near it glow and cast a shadow away from it
+                const on = len > 0.5 ? ha : 0, reach = mobile ? 260 : 420;
+                thrLight.style.transform = `translate3d(${hx.toFixed(1)}px, ${hy.toFixed(1)}px, 0)`; thrLight.style.opacity = on.toFixed(3);
+                TH.recv.forEach((r) => {
+                    const [x0, y0, x1, y1] = r.box, d = Math.hypot(clamp(hx, x0, x1) - hx, clamp(hy, y0 + r.py, y1 + r.py) - hy);
+                    const k = on * (r.max || 1) * Math.pow(clamp(1 - d / reach), 2);
+                    if (Math.abs(k - r.k) < 0.008 && (k > 0 || r.k === 0)) return;
+                    const vx = (x0 + x1) / 2 - hx, vy = (y0 + y1) / 2 + r.py - hy, vl = Math.hypot(vx, vy) || 1;
+                    r.k = k; r.el.style.setProperty('--lk', k.toFixed(3));
+                    r.el.style.setProperty('--lsx', (vx / vl * 18 * k).toFixed(1)); r.el.style.setProperty('--lsy', (vy / vl * 18 * k).toFixed(1));
+                });
+                // "remembering." turns red from the period back as the head settles into it
+                swB = setSweep(sweepB, done ? ease(settle) : 0, swB);
+                // landing: a soft ring opens from the period as the head settles into it
+                thrRing.setAttribute('r', (E[2] * (1.2 + 3.5 * ease(settle))).toFixed(1));
+                thrRing.setAttribute('opacity', done && settle < 1 ? (0.5 * (1 - settle)).toFixed(3) : 0);
+                if (done && settle < 1 && !thLoop) { thLoop = true; requestAnimationFrame((t) => { thLoop = false; drawThread(t); }); }
+            }
+
+            /* camera over the mark (logo units: viewBox 52 416 1872 1153):
+               fixed size, panning sideways onto a slab whose left edge leans like the strokes */
+            const PC = { x: 988, y: 992.5 };
+            const slabX = (y) => 2144 - (y - 416) * 0.3045;
+            let K0 = 1, SW = 1, SH = 1, GAP = 0, VH = innerHeight, mobile = false, slantA = 0;
+            const lprobe = document.querySelector('.fx-lprobe');
+            /* the visible height grows when Safari's bars collapse on the first scroll (and shrinks when they return):
+               measure it live and ease the gap, so every scene stays centred in what is actually on screen */
+            let gapNow = 0, gapTarget = 0;
+            const measureGap = () => { gapTarget = Math.max(0, Math.min(VH * 0.3, VH - innerHeight)); };
+            const applyGap = () => { GAP = gapNow; document.body.style.setProperty('--gap', `${gapNow.toFixed(1)}px`); };
+            const easeGap = () => {
+                if (Math.abs(gapTarget - gapNow) < 0.5) { if (gapNow !== gapTarget) { gapNow = gapTarget; applyGap(); heroDirty = true; } return; }
+                gapNow += (gapTarget - gapNow) * 0.18; applyGap(); heroDirty = true;
+            };
+            addEventListener('resize', measureGap);
+            if (window.visualViewport) visualViewport.addEventListener('resize', measureGap);
+            addEventListener('scroll', measureGap, { passive: true });
+            /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll) */
+            /* one scroll timeline for the whole opening scene (fractions of the hero's pinned scroll, about 4.6 screens):
+               name fades and the mark goes dark; guides grow from behind the name; the outline is traced; a beat on the
+               finished drawing; grey block-in then the finish; a hold on the lit mark; the pan; the statement; the wipe */
+            const HIDE1 = 0.0214, FADE1 = 0.0805, GD0 = 0.0271, GD1 = 0.1339, DR0 = 0.0624, DR1 = 0.2234;
+            const EM0 = 0.2234, EM1 = 0.3737, ZM0 = 0.4518, ZM1 = 0.5914, ST0 = 0.5298, ST1 = 0.657, WIPE0 = 0.922;
+            /* the decision (about a screen and a half): both choices side by side and neutral, so they can be compared;
+               then each gets its own moment, black with its watermark; only then does the wipe begin */
+            const DEC1 = ST1 + 0.06, DECM = DEC1 + (WIPE0 - DEC1) / 2;
+            const sine = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
+            function layout() {
+                mobile = innerWidth <= 900;
+                // lock 1vh to the large-viewport height measured now; only re-measured when the width changes
+                root.style.setProperty('--fvh', `${(lprobe.offsetHeight / 100).toFixed(3)}px`);
+                SW = stage.clientWidth; SH = stage.clientHeight;
+                VH = lprobe.offsetHeight;
+                measureGap(); gapNow = gapTarget; applyGap();
+                const W = mobile ? SW * 1.18 : Math.min(SW * 0.7, SH * 0.6 * 1872 / 1153);   // desktop: the whole mark fits, about 60% of the height
+                K0 = W / 1872;
+                buildBevel(2.4 / K0);   // edge highlight about 2.4px wide on screen
+                // the stage hint sits in the open space under the mark
+                const markBase = (1569.04 - PC.y) * K0 + 0.02 * SH + SH / 2;   // the mark's bottom with no gap
+                stage.style.setProperty('--hintTop', `calc(${Math.round(0.7 * markBase + 0.3 * SH)}px - var(--gap) * 0.65)`);
+                buildBp();
+                bandClips = bands.map((b, i) => `inset(${(i * SH / NB).toFixed(1)}px 0 ${(SH - (i + 1) * SH / NB).toFixed(1)}px 0)`);
+                streaking = null;
+                slantA = Math.round(SH * TAN);
+                // the proof slides under the end of the hero, so the exit wipe reveals it already in place
+                PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.total = SH * PU;
+                proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
+                proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.total)}px`;
+                layoutProof();
+                buildThread();
+            }
+            const vbox = (cx, cy, k) => `${(cx - SW / 2 / k).toFixed(3)} ${(cy - SH / 2 / k).toFixed(3)} ${(SW / k).toFixed(3)} ${(SH / k).toFixed(3)}`;
+            /* progress through a pinned section from its sticky stage's fixed height, not the changing window height */
+            const NAV = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 90;
+            let navH = 0;   // sticky stages pin at the very top
+            const pinP = (sec) => { const r = sec.getBoundingClientRect(), st = sec.firstElementChild; return clamp((navH - r.top) / (r.height - st.offsetHeight)); };
+            const setOn = (list, i) => list.forEach((el, k) => el.classList.toggle('is-on', k === i));
+
+            let ticking = false;
+            function frame() {
+                ticking = false;
+                if (navHold()) return;
+                const vh = VH;
+
+                /* ---- finale ---- */
+                const er = end.getBoundingClientRect();
+                end.style.setProperty('--p', clamp((vh - er.top) / (vh + er.height)).toFixed(3));
+
+                /* ---- the line through the steps, from one period to the other ---- */
+                drawThread(performance.now());
+
+            }
+            /* ---- hero: rendered every frame while on screen, so the distortion can relax after scrolling stops ---- */
+            let lastHp = null, lastT = 0, vel = 0, heroOn = true;
+            let heroDirty = true;
+            const SHAPES = [...document.querySelectorAll('#fwMark polygon')].map((pl) => pl.getAttribute('points').trim().split(/\s+/).map(Number))
+                .map((a) => a.reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []));
+            const SLAB = [...document.getElementById('fwSlab').getAttribute('points').trim().split(/\s+/).map(Number)]
+                .reduce((acc, v, i) => (i % 2 ? acc[acc.length - 1].push(v) : acc.push([v]), acc), []);
+            function coverage(y, x0, x1, withSlab) {
+                let total = 0;
+                (withSlab ? [...SHAPES, SLAB] : SHAPES).forEach((pts) => {
+                    const xs = [];
+                    for (let i = 0; i < pts.length; i++) {
+                        const [ax, ay] = pts[i], [bx, by] = pts[(i + 1) % pts.length];
+                        if ((ay <= y && by > y) || (by <= y && ay > y)) xs.push(ax + (y - ay) / (by - ay) * (bx - ax));
+                    }
+                    xs.sort((a, b) => a - b);
+                    for (let i = 0; i + 1 < xs.length; i += 2) total += Math.max(0, Math.min(x1, xs[i + 1]) - Math.max(x0, xs[i]));
+                });
+                return total / (x1 - x0);
+            }
+            /* ---- the mark's own geometry: bevel facets and the blueprint drawing ---- */
+            const UNIQ = SHAPES.map((pts) => { const a = pts.slice(), f = a[0], l = a[a.length - 1]; if (f[0] === l[0] && f[1] === l[1]) a.pop(); return a; });
+            const inPoly = (x, y, pts) => { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+            const P2 = (v) => `${v[0].toFixed(1)} ${v[1].toFixed(1)}`;
+            let FACETS = [];
+            function buildBevel(d) {
+                const g = document.getElementById('fwBevel'); g.textContent = ''; FACETS = [];
+                UNIQ.forEach((P) => {
+                    const n = P.length;
+                    const E = P.map((p, i) => {
+                        const q = P[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]), ex = (q[0] - p[0]) / L, ey = (q[1] - p[1]) / L;
+                        let nx = -ey, ny = ex;   // inward normal
+                        if (!inPoly((p[0] + q[0]) / 2 + nx * 3, (p[1] + q[1]) / 2 + ny * 3, P)) { nx = -nx; ny = -ny; }
+                        return { ex, ey, nx, ny };
+                    });
+                    const Q = P.map((p, i) => {   // inner corner: where the two inset edges meet
+                        const a = E[(i - 1 + n) % n], b = E[i];
+                        const ax = p[0] + a.nx * d, ay = p[1] + a.ny * d, bx = p[0] + b.nx * d, by = p[1] + b.ny * d;
+                        const den = a.ex * b.ey - a.ey * b.ex;
+                        if (Math.abs(den) < 1e-6) return [bx, by];
+                        const t = ((bx - ax) * b.ey - (by - ay) * b.ex) / den;
+                        let q = [ax + a.ex * t, ay + a.ey * t];
+                        const m = Math.hypot(q[0] - p[0], q[1] - p[1]);
+                        if (m > d * 4) q = [p[0] + (q[0] - p[0]) * d * 4 / m, p[1] + (q[1] - p[1]) * d * 4 / m];
+                        return q;
+                    });
+                    P.forEach((p, i) => {
+                        const j = (i + 1) % n, el = document.createElementNS(SVGNS, 'polygon');
+                        el.setAttribute('points', [p, P[j], Q[j], Q[i]].map(P2).join(' '));
+                        g.appendChild(el); FACETS.push({ el, ox: -E[i].nx, oy: -E[i].ny });
+                    });
+                });
+                litKey = '';
+            }
+            let litKey = '';
+            function lightMark(lx, ly, str) {
+                const key = `${lx.toFixed(3)},${ly.toFixed(3)},${str.toFixed(2)}`;
+                if (key === litKey) return; litKey = key;
+                FACETS.forEach(({ el, ox, oy }) => { const v = (ox * lx + oy * ly) * str; el.setAttribute('fill-opacity', (v > 0.05 ? Math.min(1, v * 0.95) : 0).toFixed(3)); });
+                const x = (PC.x + lx * 700).toFixed(0), y = (PC.y + ly * 460).toFixed(0);
+                LG.forEach((g) => { g.setAttribute('cx', x); g.setAttribute('cy', y); });
+                glowG.setAttribute('cx', (PC.x + lx * 380).toFixed(0)); glowG.setAttribute('cy', (PC.y + ly * 260).toFixed(0));
+            }
+            /* blueprint: the outline traced by a point of light (corners flare as it passes), and six
+               faint guides growing out from behind the fading name, each with a bright tip */
+            let CUTS = [];
+            function buildBp() {
+                const f = (v) => v.toFixed(1);
+                const O = [988, 985], GL = 0.62 * Math.hypot(SW, SH) / K0;
+                const GUIDES = [[[0, 416], [1, 0]], [[0, 890.78], [1, 0]], [[0, 1569.04], [1, 0]],
+                    [[484, 1132.26], [340, 1568.04]], [[1492.7, 416], [1416.87, 658.48]], [[1924, 416], [1572.87, 1569.04]]];
+                let c = '';
+                GUIDES.forEach(([A, B], i) => {
+                    let o, ex, ey;
+                    if (B[1] === 0) { o = [O[0], A[1]]; ex = 1; ey = 0; }
+                    else { const l = Math.hypot(B[0] - A[0], B[1] - A[1]); ex = (B[0] - A[0]) / l; ey = (B[1] - A[1]) / l; o = [A[0] + (O[1] - A[1]) / ey * ex, O[1]]; }
+                    const d = [0, 0.1, 0.2, 0.05, 0.15, 0.25][i];
+                    [-1, 1].forEach((sg) => {
+                        const ln = `pathLength="100" x1="${f(o[0])}" y1="${f(o[1])}" x2="${f(o[0] + ex * sg * GL)}" y2="${f(o[1] + ey * sg * GL)}"`;
+                        c += `<line class="bp-cut" data-a="${d}" data-b="${d + 0.6}" ${ln}/><line class="bp-ctip" ${ln}/>`;
+                    });
+                });
+                guidesEl.innerHTML = c;
+                const shape = (cls) => UNIQ.map((P) => `<polygon class="${cls}" pathLength="100" points="${P.map(P2).join(' ')}"/>`).join('');
+                bp.innerHTML = `<g clip-path="url(#fwAheadClip)">${shape('bp-out')}${shape('bp-tail')}${shape('bp-tip')}</g>`;
+                const px = (1 / (K0 * 1.08)).toFixed(3);   // the mark is at 1.08x while it is drawn
+                bp.style.setProperty('--px', px); guidesEl.style.setProperty('--px', px);
+                CUTS = [...guidesEl.querySelectorAll('.bp-cut')].map((el) => ({ el, tip: el.nextElementSibling, a: +el.dataset.a, b: +el.dataset.b, v: -1 }));
+            }
+            /* the build edge leans like the strokes; X is where it crosses y = 1700 */
+            const edgeX = (X, y) => X + (1700 - y) * TAN;
+            const f1 = (v) => v.toFixed(1);
+            const NX = 1 / Math.hypot(1, TAN), NY = TAN / Math.hypot(1, TAN);   // across the lean, pointing ahead
+            const sweepTo = (g, X, back, fwd) => {
+                g.setAttribute('x1', f1(X - NX * back)); g.setAttribute('y1', f1(1700 - NY * back));
+                g.setAttribute('x2', f1(X + NX * fwd)); g.setAttribute('y2', f1(1700 + NY * fwd));
+            };
+            function renderHero(t) {
+                const hp = reduce ? 0 : pinP(hero);
+                if (!heroDirty && lastHp !== null && Math.abs(hp - lastHp) < 1e-6 && Math.abs(vel) < 0.004) { vel = 0; lastT = t; return; }
+                heroDirty = false;
+                if (lastHp !== null) { const dt = Math.max(8, t - lastT); vel += ((hp - lastHp) / dt * 1000 - vel) * 0.18; }
+                lastHp = hp; lastT = t;
+                const fade = clamp(hp / FADE1), em = reduce ? 0.7 : ease(clamp((hp - EM0) / (EM1 - EM0))), zm = reduce ? 0 : clamp((hp - ZM0) / (ZM1 - ZM0));
+                // statement: starts while the red is completing, each line slightly after the last
+                const st = reduce ? 1 : clamp((hp - ST0) / (ST1 - ST0));
+                scene.style.setProperty('--s1', ease(clamp(st / 0.62)).toFixed(4));
+                scene.style.setProperty('--s2', ease(clamp((st - 0.16) / 0.62)).toFixed(4));
+                scene.style.setProperty('--s3', ease(clamp((st - 0.5) / 0.3)).toFixed(4));   // the aside, a beat after "simple."
+                scene.style.setProperty('--s4', ease(clamp((st - 0.6) / 0.4)).toFixed(4));   // the card arrives with the pan's momentum
+                scene.style.setProperty('--s5', ease(clamp((st - 0.78) / 0.22)).toFixed(4));
+                scene.style.setProperty('--sg', st.toFixed(4));
+                // exit: the whole scene is cut away along the slant
+                const wk = reduce ? 0 : ease(clamp((hp - WIPE0) / (1 - WIPE0)));
+                // which choice is "the answer": a tap or hover wins; otherwise the first half of the hold picks the work, the second About me
+                showPick(reduce ? -1 : pickGo >= 0 ? pickGo : pickHover >= 0 && ctaLive ? pickHover : st > 0.97 && wk < 0.3 && hp >= DEC1 ? (hp < DECM ? 0 : 1) : -1);
+                // the links only respond once they have arrived, and stop as the wipe begins
+                const live = reduce || (st > 0.97 && wk < 0.02);
+                if (live !== ctaLive) {
+                    ctaLive = live; scene.classList.toggle('is-live', live);
+                    ctaLinks.forEach((a) => { a.tabIndex = live ? 0 : -1; });
+                }
+                stage.classList.toggle('is-off', !reduce && hp >= 0.999 && wk >= 0.999);
+                if (wk > 0.0005) {
+                    const L = lerp(SW + slantA + 4, 0, wk);
+                    stage.style.clipPath = `polygon(0 0, ${L.toFixed(1)}px 0, ${(L - slantA).toFixed(1)}px 100%, 0 100%)`;
+                    wipeEdge.style.left = `${(L - slantA - 0.75).toFixed(1)}px`;
+                    wipeEdge.style.opacity = wk < 0.999 ? '1' : '0';
+                } else { stage.style.clipPath = ''; wipeEdge.style.opacity = '0'; }
+                stage.style.setProperty('--fade', fade.toFixed(3));
+                stage.style.setProperty('--em', em.toFixed(3));
+                stage.style.setProperty('--hide', (reduce ? 0 : clamp(hp / HIDE1)).toFixed(3));
+                stage.style.setProperty('--zm', zm.toFixed(3));
+                stage.style.setProperty('--glint', (-em * 160).toFixed(1));
+                // build: grey block-in first, then the finish behind a soft edge that blooms as it passes
+                const build = reduce ? 1 : sine(clamp((hp - EM0) / (EM1 - EM0)));   // gentler start than em, so it picks up as the drawing ends
+                const built = build >= 0.999;
+                stage.classList.toggle('is-built', built);
+                // both sweeps start right at the mark's left edge, so the build follows straight on from the drawing
+                const gp = clamp(build / 0.7), fp = clamp((build - 0.12) / 0.88);
+                const gx = lerp(-60, 2000, gp), fx = lerp(-200, 2250, fp);
+                if (!built) {
+                    const behind = (X) => `-3000 -3000 ${f1(edgeX(X, -3000))} -3000 ${f1(edgeX(X, 5000))} 5000 -3000 5000`;
+                    greyPoly.setAttribute('points', behind(gx)); finPoly.setAttribute('points', behind(fx));
+                    sweepTo(featherG, fx, 4, 200); sweepTo(bloomG, fx, 300, 50);
+                    aheadPoly.setAttribute('points', `${f1(edgeX(gx, -3000))} -3000 30000 -3000 30000 5000 ${f1(edgeX(gx, 5000))} 5000`);
+                }
+                stage.style.setProperty('--bloom', (built ? 0 : 0.5 * Math.sin(Math.PI * fp)).toFixed(3));
+                // the red light below: dims as the mark goes dark, stays low for the drawing, rises with the
+                // build, settles on the finished mark and swells as the camera leaves
+                const glow = reduce ? 1 : hp < HIDE1 ? lerp(1, 0.4, hp / HIDE1)
+                    : hp < EM0 ? lerp(0.4, 0.6, clamp((hp - DR0) / (EM0 - DR0)))
+                    : hp < EM1 ? lerp(0.6, 1.4, sine((hp - EM0) / (EM1 - EM0)))
+                    : hp < ZM0 ? lerp(1.4, 1.05, sine((hp - EM1) / (ZM0 - EM1)))
+                    : lerp(1.05, 1.6, clamp((hp - ZM0) / (ZM1 - ZM0)));
+                stage.style.setProperty('--glow', glow.toFixed(3));
+                // stage hint
+                const hv = reduce ? 1 : 1 - clamp((hp - (ST0 - 0.025)) / 0.025);
+                stage.style.setProperty('--hint', hv.toFixed(3));
+                const hi = reduce || hp < 0.033 ? 0 : hp < EM0 + 0.01 ? 1 : hp < ZM0 ? 2 : 3;
+                if (hi !== hintI) { hintI = hi; hint.classList.toggle('is-scroll', hi === 0); hintW.forEach((w, i) => { w.classList.toggle('is-on', i === hi); w.classList.toggle('is-past', i < hi); }); }
+                stage.style.setProperty('--glintOn', em > 0.02 && em < 0.98 ? '1' : '0');
+                letters.forEach(({ ci, d }) => {
+                    const k = clamp(fade * 1.5 - d * 0.5);
+                    ci.style.opacity = (1 - k).toFixed(3);
+                    ci.style.filter = k > 0.01 ? `blur(${(k * 16).toFixed(1)}px)` : '';
+                    ci.style.transform = k > 0.001 ? `translate3d(0, ${(-k * 0.1).toFixed(3)}em, ${(-k * 520).toFixed(0)}px)` : '';
+                });
+                const tz = ease(zm);
+                // distortion strength: only while the camera is moving, scaled by scroll speed
+                const moving = zm > 0.001 && zm < 0.999 ? 1 : 0;
+                const sp = clamp(Math.abs(vel) / (mobile ? 1.6 : 1.1)) * moving * (reduce ? 0 : 1);
+                const k0 = K0 * lerp(1.08, 1, em);
+                const cy = PC.y - 0.02 * SH / K0 + (GAP / 2) / k0;
+                const k = k0;
+                const yTop = cy - SH / 2 / k, cxEnd = slabX(yTop) + SW / 2 / k + 30 / k;
+                const cx = lerp(PC.x, cxEnd, tz);
+                const dir = Math.sign(vel) || 1, shear = sp * (mobile ? 10 : 16) / k;
+                const streak = NB > 1 && sp > 0.01;
+                if (streak !== streaking) {
+                    streaking = streak;
+                    bands.forEach((b, i) => { b.style.display = i === 0 || streak ? '' : 'none'; b.style.clipPath = streak ? bandClips[i] : ''; });
+                }
+                if (streak) bands.forEach((b, i) => b.setAttribute('viewBox', vbox(cx + dir * shear * (i - (NB - 1) / 2), cy, k)));
+                else bands[0].setAttribute('viewBox', vbox(cx, cy, k));
+                const smear = mobile ? 0 : sp * 16;
+                if (smear > 0.3) { smearBlur.setAttribute('stdDeviation', `${smear.toFixed(1)} 0`); bandsEl.style.filter = 'url(#fxSmear)'; } else bandsEl.style.filter = '';
+                bandsEl.style.transform = sp > 0.01 ? `scaleX(${(1 + sp * 0.05).toFixed(4)})` : '';
+                stage.style.setProperty('--pan', `${((cx - PC.x) * k).toFixed(1)}px`);
+                // blueprint: the outline traced by a point of light, cleared by the build
+                const draw = reduce ? 0 : sine(clamp((hp - DR0) / (DR1 - DR0)));
+                const gd = reduce ? 0 : clamp((hp - GD0) / (GD1 - GD0));
+                // guides: grow from behind the name, stay through the build and the hold, fade as the camera leaves
+                const gOut = reduce ? 1 : clamp((hp - ZM0) / 0.041);
+                const gOn = gd > 0.001 && gOut < 1;
+                guidesEl.style.display = gOn ? 'block' : 'none';
+                if (gOn) {
+                    guidesEl.setAttribute('viewBox', vbox(cx, cy, k));
+                    guidesEl.style.setProperty('--gOn', (1 - gOut).toFixed(3));
+                    CUTS.forEach((ct) => {
+                        const v = Math.round(ease(clamp((gd - ct.a) / (ct.b - ct.a || 1))) * 1000) / 10;
+                        if (v === ct.v) return;
+                        ct.v = v; ct.el.style.strokeDashoffset = String(100 - v);
+                        ct.tip.style.strokeDashoffset = String(2.5 - v); ct.tip.style.opacity = v > 0 && v < 100 ? (1 - v / 100).toFixed(2) : '0';
+                    });
+                }
+                const bpOn = draw > 0.001 && !built;
+                bp.style.display = bpOn ? 'block' : 'none';
+                if (bpOn) {
+                    bp.setAttribute('viewBox', vbox(cx, cy, k));
+                    const D = draw * 100;
+                    bp.style.setProperty('--bpd', (100 - D).toFixed(2));
+                    bp.style.setProperty('--tipo', (1.4 - D).toFixed(2));
+                    bp.style.setProperty('--tailo', (16 - D).toFixed(2));
+                    bp.style.setProperty('--tipOn', (clamp(D / 3) * (1 - clamp((draw - 0.94) / 0.06))).toFixed(3));
+                }
+                // finish: lit from where the pointer is (scroll turns the light on phones); as the camera
+                // leaves, the light swells and the mark becomes the flat red the next scene is made of
+                const swell = reduce ? 0 : ease(clamp(zm / 0.4));
+                const sh = Math.round(lerp(-400, 2100, clamp((hp - (EM1 - 0.02)) / (ZM0 - EM1 + 0.02))));
+                const shKey = String(sh);
+                if (shKey !== sheenKey) { sheenKey = shKey; sheenG.setAttribute('gradientTransform', `translate(${(sh * NX).toFixed(0)} ${(sh * NY).toFixed(0)})`); }
+                stage.style.setProperty('--swell', swell.toFixed(3));
+                if (fp > 0.001 && swell < 0.999) {
+                    const th = lerp(-2.45, -0.7, clamp((hp - EM0) / (ZM0 - EM0)));
+                    const vx = Math.cos(th) * 0.75 + MX * 0.9, vy = Math.sin(th) * 0.75 + MY * 0.9, vl = Math.hypot(vx, vy) || 1;
+                    lightMark(vx / vl, vy / vl, clamp(vl / 0.75, 0.7, 1));
+                }
+                // the colour actually at the top edge of the scene, measured from the camera
+                const vbTop = cy - SH / 2 / k, vbLeft = cx - SW / 2 / k;
+                const redTop = st > 0.02 || (swell > 0.5 && coverage(vbTop + 1 / k, vbLeft, vbLeft + SW / k, true) > 0.5);
+                setTopColor(redTop && wk < 0.55 && !reduce ? '#8f0000' : '#060606');
+                echoes.forEach((e) => {
+                    const f = +e.dataset.echo;
+                    const ecx = lerp(PC.x, cx, 1 - (f - 1) * 4);   // in a pan the echoes lag behind: depth
+                    e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
+                });
+            }
+            const heroLoop = (t) => { easeGap(); if (heroOn && !navHold()) renderHero(t); requestAnimationFrame(heroLoop); };
+            new IntersectionObserver(([e]) => {
+                heroOn = e.isIntersecting; heroDirty = true;
+                if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); setTopColor('#060606'); }
+            }).observe(hero);
+            requestAnimationFrame(heroLoop);
+
+            const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+            addEventListener('scroll', req, { passive: true });
+            let lastW = innerWidth;
+            addEventListener('resize', () => { if (innerWidth === lastW && matchMedia('(pointer: coarse)').matches) return; lastW = innerWidth; layout(); heroDirty = true; req(); });
+
+            /* hero: mouse depth on desktop (each layer moves by a different amount) */
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                let tx = 0, ty = 0, cx = 0, cy = 0;
+                stage.addEventListener('pointermove', (e) => { const r = stage.getBoundingClientRect(); tx = (((e.clientX - r.left) / r.width) * 2 - 1) * 0.5; ty = (((e.clientY - r.top) / r.height) * 2 - 1) * 0.5; });
+                stage.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+                const loop = () => {
+                    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+                    stage.style.setProperty('--mx', cx.toFixed(4)); stage.style.setProperty('--my', cy.toFixed(4));
+                    if (Math.abs(cx - MX) > 0.0005 || Math.abs(cy - MY) > 0.0005) { MX = cx; MY = cy; heroDirty = true; }
+                    requestAnimationFrame(loop);
+                };
+                loop();
+            }
+
+            /* Nitori card: live pages playing while it's in front */
+            const vid = proof.querySelector('video'), url = proof.querySelector('.fx-browser .url');
+            const clips = [
+                ['assets/images/nitori/sofa/04_desk', 'nitori-net.tw/article/Sofa'],
+                ['assets/images/nitori/electricsofa/04_desk', 'nitori-net.tw/article/Electricsofa'],
+                ['assets/images/nitori/petlife/02_desk', 'nitori-net.tw/article/PetLife'],
+            ];
+            let clipI = 0, wantPlay = false;
+            const load = (k) => { vid.poster = clips[k][0] + '_poster.webp'; vid.src = clips[k][0] + '.mp4'; url.textContent = clips[k][1]; };
+            vid.addEventListener('ended', () => { clipI = (clipI + 1) % clips.length; load(clipI); if (wantPlay) vid.play().catch(() => {}); });
+            function playClip(on) {
+                on = on && !reduce;
+                if (on === wantPlay) return;
+                wantPlay = on;
+                if (on) { if (!vid.getAttribute('src')) load(0); vid.play().catch(() => {}); } else vid.pause();
+            }
+
+            /* cursor: a red dot that opens to "View" over the centred project, and turns into the row's arrows either side of
+               the screen's centre line (desktop) */
+            const cur = document.querySelector('.fx-cursor');
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                let x = 0, y = 0, cx2 = 0, cy2 = 0, curMode = '';
+                const aim = (el) => {
+                    if (!el || !el.closest) return;
+                    const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
+                    if (mode === curMode) return; curMode = mode;
+                    cur.classList.toggle('is-view', mode === 'view'); cur.classList.toggle('is-arrow', mode === 'prev' || mode === 'next');
+                    if (mode === 'prev' || mode === 'next') cur.innerHTML = '<svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg>'.replace('class="ar"', mode === 'prev' ? 'class="ar l"' : 'class="ar"'); else cur.textContent = 'VIEW';
+                };
+                addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; aim(e.target); }, { passive: true });
+                addEventListener('scroll', () => aim(document.elementFromPoint(x, y)), { passive: true });
+                proof.addEventListener('fx-land', () => aim(document.elementFromPoint(x, y)));
+                const loop2 = () => { cx2 += (x - cx2) * 0.2; cy2 += (y - cy2) * 0.2; cur.style.transform = `translate3d(${cx2.toFixed(1)}px, ${cy2.toFixed(1)}px, 0)`; requestAnimationFrame(loop2); };
+                loop2();
+            } else cur.remove();
+
+            /* ---------- proof: the statement's red carries on, and the results stack up on it, one over the other; then the red
+               closes in to a single tile, the Nitori wordmark, which turns into the live page and settles into the row's empty
+               slot as the row comes up under it. Then the row: the centre is the active project ---------- */
+            function fitType(el, maxW, maxFs) {
+                el.style.fontSize = '100px';
+                const fs = Math.min(maxFs, 100 * maxW / Math.max(1, el.offsetWidth));
+                el.style.fontSize = `${fs.toFixed(1)}px`;
+                return fs;
+            }
+            function layoutProof() {
+                const sw = PG.sw = pstage.clientWidth, sh = PG.sh = pstage.offsetHeight;
+                PG.W = mobile ? sw * 0.74 : Math.min(sw * 0.3, 620); PG.H = PG.W * 10 / 16; PG.g = sw * (mobile ? 0.04 : 0.025);
+                pstage.style.setProperty('--cw', `${PG.W.toFixed(1)}px`);
+                const OV = 0.14, ov = (fs) => `${(fs * 0.73 * OV).toFixed(1)}px`;   // the card just tucks under the foot of the capitals
+                let nameAbove = 0;
+                pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); nameAbove = Math.max(nameAbove, n.offsetHeight - fs * 0.73 * OV); });
+                // phones: the landed row is placed so the whole group (the name above the card, the card, and the line and link
+                // below it) is centred in what is visible under the navigation, rather than the card alone sitting low
+                const infoH = Math.max(...pDescs.map((d) => d.offsetHeight));
+                PG.nav = document.querySelector('.navbar').offsetHeight || 72;   // the bar as drawn (the CSS variable runs taller on phones)
+                PG.mOff = (60 + infoH - nameAbove) / 2;
+                PG.fs = parseFloat(getComputedStyle(pFig[0].querySelector('.fx-pnum')).fontSize) || 100;
+                pstage.style.setProperty('--psw', `${sw}px`); pstage.style.setProperty('--psh', `${sh}px`);   // the scene keeps its size inside the card
+                // each rolling column is exactly as wide as the digit it lands on
+                figs.forEach((f) => f.cols.forEach((col) => {
+                    const m = document.createElement('span'); m.className = 'dc'; m.textContent = col.d; f.num.appendChild(m);
+                    col.c.style.width = `${m.getBoundingClientRect().width.toFixed(2)}px`; m.remove();
+                }));
+            }
+            // the headline's words arrive one after another, like the hero's name
+            // "Designed," "built," then a held breath before the punchline
+            const claimWords = [...pHead.querySelectorAll('.fx-phead .hw')], pSub = pHead.querySelector('.fx-psub');
+            const pSold = pHead.querySelector('.sold'), pIter = pHead.querySelector('.iter');
+            // each figure's description comes into focus word by word once its figure has risen
+            const figs = pFig.map((li) => {
+                const p = li.querySelector('p'), words = [];
+                const parts = p.textContent.split(/\s+/).filter(Boolean);
+                p.textContent = '';
+                parts.forEach((w, j) => { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w; p.appendChild(sp); if (j < parts.length - 1) p.appendChild(document.createTextNode(' ')); words.push(sp); });
+                return { num: li.querySelector('b'), p, words, cols: [] };
+            });
+            figs.forEach((f, fi) => {
+                const sr = document.createElement('span'); sr.className = 'fx-sr'; sr.textContent = f.num.textContent;
+                pFig[fi].prepend(sr); f.num.parentNode.setAttribute('aria-hidden', 'true');
+                [...f.num.childNodes].forEach((nd) => {
+                    if (nd.nodeType !== 3) return;
+                    const frag = document.createDocumentFragment();
+                    [...nd.textContent].forEach((ch) => {
+                        const c = document.createElement('span');
+                        if (/\d/.test(ch)) {
+                            // later columns spin further, so they settle one after another
+                            const d = +ch, n = 5 + f.cols.length * 2, strip = document.createElement('span');
+                            c.className = 'dg'; strip.className = 'ds';
+                            strip.textContent = Array.from({ length: n + 1 }, (_, k) => (d - n + k + 100) % 10).join('\n');
+                            if (reduce) strip.style.transform = `translate3d(0, ${-n}em, 0)`;
+                            c.appendChild(strip); f.cols.push({ c, strip, d, n });
+                        } else { c.className = 'dc'; c.textContent = ch; }
+                        frag.appendChild(c);
+                    });
+                    nd.replaceWith(frag);
+                });
+            });
+            // desktop: the figures float a little with the pointer, over a shadow that stays put
+            let ptx = 0, pty = 0, pmx = 0, pmy = 0;
+            if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                pstage.addEventListener('pointermove', (e) => { ptx = e.clientX / innerWidth * 2 - 1; pty = e.clientY / innerHeight * 2 - 1; });
+                pstage.addEventListener('pointerleave', () => { ptx = 0; pty = 0; });
+            }
+            let tv = 0, rowPos = 0, rowTarget = 0, pLanded = false, pKey = -2, pLastY = scrollY, pLastT = 0, pOn = false, pJump = true;
+            const pBgWrap = proof.querySelector('.fx-pbg'), pLabWrap = proof.querySelector('.fx-plabs'), pTitle = proof.querySelector('.fx-ptitle'), pRowWrap = proof.querySelector('.fx-prow');
+            const wrap = (v) => ((v % PN) + PN) % PN;
+            const pIdx = () => wrap(Math.round(rowTarget));
+            const goHome = () => { rowTarget = Math.round(rowPos / PN) * PN; };
+            const pStep = (d) => { if (pLanded) rowTarget = Math.round(rowTarget) + d; };
+            const place = (el, x, y, s) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${s.toFixed(4)})`; };
+            function renderProof(now) {
+                const dt = clamp((now - (pLastT || now)) / 1000, 0, 0.05) || 1 / 60; pLastT = now;
+                const k = (r) => 1 - Math.exp(-dt * r);
+                const r = proof.getBoundingClientRect(), sy = scrollY, up = sy < pLastY - 0.5; pLastY = sy;
+                let t = reduce ? 1 : clamp(-r.top / PG.total);
+                if (pJump) { pJump = false; tv = t; if (t < LAND) rowPos = rowTarget = 0; }
+                // scrolling back up into the pin: the row first glides home to Nitori, and only then can the tile lift
+                if (up && t < 0.999 && pIdx() !== 0) goHome();
+                const home = pIdx() === 0 && Math.abs(rowPos - rowTarget) < 0.01;
+                if (pLanded && !home) t = Math.max(t, LAND);
+                tv += (t - tv) * k(10); if (Math.abs(t - tv) < 1e-4) tv = t;
+                rowPos += (rowTarget - rowPos) * (reduce ? 1 : k(7));
+                if (Math.abs(rowTarget - rowPos) < 1e-3) { rowPos = rowTarget = wrap(rowTarget); }
+                const landed = reduce || tv >= LAND - 1e-4;
+                if (landed !== pLanded) {
+                    pLanded = landed; pstage.classList.toggle('is-landed', landed);
+                    if (landed && !reduce) { pCards[0].classList.remove('is-hit'); void pCards[0].offsetWidth; pCards[0].classList.add('is-hit'); }
+                    proof.dispatchEvent(new Event('fx-land'));
+                }
+                if (landed && pQueued) { pStep(pQueued); pQueued = 0; }   // a swipe made while the row was still coming up
+                const idx = pIdx(), key = landed ? idx : -1;
+                if (key !== pKey) {
+                    pKey = key;
+                    [pNames, pDescs, pBgs].forEach((list) => list.forEach((el, i) => el.classList.toggle('is-on', i === key)));
+                    pLabs.forEach((el, i) => el.classList.toggle('is-c', i === key));
+                    pCards.forEach((c, i) => { c.toggleAttribute('data-cursor', i === key); c.tabIndex = i === key ? 0 : -1; });
+                    pDescs.forEach((d, i) => { d.querySelector('a').tabIndex = i === key ? 0 : -1; });
+                }
+
+                const W = PG.W, H = PG.H, sw = PG.sw, sh = PG.sh, cx = sw / 2;
+                const cardY = mobile ? (PG.nav + sh - GAP) / 2 - PG.mOff : (sh - GAP) / 2 + sh * 0.04;
+                // where the tile is born: well above its slot, so it has somewhere to settle (but never under the navigation)
+                const fy0 = mobile ? Math.max(cardY - H * 0.6, PG.nav + H / 2 + 48) : cardY - H * 0.8;   // phones: a real drop, clear of the bar above
+                pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
+                pInfo.style.top = `${(cardY + H / 2 + 60).toFixed(1)}px`;
+
+                const bth = reduce ? 1 : ease(clamp((tv - BIRTH0) / (MORPH0 - BIRTH0)));      // the room closing in to the tile
+                const dp = reduce ? 1 : clamp((tv - DROP0) / (LAND - DROP0));                 // the row coming up, the tile settling
+                const rowOff = landed ? 0 : (1 - ease(dp)) * sh * 0.8;
+
+                // scroll depth: when the pin lets go, the colour behind lags and the text leads
+                const exit = reduce ? 0 : clamp((-r.top - PG.total) / sh);
+                const shift = (el, x, y) => { el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`; };
+                shift(pBgWrap, 0, exit * 0.4 * sh);
+                pBgWrap.style.opacity = (1 - exit * 0.85).toFixed(3);   // the colour dissolves into the dark the next section rises from
+                // the name, the cards, their labels and the line below move as one group (a touch ahead), so nothing runs
+                // into anything; only the blurred colour behind lags
+                const lead = -exit * 0.08 * sh;
+                [pTitle, pRowWrap, pLabWrap].forEach((el) => shift(el, 0, lead));
+                pInfo.style.transform = `translate3d(-50%, ${lead.toFixed(1)}px, 0)`;
+
+                if (!reduce) {
+                    const u = tv * PU;   // screens since the wipe began
+                    pmx += (ptx - pmx) * k(4); pmy += (pty - pmy) * k(4);
+                    // the headline: in once the wipe is about halfway, out again as the room starts to close
+                    // the claim, scrubbed by the scroll
+                    const win = ([a0, a1]) => ease(clamp((u - a0) / (a1 - a0)));
+                    claimWords.forEach((w, i) => {
+                        const q = win(CLAIM[i]), lift = i > 1 ? 0.34 : 0.18;
+                        w.style.opacity = q.toFixed(3);
+                        w.style.filter = q < 1 ? `blur(${((1 - q) * 14).toFixed(1)}px)` : 'none';
+                        w.style.transform = q < 1 ? `translate3d(0, ${((1 - q) * lift).toFixed(3)}em, 0)` : 'none';
+                    });
+                    pHead.style.setProperty('--setp', win(SETP).toFixed(3));
+                    const qs = win(SUB);
+                    pSub.style.opacity = qs.toFixed(3);
+                    pSub.style.filter = qs < 1 ? `blur(${((1 - qs) * 10).toFixed(1)}px)` : 'none';
+                    pSub.style.transform = qs < 1 ? `translate3d(0, ${((1 - qs) * 0.4).toFixed(3)}em, 0)` : 'none';
+                    // a slow drift over the hold, each layer at its own pace, so the room never stands dead still
+                    const drift = clamp((u - HOLD0) / (BIRTH0 * PU - HOLD0));
+                    // the pack-up moves everything as one: the room shrinks to the tile with the scene inside, then the card flips
+                    const pm = clamp((u - PACK[0]) / (PACK[1] - PACK[0]));   // one progress for the shrink and the turn
+                    const bs = ease(clamp(pm / 0.55)), still = 1 - bs;
+                    shift(pHead, 0, -drift * sh * 0.012);
+                    const ev = [0, 0, 0];
+                    figs.forEach(({ num, p, words, cols }, i) => {
+                        const [a0, a1] = RISE[i];
+                        const e = ease(clamp((u - a0) / (a1 - a0)));
+                        // the digits roll up with the rise and lock in, left to right, just before it settles
+                        cols.forEach((col, j) => {
+                            const rr = ease(clamp((e - 0.04 - j * 0.07) / 0.72));
+                            col.strip.style.transform = `translate3d(0, ${(-rr * col.n).toFixed(3)}em, 0)`;
+                        });
+                        ev[i] = e;
+                        const y = (1 - e) * PG.fs * 0.95 - drift * sh * 0.025;
+                        num.style.transform = `translate3d(${(pmx * 10 * still).toFixed(1)}px, ${(y + pmy * 5 * still).toFixed(1)}px, 0)`;
+                        num.style.filter = !mobile && e < 1 ? `blur(${((1 - e) * 8).toFixed(1)}px)` : '';
+                        // the description sharpens as its figure settles
+                        const wp = clamp((u - a1 + 0.1) / 0.24), n = words.length;
+                        words.forEach((w, j) => {
+                            const q = ease(clamp((wp - 0.5 * (n > 1 ? j / (n - 1) : 0)) / 0.5));
+                            w.style.opacity = q.toFixed(3);
+                            w.style.filter = q < 1 ? `blur(${((1 - q) * 6).toFixed(1)}px)` : '';
+                            w.style.transform = q < 1 ? `translate3d(0, ${((1 - q) * 0.3).toFixed(3)}em, 0)` : '';
+                        });
+                        shift(p, pmx * 5 * still, -drift * sh * 0.04);
+                    });
+                    // the proof lights the claim: "sells." turns red with the revenue; "Iterated on every launch." brightens with the growth
+                    const sp = clamp((ev[0] - 0.8) / 0.2), ip = clamp((ev[2] - 0.8) / 0.2);
+                    pSold.style.color = `rgb(${Math.round(255 - 44 * sp)}, ${Math.round(255 - 233 * sp)}, ${Math.round(255 - 228 * sp)})`;
+                    pIter.style.color = `rgba(255, 255, 255, ${(0.62 + 0.38 * ip).toFixed(3)})`;
+                    // the light from above comes up over the empty floor before anything rises
+                    pFigs.style.setProperty('--glowup', (ease(clamp((u - LIGHT[0]) / (LIGHT[1] - LIGHT[0]))) * still).toFixed(3));
+                    // the room closes in to the tile (the card), the scene shrinking with it and the card lifting off the black
+                    const T = fy0 - H / 2, L = cx - W / 2;
+                    const rx = L * bs, ry = T * bs, rw = sw - (sw - W) * bs, rh = sh - (sh - H) * bs, sc = Math.min(rw / sw, rh / sh);   // fits both ways (a phone's scene is tall)
+                    pRed.style.visibility = landed ? 'hidden' : '';   // the card that flipped is the card that lands
+                    const dropY = (cardY - fy0) * ease(dp);
+                    pFlip.style.left = `${rx.toFixed(1)}px`; pFlip.style.top = `${(ry + dropY).toFixed(1)}px`;
+                    pFlip.style.width = `${rw.toFixed(1)}px`; pFlip.style.height = `${rh.toFixed(1)}px`;
+                    pStats.style.transform = bth > 0 ? `translate3d(${((rw - sw * sc) / 2).toFixed(1)}px, ${((rh - sh * sc) / 2).toFixed(1)}px, 0) scale(${sc.toFixed(4)})` : '';
+                    pBox.style.setProperty('--lift', (0.04 * clamp(bth * 3)).toFixed(4));
+                    // then the flip: bottom edge first, toward the viewer and up over the top, easing past flat and back; it lifts
+                    // off the floor mid-turn, the face turning away goes into shade, and Nitori's teal glows on the floor beneath
+                    // the turn starts while the card is still shrinking, so the two read as one move
+                    const fp = clamp((pm - 0.12) / 0.88);
+                    // nearly linear with the scroll (a gentle sine ease at either end), finishing a little early so it can settle
+                    const turn = 0.5 - 0.5 * Math.cos(Math.PI * clamp(fp / 0.86));
+                    const over = Math.sin(Math.PI * clamp((fp - 0.72) / 0.28)) * 5;   // a few degrees past flat as it lands, then back
+                    const wind = pm < 0.18 ? -5 * Math.sin(Math.PI * pm / 0.18) : 0;   // tips back a touch as it's picked up, then over
+                    const ang = turn * 180 + over + wind, arc = Math.sin(Math.PI * clamp((pm - 0.04) / 0.84));   // the lift spans the whole gesture
+                    pRed.style.perspective = `${(H * 3.2).toFixed(0)}px`;
+                    pRed.style.perspectiveOrigin = `${cx.toFixed(1)}px ${(fy0 + dropY).toFixed(1)}px`;
+                    pFlip.style.transform = pm > 0 ? `translate3d(0, ${(mobile ? 0 : -arc * H * 0.12).toFixed(1)}px, ${(arc * H * (mobile ? 0.28 : 0.55)).toFixed(1)}px) rotateX(${ang.toFixed(2)}deg) rotateZ(${(arc * -2.2).toFixed(2)}deg)` : '';
+                    const edge = Math.abs(Math.sin(ang * Math.PI / 180));   // 1 when the card is edge-on
+                    const backOn = Math.cos(ang * Math.PI / 180) < 0;   // past edge-on, the back is the side facing us
+                    pFront.style.visibility = backOn ? 'hidden' : 'inherit'; pBack.style.visibility = backOn ? 'inherit' : 'hidden';
+                    pFront.style.setProperty('--shade', (ang < 90 ? edge * 0.75 : 1).toFixed(3));
+                    pBack.style.setProperty('--shade', (ang > 90 ? edge * 0.6 : 1).toFixed(3));
+                    const glow = clamp((ang - 60) / 120) * (0.55 + arc * 0.45);
+                    pFloor.style.opacity = glow.toFixed(3);
+                    pFloor.style.transform = `translate3d(${cx.toFixed(1)}px, ${(fy0 + dropY + H * 0.62).toFixed(1)}px, 0) translate(-50%, -50%) scale(${(0.8 + arc * 0.35).toFixed(3)})`;
+                }
+
+                // the row: centre in colour, neighbours grey; it loops, fading out at either end. Before the landing it comes up
+                // from below with its middle empty, and the Nitori tile settles into the gap
+                const rowVis = landed ? 1 : clamp(dp * 1.5), s1 = W + PG.g;
+                pCards.forEach((cd, i) => {
+                    let o = wrap(i - rowPos); if (o >= 2.5) o -= PN;
+                    const ao = Math.abs(o), grey = clamp(ao);
+                    let x = cx + o * s1, y = cardY + rowOff;
+                    let op = o < -1 ? clamp(1 - (-1 - o) / 0.5) : o > 2 ? clamp(1 - (o - 2) / 0.5) * 0.5 : o > 1 ? lerp(1, 0.5, o - 1) : 1;
+                    if (i === 0 && !landed) { x = cx; y = lerp(fy0, cardY, ease(dp)); op = 0; }   // until it lands, the flipping card stands in for it
+                    else if (ao > 0.5) op *= rowVis;
+                    cd.style.opacity = op.toFixed(3);
+                    cd.style.visibility = op < 0.003 ? 'hidden' : '';
+                    cd.style.filter = grey > 0.01 ? `grayscale(${grey.toFixed(3)}) brightness(${(1 - grey * 0.4).toFixed(3)})` : '';
+                    cd.style.zIndex = String(10 - Math.round(ao * 2));
+                    place(cd, x, y, 1);
+                    const lb = pLabs[i];
+                    lb.style.opacity = (i === 0 && !landed ? 0 : op).toFixed(3);
+                    lb.style.transform = `translate3d(${x.toFixed(1)}px, ${(cardY + rowOff + H / 2 + 22).toFixed(1)}px, 0) translate(-50%, 0)`;
+                });
+                playClip(pOn && landed && idx === 0);
+            }
+            new IntersectionObserver(([en]) => { pOn = en.isIntersecting; if (pOn) pJump = true; else playClip(false); }).observe(proof);
+            const proofLoop = (t) => { if (pOn && !navHold()) renderProof(t); requestAnimationFrame(proofLoop); };
+            requestAnimationFrame(proofLoop);
+            // desktop: either side of the centre line steps the row; the centred project (and its name and line) opens it
+            pstage.addEventListener('click', (e) => {
+                if (!pLanded || pSwiped || e.target.closest('.fx-pnav')) return;
+                const a = e.target.closest('a');
+                if (e.target.closest('[data-cursor]')) { if (!a) location.href = pCards[pIdx()].href; return; }
+                if (a) e.preventDefault();
+                pStep(e.clientX < innerWidth / 2 ? -1 : 1);
+            });
+            proof.querySelector('.fx-pnav.prev').addEventListener('click', () => pStep(-1));
+            proof.querySelector('.fx-pnav.next').addEventListener('click', () => pStep(1));
+            pstage.addEventListener('keydown', (e) => {
+                if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+                e.preventDefault(); pStep(e.key === 'ArrowLeft' ? -1 : 1);
+                if (pCards.includes(document.activeElement)) pCards[pIdx()].focus({ preventScroll: true });
+            });
+            /* phones: the row follows a sideways drag and settles on the nearest project when it's let go (a quick flick
+               counts as a step). Which way a drag goes is decided in its first few pixels: a vertical one is left to the page,
+               so scrolling stays the browser's. A swipe while the row is still coming up finishes the landing, then steps */
+            let pDrag = null, pSwiped = false, pQueued = 0, pQueueT = 0;
+            pstage.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse') return;
+                pDrag = { x: e.clientX, y: e.clientY, axis: '', p0: rowPos, live: false, trail: [[e.clientX, performance.now()]] };
+            });
+            pstage.addEventListener('pointermove', (e) => {
+                if (!pDrag) return;
+                const dx = e.clientX - pDrag.x, dy = e.clientY - pDrag.y;
+                if (!pDrag.axis) {
+                    if (Math.hypot(dx, dy) < 8) return;
+                    pDrag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+                    if (pDrag.axis === 'x') { pDrag.x = e.clientX; pDrag.p0 = rowPos; }   // measured from here, so the row doesn't jump
+                    return;
+                }
+                if (pDrag.axis !== 'x') return;
+                pDrag.trail.push([e.clientX, performance.now()]); if (pDrag.trail.length > 6) pDrag.trail.shift();
+                if (pLanded) { rowTarget = rowPos = pDrag.p0 - (e.clientX - pDrag.x) / (PG.W + PG.g); pDrag.live = true; }
+            });
+            pstage.addEventListener('pointerup', (e) => {
+                const d = pDrag; pDrag = null;
+                if (!d || d.axis !== 'x') return;
+                pSwiped = true; setTimeout(() => { pSwiped = false; }, 350);
+                const [x0, t0] = d.trail[0], v = (e.clientX - x0) / Math.max(16, performance.now() - t0);   // px per ms over the last moments
+                if (d.live) {
+                    const base = Math.round(d.p0), fling = clamp(-v * 180 / (PG.W + PG.g), -0.7, 0.7);
+                    rowTarget = clamp(Math.round(rowPos + fling), base - 1, base + 1);
+                } else if (!pLanded && tv >= DROP0 && Math.abs(e.clientX - d.x) > 24) {
+                    pQueued = e.clientX < d.x ? 1 : -1; clearTimeout(pQueueT); pQueueT = setTimeout(() => { pQueued = 0; }, 1600);
+                    scrollTo({ top: proof.getBoundingClientRect().top + scrollY + LAND * PG.total + 2, behavior: 'smooth' });
+                }
+            });
+            pstage.addEventListener('pointercancel', () => { if (pDrag && pDrag.live) rowTarget = Math.round(rowPos); pDrag = null; });
+
+            /* ---------- opening: a soft red light is swept down behind the mark like a torch, so the mark only shows as a dark
+               shape against the glow with its edges catching the light, and stays hidden wherever the glow isn't. The pass follows the load (the figure sits where the scroll hint will be).
+               Then nothing for a moment, and the mark prints onto the page at its full size, a touch larger than it was
+               scanned, as the dark mark behind the name. Top down rather than along the lean, which would light each
+               slanted stroke at once. ---------- */
+            function intro() {
+                const gate = document.querySelector('.fx-gate'), cvs = gate.querySelector('canvas'), g2 = cvs.getContext('2d'), pctBox = gate.querySelector('.pct'), pctEl = pctBox.querySelector('span');
+                const bez = (x1, y1, x2, y2) => (x) => {
+                    const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+                    let t = x;
+                    for (let i = 0; i < 8; i++) { const e = ((ax * t + bx) * t + cx) * t - x, d = (3 * ax * t + 2 * bx) * t + cx; if (Math.abs(e) < 1e-5 || !d) break; t = clamp(t - e / d); }
+                    return ((ay * t + by) * t + cy) * t;
+                };
+                const SCAN = bez(0.45, 0, 0.75, 0.6);   // starts unhurried and gathers pace, handing its momentum on to the settle
+                // timing (ms); the scan holds short of the end until the page has loaded
+                const RUN = mobile ? 2000 : 2400, SETTLE = 950, PRINT0 = 300, PRINT = 1000, CAP = 6000;   // the print starts PRINT0 into the settle
+                const kRest = () => K0 * 1.08, kScan = () => kRest() * 0.95;   // scanned a touch smaller than it prints
+                const camY = (k) => PC.y - (0.02 * SH * 1.08 - GAP / 2) / k;   // the frame renderHero draws at the top of the scroll
+                const scr = ([x, y], k) => [(x - PC.x) * k + SW / 2, (y - camY(k)) * k + SH / 2];
+
+                // the light: like a torch held behind the mark and swept down over it. A soft, diffused glow (no edge to it)
+                // passes behind; the mark stands dark against it, and its edges facing the glow catch a soft rim of red.
+                // Where the glow isn't, the mark is the same dark as the page.
+                const RIM = '255, 70, 55', LINE = 0.42;   // the printed mark's rim colour (.rim)
+                const EDGES = [];
+                UNIQ.forEach((P) => {
+                    let a2 = 0; P.forEach((p, i) => { const q = P[(i + 1) % P.length]; a2 += p[0] * q[1] - q[0] * p[1]; });
+                    P.forEach((p, i) => { const q = P[(i + 1) % P.length], dx = q[0] - p[0], dy = q[1] - p[1], l = Math.hypot(dx, dy); EDGES.push({ p, q, nx: (a2 > 0 ? dy : -dy) / l, ny: (a2 > 0 ? -dx : dx) / l }); });   // outward normal (y runs down)
+                });
+
+                // the figure sits where the scroll hint will be, and hands over to it at the print
+                const hintText = hint.querySelector('.hw');
+                hintW[0].classList.remove('is-on');
+                hint.style.opacity = '0';
+
+                // a jump, never the site's smooth scroll
+                const toTop = () => { try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { root.style.scrollBehavior = 'auto'; scrollTo(0, 0); root.style.scrollBehavior = ''; } };
+                let fontsIn = !document.fonts, pageIn = document.readyState === 'complete';
+                if (document.fonts) document.fonts.ready.then(() => { fontsIn = true; });
+                addEventListener('load', () => { pageIn = true; }, { once: true });
+                let t0 = 0, last = 0, prog = 0, pace = 1, full = null, handed = false, done = false, skipped = false, shown = -1;
+                stage.style.setProperty('--imp', '0');
+
+                function step(now) {
+                    if (done || skipped) return;
+                    if (scrollY || scrollX) toTop();   // fail-safe: the print only lines up with the mark at the very top
+                    if (!t0) t0 = last = now;
+                    const t = now - t0, dt = Math.min(0.05, (now - last) / 1000); last = now;
+                    const dpr = Math.min(2, devicePixelRatio || 1), cw = Math.round(SW * dpr), ch = Math.round(SH * dpr);
+                    if (cvs.width !== cw || cvs.height !== ch) { cvs.width = cw; cvs.height = ch; }
+                    g2.setTransform(dpr, 0, 0, dpr, 0, 0); g2.clearRect(0, 0, SW, SH);
+
+                    const loaded = (fontsIn && pageIn) || t > CAP;
+                    // while the page is still loading the sweep eases to a hold short of the end, and eases off again once it has
+                    pace += ((loaded ? 1 : clamp((0.85 - prog) / 0.2)) - pace) * Math.min(1, dt * 8);
+                    prog = Math.min(1, prog + dt * 1000 / RUN * pace);
+                    if (prog >= 1 && full === null) full = t;
+                    const s = SCAN(prog), pc = Math.floor(s * 100);
+                    if (pc !== shown) { shown = pc; pctEl.textContent = `${String(pc).padStart(3, '0')}%`; }
+                    pctBox.style.top = `${hintText.getBoundingClientRect().top.toFixed(1)}px`;
+
+                    // one continuous run, so there is never a dead frame:
+                    //   the sweep:  the glow passes down behind the mark (follows the load)
+                    //   the settle: once loaded it carries on down and widens into the page's own bottom light, ending exactly
+                    //               where and as that light is; the mark's silhouette goes back to dark as the glow leaves it
+                    //   the print:  overlapping the settle, the mark lands at full size; its red outline eases in and sinks into
+                    //               the dark mark; the room comes up last, crossing over from the gate's light to the real one
+                    const tf = full === null ? -1 : t - full;   // ms since the sweep finished
+                    const sg = (x, a, b) => clamp((x - a) / (b - a)), out = (x) => 1 - Math.pow(1 - x, 3);
+                    const settle = tf < 0 ? 0 : out(sg(tf, 0, SETTLE)), m = tf < 0 ? 0 : sg(tf, PRINT0, PRINT0 + PRINT);
+                    const cover = 1 - ease(sg(m, 0.35, 1));
+                    if (m > 0) {
+                        stage.style.setProperty('--lit', '1');
+                        if (!handed && m >= 0.4) { handed = true; pctBox.classList.add('is-out'); hintW[0].classList.add('is-on'); }
+                        if (m >= 0.5) ready();
+                    }
+                    gate.style.setProperty('--cover', cover.toFixed(3));
+                    stage.style.setProperty('--imp', ease(sg(m, 0.1, 0.65)).toFixed(3));
+                    hint.style.opacity = ease(sg(m, 0.45, 1)).toFixed(3);
+
+                    // swept a touch smaller than it prints; as it fades out it grows to exactly where the print begins, so the
+                    // outline appears where the shape was last seen
+                    const k = kScan() * Math.pow(kRest() * 1.012 / kScan(), out(sg(tf, 0, PRINT0)));
+                    const top = scr([PC.x, 416], k)[1], bot = scr([PC.x, 1569.04], k)[1], lft = scr([52, PC.y], k)[0], rgt = scr([1924, PC.y], k)[0];
+                    // the torch: a hand's gentle drift, down and a little across; it starts inside the mark so it stays clear of the top
+                    const T = { x: lerp(lft + (rgt - lft) * 0.42, lft + (rgt - lft) * 0.58, s), y: lerp(top + (bot - top) * 0.1, bot + (bot - top) * 0.12, s),
+                        rx: (rgt - lft) * 0.62 * 1.5, ry: (bot - top) * 0.36 * 1.5 };
+                    // the page's bottom light (.fx-light at rest: its box, its 1.04 scale about the box centre, its 50% 60% ellipse)
+                    const B = { x: SW / 2, y: SH * (0.925 + 0.075 * 1.04), rx: SW * 0.4 * 1.04, ry: SH * 0.375 * 1.04 };
+                    const G = { x: lerp(T.x, B.x, settle), y: lerp(T.y, B.y, settle), rx: lerp(T.rx, B.rx, settle), ry: lerp(T.ry, B.ry, settle) };
+                    const on = clamp(s / 0.12) * cover;   // comes up at the start; hands over to the real light as the room comes up
+                    const blob = (stops, w) => {
+                        if (w <= 0.002) return;
+                        g2.save(); g2.translate(G.x, G.y); g2.scale(G.rx / G.ry, 1);
+                        const gr = g2.createRadialGradient(0, 0, 0, 0, 0, G.ry);
+                        stops.forEach(([o, c, a]) => gr.addColorStop(o, `rgba(${c}, ${(a * w).toFixed(4)})`));
+                        g2.fillStyle = gr; g2.beginPath(); g2.arc(0, 0, G.ry, 0, Math.PI * 2); g2.fill();
+                        g2.restore();
+                    };
+                    // the torch's soft falloff, crossing into the bottom light's own colours as it settles
+                    blob([[0, RIM, 0.2], [0.2, RIM, 0.164], [0.4, RIM, 0.096], [0.6, RIM, 0.04], [0.8, RIM, 0.01], [1, RIM, 0]], on * (1 - settle));
+                    blob([[0, '211, 22, 27', 0.36], [0.55, '143, 0, 0', 0.1], [0.68, '143, 0, 0', 0.04], [0.8, '143, 0, 0', 0]], on * settle);
+                    // and the stage's breathing glow at the foot of the screen (.fx-stage::before) comes up with it
+                    if (on * settle > 0.002) {
+                        g2.save(); g2.translate(SW / 2, SH); g2.scale((SW * 0.4) / (SH * 0.35), 1);
+                        const br = g2.createRadialGradient(0, 0, 0, 0, 0, SH * 0.35);
+                        br.addColorStop(0, `rgba(211, 22, 27, ${(0.165 * on * settle).toFixed(4)})`); br.addColorStop(0.7, 'rgba(211, 22, 27, 0)');
+                        g2.fillStyle = br; g2.beginPath(); g2.arc(0, 0, SH * 0.35, 0, Math.PI * 2); g2.fill();
+                        g2.restore();
+                    }
+
+                    // the mark in front of the torch: a dark shape, its edges catching the light from behind (most on the side
+                    // facing it); it goes back to dark as the glow moves off it, a beat before the print
+                    const sil = 1 - ease(sg(tf, 0, PRINT0));
+                    if (sil > 0.002) {
+                        const tx = T.x, ty = T.y, trx = T.rx / 1.5, try_ = T.ry / 1.5;
+                        g2.fillStyle = '#070707'; g2.beginPath();
+                        UNIQ.forEach((P) => { P.forEach((q, i) => { const [x, y] = scr(q, k); i ? g2.lineTo(x, y) : g2.moveTo(x, y); }); g2.closePath(); });
+                        g2.fill();
+                        g2.lineWidth = 1.2; g2.lineCap = 'round'; g2.shadowColor = `rgba(${RIM}, 0.6)`; g2.shadowBlur = 5;
+                        EDGES.forEach((e) => {
+                            const A = scr(e.p, k), B2 = scr(e.q, k), S = [];
+                            for (let j = 0; j <= 10; j++) {
+                                const x = lerp(A[0], B2[0], j / 10), y = lerp(A[1], B2[1], j / 10), dx = tx - x, dy = ty - y, d = Math.hypot(dx, dy) || 1;
+                                const glow = Math.exp(-1.7 * (((x - tx) / trx) ** 2 + ((y - ty) / try_) ** 2));
+                                S.push(on * sil * glow * (0.3 + 0.7 * Math.max(0, (e.nx * dx + e.ny * dy) / d)) * 0.6);
+                            }
+                            if (Math.max(...S) < 0.004) return;
+                            const gr = g2.createLinearGradient(A[0], A[1], B2[0], B2[1]);
+                            S.forEach((v, j) => gr.addColorStop(j / 10, `rgba(${RIM}, ${v.toFixed(3)})`));
+                            g2.strokeStyle = gr; g2.beginPath(); g2.moveTo(A[0], A[1]); g2.lineTo(B2[0], B2[1]); g2.stroke();
+                        });
+                        g2.shadowBlur = 0;
+                    }
+
+                    // the print: at full size, settling from a touch larger; the red outline eases in, then sinks into the dark mark
+                    if (m > 0) {
+                        const kp = kRest() * lerp(1.012, 1, out(sg(m, 0, 0.7)));
+                        const a = LINE * sine(sg(m, 0, 0.25)) * (1 - ease(sg(m, 0.25, 0.8)));
+                        g2.lineWidth = 1.2; g2.lineJoin = 'miter'; g2.strokeStyle = `rgba(${RIM}, ${a.toFixed(3)})`;
+                        g2.beginPath(); UNIQ.forEach((P) => { P.forEach((q, i) => { const [x, y] = scr(q, kp); i ? g2.lineTo(x, y) : g2.moveTo(x, y); }); g2.closePath(); });
+                        g2.stroke();
+                        if (m >= 1) return end();
+                    }
+                    requestAnimationFrame(step);
+                }
+                function end() {
+                    if (done) return; done = true;
+                    try { sessionStorage.setItem('fw-gate', '1'); } catch (e) {}
+                    ready();
+                    stage.style.removeProperty('--imp'); stage.style.removeProperty('--lit');
+                    hint.style.opacity = ''; hintW[0].classList.add('is-on');
+                    toTop();
+                    root.classList.remove('fx-gate-on'); gate.remove();
+                    try { history.scrollRestoration = 'auto'; } catch (e) {}
+                    heroDirty = true; req();
+                }
+                // any input skips straight to the page
+                const skip = () => {
+                    if (done || skipped) return; skipped = true;
+                    stage.style.removeProperty('--imp'); stage.style.setProperty('--lit', '1'); ready();
+                    gate.classList.add('is-skip');
+                    setTimeout(end, 350);
+                };
+                ['click', 'keydown', 'wheel', 'touchstart'].forEach((ev) => addEventListener(ev, skip, { once: true, passive: true }));
+                requestAnimationFrame(step);
+            }
+
+            layout();
+            frame();
+            renderHero(performance.now());
+            if (root.classList.contains('fx-gate-on')) intro(); else requestAnimationFrame(() => requestAnimationFrame(ready));
+            addEventListener('scroll', () => { heroDirty = true; }, { passive: true });
+            if (document.fonts) document.fonts.ready.then(() => { layout(); heroDirty = true; req(); });
+        })();
+    </script>
 </body>
 </html>
