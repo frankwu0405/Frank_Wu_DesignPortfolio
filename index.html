@@ -171,11 +171,13 @@
         .fx-sin { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; justify-content: center; padding: 0 6vw; }
         .fx-sin .display { font-size: clamp(3rem, 6vw, 6.4rem); }
         .fx-sin .l1, .fx-sin .l2 { display: block; opacity: 0; }
-        .fx-sin .l2 .blk { color: #120000; }
+        /* drawn in outline: white line, no fill. Traced from the filled letters by an SVG filter (#fxOutlineL/S) rather than
+           text-stroke, which in Inter also draws the seams where a letter's strokes overlap */
+        .fx-sin .l2 .blk { display: inline-block; color: #fff; filter: url(#fxOutlineL); }
         /* the aside lands a beat after the motto */
         .fx-sin .aside { margin: calc(var(--fvh, 1vh) * 2.2) 0 0; font-size: clamp(1.1rem, 1.7vw, 1.6rem); font-weight: 300; font-style: italic; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.9);
             opacity: var(--s3); transform: translate3d(calc((1 - var(--s3)) * 40px), 0, 0); }
-        /* two equal choices in the motto's type; the chosen one turns black, like "SIMPLE." */
+        /* two equal choices in the motto's type; the chosen one turns to outline, like "SIMPLE." */
         .fx-cta { display: flex; flex-wrap: wrap; gap: 0.4em clamp(36px, 4.4vw, 80px); margin-top: calc(var(--fvh, 1vh) * 5.5); }
         .fx-pick { display: inline-flex; align-items: center; gap: 0.32em; font-size: clamp(1.6rem, 2.9vw, 3rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.035em; line-height: 1;
             color: #fff; text-decoration: none; pointer-events: none; transition: color 0.35s ease;
@@ -186,15 +188,19 @@
         .ar { display: inline-block; width: 0.78em; height: 0.78em; vertical-align: -0.06em; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; overflow: visible; }
         .fx-scene.is-live .fx-pick { pointer-events: auto; }
         .fx-cta.has-on .fx-pick { color: rgba(255, 255, 255, 0.5); }
-        .fx-cta.has-on .fx-pick.is-on { color: #120000; }
+        .fx-cta.has-on .fx-pick.is-on { color: #fff; }
+        .fx-cta.has-on .fx-pick.is-on .pw { filter: url(#fxOutlineS); }   /* the words only; the arrow stays a solid line */
         .fx-pick.is-on i { transform: translateX(0.18em); }
         .fx-pick:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
         /* where each choice leads, as a watermark behind the scene (pre-tinted images: plain opacity only) */
         .fx-wm { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
         .fx-wm img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 0.7s ease, transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
-        .fx-wm img.wm-work { object-position: 60% 30%; } .fx-wm img.wm-about { object-position: 70% 20%; }
+        /* both are light-only overlays (the picture's highlights in one warm tint, the rest clear), set to the right on
+           desktop and along the top on phones, fading out toward the text */
+        .fx-wm img.wm-about { object-position: 70% 20%; }
+        .fx-wm img.wm-work { object-position: 70% 0%; }   /* held to the top, so a wide window crops the floor, never the vacuum */
+        @media (max-width: 900px) { .fx-wm img.wm-work { object-position: 50% 0%; } }
         .fx-wm img.is-on { opacity: 0.75; transform: scale(1); }
-        .fx-wm img.wm-work.is-on { opacity: 0.45; }   /* the page is busier than the portrait */
         .fx-wm img.is-go { opacity: 1; transform: scale(1.03); transition-duration: 0.28s, 0.5s; }
         /* the camera keeps travelling sideways, so the lines arrive from the right with that momentum */
         .fx-sin .l1 { opacity: min(1, calc(var(--s1) * 2.2)); transform: translate3d(calc((1 - var(--s1)) * 85vw), 0, 0) skewX(calc(var(--lean) * -0.8 * (1 - var(--s1)))); filter: blur(calc((1 - var(--s1)) * 7px)); }
@@ -476,6 +482,9 @@
                 <polygon pathLength="100" vector-effect="non-scaling-stroke" points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/>
             </g>
             <polygon id="fwSlab" vector-effect="non-scaling-stroke" points="3184.2 -3000 30000 -3000 30000 5000 743.3 5000"/>
+            <!-- outlines: what is left of the letters once they are worn in from the edge by the radius (the line's width) -->
+            <filter id="fxOutlineL" x="-5%" y="-10%" width="110%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="erode" radius="1.6" result="in"/><feComposite in="SourceGraphic" in2="in" operator="out"/></filter>
+            <filter id="fxOutlineS" x="-5%" y="-10%" width="110%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="erode" radius="1.1" result="in"/><feComposite in="SourceGraphic" in2="in" operator="out"/></filter>
             <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
                 <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
             </filter>
@@ -527,7 +536,7 @@
                 <div class="fx-hint is-scroll" aria-hidden="true"><i></i><span class="hw"><b class="is-on">Scroll</b><b>Design</b><b>Build</b><b>Ship</b></span></div>
                 <div class="fx-scene">
                     <div class="fx-wm" aria-hidden="true">
-                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_work_m.webp"><img class="wm-work" src="assets/images/home/wm_work_d.webp" alt="" decoding="async"></picture>
+                        <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_appliance_m.webp"><img class="wm-work" src="assets/images/home/wm_appliance_d.webp" alt="" decoding="async"></picture>
                         <picture><source media="(max-width: 900px)" srcset="assets/images/home/wm_about_m.webp"><img class="wm-about" src="assets/images/home/wm_about_d.webp" alt="" decoding="async"></picture>
                     </div>
                     <svg class="ghost" viewBox="52 416 1872 1153" aria-hidden="true"><use href="#fwMark"/></svg>
@@ -535,8 +544,8 @@
                         <h2 class="display"><span class="l1">Everyday decisions,</span><span class="l2">made <span class="blk">simple.</span></span></h2>
                         <p class="aside">…including this one.</p>
                         <div class="fx-cta">
-                            <a class="fx-pick" href="nitori.html" data-wm="0">Latest work <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
-                            <a class="fx-pick" href="about.html" data-wm="1">About me <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
+                            <a class="fx-pick" href="nitori.html" data-wm="0"><span class="pw">Latest work</span> <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
+                            <a class="fx-pick" href="about.html" data-wm="1"><span class="pw">About me</span> <i aria-hidden="true"><svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg></i></a>
                         </div>
                     </div>
                 </div>
