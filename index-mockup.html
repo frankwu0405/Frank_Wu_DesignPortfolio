@@ -20,6 +20,9 @@
             if (reduce) d.classList.add('fx-reduce');
             // the opening lands on the hero's first frame, so it must not let the browser restore an old scroll position
             try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); history.scrollRestoration = 'manual'; try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { scrollTo(0, 0); } } } catch (e) {}
+            // navigation: the top edge refracts where backdrop-filter can take an SVG filter (Chromium); ?nav=blur compares
+            var navQ = new URLSearchParams(location.search).get('nav');
+            if (navQ !== 'blur' && navQ !== 'invert' && navigator.userAgentData && navigator.userAgentData.brands.some(function (b) { return b.brand === 'Chromium'; })) d.classList.add('nav-refract');
             if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
         })();
     </script>
@@ -52,6 +55,13 @@
             -webkit-mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0)); mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0)); }
         .fx .navbar::after { height: calc(84px + env(safe-area-inset-top, 0px)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             -webkit-mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0)); mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0)); }
+        /* Chromium (.nav-refract; ?nav=blur keeps the blur for comparison): the top edge bends light like liquid glass
+           instead, and like the blur it builds toward the edge. Low in the band nothing happens; higher up what scrolls
+           beneath swells more and more, as if the glass were thickening, the colours splitting a touch where it is
+           strongest. There is no rim to see and flat colour passes through untouched. The map is drawn by the script
+           below to the band's own height; elsewhere the two blurs above stand in */
+        .nav-refract .fx .navbar::before { display: none; }
+        .nav-refract .fx .navbar::after { height: calc(118px + env(safe-area-inset-top, 0px)); backdrop-filter: url(#navLens); -webkit-mask-image: none; mask-image: none; }
         .fx .logo { align-self: center; }
         .fx .logo-img, .fx .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%) drop-shadow(0 0 6px rgba(0, 0, 0, 0.35)); transform: none; }
         .fx .nav-links-container { display: flex; align-items: stretch; padding: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
@@ -822,6 +832,43 @@
             addEventListener('keydown', (e) => { if (e.key === 'Escape' && navList.classList.contains('show')) { navTgl.click(); navTgl.focus(); } });
             // preview only: the shared script finds the current page by file name, which this mockup doesn't share with Home
             addEventListener('load', () => document.querySelector('.nav-links a[href="index.html"]').classList.add('active'));
+            /* the glass at the top edge (Chromium). Each row of the band shows the page from a little further down, the
+               offset growing with the cube of the height above the band's foot: zero there, and flat, so the glass starts
+               without a seam, then rising until the top row shows the page from about a fifth of the band below, swelling
+               what's behind it about twofold at the very edge. Red bends a little more than green and blue a little less,
+               so the colours fringe where it is strongest. A whisper of blur keeps the stretched pixels smooth */
+            if (root.classList.contains('nav-refract')) {
+                const NS = 'http://www.w3.org/2000/svg', navEl = document.querySelector('.navbar');
+                const svg = document.createElementNS(NS, 'svg');
+                svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true');
+                svg.style.position = 'absolute';
+                const chan = (c, k) => `<feDisplacementMap in="soft" in2="map" xChannelSelector="R" yChannelSelector="G" data-k="${k}" result="d${c}"/>`
+                    + `<feColorMatrix in="d${c}" type="matrix" values="${c === 'r' ? 1 : 0} 0 0 0 0  0 ${c === 'g' ? 1 : 0} 0 0 0  0 0 ${c === 'b' ? 1 : 0} 0 0  0 0 0 1 0" result="c${c}"/>`;
+                svg.innerHTML = '<filter id="navLens" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">'
+                    + '<feImage result="map" preserveAspectRatio="none"/><feGaussianBlur in="SourceGraphic" stdDeviation="0.8" result="soft"/>'
+                    + chan('r', 1.08) + chan('g', 1) + chan('b', 0.92)
+                    + '<feComposite in="cr" in2="cg" operator="arithmetic" k2="1" k3="1" result="rg"/><feComposite in="rg" in2="cb" operator="arithmetic" k2="1" k3="1"/></filter>';
+                document.body.appendChild(svg);
+                const f = svg.firstChild, map = f.querySelector('feImage'), cv = document.createElement('canvas');
+                const draw = () => {
+                    const w = navEl.offsetWidth, h = Math.round(parseFloat(getComputedStyle(navEl, '::after').height));
+                    if (!w || !h) return;
+                    // how far below itself the top row shows the page, in px (above a third of the band, the top would fold)
+                    const lift = h * 0.18;
+                    cv.width = 1; cv.height = h;
+                    const ctx = cv.getContext('2d'), img = ctx.createImageData(1, h);
+                    for (let y = 0; y < h; y++) {
+                        const v = 1 - (y + 0.5) / h;
+                        img.data.set([128, Math.round(128 + 127 * v * v * v), 128, 255], y * 4);
+                    }
+                    ctx.putImageData(img, 0, 0);
+                    [f, map].forEach((n) => { n.setAttribute('x', 0); n.setAttribute('y', 0); n.setAttribute('width', w); n.setAttribute('height', h); });
+                    map.setAttribute('href', cv.toDataURL());
+                    // a full map value means half the scale, so the scale is twice the lift
+                    f.querySelectorAll('feDisplacementMap').forEach((m) => m.setAttribute('scale', (2 * lift * m.dataset.k).toFixed(1)));
+                };
+                new ResizeObserver(draw).observe(navEl);
+            }
             /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
             document.querySelectorAll('.fx-roll').forEach((a) => {
                 const ar = a.querySelector('.ar'), t = a.textContent.trim(), w = document.createElement('span');
