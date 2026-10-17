@@ -40,13 +40,7 @@
         html:has(body.fx) { background-color: #060606; }
         body.fx { transition: none; }
         body.fx { padding-top: 0; }
-        /* navigation: the shared one (style.css, script.js). ?nav=invert compares a version in difference blend, so it
-           inverts whatever is behind it */
-        .fx.nav-invert .navbar { mix-blend-mode: difference; }
-        .fx.nav-invert .navbar::before, .fx.nav-invert .navbar::after { display: none; }
-        .fx.nav-invert .navbar .nav-links li a { color: #fff; text-shadow: none; }
-        .fx.nav-invert .logo-img, .fx.nav-invert .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); }
-        .fx.nav-invert.menu-open .navbar { mix-blend-mode: normal; }
+        /* navigation: the shared one (style.css, script.js) */
         @media (max-width: 768px) {
             /* the shared stylesheet locks scrolling with overflow: hidden on the body, which turns the body into its own scroll
                box and unpins every sticky scene; the menu itself stops the page scrolling instead */
@@ -121,15 +115,9 @@
         .fx-cam .flat { fill: var(--deep); opacity: var(--swell, 0); }   /* the light swells into flat red as the camera leaves */
         .is-built .fx-cam .grey, .is-built .fx-cam .bloom, .is-built .fx-cam .feather { display: none; }
         .is-built .fx-cam .fin { clip-path: none; }
-        /* finishes: light defines the shape; whatever faces away sinks into the black */
-        .fx-cam .fin > g { display: none; }
-        .f-glass .fx-cam .fin > .glass, .f-backlit .fx-cam .fin > .backlit, .f-lacquer .fx-cam .fin > .lacquer { display: inline; }
+        /* the finish, glass: light defines the shape; whatever faces away sinks into the black */
         .fx-cam .edge { fill: #ffe3dc; }
-        .fx-cam .backlit .edge { fill: #ff5a46; }
         .fx-cam .rimlight { fill: none; stroke: url(#fwRimG); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
-        .fx-cam .backlit .rimlight { stroke: url(#fwRimR); stroke-width: 1.5; }
-        .fx-cam .bl-body { fill: #080808; }
-        .fx-cam .glow { opacity: calc(1 - var(--swell, 0)); }
         /* blueprint: traced light, not interface chrome */
         .fx-bp { display: none; }
         /* drawn in the mark's own units (so the trace follows the outline exactly); --px is one screen pixel */
@@ -158,25 +146,6 @@
         .fx-hint b { position: absolute; left: 0; right: 0; top: 0; font-weight: inherit; color: inherit; line-height: 1.4em; transform: translate3d(0, 110%, 0); opacity: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease; }
         .fx-hint b.is-on { transform: none; opacity: 1; }
         .fx-hint b.is-past { transform: translate3d(0, -110%, 0); opacity: 0; }
-        /* mockup-only: the finish switch is tucked off the right edge of the screen; a thin grip on the edge slides it in,
-           and × slides it back out */
-        .fx-switch { position: fixed; right: 0; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em;
-            text-transform: uppercase; white-space: nowrap; pointer-events: none; }
-        .fx-switch .grip, .fx-switch .opts { pointer-events: auto; }
-        .fx-switch .grip { position: absolute; right: 0; bottom: 0; width: 22px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; transition: opacity 0.25s ease; }
-        .fx-switch .grip::before { content: ""; position: absolute; right: 4px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.38); }
-        .fx-switch .grip:hover::before, .fx-switch .grip:focus-visible::before { background: #fff; }
-        .fx-switch .opts { display: flex; align-items: center; gap: 4px; margin-right: 14px; padding: 4px; border-radius: 999px; background: rgba(20, 20, 20, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.14); transform: translate3d(calc(100% + 30px), 0, 0); visibility: hidden;
-            transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.45s; }
-        .fx-switch.is-open .opts { transform: none; visibility: visible; transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s; }
-        .fx-switch.is-open .grip { opacity: 0; pointer-events: none; }
-        .fx-switch .opts span { color: var(--dim); padding: 0 6px 0 10px; }
-        .fx-switch a { color: #bbb; text-decoration: none; padding: 6px 11px; border-radius: 999px; }
-        .fx-switch a.is-on { background: var(--red); color: #fff; }
-        .fx-switch .x { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: #bbb; font: 400 1rem/1 'Inter', sans-serif; cursor: pointer; }
-        .fx-switch .x:hover { color: #fff; }
-        .fx-switch button:focus-visible, .fx-switch a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
         .fx-light { --pan: 0px; }
         .fx-title { position: absolute; inset: 0 0 var(--gap) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; pointer-events: none;
             transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -14px), 0); transform-style: preserve-3d; }
@@ -498,7 +467,6 @@
 
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
-    <div class="fx-switch"><button type="button" class="grip" aria-label="Show the finish switch (mockup)" aria-expanded="false"></button><div class="opts" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a><button type="button" class="x" aria-label="Hide the finish switch">×</button></div></div>
     <div class="fx-lprobe" aria-hidden="true"></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -511,9 +479,6 @@
             <filter id="fxSmear" x="-10%" y="0" width="120%" height="100%" color-interpolation-filters="sRGB">
                 <feGaussianBlur id="fxSmearBlur" stdDeviation="0 0"/>
             </filter>
-            <radialGradient id="fwSpec" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1100">
-                <stop offset="0" stop-color="#ff6a58" stop-opacity="0.6"/><stop offset="0.45" stop-color="#e0201f" stop-opacity="0.18"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/>
-            </radialGradient>
             <!-- build: soft edges that sweep in along the lean (the blueprint only shows ahead of the grey) -->
             <clipPath id="fwGreyC"><polygon id="fwGreyPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
             <clipPath id="fwFinC"><polygon id="fwFinPoly" points="-3000 -3000 -2999 -3000 -2999 -2999"/></clipPath>
@@ -525,22 +490,13 @@
                 <stop offset="0" stop-color="#ff4a38" stop-opacity="0"/><stop offset="0.7" stop-color="#ff4a38" stop-opacity="0.9"/><stop offset="1" stop-color="#ff4a38" stop-opacity="0"/>
             </linearGradient>
             <clipPath id="fwAheadClip"><polygon id="fwAheadPoly" points="-3000 -3000 30000 -3000 30000 5000 -3000 5000"/></clipPath>
-            <!-- finishes; every centre follows the light -->
+            <!-- the glass finish; every centre follows the light -->
             <radialGradient id="fwGlassG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1500">
                 <stop offset="0" stop-color="#c8161d"/><stop offset="0.28" stop-color="#76060b"/><stop offset="0.62" stop-color="#1e0205"/><stop offset="1" stop-color="#090101"/>
             </radialGradient>
             <radialGradient id="fwRimG" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1300">
                 <stop offset="0" stop-color="#ffe6de" stop-opacity="0.95"/><stop offset="0.45" stop-color="#ff5a46" stop-opacity="0.35"/><stop offset="1" stop-color="#ff3b2f" stop-opacity="0"/>
             </radialGradient>
-            <radialGradient id="fwRimR" gradientUnits="userSpaceOnUse" cx="700" cy="700" r="1400">
-                <stop offset="0" stop-color="#ff6a55" stop-opacity="1"/><stop offset="0.5" stop-color="#d3161b" stop-opacity="0.45"/><stop offset="1" stop-color="#d3161b" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="fwGlowG" gradientUnits="userSpaceOnUse" cx="988" cy="992" r="1250">
-                <stop offset="0" stop-color="#e01a20" stop-opacity="0.62"/><stop offset="0.45" stop-color="#8f0000" stop-opacity="0.25"/><stop offset="1" stop-color="#8f0000" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="fwLacqG" gradientUnits="userSpaceOnUse" x1="0" y1="416" x2="0" y2="1569">
-                <stop offset="0" stop-color="#c9161d"/><stop offset="0.55" stop-color="#8f0000"/><stop offset="1" stop-color="#3a0004"/>
-            </linearGradient>
             <linearGradient id="fwSheenG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="575" y2="170">
                 <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
             </linearGradient>
@@ -715,10 +671,8 @@
         (() => {
             const root = document.documentElement;
             const reduce = root.classList.contains('fx-reduce');
-            /* navigation: compare the inverted version with ?nav=invert. The menu itself is the shared one (script.js);
-               while it is open, and until the page is back, the scroll-driven scenes hold still (scaled, the page would
-               look to them like a scroll) */
-            if (new URLSearchParams(location.search).get('nav') === 'invert') document.body.classList.add('nav-invert');
+            /* navigation: the menu is the shared one (script.js); while it is open, and until the page is back, the
+               scroll-driven scenes hold still (scaled, the page would look to them like a scroll) */
             const navHold = () => root.classList.contains('nav-hold');
             /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
             document.querySelectorAll('.fx-roll').forEach((a) => {
@@ -770,17 +724,7 @@
             const hero = document.querySelector('.fx-hero'), stage = hero.querySelector('.fx-stage');
             const SVGNS = 'http://www.w3.org/2000/svg';
             const mkCam = (cls, inner) => { const e = document.createElementNS(SVGNS, 'svg'); e.setAttribute('class', 'fx-cam ' + cls); e.setAttribute('preserveAspectRatio', 'none'); e.innerHTML = inner; return e; };
-            const FIN = ['glass', 'backlit', 'lacquer'].includes(new URLSearchParams(location.search).get('f')) ? new URLSearchParams(location.search).get('f') : 'glass';
-            stage.classList.add('f-' + FIN);
-            document.querySelectorAll('.fx-switch a').forEach((a) => a.classList.toggle('is-on', a.dataset.f === FIN));
-            // the switch lives off the edge of the screen until its grip is tapped
-            const fxSwitch = document.querySelector('.fx-switch'), fxGrip = fxSwitch.querySelector('.grip');
-            const showSwitch = (on) => { fxSwitch.classList.toggle('is-open', on); fxGrip.setAttribute('aria-expanded', String(on)); };
-            fxGrip.addEventListener('click', () => { showSwitch(true); fxSwitch.querySelector('.is-on').focus({ preventScroll: true }); });
-            fxSwitch.querySelector('.x').addEventListener('click', () => { showSwitch(false); fxGrip.focus({ preventScroll: true }); });
-            const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
-                + '<g class="backlit"><rect class="glow" x="-1500" y="-800" width="5000" height="3400" fill="url(#fwGlowG)"/><use class="bl-body" href="#fwMark"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>'
-                + '<g class="lacquer"><use href="#fwMark" fill="url(#fwLacqG)"/><use href="#fwMark" fill="url(#fwSpec)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
+            const FINISH = '<g class="glass"><use href="#fwMark" fill="url(#fwGlassG)"/><use href="#fwMark" fill="url(#fwSheenG)"/><use class="edge" href="#fwBevel"/><use class="rimlight" href="#fwMark"/></g>';
             const FULL = '<use class="slab" href="#fwSlab"/><use class="dark" href="#fwMark"/><use class="grey" href="#fwMark" clip-path="url(#fwGreyC)"/>'
                 + '<g class="fin" clip-path="url(#fwFinC)">' + FINISH + '</g><use class="feather" href="#fwMark" fill="url(#fwFeatherG)"/><use class="bloom" href="#fwMark" fill="url(#fwBloomG)"/>'
                 + '<use class="flat" href="#fwMark"/><use class="rim" href="#fwMark"/><use class="glint" href="#fwMark"/>';
@@ -789,10 +733,9 @@
             const greyPoly = document.getElementById('fwGreyPoly'), finPoly = document.getElementById('fwFinPoly');
             const featherG = document.getElementById('fwFeatherG'), bloomG = document.getElementById('fwBloomG'), sheenG = document.getElementById('fwSheenG');
             let sheenKey = '';
-            const LG = ['fwGlassG', 'fwRimG', 'fwRimR', 'fwSpec'].map((id) => document.getElementById(id)), glowG = document.getElementById('fwGlowG');
+            const LG = ['fwGlassG', 'fwRimG'].map((id) => document.getElementById(id));
             const hint = stage.querySelector('.fx-hint'), hintW = [...hint.querySelectorAll('b')];
             let hintI = 0;
-            const specGrad = document.getElementById('fwSpec');
             let MX = 0, MY = 0;   // smoothed pointer, -1..1 across the stage
             const fxbox = stage.querySelector('.fx-fxbox'), bandsEl = stage.querySelector('.fx-bands');
             const echoes = [...stage.querySelectorAll('[data-echo]')];
@@ -1125,7 +1068,6 @@
                 FACETS.forEach(({ el, ox, oy }) => { const v = (ox * lx + oy * ly) * str; el.setAttribute('fill-opacity', (v > 0.05 ? Math.min(1, v * 0.95) : 0).toFixed(3)); });
                 const x = (PC.x + lx * 700).toFixed(0), y = (PC.y + ly * 460).toFixed(0);
                 LG.forEach((g) => { g.setAttribute('cx', x); g.setAttribute('cy', y); });
-                glowG.setAttribute('cx', (PC.x + lx * 380).toFixed(0)); glowG.setAttribute('cy', (PC.y + ly * 260).toFixed(0));
             }
             /* blueprint: the outline traced by a point of light (corners flare as it passes), and six
                faint guides growing out from behind the fading name, each with a bright tip */
