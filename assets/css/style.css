@@ -125,8 +125,9 @@ b {
 /* S E C T I O N :   N A V B A R */
 /* Always there, with no bar and no line. What scrolls up beneath it dissolves into a blur that builds toward the top
    edge (two layers: a light blur reaching further down, a stronger one hugging the edge), so text can't collide with
-   the tabs while flat colour stays exactly as it is. The blur spans the whole width; the logo and tabs keep to the
-   page's 1520.8px. The current tab is told apart by tone alone (white, the rest dimmed) */
+   the tabs. Both are kept light, and the edge dims a touch as it goes, the page fading softly to dark off the brink
+   rather than washing out; nothing is brightened or recoloured. The blur spans the whole width; the logo and tabs
+   keep to the page's 1520.8px. The current tab is told apart by tone alone (white, the rest dimmed) */
 .navbar {
     position: fixed;
     top: 0;
@@ -154,16 +155,17 @@ b {
 
 .navbar::before {
     height: calc(118px + env(safe-area-inset-top, 0px));
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     -webkit-mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0));
     mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0));
 }
 
 .navbar::after {
-    height: calc(84px + env(safe-area-inset-top, 0px));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    height: calc(76px + env(safe-area-inset-top, 0px));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     -webkit-mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0));
     mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0));
 }
@@ -2304,3 +2306,4 @@ td {
     filter: none;
     transform: none;
 }
+
