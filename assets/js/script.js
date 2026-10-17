@@ -150,42 +150,73 @@ const navLinks = document.querySelector('.nav-links');
 
 // Check if menu elements exist before adding event listeners
 if (navToggle && navLinks) {
-    // Add a click event listener to the toggle button
-    navToggle.addEventListener('click', () => {
-        // Toggle the 'show' class to display or hide the mobile menu
-        navLinks.classList.toggle('show');
-        // Toggle the 'active' class on the button itself for the 'X' icon
-        navToggle.classList.toggle('active');
-        // Toggle a class on the body to darken the background
-        document.body.classList.toggle('menu-open');
-    });
+    // The veil of blur that comes down behind the open menu (styled in the mobile section of style.css)
+    const navVeil = document.createElement('div');
+    navVeil.className = 'nav-veil';
+    navVeil.setAttribute('aria-hidden', 'true');
+    document.querySelector('.navbar').after(navVeil);
+
+    /* Phones: while the menu is open the page (and the footer under it) steps back, scaled about the middle of the
+       screen. Anything inside it that is fixed to the screen would jump once its parent is scaled, so it is pinned
+       where it stands for as long as the menu is open. <html> carries 'nav-hold' from opening until the page is back,
+       so scroll-driven scenes can hold still meanwhile (scaled, the page would look to them like a scroll) */
+    const recedeEls = [document.querySelector('main'), document.querySelector('body > .footer')].filter(Boolean);
+    const PIN = ['position', 'top', 'left', 'width', 'height'];
+    let pinned = [], unpinTimer = 0;
+    const recede = () => {
+        if (innerWidth > 768 || !recedeEls.length) return;
+        clearTimeout(unpinTimer);
+        document.documentElement.classList.add('nav-hold');
+        if (!pinned.length) {
+            const mr = recedeEls[0].getBoundingClientRect();
+            pinned = [...recedeEls[0].querySelectorAll('*')].filter((el) => getComputedStyle(el).position === 'fixed').map((el) => {
+                const r = el.getBoundingClientRect(), prev = PIN.map((k) => el.style[k]);
+                Object.assign(el.style, { position: 'absolute', top: `${r.top - mr.top}px`, left: `${r.left - mr.left}px`, width: `${r.width}px`, height: `${r.height}px` });
+                return [el, prev];
+            });
+        }
+        recedeEls.forEach((el) => {
+            const r = el.getBoundingClientRect();
+            el.style.transformOrigin = `${innerWidth / 2 - r.left}px ${innerHeight / 2 - r.top}px`;
+            el.classList.add('nav-recede');
+        });
+    };
+    const comeForward = () => {
+        recedeEls.forEach((el) => el.classList.remove('nav-recede'));
+        clearTimeout(unpinTimer);
+        unpinTimer = setTimeout(() => {
+            pinned.forEach(([el, prev]) => PIN.forEach((k, i) => { el.style[k] = prev[i]; }));
+            pinned = [];
+            recedeEls.forEach((el) => { el.style.transformOrigin = ''; });
+            document.documentElement.classList.remove('nav-hold');
+        }, 750);
+    };
+
+    // Open or close the menu: the links, the button's cross, the veil (via body.menu-open) and the page behind
+    const setMenu = (open) => {
+        if (open === navLinks.classList.contains('show')) return;
+        navLinks.classList.toggle('show', open);
+        navToggle.classList.toggle('active', open);
+        document.body.classList.toggle('menu-open', open);
+        navToggle.setAttribute('aria-expanded', String(open));
+        if (open) recede(); else comeForward();
+    };
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('show')));
 
     // Close the menu when a navigation link is clicked
-    const navLinksList = document.querySelectorAll('.nav-links li a');
-    navLinksList.forEach(link => {
-        link.addEventListener('click', () => {
-            // Remove the 'show' class to hide the menu after a link is selected
-            navLinks.classList.remove('show');
-            // Also remove the active class from the toggle button
-            navToggle.classList.remove('active');
-            // And remove the class from the body
-            document.body.classList.remove('menu-open');
-        });
+    navLinks.querySelectorAll('li a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+
+    // Close it on a tap outside the links: the open menu covers the screen, so that is its own empty space
+    document.addEventListener('click', (event) => {
+        if (navToggle.contains(event.target)) return;
+        if (!navLinks.contains(event.target) || event.target === navLinks) setMenu(false);
     });
 
-    // Close the menu when the user clicks outside of the menu and the toggle button
-    document.addEventListener('click', (event) => {
-        // Check if the click was outside of both the toggle button and the menu itself
-        if (!navToggle.contains(event.target) && !navLinks.contains(event.target)) {
-            // If the menu is currently open, close it
-            if (navLinks.classList.contains('show')) {
-                navLinks.classList.remove('show');
-                // Also remove the active class from the toggle button
-                navToggle.classList.remove('active');
-                // And remove the class from the body
-                document.body.classList.remove('menu-open');
-            }
-        }
+    // The page stays put under the open menu, and Escape closes it
+    navLinks.addEventListener('touchmove', (event) => { if (navLinks.classList.contains('show')) event.preventDefault(); }, { passive: false });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && navLinks.classList.contains('show')) { setMenu(false); navToggle.focus(); }
     });
 }
 
@@ -310,7 +341,7 @@ function highlightCurrentLink() {
         currentPath = 'index.html';
     } else {
         // For other pages, extract just the filename from the path
-        currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index.html';   // '/' on frankwu.dev is Home
     }
 
     // Select all the navigation links

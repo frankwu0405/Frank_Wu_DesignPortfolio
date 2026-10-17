@@ -41,78 +41,17 @@
         html:has(body.fx) { background-color: #060606; }
         body.fx { transition: none; }
         body.fx { padding-top: 0; }
-        /* navigation: always there, with no bar and no line. What scrolls up beneath it dissolves into a blur that builds
-           toward the top edge (two layers: a light blur reaching further down, a stronger one hugging the edge), so text
-           can't collide with the tabs while flat colour stays exactly as it is. The current tab is told apart by tone
-           alone (white, the rest dimmed) */
-        .fx .navbar { height: calc(68px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 2rem 0; align-items: stretch; border-bottom: 0; box-shadow: none;
-            background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .fx .navbar::before, .fx .navbar::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; pointer-events: none; }
-        .fx .navbar::before { height: calc(118px + env(safe-area-inset-top, 0px)); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            -webkit-mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0)); mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0)); }
-        .fx .navbar::after { height: calc(84px + env(safe-area-inset-top, 0px)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            -webkit-mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0)); mask-image: linear-gradient(#000 40%, rgba(0, 0, 0, 0)); }
-        .fx .logo { align-self: center; }
-        .fx .logo-img, .fx .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%) drop-shadow(0 0 6px rgba(0, 0, 0, 0.35)); transform: none; }
-        .fx .nav-links-container { display: flex; align-items: stretch; padding: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .fx .navbar .nav-links { position: relative; align-items: stretch; gap: 0; }
-        .fx .navbar .nav-links li { display: flex; }
-        .fx .navbar .nav-links li a { position: relative; display: flex; align-items: center; padding: 0 1.15rem; border-radius: 0; background: none; box-shadow: none;
-            color: rgba(255, 255, 255, 0.55); font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; text-shadow: 0 0 1px rgba(0, 0, 0, 0.35), 0 0 8px rgba(0, 0, 0, 0.35); }
-        .fx .navbar .nav-links li a:hover { color: #fff; background: none; border-radius: 0; }
-        .fx .navbar .nav-links li a.active { color: #fff; font-weight: 600; background: none; box-shadow: none; border-radius: 0; }
-        .fx .navbar .nav-links li.nav-extra { display: none; }
-        /* the comparison (?nav=invert): the navigation in difference blend, so it inverts whatever is behind it */
+        /* navigation: the shared one (style.css, script.js). ?nav=invert compares a version in difference blend, so it
+           inverts whatever is behind it */
         .fx.nav-invert .navbar { mix-blend-mode: difference; }
         .fx.nav-invert .navbar::before, .fx.nav-invert .navbar::after { display: none; }
         .fx.nav-invert .navbar .nav-links li a { color: #fff; text-shadow: none; }
         .fx.nav-invert .logo-img, .fx.nav-invert .logo-img:hover { filter: brightness(100) saturate(100%) invert(0%); }
         .fx.nav-invert.menu-open .navbar { mix-blend-mode: normal; }
-        /* phones: logo and a two-line menu button. Opening the menu, the page steps back into the dark while a veil of blur
-           comes down over it from the top edge, feathered at its leading edge; the links drop in after it, low on the
-           screen where the thumb is, the current one in white. Closing reverses it: the links lift, the veil draws back
-           up and the page comes forward */
-        .fx-veil { display: none; }
-        .fx .nav-toggle { position: relative; width: 44px; height: 44px; align-self: center; order: 2; margin-left: auto; }
-        .fx .nav-links-container { order: 3; }
-        .fx .hamburger { position: absolute; left: 10px; top: 50%; width: 24px; height: 1.5px; margin-top: -0.75px; border-radius: 0; background: transparent; transition: none; }
-        .fx .hamburger::before, .fx .hamburger::after { width: 24px; height: 1.5px; border-radius: 0; background: #fff; left: 0; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s ease; }
-        .fx .hamburger::before { transform: translateY(-4px); }
-        .fx .hamburger::after { transform: translateY(4px); }
-        .fx .nav-toggle.active .hamburger { transform: none; bottom: auto; }
-        .fx .nav-toggle.active .hamburger::before { transform: rotate(45deg); opacity: 1; }
-        .fx .nav-toggle.active .hamburger::after { transform: rotate(-45deg); }
         @media (max-width: 768px) {
-            .fx .navbar { height: calc(72px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 3%; }
-            .fx .nav-links-container { position: absolute; width: 0; height: 0; padding: 0; overflow: visible; }
-            .fx-veil { display: block; position: fixed; z-index: 985; inset: 0; pointer-events: none; background: rgba(6, 6, 6, 0.42);
-                backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-                -webkit-mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0) 55%); mask-image: linear-gradient(#000 45%, rgba(0, 0, 0, 0) 55%);
-                -webkit-mask-size: 100% 220%; mask-size: 100% 220%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-                -webkit-mask-position: 0 100%; mask-position: 0 100%; transition: -webkit-mask-position 0.7s cubic-bezier(0.6, 0, 0.2, 1), mask-position 0.7s cubic-bezier(0.6, 0, 0.2, 1); }
-            .fx-veil::after { content: ""; position: absolute; inset: 4%; border: 1px solid rgba(255, 255, 255, 0.12); opacity: 0; transition: opacity 0.4s ease; }
-            body.fx.menu-open .fx-veil { -webkit-mask-position: 0 0; mask-position: 0 0; transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
-            body.fx.menu-open .fx-veil::after { opacity: 1; transition-delay: 0.3s; }
-            body.fx.menu-open::before { display: none; }
             /* the shared stylesheet locks scrolling with overflow: hidden on the body, which turns the body into its own scroll
                box and unpins every sticky scene; the menu itself stops the page scrolling instead */
             body.fx.menu-open { overflow: visible; overflow-x: clip; }
-            .fx main, .fx > .footer { transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
-            .fx .fx-recede { transform: scale(0.92); }
-            .fx .navbar .nav-links { position: fixed; inset: 0; width: auto; height: 100vh; height: 100dvh; max-width: none; transform: none; display: flex; flex-direction: column;
-                justify-content: flex-end; align-items: flex-start; gap: 0; padding: 0 28px calc(14vh + env(safe-area-inset-bottom, 0px)); background: none;
-                backdrop-filter: none; -webkit-backdrop-filter: none; visibility: hidden; pointer-events: none; transition: visibility 0s linear 0.7s; }
-            .fx .navbar .nav-links.show { transform: none; visibility: visible; pointer-events: auto; transition: none; }
-            .fx .navbar .nav-links li { margin: 0; opacity: 0; transform: translateY(-28px); filter: blur(6px);
-                transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.6, 0, 0.8, 0.4), filter 0.3s ease; }
-            .fx .navbar .nav-links li:nth-child(2) { --i: 1; } .fx .navbar .nav-links li:nth-child(3) { --i: 2; } .fx .navbar .nav-links li:nth-child(4) { --i: 3; }
-            .fx .navbar .nav-links.show li { opacity: 1; transform: none; filter: none; transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease;
-                transition-delay: calc(0.28s + var(--i, 0) * 0.08s); }
-            .fx .navbar .nav-links li a { width: auto; padding: 0.06em 0; font-size: 12.5vw; font-weight: 900; letter-spacing: -0.035em; line-height: 0.95; text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.36); text-shadow: none; }
-            .fx .navbar .nav-links li a:hover, .fx .navbar .nav-links li a.active { background: none; box-shadow: none; border-radius: 0; color: #fff; }
-            .fx .navbar .nav-links li.nav-extra { display: flex; margin-top: 5vh; }
-            .fx .navbar .nav-links li.nav-extra a { font-size: 0.92rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, 0.6); }
         }
         .fx main { max-width: none; }
         :where(.fx) section { padding: 0; max-width: none; margin: 0; }
@@ -558,7 +497,6 @@
         </div>
     </header>
 
-    <div class="fx-veil" aria-hidden="true"></div>
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
     <div class="fx-switch"><button type="button" class="grip" aria-label="Show the finish switch (mockup)" aria-expanded="false"></button><div class="opts" role="group" aria-label="Mockup: finish"><span>Finish</span><a href="?f=glass" data-f="glass">Glass</a><a href="?f=backlit" data-f="backlit">Backlit</a><a href="?f=lacquer" data-f="lacquer">Lacquer</a><button type="button" class="x" aria-label="Hide the finish switch">×</button></div></div>
@@ -778,48 +716,11 @@
         (() => {
             const root = document.documentElement;
             const reduce = root.classList.contains('fx-reduce');
-            /* navigation: compare the inverted version with ?nav=invert */
-            const navTgl = document.querySelector('.nav-toggle'), navList = document.querySelector('.nav-links');
+            /* navigation: compare the inverted version with ?nav=invert. The menu itself is the shared one (script.js);
+               while it is open, and until the page is back, the scroll-driven scenes hold still (scaled, the page would
+               look to them like a scroll) */
             if (new URLSearchParams(location.search).get('nav') === 'invert') document.body.classList.add('nav-invert');
-            // the menu button says whether the menu is open, and Escape closes it
-            navTgl.setAttribute('aria-expanded', 'false');
-            /* phones: while the menu is open the page (and the footer under it) steps back, scaled about the middle of the
-               screen. Anything inside it that is fixed to the screen would jump once its parent is scaled, so it is pinned
-               where it stands for as long as the menu is open */
-            const recedeEls = [document.querySelector('main'), document.querySelector('body > .footer')].filter(Boolean);
-            let pinned = [], unpinT = 0;
-            // the scroll-driven scenes read the page's position from the screen; scaled, it would look like a scroll, so they
-            // hold still until the page is back
-            let navHold = false;
-            const PIN = ['position', 'top', 'left', 'width', 'height'];
-            const openMenu = () => {
-                if (innerWidth > 768) return;
-                clearTimeout(unpinT); navHold = true;
-                if (!pinned.length) {
-                    const mr = recedeEls[0].getBoundingClientRect();
-                    pinned = [...recedeEls[0].querySelectorAll('*')].filter((el) => getComputedStyle(el).position === 'fixed').map((el) => {
-                        const r = el.getBoundingClientRect(), prev = PIN.map((k) => el.style[k]);
-                        Object.assign(el.style, { position: 'absolute', top: `${r.top - mr.top}px`, left: `${r.left - mr.left}px`, width: `${r.width}px`, height: `${r.height}px` });
-                        return [el, prev];
-                    });
-                }
-                recedeEls.forEach((el) => { const r = el.getBoundingClientRect(); el.style.transformOrigin = `${innerWidth / 2 - r.left}px ${innerHeight / 2 - r.top}px`; el.classList.add('fx-recede'); });
-            };
-            const closeMenu = () => {
-                recedeEls.forEach((el) => el.classList.remove('fx-recede'));
-                clearTimeout(unpinT);
-                unpinT = setTimeout(() => { pinned.forEach(([el, prev]) => PIN.forEach((k, i) => { el.style[k] = prev[i]; })); pinned = []; recedeEls.forEach((el) => { el.style.transformOrigin = ''; }); navHold = false; }, 750);
-            };
-            let menuOpen = false;
-            new MutationObserver(() => {
-                const open = navList.classList.contains('show');
-                navTgl.setAttribute('aria-expanded', String(open));
-                if (open !== menuOpen) { menuOpen = open; if (open) openMenu(); else closeMenu(); }
-            }).observe(navList, { attributes: true, attributeFilter: ['class'] });
-            // the page stays put under the menu; a tap on the empty space closes it
-            navList.addEventListener('touchmove', (e) => { if (menuOpen) e.preventDefault(); }, { passive: false });
-            navList.addEventListener('click', (e) => { if (menuOpen && e.target === navList) navTgl.click(); });
-            addEventListener('keydown', (e) => { if (e.key === 'Escape' && navList.classList.contains('show')) { navTgl.click(); navTgl.focus(); } });
+            const navHold = () => root.classList.contains('nav-hold');
             // preview only: the shared script finds the current page by file name, which this mockup doesn't share with Home
             addEventListener('load', () => document.querySelector('.nav-links a[href="index.html"]').classList.add('active'));
             /* footer links: each letter in its own window, so on hover they roll up one after another to a red copy */
@@ -1155,7 +1056,7 @@
             let ticking = false;
             function frame() {
                 ticking = false;
-                if (navHold) return;
+                if (navHold()) return;
                 const vh = VH;
 
                 /* ---- finale ---- */
@@ -1404,7 +1305,7 @@
                     e.setAttribute('viewBox', vbox(ecx, cy, k0 * f));
                 });
             }
-            const heroLoop = (t) => { easeGap(); if (heroOn && !navHold) renderHero(t); requestAnimationFrame(heroLoop); };
+            const heroLoop = (t) => { easeGap(); if (heroOn && !navHold()) renderHero(t); requestAnimationFrame(heroLoop); };
             new IntersectionObserver(([e]) => {
                 heroOn = e.isIntersecting; heroDirty = true;
                 if (!heroOn) { wipeEdge.style.opacity = '0'; if (!reduce) stage.classList.add('is-off'); setTopColor('#060606'); }
@@ -1697,7 +1598,7 @@
                 playClip(pOn && landed && idx === 0);
             }
             new IntersectionObserver(([en]) => { pOn = en.isIntersecting; if (pOn) pJump = true; else playClip(false); }).observe(proof);
-            const proofLoop = (t) => { if (pOn && !navHold) renderProof(t); requestAnimationFrame(proofLoop); };
+            const proofLoop = (t) => { if (pOn && !navHold()) renderProof(t); requestAnimationFrame(proofLoop); };
             requestAnimationFrame(proofLoop);
             // desktop: either side of the centre line steps the row; the centred project (and its name and line) opens it
             pstage.addEventListener('click', (e) => {
