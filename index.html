@@ -241,7 +241,7 @@
             background: radial-gradient(closest-side, rgba(0, 158, 150, 0.32), rgba(0, 158, 150, 0.08) 60%, transparent); }
         /* set like the statement it replaces: one block, left-aligned, centred in the visible height, in the page's display type;
            it keeps the stage's size inside the card, and only scales */
-        .fx-pstats { position: absolute; left: 0; top: 0; width: var(--psw, 100vw); height: calc(var(--psh, 100vh) - var(--gap)); transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw 0; box-sizing: border-box; }
+        .fx-pstats { position: absolute; left: 0; top: 0; width: var(--psw, 100vw); height: calc(var(--psh, 100vh) - var(--gap)); transform-origin: 0 0; display: flex; flex-direction: column; justify-content: center; padding: var(--navbar-height) 6vw calc(var(--navbar-height) + var(--fvh, 1vh) * 4); box-sizing: border-box; }
         .fx-phead { margin: 0; font-size: clamp(3.2rem, 6.8vw, 7.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.022em; line-height: 1.02; color: #fff; }
         /* the claim follows the scroll, like the figures. "Designed," then "built," arrive full size and white; as the
            punchline comes in, that first line steps back (smaller, slightly dimmed) so "and it sells." lands on its own */
@@ -1331,8 +1331,8 @@
                 const OV = 0.14, ov = (fs) => `${(fs * 0.73 * OV).toFixed(1)}px`;   // the card just tucks under the foot of the capitals
                 let nameAbove = 0;
                 pNames.forEach((n) => { const fs = fitType(n, mobile ? sw * 0.9 : PG.W, sh * (mobile ? 0.085 : 0.11)); n.style.setProperty('--ov', ov(fs)); nameAbove = Math.max(nameAbove, n.offsetHeight - fs * 0.73 * OV); });
-                // phones: the landed row is placed so the whole group (the name above the card, the card, and the line and link
-                // below it) is centred in what is visible under the navigation, rather than the card alone sitting low
+                // the landed row is placed so the whole group (the name above the card, the card, and the line and link below
+                // it) is centred in what is visible under the navigation, rather than the card alone sitting low
                 const infoH = Math.max(...pDescs.map((d) => d.offsetHeight));
                 PG.nav = document.querySelector('.navbar').offsetHeight || 72;   // the bar as drawn (the CSS variable runs taller on phones)
                 PG.mOff = (60 + infoH - nameAbove) / 2;
@@ -1420,7 +1420,7 @@
                 }
 
                 const W = PG.W, H = PG.H, sw = PG.sw, sh = PG.sh, cx = sw / 2;
-                const cardY = mobile ? (PG.nav + sh - GAP) / 2 - PG.mOff : (sh - GAP) / 2 + sh * 0.04;
+                const cardY = (PG.nav + sh - GAP) / 2 - PG.mOff;
                 // where the tile is born: well above its slot, so it has somewhere to settle (but never under the navigation)
                 const fy0 = mobile ? Math.max(cardY - H * 0.6, PG.nav + H / 2 + 48) : cardY - H * 0.8;   // phones: a real drop, clear of the bar above
                 pstage.style.setProperty('--slot', `${(cardY - H / 2).toFixed(1)}px`);
