@@ -17,8 +17,6 @@
         (function () {
             var d = document.documentElement, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduce) d.classList.add('fx-reduce');
-            // PREVIEW: ?light=lava turns on the lava-lamp light behind the mark
-            if (/[?&]light=lava\b/.test(location.search)) d.classList.add('fx-lava-on');
             // the opening lands on the hero's first frame, so it must not let the browser restore an old scroll position
             try { if (!reduce && !sessionStorage.getItem('fw-gate')) { d.classList.add('fx-gate-on'); history.scrollRestoration = 'manual'; try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { scrollTo(0, 0); } } } catch (e) {}
             if (!reduce) { d.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) d.classList.remove('js-blur'); }, 3000); }
@@ -99,42 +97,41 @@
             transform: translate3d(calc(var(--mx) * 30px - var(--pan, 0px) * 0.35), calc(var(--my) * 14px), 0) scale(calc(0.82 + var(--glow, 1) * 0.22)); opacity: calc(var(--glow, 1) * 0.85 * var(--lit, 1));
             }
         @keyframes fx-breathe { from { opacity: 0.82; } to { opacity: 1; } }
-        /* PREVIEW (?light=lava): the light at rest moves like flames, or an aurora. Tongues of red stand on the foot of the
+        /* the light at rest moves like flames, or an aurora. Tongues of red stand on the foot of the
            screen and never leave it: each one grows and sinks back, leans from its root and drifts a little, narrowing as it
            stretches, and they overlap at the base, so the light ripples as one body instead of breaking into pieces. The
            tallest reach up behind the mark, which stands dark against them. Periods that never line up, so it never
            repeats. Pre-softened gradients that only move, stretch and lean: no blur, nothing repainted.
            They wait, low in the bottom light, until the name arrives, then come up from a standstill. The first scroll
-           lets them sink back and fade, over the same stretch the name takes to go (--lava) */
-        .fx-lava { display: none; position: absolute; inset: 0; pointer-events: none; overflow: hidden;
-            opacity: calc(var(--lit, 1) * (1 - var(--lava, 0)));
-            transform: translate3d(calc(var(--mx) * 34px), calc(var(--my) * 16px + var(--lava, 0) * var(--fvh, 1vh) * 18), 0); }
-        .fx-lava-on .fx-lava { display: block; }
-        .fx-lava .in { position: absolute; inset: 0; opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s; }
-        .fx-ready .fx-lava .in { opacity: 1; }
+           lets them sink back and fade, over the same stretch the name takes to go (--flame) */
+        .fx-flame { position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+            opacity: calc(var(--lit, 1) * (1 - var(--flame, 0)));
+            transform: translate3d(calc(var(--mx) * 34px), calc(var(--my) * 16px + var(--flame, 0) * var(--fvh, 1vh) * 18), 0); }
+        .fx-flame .in { position: absolute; inset: 0; opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s; }
+        .fx-ready .fx-flame .in { opacity: 1; }
         /* the root: stands just below the edge, and drifts */
-        .fx-lava span { position: absolute; left: var(--x); bottom: calc(var(--fvh, 1vh) * -6); width: calc(var(--w) * var(--wk, 1) * 1vw); height: calc(var(--fvh, 1vh) * var(--h) * var(--hk, 1));
-            margin-left: calc(var(--w) * var(--wk, 1) * -0.5vw); animation: fx-lava-sway var(--sway) ease-in-out infinite alternate; will-change: translate; }
+        .fx-flame span { position: absolute; left: var(--x); bottom: calc(var(--fvh, 1vh) * -6); width: calc(var(--w) * var(--wk, 1) * 1vw); height: calc(var(--fvh, 1vh) * var(--h) * var(--hk, 1));
+            margin-left: calc(var(--w) * var(--wk, 1) * -0.5vw); animation: fx-flame-sway var(--sway) ease-in-out infinite alternate; will-change: translate; }
         /* the tongue: half an ellipse standing on the root, its colour held low and thinning toward the tip */
-        .fx-lava i { position: absolute; inset: 0; transform-origin: 50% 100%;
+        .fx-flame i { position: absolute; inset: 0; transform-origin: 50% 100%;
             background: radial-gradient(50% 100% at 50% 100%, var(--c), var(--c) 18%, color-mix(in srgb, var(--c) 42%, transparent) 55%, transparent);
-            animation: fx-lava-grow var(--grow) ease-in-out infinite alternate, fx-lava-lean var(--lean-t) linear infinite; will-change: transform, scale; }
+            animation: fx-flame-grow var(--grow) ease-in-out infinite alternate, fx-flame-lean var(--lean-t) linear infinite; will-change: transform, scale; }
         /* every tongue starts low, upright and centred, so the first motion is a rise out of the light, never a jump */
-        @keyframes fx-lava-sway { from { translate: 0 0; } to { translate: var(--dx) 0; } }
-        @keyframes fx-lava-grow { from { scale: 1.1 var(--lo); } to { scale: 0.86 1; } }
-        @keyframes fx-lava-lean { 0% { transform: skewX(0deg); animation-timing-function: ease-out; } 25% { transform: skewX(var(--lean)); animation-timing-function: ease-in-out; }
+        @keyframes fx-flame-sway { from { translate: 0 0; } to { translate: var(--dx) 0; } }
+        @keyframes fx-flame-grow { from { scale: 1.1 var(--lo); } to { scale: 0.86 1; } }
+        @keyframes fx-flame-lean { 0% { transform: skewX(0deg); animation-timing-function: ease-out; } 25% { transform: skewX(var(--lean)); animation-timing-function: ease-in-out; }
             75% { transform: skewX(calc(var(--lean) * -1)); animation-timing-function: ease-in; } 100% { transform: skewX(0deg); } }
-        .fx-lava span:nth-child(1) { --x: 16%; --w: 20; --h: 60; --c: rgba(211, 22, 27, 0.30); --lo: 0.5;  --grow: 7s;   --lean: 11deg; --lean-t: 10s; --dx: 3vw;  --sway: 15s; }
-        .fx-lava span:nth-child(2) { --x: 29%; --w: 16; --h: 80; --c: rgba(255, 70, 55, 0.20); --lo: 0.45; --grow: 5.5s; --lean: -12deg; --lean-t: 8s;  --dx: -3vw; --sway: 12s; }
-        .fx-lava span:nth-child(3) { --x: 42%; --w: 22; --h: 72; --c: rgba(211, 22, 27, 0.32); --lo: 0.55; --grow: 8.5s; --lean: 8deg;  --lean-t: 12s; --dx: 4vw;  --sway: 18s; }
-        .fx-lava span:nth-child(4) { --x: 56%; --w: 16; --h: 88; --c: rgba(255, 70, 55, 0.18); --lo: 0.4;  --grow: 6s;   --lean: -11deg; --lean-t: 9s;  --dx: -4vw; --sway: 13s; }
-        .fx-lava span:nth-child(5) { --x: 70%; --w: 22; --h: 66; --c: rgba(211, 22, 27, 0.30); --lo: 0.5;  --grow: 7.5s; --lean: 10deg; --lean-t: 11s; --dx: 3vw;  --sway: 16s; }
-        .fx-lava span:nth-child(6) { --x: 84%; --w: 18; --h: 54; --c: rgba(143, 0, 0, 0.36);   --lo: 0.55; --grow: 9s;   --lean: -8deg; --lean-t: 13s; --dx: -3vw; --sway: 19s; }
-        .fx-lava span:nth-child(7) { --x: 50%; --w: 70; --h: 38; --c: rgba(143, 0, 0, 0.30);   --lo: 0.7;  --grow: 11s;  --lean: 4deg;  --lean-t: 17s; --dx: 2vw;  --sway: 21s; }   /* the wide base that binds them */
+        .fx-flame span:nth-child(1) { --x: 16%; --w: 20; --h: 60; --c: rgba(211, 22, 27, 0.30); --lo: 0.5;  --grow: 7s;   --lean: 11deg; --lean-t: 10s; --dx: 3vw;  --sway: 15s; }
+        .fx-flame span:nth-child(2) { --x: 29%; --w: 16; --h: 80; --c: rgba(255, 70, 55, 0.20); --lo: 0.45; --grow: 5.5s; --lean: -12deg; --lean-t: 8s;  --dx: -3vw; --sway: 12s; }
+        .fx-flame span:nth-child(3) { --x: 42%; --w: 22; --h: 72; --c: rgba(211, 22, 27, 0.32); --lo: 0.55; --grow: 8.5s; --lean: 8deg;  --lean-t: 12s; --dx: 4vw;  --sway: 18s; }
+        .fx-flame span:nth-child(4) { --x: 56%; --w: 16; --h: 88; --c: rgba(255, 70, 55, 0.18); --lo: 0.4;  --grow: 6s;   --lean: -11deg; --lean-t: 9s;  --dx: -4vw; --sway: 13s; }
+        .fx-flame span:nth-child(5) { --x: 70%; --w: 22; --h: 66; --c: rgba(211, 22, 27, 0.30); --lo: 0.5;  --grow: 7.5s; --lean: 10deg; --lean-t: 11s; --dx: 3vw;  --sway: 16s; }
+        .fx-flame span:nth-child(6) { --x: 84%; --w: 18; --h: 54; --c: rgba(143, 0, 0, 0.36);   --lo: 0.55; --grow: 9s;   --lean: -8deg; --lean-t: 13s; --dx: -3vw; --sway: 19s; }
+        .fx-flame span:nth-child(7) { --x: 50%; --w: 70; --h: 38; --c: rgba(143, 0, 0, 0.30);   --lo: 0.7;  --grow: 11s;  --lean: 4deg;  --lean-t: 17s; --dx: 2vw;  --sway: 21s; }   /* the wide base that binds them */
         /* held still under the opening, so they start from rest when the name arrives; stopped again once scrolled away */
-        .fx-lava .in span, .fx-lava .in i { animation-play-state: paused; }
-        .fx-ready .fx-stage:not(.is-moved) .fx-lava .in span, .fx-ready .fx-stage:not(.is-moved) .fx-lava .in i { animation-play-state: running; }
-        .fx-reduce .fx-lava { display: none; }
+        .fx-flame .in span, .fx-flame .in i { animation-play-state: paused; }
+        .fx-ready .fx-stage:not(.is-moved) .fx-flame .in span, .fx-ready .fx-stage:not(.is-moved) .fx-flame .in i { animation-play-state: running; }
+        .fx-reduce .fx-flame { display: none; }
         .fx-par { position: absolute; inset: 0; pointer-events: none; }
         .fx-ink { position: absolute; inset: 0; z-index: -1; background: var(--ink); pointer-events: none; }   /* behind the glow and every layer */
         .fx-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40% 35% at 50% 100%, rgba(211, 22, 27, 0.18), transparent 70%); animation: fx-breathe 6s ease-in-out infinite alternate; filter: opacity(var(--lit, 1)); }
@@ -455,10 +452,10 @@
             .fx-pick { font-size: 8.4vw; }
             /* on the tall screen the tongues are a little wider for the narrow width, so each still reads as its own, and a
                touch shorter; the wide base is fainter and the bottom light dimmer, so the foot glows rather than reads solid */
-            .fx-ready .fx-lava .in { opacity: 0.82; }
-            .fx-lava span { --wk: 1.7; --hk: 0.86; }
-            .fx-lava span:nth-child(7) { --c: rgba(143, 0, 0, 0.16); }
-            .fx-lava-on .fx-light { opacity: calc(var(--glow, 1) * 0.85 * var(--lit, 1) * 0.55); }
+            .fx-ready .fx-flame .in { opacity: 0.82; }
+            .fx-flame span { --wk: 1.7; --hk: 0.86; }
+            .fx-flame span:nth-child(7) { --c: rgba(143, 0, 0, 0.16); }
+            html:not(.fx-reduce) .fx-light { opacity: calc(var(--glow, 1) * 0.85 * var(--lit, 1) * 0.55); }
             .fx-pstats { padding: var(--navbar-height) 20px 0; }
             .fx-phead { font-size: 12.4vw; --set0: 0.58em; --set1: 0.46em; }
             .fx-psub { font-size: 1.05rem; }
@@ -565,7 +562,7 @@
             <div class="fx-stage">
                 <div class="fx-ink" aria-hidden="true"></div>
                 <div class="fx-light" aria-hidden="true"></div>
-                <div class="fx-lava" aria-hidden="true"><div class="in"><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span></div></div>
+                <div class="fx-flame" aria-hidden="true"><div class="in"><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span></div></div>
                 <div class="fx-par echo2" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.12" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par echo1" aria-hidden="true"><svg class="fx-cam fx-echo" data-echo="1.06" preserveAspectRatio="none"><use href="#fwMark"/></svg></div>
                 <div class="fx-par markp" aria-hidden="true">
@@ -1192,8 +1189,8 @@
                 stage.style.setProperty('--fade', fade.toFixed(3));
                 stage.style.setProperty('--em', em.toFixed(3));
                 stage.style.setProperty('--hide', (reduce ? 0 : clamp(hp / HIDE1)).toFixed(3));
-                // the lava light sinks and fades over the stretch the name takes to go, then stops
-                stage.style.setProperty('--lava', (reduce ? 0 : ease(clamp(hp / FADE1))).toFixed(4));
+                // the flame light sinks and fades over the stretch the name takes to go, then stops
+                stage.style.setProperty('--flame', (reduce ? 0 : ease(clamp(hp / FADE1))).toFixed(4));
                 stage.classList.toggle('is-moved', hp >= FADE1);
                 stage.style.setProperty('--zm', zm.toFixed(3));
                 stage.style.setProperty('--glint', (-em * 160).toFixed(1));
