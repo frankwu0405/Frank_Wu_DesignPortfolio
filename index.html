@@ -34,8 +34,11 @@
         @supports (height: 100lvh) { .fx { --gap: calc(100lvh - 100svh); } }
         .fx-lprobe { position: absolute; left: -9999px; top: 0; width: 1px; height: 100vh; pointer-events: none; visibility: hidden; }
         @supports (height: 100lvh) { .fx-lprobe { height: 100lvh; } }
+        /* --motto: the size of the two mottos ("How I work" and the finale), a matched pair. It follows the width, but never
+           past what the height allows, so on a wide, short window (a laptop with display scaling) the finale still fits */
         body.fx { --red: #d3161b; --deep: #8f0000; --ink: #060606; --dim: #8c8c8c; --lean: 16.5deg; --nitori: #009e96;
-            background: var(--ink); background-image: none; padding-bottom: 34px; overflow-x: clip; font-family: 'Inter', sans-serif; }
+            --motto: clamp(2.6rem, min(7vw, calc(var(--fvh, 1vh) * 11.5)), 7.6rem);
+            background: var(--ink); background-image: none; padding-bottom: env(safe-area-inset-bottom, 0px); overflow-x: clip; font-family: 'Inter', sans-serif; }
         .fx .section-bg-overlay { display: none; }
         html:has(body.fx) { background-color: #060606; }
         body.fx { transition: none; }
@@ -77,12 +80,14 @@
 
         /* Cursor */
         .fx-cursor { position: fixed; left: 0; top: 0; z-index: 60; box-sizing: border-box; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; border: 1px solid transparent;
-            background: var(--red); pointer-events: none; display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
+            background: transparent; pointer-events: none; display: grid; place-items: center; color: #fff; font-size: 0; font-weight: 600; letter-spacing: 0.16em; opacity: 0;
             transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease, font-size 0.2s ease, opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; }
         /* over a project: a hairline ring, its middle softly darkened and blurred so the word reads over the live page */
         .fx-cursor.is-view { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: rgba(6, 6, 6, 0.42); border-color: rgba(255, 255, 255, 0.6);
             -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 0.6rem; letter-spacing: 0.24em; text-indent: 0.24em; opacity: 1; }
         .fx-cursor.is-arrow { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: transparent; font-size: 1.6rem; font-weight: 300; letter-spacing: 0; opacity: 1; }
+        /* leaving the row: it fades out as it is, rather than shrinking back through another look on its way out */
+        .fx-cursor.is-off { opacity: 0; }
         .fx-cursor .ar { stroke-width: 1; }
         .fx-cursor .ar.l { transform: scaleX(-1); }
         @media (hover: none), (pointer: coarse) { .fx-cursor { display: none; } }
@@ -361,9 +366,10 @@
            behind them from one period to the other and is the scene's light: what it nears picks up a red glow and casts
            a shadow away from it, and the word it touches fills from that point outward */
         .fx-process { position: relative; padding: calc(var(--fvh, 1vh) * 16) 6vw calc(var(--fvh, 1vh) * 8); }
-        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 16); text-align: center; }
+        /* well clear of the steps (more than the steps are from each other), so the motto reads as the section's head */
+        .fx-pr-head { max-width: 1100px; margin: 0 auto calc(var(--fvh, 1vh) * 26); text-align: center; }
         /* the two mottos are a matched pair, the section's top level; the steps sit at about half their size */
-        .fx-pr-head .display { font-size: clamp(2.6rem, 7vw, 7.6rem); max-width: 15ch; margin-inline: auto; text-wrap: balance; }
+        .fx-pr-head .display { font-size: var(--motto); max-width: 15ch; margin-inline: auto; text-wrap: balance; }
         .fx-pr-body { position: relative; max-width: 1100px; margin: 0 auto; }
         .fx-steps { display: grid; justify-items: center; gap: calc(var(--fvh, 1vh) * 13); }
         .fx-step { position: relative; z-index: 2; width: 100%; text-align: center; perspective: 900px; transform: translate3d(0, var(--py, 0px), 0) scale(var(--sc, 1)); }
@@ -382,8 +388,10 @@
         .fx-step p { margin: 0 auto; max-width: 34ch; color: #c9c9c9; line-height: 1.7; text-shadow: 0 0 3px var(--ink), 0 0 7px var(--ink); }
         /* the words are solid to the line (a dark edge round each letter), so where it runs behind them it stops short */
         .fx-step h3 span, .fx-end .display { --halo: 0 0 2px var(--ink), 0 0 6px var(--ink), 0 0 12px var(--ink); }
-        /* where the line's head is, the dark around it warms */
-        .fx-thread-light { position: absolute; z-index: 0; left: 0; top: 0; width: var(--tlS, 960px); height: var(--tlS, 960px); margin: calc(var(--tlS, 960px) / -2) 0 0 calc(var(--tlS, 960px) / -2);
+        /* where the line's head is, the dark around it warms. Its box is held inside the finale's foot (and free well above),
+           so as the head lands on the period the glow can't hang below the page and make it scroll on past the footer */
+        .fx-thread-clip { position: absolute; z-index: 0; left: 0; right: 0; top: -100vh; bottom: 0; overflow: hidden; pointer-events: none; }
+        .fx-thread-light { position: absolute; z-index: 0; left: 0; top: 100vh; width: var(--tlS, 960px); height: var(--tlS, 960px); margin: calc(var(--tlS, 960px) / -2) 0 0 calc(var(--tlS, 960px) / -2);
             border-radius: 50%; pointer-events: none; opacity: 0; will-change: transform, opacity;
             background: radial-gradient(closest-side, rgba(211, 22, 27, 0.2), rgba(211, 22, 27, 0.07) 45%, rgba(211, 22, 27, 0)); }
         /* the two words the line runs between: white until the red passes over them (--sw, 0 to 1), "intentional." from
@@ -399,7 +407,10 @@
 
         /* 7 · Finale: the mark returns, lit. Its heading stands over the line's lower layer, so the line runs behind the
            words on its way into the period */
-        .fx .fx-end { position: relative; overflow: hidden; padding: calc(var(--fvh, 1vh) * 20) 6vw 0; text-align: center; --p: 0.5; --pt: 80px; --hs: clamp(2.6rem, 7vw, 7.6rem); }
+        /* its padding has to outrank the shared stylesheet's old #contact rule (80px all round) to take effect: the top and
+           sides as they have always shown, and a short foot so the buttons sit close above the footer */
+        #contact.fx-end { padding: 80px 20px calc(var(--fvh, 1vh) * 7); }
+        .fx .fx-end { position: relative; overflow: hidden; text-align: center; --p: 0.5; --pt: 80px; --hs: var(--motto); }
         .fx-end > :not(.mark2) { position: relative; z-index: 2; }
         .fx-end .mark2 { position: absolute; z-index: 0; left: 50%; top: calc(var(--pt) + var(--hs) * 1.8); width: 92vw; aspect-ratio: 1872 / 1153; pointer-events: none;
             fill: var(--deep); stroke: rgba(255, 70, 55, 0.5); stroke-width: 1;
@@ -468,9 +479,12 @@
             .fx-pbg img { filter: blur(28px) brightness(0.38) saturate(1.2); }
             .fx-process { padding: calc(var(--fvh, 1vh) * 12) 20px calc(var(--fvh, 1vh) * 6); }
             .fx-steps { gap: calc(var(--fvh, 1vh) * 9); }
+            .fx-pr-head { margin-bottom: calc(var(--fvh, 1vh) * 20); }
             .fx-step h3 { font-size: 6.6vw; }
             .fx-thread-light { --tlS: 600px; }
-            .fx .fx-end { padding: calc(var(--fvh, 1vh) * 14) 20px calc(var(--fvh, 1vh) * 8); }
+            #contact.fx-end { padding-bottom: calc(var(--fvh, 1vh) * 6); }
+            /* the shared footer stacks its line and icons with a wide gap on phones; closer here */
+            .fx .footer { gap: 10px; padding-top: 14px; padding-bottom: 14px; }
             .fx-end .mark2 { width: 170vw; }
             .fx-mailto { font-size: 6.2vw; }
             .fx-sbtn { height: 42px; padding: 0 18px; font-size: 0.72rem; }
@@ -679,7 +693,7 @@
                 </div>
             </div>
         </section>
-            <div class="fx-thread-light" aria-hidden="true"></div>
+            <div class="fx-thread-clip" aria-hidden="true"><div class="fx-thread-light"></div></div>
             <svg class="fx-thread back" aria-hidden="true">
                 <defs><clipPath id="thrBackClip"></clipPath><clipPath id="thrFrontClip"></clipPath></defs>
                 <g clip-path="url(#thrBackClip)">
@@ -1341,8 +1355,8 @@
                 if (on) { if (!vid.getAttribute('src')) load(0); vid.play().catch(() => {}); } else vid.pause();
             }
 
-            /* cursor: a red dot that opens to "View" over the centred project, and turns into the row's arrows either side of
-               the screen's centre line (desktop) */
+            /* cursor: "View" over the centred project, and the row's arrows either side of the screen's centre line (desktop);
+               hidden anywhere else */
             const cur = document.querySelector('.fx-cursor');
             if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
                 let x = 0, y = 0, cx2 = 0, cy2 = 0, curMode = '';
@@ -1350,6 +1364,8 @@
                     if (!el || !el.closest) return;
                     const mode = el.closest('[data-cursor]') ? 'view' : el.closest('.fx-pstage.is-landed') && !el.closest('.fx-pnav') ? (x < innerWidth / 2 ? 'prev' : 'next') : '';
                     if (mode === curMode) return; curMode = mode;
+                    cur.classList.toggle('is-off', !mode);
+                    if (!mode) return;   // keeps the look it had, so it only fades
                     cur.classList.toggle('is-view', mode === 'view'); cur.classList.toggle('is-arrow', mode === 'prev' || mode === 'next');
                     if (mode === 'prev' || mode === 'next') cur.innerHTML = '<svg class="ar" viewBox="0 0 12 12"><path d="M1 6h9.6M6.4 1.8 10.6 6l-4.2 4.2"/></svg>'.replace('class="ar"', mode === 'prev' ? 'class="ar l"' : 'class="ar"'); else cur.textContent = 'VIEW';
                 };
