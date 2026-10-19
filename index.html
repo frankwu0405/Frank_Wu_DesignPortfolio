@@ -95,10 +95,12 @@
 
         /* 1 · Hero: the hidden mark (pinned) */
         .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 660); }   /* scroll spacer for the fixed scene */
-        /* iPhone Safari ends the fixed scene at the top of its bottom bar and shows the page scrolling beneath it, here
-           this spacer over the body (red while the top strip is). Ink, so the bar stays dark; it stops where the proof
-           slides under the hero's end (--under, set with the layout), so the wipe still uncovers the proof */
-        .fx-hero { background: linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - var(--under, 0px)) no-repeat; }
+        /* iPhone Safari ends the fixed scene at the top of its bottom bar: shrunk, the bar shows the page scrolling beneath
+           it, here this spacer over the body (red while the top strip is); full size, it fills with the background colour
+           of what lies there. So an ink layer with a real background colour, not a gradient, keeps the bar dark both ways.
+           It stops where the proof slides under the hero's end (--under, set with the layout), so the wipe still uncovers
+           the proof */
+        .fx-hfloor { position: absolute; left: 0; right: 0; top: 0; height: calc(100% - var(--under, 0px)); background-color: var(--ink); pointer-events: none; }
         .fx-stage.is-off { visibility: hidden; }
         .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
@@ -507,6 +509,7 @@
         .fx-reduce .fx-step h3 span::after { transition: none; }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
+        .fx-reduce .fx-hfloor { display: none; }   /* nothing turns red here, and the stage is in the flow under it */
         .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
         .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-stage::before, .fx-reduce .fx-cue i { animation: none; }
@@ -614,6 +617,7 @@
                     </div>
                 </div>
             </div>
+            <div class="fx-hfloor" aria-hidden="true"></div>
         </section>
 
         <!-- 3 · Proof: the results stack up on the red; the red closes in to the Nitori tile, which settles into the row -->
@@ -783,26 +787,14 @@
                the top of the scene so the strip blends in instead of reading as a cut-off. */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
             let topColor = '';
-            /* TEMPORARY, ?bar=debug: everything that could sit under Safari's bottom bar takes its own colour, to see which
-               one shows there (page green, body magenta, stage cyan, the scene's red orange, the hero's dark blue, the stats
-               stage purple, the stats section white, the wipe's line yellow) */
-            const barDebug = new URLSearchParams(location.search).get('bar') === 'debug';
-            if (barDebug) {
-                const s = document.createElement('style');
-                s.textContent = 'body.fx { --deep: #ff8800 !important; } .fx-hero { --ink: #0040ff; } .fx-hero .fx-stage { --ink: #060606; }'
-                    + ' .fx-proof { background: #ffffff !important; } .fx-pstage { background: #9b30ff !important; } .fx-pstage::after { display: none; }'
-                    + ' .fx-wipe-edge { background: #ffee00 !important; box-shadow: 0 0 14px #ffee00 !important; }';
-                document.head.appendChild(s);
-            }
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                const dbg = (debugC) => barDebug && c !== '#060606' ? debugC : c;
-                root.style.backgroundColor = dbg('#00ff00');
-                document.body.style.backgroundColor = dbg('#ff00ff');
+                root.style.backgroundColor = c;
+                document.body.style.backgroundColor = c;
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
-                if (st) st.style.backgroundColor = dbg('#00ffff');
+                if (st) st.style.backgroundColor = c;
             }
 
             /* ---------- elements ---------- */
