@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="../assets/images/LOGOs-10.svg">
     <script>
         // Blur reveal (script.js): hide headings for the reveal only when motion is welcome,
@@ -19,93 +19,77 @@
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('js-blur'); setTimeout(function () { if (!window.__blurReady) document.documentElement.classList.remove('js-blur'); }, 3000); }
     </script>
     <style>
-        /* About, as a split stage: the words scroll on one side while a picture holds still on the other and changes
-           as each paragraph arrives, cut away along the home page's 16.5° lean. In the home page's own world: ink,
-           white Inter, 900-weight capitals, one red for the cut and the actions */
-        body.ab { --ink: #060606; --red: #d3161b; --lean: 16.5deg; --tan: 0.29621;
-            --m: clamp(16px, 3.4vw, 48px); --g: clamp(24px, 3.4vw, 56px);
-            background: var(--ink); background-image: none; padding-top: 0; color: #fff; scrollbar-color: #3a3a3a var(--ink);
-            overflow-x: clip; }   /* not the shared stylesheet's hidden: that makes the body its own scroll box and nothing sticks */
+        /* About on one screen: the words, the facts, and the person, in the home page's world (ink, white Inter,
+           900-weight capitals, one red, the 16.5° lean). Its one moment: the portrait first shows only through the FW
+           mark, then the home page's red scan line passes along the lean and leaves the person behind the mark */
+        body.ab { --ink: #060606; --red: #d3161b; --lean: 16.5deg; --tan: 0.29621; --m: clamp(16px, 3.4vw, 48px);
+            background: var(--ink); background-image: none; padding-top: 0; color: #fff; overflow-x: clip; scrollbar-color: #3a3a3a var(--ink); }
         html:has(body.ab) { background-color: #060606; }
         .ab ::selection { background: var(--red); color: #fff; }
         .ab a:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
         .ab main.ab-main { max-width: none; margin: 0; }
-        /* the stage stays pinned only beside the paragraphs, so it leaves before the close */
-        .ab-split { display: grid; grid-template-columns: 46fr 54fr; }
         .ab p { color: #fff; }
 
-        /* the stage: holds still while the words scroll past it */
-        /* the frame keeps to a steady shape (no taller than 1.15 times its width) centred under the navigation, so the
-           4:3 pictures are not cropped to a sliver or stretched */
-        .ab-stage { position: sticky; top: 0; height: 100vh; grid-column: 1; grid-row: 1; --fw: calc(46vw - var(--m) - var(--g));
-            --fh: min(calc(100vh - var(--navbar-height) - 12vh), calc(var(--fw) * 1.15));
-            --ft: calc(var(--navbar-height) + (100vh - var(--navbar-height) - var(--fh)) / 2); --s: calc(var(--fh) * var(--tan)); }
-        .ab-frame { position: absolute; left: var(--m); right: var(--g); top: var(--ft); height: var(--fh); overflow: hidden;
-            clip-path: polygon(0 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); background: #0d0d0d; }
-        .ab-pic { position: absolute; inset: 0; margin: 0; }
-        .ab-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ab-pic:nth-child(1) { z-index: 4; } .ab-pic:nth-child(2) { z-index: 3; } .ab-pic:nth-child(3) { z-index: 2; } .ab-pic:nth-child(4) { z-index: 1; }
-        .ab-pic[data-pos="face"] img { object-position: 50% 30%; }
-        .ab-pic[data-pos="left"] img { object-position: 20% 50%; }
-        .ab-pic[data-pos="kit"] img { object-position: 0% 50%; }   /* the kit's titles start at its left edge */
-        .ab-pic[data-pos="finger"] img, .ab-fig[data-pos="finger"] img { object-position: 56% 50%; }
-        /* the frame's own cut, and the line that cuts each picture away; both lean like the home page's wipe */
-        .ab-cut, .ab-edge { position: absolute; width: 1.5px; transform: skewX(calc(var(--lean) * -1)); transform-origin: 0 100%; pointer-events: none; }
-        .ab-cut { top: var(--ft); height: var(--fh); left: calc(100% - var(--g) - var(--s) - 0.75px); background: var(--red); }
-        .ab-edge { top: 0; height: 100%; left: 0; background: #ff5446; opacity: 0; z-index: 5; }
+        .ab-page { min-height: 100vh; box-sizing: border-box; padding: calc(var(--navbar-height) + 3vh) var(--m) 5vh;
+            display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr); grid-template-rows: auto 1fr auto;
+            column-gap: clamp(28px, 3.4vw, 64px); row-gap: clamp(28px, 4vh, 56px); max-width: none; margin: 0; }
 
         /* the words */
-        .ab-text { grid-column: 2; grid-row: 1; padding: 0 var(--m) 0 0; }
-        .ab-ch { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--navbar-height) + 4vh) 0 8vh; }
-        .ab-ch > :not(.ab-skills) { max-width: 34em; }
-        .ab-name { margin: 0 0 0.32em; font-size: clamp(3.4rem, 7vw, 7.4rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.86; white-space: nowrap; }
-        .ab-say { margin: 0; font-size: clamp(1.2rem, 1.6vw, 1.55rem); font-weight: 400; line-height: 1.5; letter-spacing: -0.006em; text-wrap: pretty; }
-        .ab-h { margin: 0 0 0.5em; font-size: clamp(2.6rem, 4.6vw, 4.8rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.9; }
-        .ab-skills { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); column-gap: clamp(28px, 4vw, 72px); row-gap: 0.5em; font-weight: 400; }
-        .ab-skills li { font-size: clamp(1.2rem, 1.8vw, 1.75rem); font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; color: rgba(255, 255, 255, 0.9); }
+        .ab-name { grid-column: 1 / 3; grid-row: 1; margin: 0; align-self: end; font-size: clamp(3.4rem, 7.2vw, 8rem); font-weight: 900; text-transform: uppercase;
+            letter-spacing: -0.045em; line-height: 0.84; white-space: nowrap; }
+        .ab-bio { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; gap: 1.1em; max-width: 36em; }
+        .ab-bio p { margin: 0; font-size: clamp(1rem, 1.12vw, 1.12rem); line-height: 1.62; }
 
-        /* the close: across the whole page */
-        .ab-close { max-width: none; margin: 0; padding: 22vh var(--m) 16vh; }   /* not the shared 1200px centred section */
-        .ab-close .ab-h { font-size: clamp(3rem, 8vw, 8.6rem); margin-bottom: 0.3em; }
-        .ab-close .ab-say { max-width: 30em; margin-bottom: 1.8em; color: rgba(255, 255, 255, 0.86); }
-        .ab-reach { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
-        .ab-mail { --rh: 1.2em; display: inline-flex; padding-bottom: 0.12em; border-bottom: 1px solid rgba(255, 255, 255, 0.28); color: #fff; text-decoration: none;
-            font-size: clamp(1.5rem, 3.4vw, 3.2rem); font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; transition: border-color 0.4s ease; }
+        /* the facts: plain lists, headed by plain bold words */
+        .ab-facts { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; gap: 1.6em; font-size: 0.95rem; line-height: 1.45; }
+        .ab-facts h2 { margin: 0 0 0.45em; font-size: 0.95rem; font-weight: 700; letter-spacing: 0; line-height: 1.45; color: #fff; }
+        .ab-facts ul { list-style: none; margin: 0; padding: 0; font-weight: 400; }
+        .ab-facts li { margin: 0; color: rgba(255, 255, 255, 0.66); }
+        .ab-facts li b { display: block; font-style: normal; font-weight: 600; color: #fff; }
+        .ab-facts .ab-role + .ab-role { margin-top: 0.75em; }
+        .ab-facts ul.ab-cols { display: grid; grid-template-columns: repeat(2, max-content); column-gap: 1.4em; }
+
+        /* the person: a frame cut on the lean, the portrait in two layers (seen through the mark, and whole), and the
+           red line that passes between them */
+        .ab-portrait { grid-column: 3; grid-row: 1 / 3; align-self: stretch; position: relative; margin: 0; min-height: 0; }
+        .ab-frame { position: absolute; inset: 0; overflow: hidden; background: #0c0c0c; --s: calc(var(--h, 600px) * var(--tan));
+            clip-path: polygon(0 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); touch-action: pan-y; }
+        .ab-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; }
+        .ab-mark { -webkit-mask: var(--fw) no-repeat 50% 40% / 118% auto; mask: var(--fw) no-repeat 50% 40% / 118% auto; opacity: 0; transition: opacity 0.7s ease; }
+        .ab-frame.is-armed .ab-mark { opacity: 1; }
+        .ab-scan { position: absolute; top: 0; left: 0; width: 1.5px; height: 100%; background: #ff5446; transform: skewX(calc(var(--lean) * -1)); transform-origin: 0 100%;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .ab-frame.is-scanning .ab-scan { opacity: 1; }
+        .ab-cut { position: absolute; top: 0; height: 100%; width: 1.5px; right: calc(var(--s, 0px) - 0.75px); background: var(--red); transform: skewX(calc(var(--lean) * -1));
+            transform-origin: 0 100%; pointer-events: none; }
+
+        /* the way to reach him */
+        .ab-reach { grid-column: 1 / -1; grid-row: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+        .ab-mail { --rh: 1.2em; display: inline-flex; padding-bottom: 0.1em; border-bottom: 1px solid rgba(255, 255, 255, 0.28); color: #fff; text-decoration: none;
+            font-size: clamp(1.3rem, 2.4vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; transition: border-color 0.4s ease; margin-right: auto; }
         .ab-mail:hover, .ab-mail:focus-visible { border-color: var(--red); }
         .ab-more { display: flex; flex-wrap: wrap; gap: 12px; }
         .ab-btn { display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; text-decoration: none;
-            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; transition: border-color 0.4s ease; }
+            font-size: 0.76rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; transition: border-color 0.4s ease; }
         .ab-btn:hover, .ab-btn:focus-visible { border-color: var(--red); }
         .ab-roll .rc { display: inline-block; overflow: hidden; vertical-align: top; height: var(--rh, 1.6em); line-height: var(--rh, 1.6em); }
         .ab-roll .rc > span { display: inline-block; text-shadow: 0 var(--rh, 1.6em) 0 var(--red); transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1) calc(var(--i) * 18ms); }
         .ab-roll:hover .rc > span, .ab-roll:focus-visible .rc > span { transform: translateY(calc(var(--rh, 1.6em) * -1)); }
-        .ab .footer { position: relative; }
 
-        /* phones: one sequence, each picture over its own paragraph, wiped in along the same lean */
-        .ab-fig { display: none; }
-        @media (max-width: 900px) {
-            body.ab { --m: 6vw; }
-            .ab-split { display: block; }
-            .ab-stage { display: none; }
-            .ab-text { padding: 0 var(--m); }
-            .ab-ch { min-height: 0; padding: 0 0 15vh; }
-            .ab-ch:first-child { padding-top: calc(var(--navbar-height) + 2vh); }
-            .ab-fig { display: block; position: relative; margin: 0 0 9vw; aspect-ratio: 4 / 3; --s: calc(var(--w, 88vw) * 0.75 * var(--tan));
-                clip-path: polygon(0 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); background: #0d0d0d; overflow: hidden; }
-            .ab-fig.is-tall { aspect-ratio: 4 / 5; --s: calc(var(--w, 88vw) * 1.25 * var(--tan)); }
-            .ab-fig img { width: 100%; height: 100%; object-fit: cover; display: block; }
-            .ab-fig .ab-edge { opacity: 0; }
-            .ab-name { font-size: 17vw; }
-            .ab-say { font-size: 1.15rem; }
-            .ab-h { font-size: 12vw; }
-            .ab-skills { grid-template-columns: 1fr 1fr; column-gap: 20px; }
-            .ab-skills li { font-size: 1.05rem; }
-            .ab-close { padding: 10vh var(--m) 12vh; }
-            .ab-close .ab-h { font-size: 15vw; }
-            .ab-mail { font-size: 6.4vw; }
+        /* narrower screens: one column, the person first */
+        @media (max-width: 1000px) {
+            .ab-page { display: flex; flex-direction: column; gap: 0; min-height: 0; padding: calc(var(--navbar-height) + 2vh) 6vw 10vh; }
+            .ab-portrait { order: 1; aspect-ratio: 4 / 5; width: 100%; max-width: 560px; margin: 0 0 8vw; }
+            .ab-name { order: 2; font-size: 16.5vw; margin: 0 0 0.3em; white-space: normal; }
+            .ab-bio { order: 3; }
+            .ab-bio p { font-size: 1.06rem; }
+            .ab-facts { order: 4; margin-top: 12vw; display: grid; grid-template-columns: 1fr 1fr; gap: 2em 6vw; }
+            .ab-reach { order: 5; margin-top: 14vw; flex-direction: column; align-items: flex-start; }
+            .ab-mail { font-size: 6.4vw; margin-right: 0; }
             .ab-btn { height: 44px; padding: 0 18px; font-size: 0.72rem; }
         }
-        @media (prefers-reduced-motion: reduce) { .ab-edge { display: none; } }
+        @media (max-width: 1000px) { .ab-facts ul.ab-cols { grid-template-columns: 1fr; } }   /* already two columns of facts */
+        @media (max-width: 420px) { .ab-facts { grid-template-columns: 1fr; } .ab-facts ul.ab-cols { grid-template-columns: repeat(2, max-content); } }
     </style>
 </head>
 <body class="ab">
@@ -127,52 +111,60 @@
     </header>
 
     <main class="ab-main">
-        <div class="ab-split">
+        <section class="ab-page">
+            <h1 class="ab-name">Frank Wu</h1>
 
-        <div class="ab-text">
-            <section class="ab-ch">
-                <figure class="ab-fig is-tall"><img src="../assets/images/about/portrait_900.webp" alt="Frank Wu at night by Sydney Harbour" loading="lazy" decoding="async"><i class="ab-edge" aria-hidden="true"></i></figure>
-                <h1 class="ab-name">Frank Wu</h1>
-                <p class="ab-say">As a junior UI/UX designer and recent University of Sydney graduate (Bachelor of Design Computing), my goal is to craft simple, thoughtful solutions that merge technology into one's daily life.</p>
-            </section>
-            <section class="ab-ch">
-                <figure class="ab-fig" data-pos="finger"><img src="../assets/images/about/sofa_button.webp" alt="A finger pressing the small recline button on an electric sofa, from Frank's Nitori sofa guide" loading="lazy" decoding="async"><i class="ab-edge" aria-hidden="true"></i></figure>
-                <p class="ab-say">I believe that the best technology is invisible—it simply allows us to complete our daily tasks more seamlessly and intuitively. I focus on transforming complex problems into effortless routines.</p>
-            </section>
-            <section class="ab-ch">
-                <figure class="ab-fig"><img src="../assets/images/home/skill_research.webp" alt="A participant testing a prototype on a laptop during a usability session" loading="lazy" decoding="async"><i class="ab-edge" aria-hidden="true"></i></figure>
-                <p class="ab-say">My past experience as an English instructor and editor informs this approach, giving me a strong foundation in empathetic communication and clarity. I apply this clarity to design, ensuring every interaction is precise, simple, and immediately understandable.</p>
-            </section>
-            <section class="ab-ch" aria-labelledby="ab-skills-h">
-                <figure class="ab-fig"><img src="../assets/images/home/skill_uiux.webp" alt="The One Shop UI kit: colours, type, buttons, menus and toggles" loading="lazy" decoding="async"><i class="ab-edge" aria-hidden="true"></i></figure>
-                <h2 class="ab-h" id="ab-skills-h">Skills</h2>
-                <ul class="ab-skills">
-                    <li>UI/UX Design</li>
-                    <li>Prototyping</li>
-                    <li>User Research</li>
-                    <li>Wireframing</li>
-                    <li>Figma</li>
-                    <li>Design Systems</li>
-                    <li>Responsive Design</li>
-                    <li>User Testing</li>
-                </ul>
-            </section>
-        </div>
-        <div class="ab-stage">
-            <div class="ab-frame">
-                <figure class="ab-pic" data-pos="face"><img src="../assets/images/about/portrait_1400.webp" alt="Frank Wu at night by Sydney Harbour" decoding="async"></figure>
-                <figure class="ab-pic" data-pos="finger"><img src="../assets/images/about/sofa_button.webp" alt="A finger pressing the small recline button on an electric sofa, from Frank's Nitori sofa guide" decoding="async"></figure>
-                <figure class="ab-pic" data-pos="left"><img src="../assets/images/home/skill_research.webp" alt="A participant testing a prototype on a laptop during a usability session" decoding="async"></figure>
-                <figure class="ab-pic" data-pos="kit"><img src="../assets/images/home/skill_uiux.webp" alt="The One Shop UI kit: colours, type, buttons, menus and toggles" decoding="async"></figure>
-                <i class="ab-edge" aria-hidden="true"></i>
+            <div class="ab-bio">
+                <p>As a junior UI/UX designer and recent University of Sydney graduate (Bachelor of Design Computing), my goal is to craft simple, thoughtful solutions that merge technology into one's daily life.</p>
+                <p>I believe that the best technology is invisible—it simply allows us to complete our daily tasks more seamlessly and intuitively. I focus on transforming complex problems into effortless routines.</p>
+                <p>My past experience as an English instructor and editor informs this approach, giving me a strong foundation in empathetic communication and clarity. I apply this clarity to design, ensuring every interaction is precise, simple, and immediately understandable.</p>
             </div>
-            <i class="ab-cut" aria-hidden="true"></i>
-        </div>
-        </div>
 
-        <section class="ab-close" aria-labelledby="ab-close-h">
-            <h2 class="ab-h" id="ab-close-h">Get in touch</h2>
-            <p class="ab-say">I'm always open to new opportunities and collaborations. Feel free to reach out!</p>
+            <div class="ab-facts">
+                <div>
+                    <h2 class="ab-fh">Experience</h2>
+                    <ul>
+                        <li class="ab-role"><b>Nitori Taiwan</b>E-commerce feature pages<br>2025 to now</li>
+                        <li class="ab-role"><b>Let's Talk in English</b>Editor &amp; content creator<br>2023 to 2026</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="ab-fh">Education</h2>
+                    <ul>
+                        <li><b>University of Sydney</b>Bachelor of Design Computing<br>2020 to 2024</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="ab-fh">Skills</h2>
+                    <ul class="ab-cols">
+                        <li>UI/UX Design</li>
+                        <li>Prototyping</li>
+                        <li>User Research</li>
+                        <li>Wireframing</li>
+                        <li>Figma</li>
+                        <li>Design Systems</li>
+                        <li>Responsive Design</li>
+                        <li>User Testing</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="ab-fh">Languages</h2>
+                    <ul class="ab-cols">
+                        <li>Chinese</li>
+                        <li>English</li>
+                    </ul>
+                </div>
+            </div>
+
+            <figure class="ab-portrait">
+                <div class="ab-frame">
+                    <img class="ab-mark" src="../assets/images/about/portrait_1400.webp" alt="" aria-hidden="true" decoding="async">
+                    <img class="ab-whole" src="../assets/images/about/portrait_1400.webp" alt="Frank Wu at night by Sydney Harbour" decoding="async">
+                    <i class="ab-scan" aria-hidden="true"></i>
+                </div>
+                <i class="ab-cut" aria-hidden="true"></i>
+            </figure>
+
             <div class="ab-reach">
                 <a class="ab-mail ab-roll" href="mailto:frank.wu.0405@gmail.com">frank.wu.0405@gmail.com</a>
                 <div class="ab-more">
@@ -195,73 +187,73 @@
     <script src="../assets/js/script.js" defer></script>
     <script>
         (() => {
-            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const wide = matchMedia('(min-width: 901px)');
-            const clamp = (v) => Math.max(0, Math.min(1, v));
-            const ease = (t) => t * t * (3 - 2 * t);
+            const frame = document.querySelector('.ab-frame');
+            const whole = frame.querySelector('.ab-whole'), scan = frame.querySelector('.ab-scan');
             const TAN = 0.29621;
 
-            /* the stage (desktop): as each paragraph comes up the screen, the picture on top is cut away along the lean,
-               right to left, uncovering the next; it follows the scroll exactly, so scrolling back brings it back */
-            const frame = document.querySelector('.ab-frame');
-            const pics = [...frame.querySelectorAll('.ab-pic')];
-            const edge = frame.querySelector('.ab-edge');
-            const chapters = [...document.querySelectorAll('.ab-ch')];
-            function stage() {
-                const W = frame.clientWidth, H = frame.clientHeight, s = H * TAN, vh = innerHeight;
-                let edgeAt = null;
-                pics.forEach((pic, i) => {
-                    if (i === pics.length - 1) return;
-                    const top = chapters[i + 1].getBoundingClientRect().top;
-                    const p = ease(clamp((vh * 0.85 - top) / (vh * 0.5)));
-                    if (reduce) { pic.style.opacity = (1 - p).toFixed(3); return; }
-                    const L = W + 1 - (W + 1) * p;
-                    pic.style.clipPath = p > 0 ? `polygon(0 0, ${L.toFixed(1)}px 0, ${(L - s).toFixed(1)}px 100%, 0 100%)` : '';
-                    if (p > 0 && p < 1) edgeAt = L - s;
-                });
-                if (edge) { edge.style.opacity = edgeAt === null ? '0' : '1'; if (edgeAt !== null) edge.style.left = `${(edgeAt - 0.75).toFixed(1)}px`; }
-            }
+            /* the FW mark, the home page's own shape, as the window the portrait first shows through */
+            const MARK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 416 1872 1153"><polygon points="818.61 886.07 1022.09 1569.04 1180.35 1569.04 1270.78 1207.3 1338.61 1569.04 1572.87 1569.04 1924 416 1644.52 416 1429.04 1136.26 1406.43 890.78 1157.74 890.78 1067.3 1136.26 1022.09 886.07 818.61 886.07"/><polygon points="670.78 890.78 738.61 1133.26 484 1132.26 340 1568.04 52 1569.04 388 416 1492.7 416 1416.87 658.48 628 657.48 556 889.78 670.78 890.78"/></svg>';
+            frame.style.setProperty('--fw', `url("data:image/svg+xml,${encodeURIComponent(MARK)}")`);
 
-            /* phones: each picture is wiped in along the same lean as it comes up the screen */
-            const figs = [...document.querySelectorAll('.ab-fig')];
-            function sequence() {
-                const vh = innerHeight;
-                figs.forEach((fig) => {
-                    const img = fig.querySelector('img'), e = fig.querySelector('.ab-edge');
-                    const W = fig.clientWidth, H = fig.clientHeight, s = H * TAN;
-                    fig.style.setProperty('--w', `${W}px`);
-                    if (reduce) return;
-                    const q = ease(clamp((vh * 0.98 - fig.getBoundingClientRect().top) / (vh * 0.4)));
-                    const L = (W + s) * (1 - q);
-                    img.style.clipPath = q < 1 ? `polygon(${L.toFixed(1)}px 0, ${(W + s).toFixed(1)}px 0, ${(W + s).toFixed(1)}px 100%, ${(L - s).toFixed(1)}px 100%)` : '';
-                    e.style.opacity = q > 0 && q < 1 ? '1' : '0';
-                    e.style.left = `${(L - s - 0.75).toFixed(1)}px`;
-                });
-            }
+            let W = 0, H = 0, S = 0;
+            const measure = () => { W = frame.clientWidth; H = frame.clientHeight; S = H * TAN; frame.style.setProperty('--h', `${H}px`); frame.parentElement.style.setProperty('--s', `${S}px`); };
+            measure(); addEventListener('resize', measure);
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // the portrait simply shows, whole
 
-            let queued = false;
-            const render = () => { queued = false; if (wide.matches) stage(); else sequence(); };
-            const req = () => { if (!queued) { queued = true; requestAnimationFrame(render); } };
-            addEventListener('scroll', req, { passive: true });
-            addEventListener('resize', req);
-            wide.addEventListener('change', () => {
-                pics.forEach((p) => { p.style.clipPath = ''; p.style.opacity = ''; });
-                figs.forEach((f) => { f.querySelector('img').style.clipPath = ''; });
-                req();
-            });
-            render();
+            /* L is where the line meets the top edge. Right of the line the portrait is whole; left of it, only the mark.
+               Fully whole at L = 0 (the line has left past the bottom-left corner), all mark at L = W + S */
+            let L = 0, target = 0, raf = 0, ready = false, played = false;
+            const draw = () => {
+                whole.style.clipPath = L <= 0 ? '' : `polygon(${L.toFixed(1)}px 0, ${(W + S).toFixed(1)}px 0, ${(W + S).toFixed(1)}px 100%, ${(L - S).toFixed(1)}px 100%)`;
+                scan.style.left = `${(L - S - 0.75).toFixed(1)}px`;
+            };
+            const settle = () => {
+                L += (target - L) * 0.16;
+                if (Math.abs(target - L) < 0.3) { L = target; raf = 0; frame.classList.toggle('is-scanning', L > 0 && L < W + S); draw(); return; }
+                draw(); raf = requestAnimationFrame(settle);
+            };
+            const go = (t) => { target = t; frame.classList.add('is-scanning'); if (!raf) raf = requestAnimationFrame(settle); };
 
-            /* the links at the close: each letter in its own window, rolling up to a red copy on hover (as on Home) */
-            document.querySelectorAll('.ab-roll').forEach((a) => {
-                const t = a.textContent.trim(), w = document.createElement('span');
-                a.setAttribute('aria-label', a.target === '_blank' ? `${t} (opens in a new tab)` : t); a.textContent = ''; w.setAttribute('aria-hidden', 'true');
-                [...t].forEach((c, i) => {
-                    const o = document.createElement('span'), n = document.createElement('span');
-                    o.className = 'rc'; o.style.setProperty('--i', i); n.textContent = c === ' ' ? ' ' : c; o.appendChild(n); w.appendChild(o);
-                });
-                a.appendChild(w);
-            });
+            /* the opening: the mark comes up, holds a beat, then the line sweeps it away along the lean, right to left */
+            const intro = () => {
+                if (played) return; played = true;
+                measure(); L = W + S; draw(); frame.classList.add('is-armed');
+                setTimeout(() => {
+                    frame.classList.add('is-scanning');
+                    const t0 = performance.now(), dur = 1500, from = W + S;
+                    const sweep = (t) => {
+                        const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+                        L = from * (1 - e); draw();
+                        if (ready) return; if (k < 1) requestAnimationFrame(sweep); else { L = 0; target = 0; draw(); frame.classList.remove('is-scanning'); ready = true; }
+                    };
+                    requestAnimationFrame(sweep);
+                    setTimeout(() => { if (!ready) { L = 0; target = 0; draw(); frame.classList.remove('is-scanning'); ready = true; } }, dur + 250);
+                }, 900);
+            };
+            new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { intro(); io.disconnect(); } }, { threshold: 0.4 }).observe(frame);
+
+            /* afterwards the line answers the pointer: it passes through the pointer along the lean, the mark on its left,
+               the person on its right; let go, and it slides away again */
+            const follow = (e) => {
+                if (!ready || (e.pointerType === 'touch' && !e.isPrimary)) return;
+                const r = frame.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                go(Math.max(0, Math.min(W + S, x + S * (1 - y / H))));
+            };
+            frame.addEventListener('pointermove', follow);
+            frame.addEventListener('pointerdown', follow);
+            ['pointerleave', 'pointerup', 'pointercancel'].forEach((t) => frame.addEventListener(t, () => { if (ready) go(0); }));
         })();
+
+        /* the links: each letter in its own window, rolling up to a red copy on hover (as on Home) */
+        document.querySelectorAll('.ab-roll').forEach((a) => {
+            const t = a.textContent.trim(), w = document.createElement('span');
+            a.setAttribute('aria-label', a.target === '_blank' ? `${t} (opens in a new tab)` : t); a.textContent = ''; w.setAttribute('aria-hidden', 'true');
+            [...t].forEach((c, i) => {
+                const o = document.createElement('span'), n = document.createElement('span');
+                o.className = 'rc'; o.style.setProperty('--i', i); n.textContent = c === ' ' ? ' ' : c; o.appendChild(n); w.appendChild(o);
+            });
+            a.appendChild(w);
+        });
     </script>
 </body>
 </html>
