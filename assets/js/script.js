@@ -260,10 +260,12 @@ window.addEventListener('beforeunload', () => {
 function setupIntersectionObserver() {
     const fadeInElements = document.querySelectorAll('.fade-in');
 
+    // Trigger as soon as the element's top is a little way onto the screen: a share of
+    // a tall block (say 30%) can be more than a short screen ever shows, and it never appears
     const observerOptions = {
         root: null, // Use the viewport as the root
-        rootMargin: '0px',
-        threshold: 0.3 // Trigger when 30% of the element is visible
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0
     };
 
     const observer = new IntersectionObserver((entries, observer) => {

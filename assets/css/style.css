@@ -691,11 +691,16 @@ figcaption {
 /* S E C T I O N :   F A D E - I N - O N - S C R O L L */
 /* ==================================
     Fade-in-on-scroll styles
+    Hidden only under .js-blur, which each page's <head> adds when motion is welcome
+    and takes away again if script.js never runs, so the content always shows
 ================================== */
 .fade-in {
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.js-blur .fade-in {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
-    transition: opacity 1s ease-out, transform 1s ease-out;
     will-change: opacity, transform;
 }
 
