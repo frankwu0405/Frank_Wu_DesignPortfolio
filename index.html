@@ -95,12 +95,8 @@
 
         /* 1 · Hero: the hidden mark (pinned) */
         .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 660); }   /* scroll spacer for the fixed scene */
-        /* iPhone Safari ends the fixed scene at the top of its bottom bar: shrunk, the bar shows the page scrolling beneath
-           it, here this spacer over the body (red while the top strip is); full size, it fills with the background colour
-           of what lies there. So an ink layer with a real background colour, not a gradient, keeps the bar dark both ways.
-           It stops where the proof slides under the hero's end (--under, set with the layout), so the wipe still uncovers
-           the proof */
-        .fx-hfloor { position: absolute; left: 0; right: 0; top: 0; height: calc(100% - var(--under, 0px)); background-color: var(--ink); pointer-events: none; }
+        /* the strip under the status bar: the colour iOS Safari samples for it (setTopColor) */
+        .fx-topedge { position: fixed; left: 0; right: 0; top: 0; height: max(env(safe-area-inset-top, 0px), 1px); z-index: 980; pointer-events: none; background-color: var(--ink); }
         .fx-stage.is-off { visibility: hidden; }
         .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
@@ -266,9 +262,6 @@
            to a single tile while it fills with Nitori teal from below, the figures sinking back into the shadow; the white
            wordmark comes up on the teal, and the tile drops into the row's empty slot as the row comes up underneath it */
         .fx-proof { position: relative; z-index: 1; }
-        /* once its stage pins, iPhone Safari ends that too at the top of the bottom bar, like the hero's fixed scene, and
-           shows this section beneath it over the body (still red through the first half of the wipe): ink, like the hero */
-        .fx-proof { background: var(--ink); }
         .fx-pstage { position: sticky; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink); touch-action: pan-y; --cw: 30vw; --slot: 30%; }
         .fx-pbg { position: absolute; inset: -10% -6%; z-index: 0; pointer-events: none; }
         .fx-pbg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(44px) brightness(0.38) saturate(1.2); opacity: 0; transform: scale(1.15); transition: opacity 0.9s ease; }
@@ -509,7 +502,6 @@
         .fx-reduce .fx-step h3 span::after { transition: none; }
         /* Reduced motion: no pinning or fly-ins, everything shown in place */
         .fx-reduce .fx-hero { height: auto; }
-        .fx-reduce .fx-hfloor { display: none; }   /* nothing turns red here, and the stage is in the flow under it */
         .fx-reduce .fx-stage { position: relative; top: 0; z-index: auto; }
         .fx-reduce .fx-title h1 .ch, .fx-reduce .fx-title .role-in { opacity: 1; filter: none; transform: none; transition: none; }
         .fx-reduce .fx-stage::before, .fx-reduce .fx-cue i { animation: none; }
@@ -539,6 +531,7 @@
 
     <div class="fx-cursor" aria-hidden="true">VIEW</div>
     <div class="fx-wipe-edge" aria-hidden="true"></div>
+    <div class="fx-topedge" aria-hidden="true"></div>
     <div class="fx-lprobe" aria-hidden="true"></div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -617,7 +610,6 @@
                     </div>
                 </div>
             </div>
-            <div class="fx-hfloor" aria-hidden="true"></div>
         </section>
 
         <!-- 3 · Proof: the results stack up on the red; the red closes in to the Nitori tile, which settles into the row -->
@@ -784,26 +776,16 @@
             /* ---------- top-edge colour ----------
                iOS Safari paints the strip behind the status bar in a colour it samples from the page
                (top-pinned elements, then the page background). Keep that colour equal to whatever is at
-               the top of the scene so the strip blends in instead of reading as a cut-off. */
+               the top of the scene so the strip blends in instead of reading as a cut-off. Only the strip
+               pinned along the top edge (.fx-topedge) takes it: the page itself stays ink, since the
+               bottom bar falls back on the page's colour and would turn red with it */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
+            const topEdge = document.querySelector('.fx-topedge');
             let topColor = '';
-            /* TEMPORARY, ?bar=test: the page itself stays ink, and only a strip pinned along the top edge (under the status
-               bar) takes the scene's colour, so the top strip can match while Safari's bottom bar has no red to fall back on */
-            const barTest = new URLSearchParams(location.search).get('bar') === 'test';
-            let topEdge = null;
-            if (barTest) {
-                topEdge = document.createElement('div');
-                topEdge.setAttribute('aria-hidden', 'true');
-                topEdge.style.cssText = 'position: fixed; left: 0; right: 0; top: 0; height: max(env(safe-area-inset-top, 0px), 1px); z-index: 980; pointer-events: none; background-color: #060606;';
-                document.body.appendChild(topEdge);
-            }
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                const pageC = barTest ? '#060606' : c;
-                root.style.backgroundColor = pageC;
-                document.body.style.backgroundColor = pageC;
-                if (topEdge) topEdge.style.backgroundColor = c;
+                topEdge.style.backgroundColor = c;
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
                 if (st) st.style.backgroundColor = c;
@@ -1071,7 +1053,6 @@
                 // the proof slides under the end of the hero, so the exit wipe reveals it already in place
                 PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.total = SH * PU;
                 proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
-                hero.style.setProperty('--under', reduce ? '0px' : `${Math.round(SH + PG.wipe + 4)}px`);
                 proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.total)}px`;
                 layoutProof();
                 buildThread();
