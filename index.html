@@ -787,11 +787,23 @@
                the top of the scene so the strip blends in instead of reading as a cut-off. */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
             let topColor = '';
+            /* TEMPORARY, ?bar=test: the page itself stays ink, and only a strip pinned along the top edge (under the status
+               bar) takes the scene's colour, so the top strip can match while Safari's bottom bar has no red to fall back on */
+            const barTest = new URLSearchParams(location.search).get('bar') === 'test';
+            let topEdge = null;
+            if (barTest) {
+                topEdge = document.createElement('div');
+                topEdge.setAttribute('aria-hidden', 'true');
+                topEdge.style.cssText = 'position: fixed; left: 0; right: 0; top: 0; height: max(env(safe-area-inset-top, 0px), 1px); z-index: 980; pointer-events: none; background-color: #060606;';
+                document.body.appendChild(topEdge);
+            }
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                root.style.backgroundColor = c;
-                document.body.style.backgroundColor = c;
+                const pageC = barTest ? '#060606' : c;
+                root.style.backgroundColor = pageC;
+                document.body.style.backgroundColor = pageC;
+                if (topEdge) topEdge.style.backgroundColor = c;
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
                 if (st) st.style.backgroundColor = c;
