@@ -95,6 +95,10 @@
 
         /* 1 · Hero: the hidden mark (pinned) */
         .fx-hero { position: relative; z-index: 2; height: calc(var(--fvh, 1vh) * 660); }   /* scroll spacer for the fixed scene */
+        /* iPhone Safari ends the fixed scene at the top of its bottom bar and shows the page scrolling beneath it, here
+           this spacer over the body (red while the top strip is). Ink, so the bar stays dark; it stops where the proof
+           slides under the hero's end (--under, set with the layout), so the wipe still uncovers the proof */
+        .fx-hero { background: linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - var(--under, 0px)) no-repeat; }
         .fx-stage.is-off { visibility: hidden; }
         .fx-stage { position: fixed; top: 0; left: 0; width: 100%; z-index: 2; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); overflow: hidden; background: var(--ink);
             perspective: 1200px; --mx: 0; --my: 0; --fade: 0; --em: 0; --zm: 0; }
@@ -776,19 +780,14 @@
                the top of the scene so the strip blends in instead of reading as a cut-off. */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
             let topColor = '';
-            /* TEMPORARY, ?bar=debug: each layer that turns red takes its own colour instead (page green, body magenta,
-               stage cyan, the scene's red orange), to see which one shows in Safari's bars */
-            const barDebug = new URLSearchParams(location.search).get('bar') === 'debug';
-            if (barDebug) document.body.style.setProperty('--deep', '#ff8800');
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                const dbg = (debugC) => barDebug && c !== '#060606' ? debugC : c;
-                root.style.backgroundColor = dbg('#00ff00');
-                document.body.style.backgroundColor = dbg('#ff00ff');
+                root.style.backgroundColor = c;
+                document.body.style.backgroundColor = c;
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
-                if (st) st.style.backgroundColor = dbg('#00ffff');
+                if (st) st.style.backgroundColor = c;
             }
 
             /* ---------- elements ---------- */
@@ -1053,6 +1052,7 @@
                 // the proof slides under the end of the hero, so the exit wipe reveals it already in place
                 PG.wipe = (hero.offsetHeight - SH) * (1 - WIPE0); PG.total = SH * PU;
                 proof.style.marginTop = reduce ? '' : `-${Math.round(SH + PG.wipe + 4)}px`;
+                hero.style.setProperty('--under', reduce ? '0px' : `${Math.round(SH + PG.wipe + 4)}px`);
                 proof.style.height = reduce ? '' : `${Math.round(pstage.offsetHeight + PG.total)}px`;
                 layoutProof();
                 buildThread();
