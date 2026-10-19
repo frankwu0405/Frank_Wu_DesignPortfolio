@@ -776,14 +776,19 @@
                the top of the scene so the strip blends in instead of reading as a cut-off. */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
             let topColor = '';
+            /* TEMPORARY, ?bar=debug: each layer that turns red takes its own colour instead (page green, body magenta,
+               stage cyan, the scene's red orange), to see which one shows in Safari's bars */
+            const barDebug = new URLSearchParams(location.search).get('bar') === 'debug';
+            if (barDebug) document.body.style.setProperty('--deep', '#ff8800');
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                root.style.backgroundColor = c;
-                document.body.style.backgroundColor = c;
+                const dbg = (debugC) => barDebug && c !== '#060606' ? debugC : c;
+                root.style.backgroundColor = dbg('#00ff00');
+                document.body.style.backgroundColor = dbg('#ff00ff');
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
-                if (st) st.style.backgroundColor = c;
+                if (st) st.style.backgroundColor = dbg('#00ffff');
             }
 
             /* ---------- elements ---------- */
