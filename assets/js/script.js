@@ -318,54 +318,36 @@ if (logo) {
 }
 
 // ======================================================================
-// Active Navigation Link Functionality (File-based)
+// Folder Links When Opened From Disk
+// ======================================================================
+
+// Pages live at folder/index.html and link to "folder/". A server answers a folder
+// with its index.html; a file opened straight from disk has no server, so the links
+// name the file themselves there. The live site keeps its clean addresses.
+if (location.protocol === 'file:') {
+    document.querySelectorAll('a[href]').forEach(a => {
+        const href = a.getAttribute('href');
+        if (/^([a-z]+:|#)/i.test(href)) return;   // external, mailto:, tel:, in-page
+        a.setAttribute('href', href.replace(/^([^?#]*\/)(?=[?#]|$)/, '$1index.html'));
+    });
+}
+
+// ======================================================================
+// Active Navigation Link Functionality (Folder-based)
 // ======================================================================
 
 // Function to highlight the current page in the navigation bar
 function highlightCurrentLink() {
-    // Get the current page's URL pathname
-    let currentPath = window.location.pathname;
+    // A folder and its index.html are the same page
+    const folder = (path) => path.replace(/index\.html$/, '');
+    const here = folder(location.pathname);
 
-    // Define the base path for your GitHub Pages project site
-    // The base path is the repository name, including the leading and trailing slash
-    const basePath = '/Frank_Wu_DesignPortfolio/';
+    // The case-study pages sit under the Projects tab
+    const inProjects = /\/(project\d+|nitori)\/$/.test(here);
 
-    // Check if the URL starts with the base path and remove it
-    if (currentPath.startsWith(basePath)) {
-        currentPath = currentPath.substring(basePath.length);
-    }
-    
-    // Handle the case of the root URL (e.g., https://.../Frank_Wu_DesignPortfolio/)
-    // After removing the base path, the root URL becomes an empty string
-    if (currentPath === '') {
-        currentPath = 'index.html';
-    } else {
-        // For other pages, extract just the filename from the path
-        currentPath = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index.html';   // '/' on frankwu.dev is Home
-    }
-
-    // Select all the navigation links
-    const links = document.querySelectorAll('.nav-links a');
-
-    // Loop through each link
-    links.forEach(link => {
-        // Get the link's href attribute
-        const linkHref = link.getAttribute('href');
-
-        // Remove the 'active' class from all links first
-        link.classList.remove('active');
-
-        // Check if the link's href matches the current page's filename
-        if (linkHref === currentPath) {
-            // If it matches, add the 'active' class to this link
-            link.classList.add('active');
-        }
-
-        // Additional logic for highlighting the "Projects" link on individual project pages
-        // This logic assumes your project pages' URLs start with 'project'
-        if ((currentPath.startsWith('project') || currentPath === 'nitori.html') && linkHref === 'projects.html') {
-            link.classList.add('active');
-        }
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        const target = folder(new URL(link.getAttribute('href'), location.href).pathname);
+        link.classList.toggle('active', target === here || (inProjects && target.endsWith('/projects/')));
     });
 }
 
