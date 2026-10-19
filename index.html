@@ -250,6 +250,17 @@
         /* exit: the scene is cut away along the slant, revealing the next stage already in place */
         .fx-wipe-edge { position: fixed; z-index: 30; top: 0; height: calc(calc(var(--fvh, 1vh) * 100) + env(safe-area-inset-bottom, 0px) + 2px); width: 1.5px; background: #ff5446; box-shadow: 0 0 14px #ff3b2f;
             transform: skewX(calc(var(--lean) * -1)); transform-origin: 50% 100%; left: -10px; opacity: 0; pointer-events: none; }
+        /* iPhone: Safari's bottom bar is glass over the page and tints itself from what lies beneath, so the red would turn
+           it red. An ink floor sits under the bar, fading up into the scene, and comes up with the red (--swell); the stage's
+           clip takes it away with the wipe, and the wipe's line stops where it starts. --bar: the bar as it stands (the
+           live --gap), and no less than the compact bar over the home indicator once it shrinks */
+        .fx-floor { display: none; }
+        @supports (-webkit-touch-callout: none) {
+            body.fx { --bar: max(var(--gap), calc(env(safe-area-inset-bottom, 0px) + 56px)); --floor: calc(var(--bar) + env(safe-area-inset-bottom, 0px) + 2px); }
+            .fx-floor { display: block; position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; height: calc(var(--floor) + 40px); pointer-events: none;
+                background: linear-gradient(to top, var(--ink) var(--floor), transparent); opacity: var(--swell, 0); }
+            .fx-wipe-edge { -webkit-mask-image: linear-gradient(to top, transparent var(--floor), #000 calc(var(--floor) + 40px)); mask-image: linear-gradient(to top, transparent var(--floor), #000 calc(var(--floor) + 40px)); }
+        }
         .fx-scene.is-static { position: relative; inset: auto; background: var(--deep); padding: calc(var(--fvh, 1vh) * 16) 0; }
         .fx-scene.is-static .fx-sin { position: relative; }
         .fx-scene.is-static .l1, .fx-scene.is-static .l2, .fx-scene.is-static .aside, .fx-scene.is-static .fx-pick { opacity: 1; transform: none; filter: none; }
@@ -606,6 +617,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="fx-floor" aria-hidden="true"></div>
             </div>
         </section>
 
