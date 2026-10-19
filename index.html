@@ -783,14 +783,26 @@
                the top of the scene so the strip blends in instead of reading as a cut-off. */
             const themeMeta = document.querySelector('meta[name="theme-color"]');
             let topColor = '';
+            /* TEMPORARY, ?bar=debug: everything that could sit under Safari's bottom bar takes its own colour, to see which
+               one shows there (page green, body magenta, stage cyan, the scene's red orange, the hero's dark blue, the stats
+               stage purple, the stats section white, the wipe's line yellow) */
+            const barDebug = new URLSearchParams(location.search).get('bar') === 'debug';
+            if (barDebug) {
+                const s = document.createElement('style');
+                s.textContent = 'body.fx { --deep: #ff8800 !important; } .fx-hero { --ink: #0040ff; } .fx-hero .fx-stage { --ink: #060606; }'
+                    + ' .fx-proof { background: #ffffff !important; } .fx-pstage { background: #9b30ff !important; } .fx-pstage::after { display: none; }'
+                    + ' .fx-wipe-edge { background: #ffee00 !important; box-shadow: 0 0 14px #ffee00 !important; }';
+                document.head.appendChild(s);
+            }
             function setTopColor(c) {
                 if (c === topColor) return;
                 topColor = c;
-                root.style.backgroundColor = c;
-                document.body.style.backgroundColor = c;
+                const dbg = (debugC) => barDebug && c !== '#060606' ? debugC : c;
+                root.style.backgroundColor = dbg('#00ff00');
+                document.body.style.backgroundColor = dbg('#ff00ff');
                 if (themeMeta) themeMeta.setAttribute('content', c);
                 const st = document.querySelector('.fx-stage');
-                if (st) st.style.backgroundColor = c;
+                if (st) st.style.backgroundColor = dbg('#00ffff');
             }
 
             /* ---------- elements ---------- */
