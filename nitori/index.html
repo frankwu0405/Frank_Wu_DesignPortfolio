@@ -136,6 +136,18 @@
         .nt-row h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); margin-bottom: 2px; }
         .nt-row .zh-title { display: block; font-size: 0.9rem; color: #8a8a8a; margin-bottom: 10px; }
         .nt-row p { max-width: 62ch; margin-bottom: 10px; font-weight: 400; color: var(--text-secondary); font-size: 1rem; }
+        /* Problem / Idea / Outcome: one line each, labels in their own column so
+           the three beats scan straight down all nine entries. The idea is the
+           design decision, so it reads brightest. */
+        .nt-story { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: baseline; column-gap: 18px; row-gap: 10px; max-width: 62ch; margin: 6px 0 16px; }
+        .nt-story dt { font-size: 0.8rem; font-weight: 600; color: var(--series); }
+        .nt-story dd { margin: 0; font-size: 1rem; font-weight: 400; line-height: 1.6; color: var(--text-secondary); }
+        .nt-story dd.idea { color: #fff; font-weight: 600; }
+        /* Phones: each label sits above its line, so the text keeps the full width */
+        @media (max-width: 480px) {
+            .nt-story { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+            .nt-story dd + dt { margin-top: 12px; }
+        }
         .nt-live { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--series); padding-bottom: 2px; }
         .nt-live:hover { color: var(--series); }
         .nt-ended { font-size: 0.9rem; color: #8a8a8a; }
@@ -212,7 +224,7 @@
                         <h1>Shipped at Nitori</h1>
                     </div>
                 </div>
-                <p data-blur>I design and build the feature pages of Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six of these pages are live today, so you can open them and try them. The other three were seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn, shown here with their results.</p>
+                <p data-blur>Feature pages for Nitori Taiwan's online store, <a class="inline" href="https://www.nitori-net.tw/" target="_blank" rel="noopener">nitori-net.tw</a>: the UX, the visual design and the front-end code. Six are live today, open to try. Three were seasonal campaigns for Mother's Day, Father's Day and Mid-Autumn, shown with their results.</p>
             </section>
 
             <ul class="nt-list">
@@ -232,7 +244,11 @@
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Mother's Day 2026</h3>
                         <span class="zh-title zh">溫馨5月 · 母親節暖心選品</span>
-                        <p>Instead of a price-sorted grid, I staged the products as scenes in one mother's evening, so a NT$15,000 recliner and a NT$300 mug could share one story. Almost nothing on it was discounted.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>A gift campaign with nothing on sale, so the page needed a reason to buy beyond price.</dd>
+                            <dt>Idea</dt><dd class="idea">Sell a feeling, not a price: one mother's evening in timed scenes, where a NT$15,000 recliner and a NT$300 mug share one story.</dd>
+                            <dt>Outcome</dt><dd>NT$1.17M in four weeks without leaning on discounts. The story-led format went on to shape the next two campaigns.</dd>
+                        </dl>
                     </div>
                     <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
@@ -261,7 +277,11 @@
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Father's Day 2026</h3>
                         <span class="zh-title zh">給爸爸的專屬躺平時光 · 父親節放鬆好禮推薦</span>
-                        <p>I built the page around three times in a father's day: 19:00 home and reclining, 9:00 back at the desk, 23:00 lights out. The colours shift from daylight to night blue as you scroll, with an electric recliner at the centre. It brought in 40% more revenue than Mother's Day, in 17 days instead of four weeks.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>The same hero recliner, for buyers who weigh function over feeling, across a range spanning rest and work.</dd>
+                            <dt>Idea</dt><dd class="idea">Frame his whole day as three chapters, home, desk, lights out, with colour shifting by the hour.</dd>
+                            <dt>Outcome</dt><dd>NT$1.67M in 17 days, 40% above Mother's Day. The lesson: the story draws people in, side-by-side specs close the sale.</dd>
+                        </dl>
                     </div>
                     <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
@@ -290,7 +310,11 @@
                         <span class="nt-tag">Seasonal campaign</span>
                         <h3>Mid-Autumn BBQ 2026</h3>
                         <span class="zh-title zh">中秋烤肉，備料更輕鬆</span>
-                        <p>The grilling takes two hours; the prep takes a day. So the page walks through the six prep steps, from portioning to clean-up, each opening with a familiar kitchen mishap and the item that fixes it. A moon in the step bar fills as you go and is full at the last step. It converted best of the three campaigns.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>Barbecue season, told through a homeware range: everyday storage and kitchen pieces with no obvious link to the grill.</dd>
+                            <dt>Idea</dt><dd class="idea">Move the story from the grill to the prep: six steps, each opening on a familiar kitchen mishap and its fix.</dd>
+                            <dt>Outcome</dt><dd>The best conversion of the three, 1.19%. Everyday items sell once each one has a moment to solve.</dd>
+                        </dl>
                     </div>
                     <div class="nt-results">
                         <div class="nt-stats" aria-label="Campaign results">
@@ -319,7 +343,11 @@
                         <span class="nt-tag">Product guide</span>
                         <h3>Electric sofa guide</h3>
                         <span class="zh-title zh">電動可躺式沙發 在家享受頂級坐感</span>
-                        <p>Rebuilt from seven series stacked in one repeated block into a guide: a viewer that reclines each sofa and shows its size, a care kit matched to the fabric, and one table comparing all seven.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>A sofa costing tens of thousands, sold from a static page: one image per model, little reason to buy online.</dd>
+                            <dt>Idea</dt><dd class="idea">Bring the showroom to the screen: a viewer that reclines each sofa and shows its size, with a fabric-matched care kit offered as an add-on.</dd>
+                            <dt>Outcome</dt><dd>First care-kit sale within a month, after three years without one. Priced against the sofa, the add-on stops feeling like a second purchase.</dd>
+                        </dl>
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Electricsofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
@@ -339,7 +367,11 @@
                         <span class="nt-tag">Product guide</span>
                         <h3>Sofa guide</h3>
                         <span class="zh-title zh">多款風格沙發 | 打造理想居家空間</span>
-                        <p>Each sofa type opens with who it's for, such as 給想盤腿放鬆的人, before the products. It ends with a side-by-side comparison and an FAQ.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>The electric-sofa approach, for a range three to four times larger: too many types to weigh at once.</dd>
+                            <dt>Idea</dt><dd class="idea">Start from the room: a floor plan and household narrow the range, so the sofas that suit lead and the rest reads as a ranking.</dd>
+                            <dt>Outcome</dt><dd>The lesson of scale: narrow the choice before persuading. The viewer sells the sofa; the shortlist gets them there.</dd>
+                        </dl>
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Sofa" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
@@ -359,7 +391,11 @@
                         <span class="nt-tag">Product guide</span>
                         <h3>Kitchen cupboard guide</h3>
                         <span class="zh-title zh">打造理想廚房收納 | 機能櫥櫃選購指南</span>
-                        <p>Organised by what people care about in a kitchen, like flexibility, safety or an open view, rather than by product line. A comparison and an FAQ close the page.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>A purchase that has to fit the wall, spread across spec-heavy series on a static, product-first page.</dd>
+                            <dt>Idea</dt><dd class="idea">A sentence to complete, wall width, type, function, each blank with its own visual, so shoppers see what they need as they choose.</dd>
+                            <dt>Outcome</dt><dd>Built so width rules out what won't fit before a single product appears.</dd>
+                        </dl>
                         <a class="nt-live" href="https://www.nitori-net.tw/article/Cupboard" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
@@ -379,28 +415,12 @@
                         <span class="nt-tag">Lifestyle guide</span>
                         <h3>Pet living</h3>
                         <span class="zh-title zh">養寵推薦｜毛孩用品選物</span>
-                        <p>A season switcher brings cooling or warming beds forward, and the featured group follows what's in stock. Claw-proof furniture, essentials, an FAQ and comparison tables follow.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>A range that turns over with the seasons, which meant rebuilding the same static page three times a year.</dd>
+                            <dt>Idea</dt><dd class="idea">One page with a season switch: the featured beds change with the weather, and a cat follows the pick.</dd>
+                            <dt>Outcome</dt><dd>Designed for upkeep, not just launch: one page now does the work of three, and nothing goes out of season.</dd>
+                        </dl>
                         <a class="nt-live" href="https://www.nitori-net.tw/article/PetLife" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                    </div>
-                </li>
-                <li class="nt-row" id="home-appliances">
-                    <div class="nt-media">
-                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
-                        <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by task page">
-                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/01" data-cap="The opening, with a tab for each chore."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/01_mob_t.webp"><img src="../assets/images/nitori/homeappliances/01_desk_t.webp" alt="Opening banner with a tab for each chore" loading="lazy"></picture></button></li>
-                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/02" data-cap="Each chore gets a spotlit stage: the product in the middle, its features listed beside it."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/02_mob_t.webp"><img src="../assets/images/nitori/homeappliances/02_desk_t.webp" alt="Cleaning section with a vacuum on a spotlit stage" loading="lazy"></picture></button></li>
-                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="../assets/images/nitori/homeappliances/03" data-cap="Stepping through the features opens a detail card for each one on the stage."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/03_mob_t.webp"><img src="../assets/images/nitori/homeappliances/03_desk_t.webp" alt="Clip: stepping through the vacuum&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
-                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/04" data-cap="Cooking, staged the same way."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/04_mob_t.webp"><img src="../assets/images/nitori/homeappliances/04_desk_t.webp" alt="Cooking section with a rice cooker on stage" loading="lazy"></picture></button></li>
-                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="../assets/images/nitori/homeappliances/05" data-cap="The massage range, feature by feature."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/05_mob_t.webp"><img src="../assets/images/nitori/homeappliances/05_desk_t.webp" alt="Clip: stepping through a massager&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
-                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/06" data-cap="Every stage leads into a row of related products with live prices."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/06_mob_t.webp"><img src="../assets/images/nitori/homeappliances/06_desk_t.webp" alt="Row of cooking appliances with prices" loading="lazy"></picture></button></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <span class="nt-tag">Feature page</span>
-                        <h3>Home appliances, by task</h3>
-                        <span class="zh-title zh">【家電特集】日常家電選用升級指南</span>
-                        <p>Appliances grouped by the chore they take off your hands: cleaning, cooking, unwinding, keeping cool.</p>
-                        <a class="nt-live" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
                 <li class="nt-row" id="comfy-appliances">
@@ -419,15 +439,43 @@
                         <span class="nt-tag">Feature page</span>
                         <h3>Home appliances, by mood</h3>
                         <span class="zh-title zh">【家電特集】佈置舒適居家空間</span>
-                        <p>The same range seen another way: grouped by how a room feels, through air, scent and light.</p>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>The first appliance pages for a furniture brand, and a range usually sold on specs.</dd>
+                            <dt>Idea</dt><dd class="idea">A bright stage grouped by how a room feels, air, scent, light, with features stepping in one at a time instead of a spec list.</dd>
+                            <dt>Outcome</dt><dd>Opened a new article series, with a stage built to make specs feel premium, not catalogue.</dd>
+                        </dl>
                         <a class="nt-live" href="https://www.nitori-net.tw/article/ComfyAppliance" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+                <li class="nt-row" id="home-appliances">
+                    <div class="nt-media">
+                        <a class="nt-thumb" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener"><img src="https://nitorimain.blob.core.windows.net/article/AT2026020002/article_main__HomeAppliances_600x315_v1.png" alt="Cover image of the everyday home appliances page" loading="lazy"><span class="nt-count" aria-hidden="true"><i class="fa-regular fa-images"></i> 4 screens · 2 clips</span></a>
+                        <ul class="nt-shots" aria-label="Key screens and clips from the Home appliances by task page">
+                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/01" data-cap="The opening, with a tab for each chore."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/01_mob_t.webp"><img src="../assets/images/nitori/homeappliances/01_desk_t.webp" alt="Opening banner with a tab for each chore" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/02" data-cap="Each chore gets a spotlit stage: the product in the middle, its features listed beside it."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/02_mob_t.webp"><img src="../assets/images/nitori/homeappliances/02_desk_t.webp" alt="Cleaning section with a vacuum on a spotlit stage" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="../assets/images/nitori/homeappliances/03" data-cap="Stepping through the features opens a detail card for each one on the stage."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/03_mob_t.webp"><img src="../assets/images/nitori/homeappliances/03_desk_t.webp" alt="Clip: stepping through the vacuum&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/04" data-cap="Cooking, staged the same way."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/04_mob_t.webp"><img src="../assets/images/nitori/homeappliances/04_desk_t.webp" alt="Cooking section with a rice cooker on stage" loading="lazy"></picture></button></li>
+                            <li><button type="button" class="nt-shot" data-kind="clip" data-src="../assets/images/nitori/homeappliances/05" data-cap="The massage range, feature by feature."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/05_mob_t.webp"><img src="../assets/images/nitori/homeappliances/05_desk_t.webp" alt="Clip: stepping through a massager&#x27;s features" loading="lazy"></picture><span class="nt-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button></li>
+                            <li><button type="button" class="nt-shot" data-src="../assets/images/nitori/homeappliances/06" data-cap="Every stage leads into a row of related products with live prices."><picture><source media="(max-width: 760px)" srcset="../assets/images/nitori/homeappliances/06_mob_t.webp"><img src="../assets/images/nitori/homeappliances/06_desk_t.webp" alt="Row of cooking appliances with prices" loading="lazy"></picture></button></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <span class="nt-tag">Feature page</span>
+                        <h3>Home appliances, by task</h3>
+                        <span class="zh-title zh">【家電特集】日常家電選用升級指南</span>
+                        <dl class="nt-story">
+                            <dt>Problem</dt><dd>The same range as a second page: it had to feel distinct yet clearly belong to the first.</dd>
+                            <dt>Idea</dt><dd class="idea">Mirror the mood page in the dark: a spotlit stage for each chore, cleaning, cooking, unwinding, keeping cool.</dd>
+                            <dt>Outcome</dt><dd>Two pages, one system: the same structure flipped, so the pair reads as two halves of one range.</dd>
+                        </dl>
+                        <a class="nt-live" href="https://www.nitori-net.tw/article/HomeAppliances" target="_blank" rel="noopener">View live page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                 </li>
             </ul>
 
             <section class="nt-cta">
                 <h2>Want the details behind any of these?</h2>
-                <p>I'm glad to walk you through the decisions, the trade-offs and the code.</p>
+                <p>Happy to walk through the decisions, the trade-offs and the code.</p>
                 <div class="nt-cta-btns">
                     <a href="mailto:frank.wu.0405@gmail.com" class="btn nt-btn">Email me</a>
                     <a href="../projects/#university" class="btn secondary nt-btn-2">University projects</a>
